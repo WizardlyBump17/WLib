@@ -1,0 +1,6 @@
+name: ${project.artifactId}
+version: ${project.version}
+main: com.wizardlybump17.wlib.${project.artifactId}
+author: WizardlyBump17
+commands:
+  test:
