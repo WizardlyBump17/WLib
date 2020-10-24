@@ -2,10 +2,13 @@ package com.wizardlybump17.wlib.inventory;
 
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.ItemClickAction;
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,7 @@ import java.util.Map;
 public class CustomInventoryHolder implements InventoryHolder {
 
     private final Inventory inventory;
+    @Getter
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
 
     public CustomInventoryHolder(String title, int size) {
@@ -26,7 +30,7 @@ public class CustomInventoryHolder implements InventoryHolder {
 
     public void addButton(int slot, ItemButton button) {
         buttons.put(slot, button);
-        inventory.setItem(slot, button.getItemStack());
+        inventory.setItem(slot, button == null ? new ItemStack(Material.AIR) : button.getItemStack());
     }
 
     public void removeButton(int slot) {
