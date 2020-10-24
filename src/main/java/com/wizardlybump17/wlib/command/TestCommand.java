@@ -45,6 +45,11 @@ public class TestCommand extends WCommand {
                 test3(player);
                 return true;
             }
+
+            case "4": {
+                test4(player);
+                return true;
+            }
         }
         return true;
     }
@@ -180,6 +185,60 @@ public class TestCommand extends WCommand {
         List<ItemButton> itemButtons = new ArrayList<>();
         Random random = new Random();
         Material[] materials = new Material[]{Material.CARROT_ITEM, Material.EMERALD_BLOCK, Material.STONE};
+        for (int i = 0; i < 500; i++) {
+            Material material = materials[random.nextInt(materials.length)];
+            itemButtons.add(new ItemButton(new ItemStack(material), event -> event.getWhoClicked().sendMessage("§aYou clicked in " + material)));
+        }
+
+        paginatedInventory
+                .border(new ItemButton(
+                        new ItemBuilder(Material.STAINED_GLASS_PANE, 1, DyeColor.BLACK.getData())
+                                .displayName(" ")
+                                .build()
+                ))
+                .nextPageItemStack(
+                        new ItemBuilder(Material.ARROW)
+                                .displayName("§aNext page")
+                                .build())
+                .previousPageItemStack(
+                        new ItemBuilder(Material.ARROW)
+                                .displayName("§aPrevious page")
+                                .build())
+                .addShapeReplacement('0', null)
+                .addShapeReplacement(
+                        '1',
+                        new ItemButton(
+                                new ItemBuilder(Material.ANVIL)
+                                        .displayName("§7Anvil")
+                                        .glow(true)
+                                        .build(),
+                                event -> event.getWhoClicked().damage(6)))
+                .addShapeReplacement(
+                        '2',
+                        new ItemButton(
+                                new ItemBuilder(Material.APPLE)
+                                        .displayName("§cApple")
+                                        .glow(true)
+                                        .build(),
+                                event -> event.getWhoClicked().setHealth(event.getWhoClicked().getHealth() + 6)))
+                .items(itemButtons);
+
+        paginatedInventory.build().openPage(player, 0);
+    }
+
+    private void test4(Player player) {
+        PaginatedInventoryBuilder paginatedInventory = new PaginatedInventoryBuilder("§eTest 4", 9 * 6,
+                "#xxxxxxx#" +
+                        "#xxx1xxx#" +
+                        "#xx101xx#" +
+                        "#x12021x#" +
+                        "#2210122#" +
+                        "<xxxxxxx>"
+        );
+
+        List<ItemButton> itemButtons = new ArrayList<>();
+        Random random = new Random();
+        Material[] materials = new Material[]{Material.CACTUS, Material.CHEST, Material.SPONGE};
         for (int i = 0; i < 500; i++) {
             Material material = materials[random.nextInt(materials.length)];
             itemButtons.add(new ItemButton(new ItemStack(material), event -> event.getWhoClicked().sendMessage("§aYou clicked in " + material)));
