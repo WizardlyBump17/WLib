@@ -35,21 +35,21 @@ public class PaginatedInventory {
         return inventories.get(page);
     }
 
-    public void open(Player player, int page) {
+    public void openPage(Player player, int page) {
         players.put(player, page);
         inventories.get(page).open(player);
     }
 
-    public void nextPage(Player player) {
+    public void openNextPage(Player player) {
         if (!players.containsKey(player)) players.put(player, 0);
         if (players.get(player) == inventories.size() - 1) return;
-        open(player, players.get(player) + 1);
+        openPage(player, players.get(player) + 1);
     }
 
-    public void previousPage(Player player) {
+    public void openPreviousPage(Player player) {
         if (!players.containsKey(player)) players.put(player, 0);
         if (players.get(player) == 0) return;
-        open(player, players.get(player) - 1);
+        openPage(player, players.get(player) - 1);
     }
 
     public CustomInventory getOpenedInventory(Player player) {
