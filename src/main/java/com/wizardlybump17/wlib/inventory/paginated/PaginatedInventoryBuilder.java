@@ -67,16 +67,19 @@ public class PaginatedInventoryBuilder {
         char[] shapeChar = shape.toCharArray();
 
         int contentSize = content.length;
-        int borderSize = border == null ? 0 : size == 9 ? 9 : (size / 9 - 2) * 2 + 18;
 
+        int borderSize = border == null ? 0 : 2;
         int presetItems = 0;
-        for (char c : shapeChar) if (shapeReplacements.containsKey(c) && c != '#') presetItems++;
+        for (char c : shapeChar) {
+            if (c == '#') {
+                borderSize++;
+                continue;
+            }
+            if (shapeReplacements.containsKey(c)) presetItems++;
+        }
 
         int inventoriesSize = contentSize / (size - borderSize - presetItems);
         if (contentSize % (size - borderSize - presetItems) != 0) inventoriesSize++;
-
-        System.out.println(inventoriesSize);
-        System.out.println(presetItems);
 
         shapeReplacements.put('>',
                 new ItemButton(
@@ -100,7 +103,6 @@ public class PaginatedInventoryBuilder {
             for (int j = 0; j < size; j++) {
                 char currentChar = shapeChar[j];
                 if (shapeReplacements.containsKey(currentChar)) continue;
-                if (customInventory.isFull()) break;
                 customInventory.item(j, content[currentItem]);
                 if (currentItem + 1 >= contentSize) break;
                 currentItem++;
