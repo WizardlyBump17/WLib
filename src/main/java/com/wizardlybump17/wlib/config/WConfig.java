@@ -19,20 +19,20 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
-public class CustomConfig {
+public class WConfig {
 
     private final File file;
     private final Plugin plugin;
+    private final String name;
     private YamlConfiguration yamlConfiguration;
 
-    public CustomConfig(Plugin plugin, String name) {
+    public WConfig(Plugin plugin, String name, boolean saveDefault) {
         this.plugin = plugin;
-        file = new File(plugin.getDataFolder(), name.endsWith(".yml") ? name : name + ".yml");
+        this.file = new File(plugin.getDataFolder(), name);
+        this.name = name;
+        if(saveDefault) saveDefaultConfig();
         reloadConfig();
-    }
-
-    public CustomConfig(Plugin plugin, String folder, String name) {
-        this(plugin, folder + "/" + name);
+        saveConfig();
     }
 
     public void reloadConfig() {
@@ -47,8 +47,12 @@ public class CustomConfig {
         }
     }
 
+    public boolean isNull(String path) {
+        return get(path) == null;
+    }
+
     public void saveDefaultConfig() {
-        plugin.saveResource(file.getAbsolutePath(), false);
+        plugin.saveResource(name, false);
     }
 
     public boolean getBoolean(String path, boolean def) {
