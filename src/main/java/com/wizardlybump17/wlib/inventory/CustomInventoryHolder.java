@@ -40,8 +40,8 @@ public class CustomInventoryHolder implements InventoryHolder {
 
     public void onClick(InventoryClickEvent event) {
         if (!buttons.containsKey(event.getRawSlot())) return;
-        ItemClickAction itemClickAction = buttons.get(event.getRawSlot()).getItemClickAction();
-        if (itemClickAction == null) return;
-        itemClickAction.execute(event);
+        ItemButton itemButton = buttons.get(event.getRawSlot());
+        if (itemButton == null || itemButton.getItemClickAction() == null) return;
+        itemButton.getItemClickAction().execute(event);
     }
 }
