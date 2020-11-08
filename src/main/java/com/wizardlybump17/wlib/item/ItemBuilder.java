@@ -1,7 +1,11 @@
 package com.wizardlybump17.wlib.item;
 
+import com.google.gson.Gson;
+import com.wizardlybump17.wlib.config.WConfig;
+import com.wizardlybump17.wlib.list.ListUtil;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagInt;
 import net.minecraft.server.v1_8_R3.NBTTagList;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -15,23 +19,20 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class ItemBuilder {
 
     private final Material material;
-    private final Map<Enchantment, Integer> enchantments = new HashMap<>();
+    private Map<Enchantment, Integer> enchantments = new HashMap<>();
     private int amount;
     private short durability;
     private String displayName;
     private List<String> lore;
     private boolean glow;
-    private boolean hideAttributes;
     private boolean unbreakable;
+    private final Set<ItemFlag> itemFlags = new HashSet<>();
 
     public ItemBuilder(Material material) {
         this(material, 1, (short) 0);
@@ -53,14 +54,12 @@ public class ItemBuilder {
         itemBuilder
                 .displayName(itemMeta.getDisplayName())
                 .lore(itemMeta.getLore())
-                .hideAttributes(itemMeta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES))
+                .addItemFlags(itemMeta.getItemFlags())
                 .enchantments(itemStack.getEnchantments())
                 .unbreakable(itemMeta.spigot().isUnbreakable());
         net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
-        if (!nmsStack.hasTag()) return itemBuilder;
-        NBTTagCompound tag = nmsStack.getTag();
-        NBTTagList ench = tag.getList("ench", 0);
-        itemBuilder.glow(ench != null);
+        NBTTagCompound tag = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
+        itemBuilder.glow(tag.hasKey("ench"));
         return itemBuilder;
     }
 
@@ -88,6 +87,38 @@ public class ItemBuilder {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static ItemBuilder fromConfig(WConfig config, String path) {
+        ItemBuilder itemBuilder = new ItemBuilder(
+                Material.valueOf(config.getString(path + ".material").toUpperCase()),
+                config.getInt(path + ".amount", 1),
+                (short) config.getInt(path + ".durability", 0));
+
+        Map<Enchantment, Integer> enchantments = new HashMap<>();
+        if (!config.isNull(path + ".enchantments"))
+            new Gson().fromJson(config.getString(path + ".enchantments"), Map.class)
+                    .forEach((key, value) -> enchantments.put(Enchantment.getByName(key.toString().toUpperCase()), (int) Double.parseDouble(value.toString())));
+
+        Set<ItemFlag> flags = new HashSet<>();
+        if (!config.isNull(path + ".item-flags"))
+            for (String flagName : config.getStringList(path + ".item-flags"))
+                flags.add(ItemFlag.valueOf(flagName.toUpperCase()));
+
+        itemBuilder
+                .displayName(
+                        config.isNull(path + ".display-name")
+                                ? null
+                                : config.getString(path + ".display-name")
+                                .replace('&', '§'))
+                .lore(ListUtil.replace(
+                        config.getStringList(path + ".lore"), "&", "§"))
+                .enchantments(enchantments)
+                .glow(config.getBoolean(path + ".glow"))
+                .unbreakable(config.getBoolean(path + ".unbreakable"))
+                .addItemFlags(flags);
+        return itemBuilder;
     }
 
     public ItemBuilder amount(int amount) {
@@ -120,7 +151,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder enchantments(Map<Enchantment, Integer> enchantments) {
-        enchantments.forEach(this::enchantment);
+        this.enchantments = enchantments == null ? new HashMap<>() : enchantments;
         return this;
     }
 
@@ -129,13 +160,23 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder hideAttributes(boolean hideAttributes) {
-        this.hideAttributes = hideAttributes;
+    public ItemBuilder unbreakable(boolean unbreakable) {
+        this.unbreakable = unbreakable;
         return this;
     }
 
-    public ItemBuilder unbreakable(boolean unbreakable) {
-        this.unbreakable = unbreakable;
+    public ItemBuilder addItemFlags(ItemFlag... flags) {
+        itemFlags.addAll(Arrays.asList(flags));
+        return this;
+    }
+
+    public ItemBuilder addItemFlags(Set<ItemFlag> flags) {
+        itemFlags.addAll(flags);
+        return this;
+    }
+
+    public ItemBuilder removeItemFlag(ItemFlag flag) {
+        itemFlags.remove(flag);
         return this;
     }
 
@@ -145,21 +186,26 @@ public class ItemBuilder {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(displayName);
         itemMeta.setLore(lore);
-        if (isHideAttributes()) itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(itemFlags.toArray(new ItemFlag[]{}));
         itemMeta.spigot().setUnbreakable(isUnbreakable());
         itemStack.setItemMeta(itemMeta);
-        if (isGlow()) {
-            net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
-            NBTTagCompound tag = null;
-            if (!nmsStack.hasTag()) {
-                tag = new NBTTagCompound();
+        if (isGlow() && enchantments.isEmpty()) {
+            try {
+                net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
+
+                NBTTagCompound tag = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
+
+                tag.set("ench", new NBTTagList());
+                if ((displayName == null
+                        || displayName.isEmpty())
+                        && (lore == null || lore.isEmpty()))
+                    tag.set("HideFlags", new NBTTagInt(1));
+
                 nmsStack.setTag(tag);
+                itemStack = CraftItemStack.asCraftMirror(nmsStack);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (tag == null) tag = nmsStack.getTag();
-            NBTTagList ench = new NBTTagList();
-            tag.set("ench", ench);
-            nmsStack.setTag(tag);
-            itemStack = CraftItemStack.asCraftMirror(nmsStack);
         }
         return itemStack;
     }
