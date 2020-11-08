@@ -17,7 +17,6 @@ public class PaginatedInventoryBuilder {
     private final String title, shape;
     private final int size;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
-    private ItemButton border;
     private ItemButton[] content;
     private ItemStack nextPageItemStack, previousPageItemStack;
 
@@ -28,7 +27,7 @@ public class PaginatedInventoryBuilder {
     }
 
     public PaginatedInventoryBuilder border(ItemButton itemButton) {
-        shapeReplacements.put('#', border = itemButton);
+        shapeReplacements.put('#', itemButton);
         return this;
     }
 
@@ -68,7 +67,7 @@ public class PaginatedInventoryBuilder {
 
         int contentSize = content.length;
 
-        int borderSize = border == null ? 0 : 2;
+        int borderSize = shape.contains("#") ? 2 : 0;
         int presetItems = 0;
         for (char c : shapeChar) {
             if (c == '#') {
