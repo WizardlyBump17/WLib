@@ -1,19 +1,15 @@
 package com.wizardlybump17.wlib;
 
-import com.wizardlybump17.wlib.command.TestCommand;
 import com.wizardlybump17.wlib.listener.InventoryClickListener;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Getter
 public class WLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
         initEvents();
-        initCommands();
-    }
-
-    private void initCommands() {
-        new TestCommand(this);
     }
 
     private void initEvents() {
