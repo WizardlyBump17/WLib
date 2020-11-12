@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.wizardlybump17.wlib.config.WConfig;
 import com.wizardlybump17.wlib.list.ListUtil;
 import lombok.Getter;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -48,16 +46,29 @@ public class ItemBuilder {
 
     public static ItemBuilder fromItemStack(ItemStack itemStack) {
         ItemBuilder itemBuilder = new ItemBuilder(itemStack.getType(), itemStack.getAmount(), itemStack.getDurability());
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemBuilder
-                .displayName(itemMeta.getDisplayName())
-                .lore(itemMeta.getLore())
-                .addItemFlags(itemMeta.getItemFlags())
-                .enchantments(itemStack.getEnchantments())
-                .unbreakable(itemMeta.spigot().isUnbreakable());
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
-        NBTTagCompound tag = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
-        itemBuilder.glow(tag.hasKey("ench"));
+        try {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemBuilder
+                    .displayName(itemMeta.getDisplayName())
+                    .lore(itemMeta.getLore())
+                    .addItemFlags(itemMeta.getItemFlags())
+                    .enchantments(itemStack.getEnchantments())
+                    .unbreakable(itemMeta.spigot().isUnbreakable());
+
+            Object nmsCopy = Class.forName(
+                    "org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
+                    .getDeclaredMethod("asNMSCopy", ItemStack.class)
+                    .invoke(null, itemStack);
+
+            Object tag =
+                    (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
+                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
+                            : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound")
+                            .newInstance();
+            itemBuilder.glow((boolean) tag.getClass().getDeclaredMethod("hasKey", String.class).invoke(tag, "ench"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return itemBuilder;
     }
 
