@@ -5,8 +5,6 @@ import com.wizardlybump17.wlib.config.WConfig;
 import com.wizardlybump17.wlib.list.ListUtil;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagInt;
-import net.minecraft.server.v1_8_R3.NBTTagList;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -25,6 +23,7 @@ import java.util.*;
 public class ItemBuilder {
 
     private final Material material;
+    private final Set<ItemFlag> itemFlags = new HashSet<>();
     private Map<Enchantment, Integer> enchantments = new HashMap<>();
     private int amount;
     private short durability;
@@ -32,7 +31,6 @@ public class ItemBuilder {
     private List<String> lore;
     private boolean glow;
     private boolean unbreakable;
-    private final Set<ItemFlag> itemFlags = new HashSet<>();
 
     public ItemBuilder(Material material) {
         this(material, 1, (short) 0);
@@ -191,18 +189,45 @@ public class ItemBuilder {
         itemStack.setItemMeta(itemMeta);
         if (isGlow() && enchantments.isEmpty()) {
             try {
-                net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
+                Object nmsCopy = Class.forName(
+                        "org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
+                        .getDeclaredMethod("asNMSCopy", ItemStack.class)
+                        .invoke(null, itemStack);
 
-                NBTTagCompound tag = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
+                Object tag =
+                        (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
+                                ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
+                                : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound")
+                                .newInstance();
 
-                tag.set("ench", new NBTTagList());
+
+                tag.getClass().getDeclaredMethod(
+                        "set",
+                        String.class,
+                        Class.forName("net.minecraft.server.v1_8_R3.NBTBase")).invoke(
+                        tag, "ench", Class.forName("net.minecraft.server.v1_8_R3.NBTTagList").newInstance());
+
                 if ((displayName == null
                         || displayName.isEmpty())
                         && (lore == null || lore.isEmpty()))
-                    tag.set("HideFlags", new NBTTagInt(1));
+                    tag.getClass().getDeclaredMethod(
+                            "set",
+                            String.class,
+                            Class.forName("net.minecraft.server.v1_8_R3.NBTBase")).invoke(
+                            tag, "HideFlags", Class.forName("net.minecraft.server.v1_8_R3.NBTTagInt").getConstructor(int.class).newInstance(1));
 
-                nmsStack.setTag(tag);
-                itemStack = CraftItemStack.asCraftMirror(nmsStack);
+                nmsCopy.getClass().getDeclaredMethod(
+                        "setTag",
+                        Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound"))
+                        .invoke(nmsCopy, tag);
+
+                itemStack = (ItemStack)
+                        Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
+                                .getDeclaredMethod(
+                                        "asCraftMirror",
+                                        Class.forName(
+                                                "net.minecraft.server.v1_8_R3.ItemStack"))
+                                .invoke(null, nmsCopy);
             } catch (Exception e) {
                 e.printStackTrace();
             }
