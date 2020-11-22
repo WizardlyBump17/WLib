@@ -20,9 +20,9 @@ public class PaginatedInventoryBuilder {
     private ItemButton[] content;
     private ItemStack nextPageItemStack, previousPageItemStack;
 
-    public PaginatedInventoryBuilder(String title, int size, String shape) {
+    public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
-        this.size = size;
+        size = shape.length();
         this.shape = shape;
     }
 
