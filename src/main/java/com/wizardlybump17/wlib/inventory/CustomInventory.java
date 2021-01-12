@@ -55,9 +55,9 @@ public class CustomInventory {
         return inventory.firstEmpty() == -1;
     }
 
-    public ItemButton[] getContents() {
-        ItemButton[] content = new ItemButton[size];
-        for (int i = 0; i < size; i++) content[i] = holder.getButtons().get(i);
-        return content;
+    public ItemButton[] getItems() {
+        ItemButton[] items = new ItemButton[size];
+        for (int i = 0; i < size; i++) items[i] = holder.getButtons().get(i);
+        return items;
     }
 }

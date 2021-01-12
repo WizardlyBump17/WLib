@@ -17,8 +17,9 @@ public class PaginatedInventoryBuilder {
     private final String title, shape;
     private final int size;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
-    private ItemButton[] content;
+    private ItemButton[] items;
     private ItemStack nextPageItemStack, previousPageItemStack;
+    private char ifLastPage, ifFirstPage;
 
     public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
@@ -26,13 +27,14 @@ public class PaginatedInventoryBuilder {
         this.shape = shape;
     }
 
+    @Deprecated
     public PaginatedInventoryBuilder border(ItemButton itemButton) {
         shapeReplacements.put('#', itemButton);
         return this;
     }
 
     public PaginatedInventoryBuilder items(ItemButton... itemButtons) {
-        content = itemButtons;
+        items = itemButtons;
         return this;
     }
 
@@ -40,13 +42,15 @@ public class PaginatedInventoryBuilder {
         return items(itemButtons.toArray(new ItemButton[]{}));
     }
 
-    public PaginatedInventoryBuilder nextPageItemStack(ItemStack nextPageItemStack) {
+    public PaginatedInventoryBuilder nextPageItemStack(ItemStack nextPageItemStack, char ifLast) {
         this.nextPageItemStack = nextPageItemStack;
+        ifLastPage = ifLast;
         return this;
     }
 
-    public PaginatedInventoryBuilder previousPageItemStack(ItemStack previousPageItemStack) {
+    public PaginatedInventoryBuilder previousPageItemStack(ItemStack previousPageItemStack, char ifFirst) {
         this.previousPageItemStack = previousPageItemStack;
+        ifFirstPage = ifFirst;
         return this;
     }
 
@@ -64,21 +68,16 @@ public class PaginatedInventoryBuilder {
         PaginatedInventory paginatedGui = new PaginatedInventory();
 
         char[] shapeChar = shape.toCharArray();
-
-        int contentSize = content.length;
-
-        int borderSize = shape.contains("#") ? 2 : 0;
+        int itemsSize = items == null ? 0 : items.length;
         int presetItems = 0;
-        for (char c : shapeChar) {
-            if (c == '#') {
-                borderSize++;
-                continue;
-            }
-            if (shapeReplacements.containsKey(c)) presetItems++;
-        }
+        for (char c : shapeChar) if (c != 'x') presetItems++;
 
-        int inventoriesSize = contentSize / (size - borderSize - presetItems);
-        if (contentSize % (size - borderSize - presetItems) != 0) inventoriesSize++;
+        int inventoriesSize = itemsSize == 0
+                ? 1
+                : Math.max(size - presetItems, itemsSize) / Math.min(size - presetItems, itemsSize);
+        if (itemsSize != 0
+                && Math.max(size - presetItems, itemsSize) % Math.min(size - presetItems, itemsSize) != 0)
+            inventoriesSize++;
 
         shapeReplacements.put('>',
                 new ItemButton(
@@ -94,17 +93,29 @@ public class PaginatedInventoryBuilder {
             CustomInventory customInventory = new CustomInventory(title, size);
             paginatedGui.addInventory(customInventory);
 
-            for (int j = 0; j < shapeChar.length; j++) {
-                char currentChar = shapeChar[j];
-                if (!shapeReplacements.containsKey(currentChar)) continue;
-                customInventory.item(j, shapeReplacements.getOrDefault(currentChar, new ItemButton(new ItemStack(Material.AIR))));
-            }
             for (int j = 0; j < size; j++) {
                 char currentChar = shapeChar[j];
-                if (shapeReplacements.containsKey(currentChar)) continue;
-                customInventory.item(j, content[currentItem]);
-                if (currentItem + 1 >= contentSize) break;
-                currentItem++;
+
+                if (currentChar != 'x' && !shapeReplacements.containsKey(currentChar)) continue;
+
+                if (currentChar == 'x' && itemsSize > 0) {
+                    if (currentItem >= itemsSize) continue;
+                    customInventory.item(j, items[currentItem]);
+                    currentItem++;
+                    continue;
+                }
+
+                if (i == inventoriesSize - 1 && currentChar == '>') {
+                    customInventory.item(j, shapeReplacements.get(ifLastPage));
+                    continue;
+                }
+                if (i == 0 && currentChar == '<') {
+                    customInventory.item(j, shapeReplacements.get(ifFirstPage));
+                    continue;
+                }
+
+                customInventory.item(j, shapeReplacements.getOrDefault(
+                        currentChar, new ItemButton(new ItemStack(Material.AIR))));
             }
         }
         return paginatedGui;
