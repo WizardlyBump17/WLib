@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.item;
 
 import com.google.gson.Gson;
 import com.wizardlybump17.wlib.config.WConfig;
-import com.wizardlybump17.wlib.list.ListUtil;
+import com.wizardlybump17.wlib.util.ListUtil;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,9 +17,6 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Getter
@@ -314,6 +311,20 @@ public class ItemBuilder {
     }
 
     public static boolean hasNBTTag(ItemStack itemStack, String key) {
-        return getNBTTag(itemStack, key) != null;
+        try {
+            Object nmsCopy = Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
+                    .getDeclaredMethod("asNMSCopy", ItemStack.class)
+                    .invoke(null, itemStack);
+
+            Object tag =
+                    (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
+                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
+                            : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound").newInstance();
+
+            return (boolean) tag.getClass().getDeclaredMethod("hasKey", String.class).invoke(tag, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
