@@ -4,13 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class WListener implements Listener {
+public abstract class WListener<K extends JavaPlugin> implements Listener {
 
-    protected JavaPlugin plugin;
+    protected K plugin;
 
-    public WListener(JavaPlugin plugin) {
+    public WListener(K plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        plugin.getLogger().info("Registered the events in " + getClass().getName() + " class");
     }
 }

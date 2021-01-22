@@ -3,13 +3,12 @@ package com.wizardlybump17.wlib.command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class WCommand implements CommandExecutor {
+public abstract class WCommand<K extends JavaPlugin> implements CommandExecutor {
 
-    protected final JavaPlugin plugin;
+    protected final K plugin;
 
-    public WCommand(JavaPlugin plugin, String commandName) {
+    public WCommand(K plugin, String commandName) {
         this.plugin = plugin;
         plugin.getCommand(commandName).setExecutor(this);
-        plugin.getLogger().info("Registered the command executor of " + commandName + " command");
     }
 }
