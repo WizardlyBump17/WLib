@@ -11,9 +11,9 @@ public class SQLiteDatabase<K extends JavaPlugin> extends Database<K> {
 
     private final File file;
 
-    public SQLiteDatabase(K plugin, File file) {
+    public SQLiteDatabase(K plugin, String file) {
         super(plugin);
-        this.file = file;
+        this.file = new File(plugin.getDataFolder(), file);
         try {
             setupFile();
         } catch (IOException e) {
