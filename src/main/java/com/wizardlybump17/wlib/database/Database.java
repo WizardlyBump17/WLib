@@ -1,31 +1,84 @@
 package com.wizardlybump17.wlib.database;
 
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public interface Database {
+@Getter
+public abstract class Database<K extends JavaPlugin> {
 
-    void openConnection();
+    private final K plugin;
+    private Connection connection;
 
-    Connection getConnection();
+    public Database(K plugin) {
+        this.plugin = plugin;
+    }
 
-    default boolean isClosed() {
+    public void openConnection(String user, String password) {
         try {
-            return getConnection() == null || getConnection().isClosed();
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            closeConnection();
+            connection = DriverManager.getConnection(getUrl(), user, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openConnection() {
+        try {
+            closeConnection();
+            connection = DriverManager.getConnection(getUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() {
+        if (isClosed()) return;
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isClosed() {
+        try {
+            return connection != null && connection.isClosed();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return true;
         }
     }
 
-    void closeConnection();
+    public PreparedStatement query(String command, Object... replacements) {
+        if (isClosed()) return null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(command);
+            if (replacements != null)
+                for (int i = 0; i < replacements.length; i++)
+                    preparedStatement.setObject(i + 1, replacements[i]);
+            return preparedStatement;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-    PreparedStatement query(String query, Object... replacements);
+    public void update(String command, Object... replacements) {
+        if (isClosed()) return;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(command)) {
+            if (replacements != null)
+                for (int i = 0; i < replacements.length; i++)
+                    preparedStatement.setObject(i + 1, replacements[i]);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-    void update(String command, Object... replacements);
-
-    JavaPlugin getPlugin();
+    public abstract String getUrl();
 }
