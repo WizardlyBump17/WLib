@@ -32,9 +32,7 @@ public class CustomInventory {
     }
 
     public CustomInventory items(List<ItemButton> itemButtons) {
-        for (ItemButton itemButton : itemButtons) {
-            item(itemButton);
-        }
+        for (ItemButton itemButton : itemButtons) item(itemButton);
         return this;
     }
 

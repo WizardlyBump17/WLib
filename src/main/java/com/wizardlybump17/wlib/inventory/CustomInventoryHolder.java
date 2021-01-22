@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.inventory;
 
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
-import com.wizardlybump17.wlib.inventory.item.ItemClickAction;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
