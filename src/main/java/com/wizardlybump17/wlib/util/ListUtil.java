@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.list;
+package com.wizardlybump17.wlib.util;
 
 import java.util.ArrayList;
 import java.util.List;

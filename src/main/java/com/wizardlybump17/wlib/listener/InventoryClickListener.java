@@ -1,13 +1,13 @@
 package com.wizardlybump17.wlib.listener;
 
+import com.wizardlybump17.wlib.WLib;
 import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class InventoryClickListener extends WListener {
+public class InventoryClickListener extends WListener<WLib> {
 
-    public InventoryClickListener(JavaPlugin plugin) {
+    public InventoryClickListener(WLib plugin) {
         super(plugin);
     }
 
