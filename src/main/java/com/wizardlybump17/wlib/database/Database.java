@@ -13,6 +13,7 @@ public abstract class Database<K extends JavaPlugin> {
 
     private final K plugin;
     private Connection connection;
+    private boolean closed = true;
 
     public Database(K plugin) {
         this.plugin = plugin;
@@ -22,6 +23,7 @@ public abstract class Database<K extends JavaPlugin> {
         try {
             closeConnection();
             connection = DriverManager.getConnection(getUrl(), user, password);
+            closed = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,6 +33,7 @@ public abstract class Database<K extends JavaPlugin> {
         try {
             closeConnection();
             connection = DriverManager.getConnection(getUrl());
+            closed = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,17 +43,9 @@ public abstract class Database<K extends JavaPlugin> {
         if (isClosed()) return;
         try {
             connection.close();
+            closed = true;
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public boolean isClosed() {
-        try {
-            return connection != null && connection.isClosed();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return true;
         }
     }
 
