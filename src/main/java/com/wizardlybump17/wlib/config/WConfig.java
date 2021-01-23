@@ -3,40 +3,27 @@ package com.wizardlybump17.wlib.config;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 @Getter
-public class WConfig<K extends JavaPlugin> extends YamlConfiguration {
+public class WConfig extends YamlConfiguration {
 
     private final File file;
-    private final K plugin;
+    private final JavaPlugin plugin;
     private final String name;
 
-    public WConfig(K plugin, String name, boolean saveDefault) {
-        this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), name);
-        this.name = name;
-        if(saveDefault) saveDefaultConfig();
-        reloadConfig();
-        saveConfig();
+    public WConfig(JavaPlugin plugin, String name) {
+        file = new File((this.plugin = plugin).getDataFolder(), this.name = name);
     }
 
     public void reloadConfig() {
         try {
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-            Field yamlField = getClass().getDeclaredField("yaml");
-            yamlField.setAccessible(true);
-
-            Field newYamlField = config.getClass().getDeclaredField("yaml");
-            newYamlField.setAccessible(true);
-
-            yamlField.set(this, newYamlField.get(config));
+            load(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,5 +64,19 @@ public class WConfig<K extends JavaPlugin> extends YamlConfiguration {
 
     public boolean isWorld(String path) {
         return getWorld(path) != null;
+    }
+
+    public static WConfig load(JavaPlugin plugin, String name, boolean saveDefault) {
+        WConfig config = new WConfig(plugin, name);
+        if (!saveDefault) {
+            try {
+                if (!config.getFile().getParentFile().mkdirs() && !config.getFile().createNewFile())
+                    System.out.println(name + " already exists.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else config.saveDefaultConfig();
+        config.reloadConfig();
+        return config;
     }
 }
