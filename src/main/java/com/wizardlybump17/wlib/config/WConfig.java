@@ -70,8 +70,8 @@ public class WConfig extends YamlConfiguration {
         WConfig config = new WConfig(plugin, name);
         if (!saveDefault) {
             try {
-                if (!config.getFile().getParentFile().mkdirs() && !config.getFile().createNewFile())
-                    System.out.println(name + " already exists.");
+                config.getFile().getParentFile().mkdirs();
+                config.getFile().createNewFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }
