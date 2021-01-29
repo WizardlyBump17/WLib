@@ -22,7 +22,7 @@ public class SQLiteDatabase<K extends JavaPlugin> extends Database<K> {
     }
 
     private void setupFile() throws IOException {
-        file.mkdirs();
+        file.getParentFile().mkdirs();
         if (!file.exists()) file.createNewFile();
     }
 
