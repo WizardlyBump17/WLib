@@ -10,18 +10,21 @@ public class DateUtil {
     private final long date;
 
     public String getDifferenceBetween(long anotherDate) {
+        return new DateUtil(Math.abs(date - anotherDate)).toFancyString();
+    }
+
+    public String toFancyString() {
         StringBuilder result = new StringBuilder();
 
-        long diff = Math.abs(date - anotherDate);
-        long diffSeconds = diff / 1000 % 60;
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000) % 24;
-        long diffDays = diff / (24 * 60 * 60 * 1000);
+        long seconds = date / 1000 % 60;
+        long minutes = date / (60 * 1000) % 60;
+        long hours = date / (60 * 60 * 1000) % 24;
+        long days = date / (24 * 60 * 60 * 1000);
 
-        if (diffDays > 0) result.append(diffDays).append(" days, ");
-        if (diffHours > 0) result.append(diffHours).append(" hours, ");
-        if (diffMinutes > 0) result.append(diffMinutes).append(" minutes, ");
-        if (diffSeconds > 0) result.append(diffSeconds).append(" seconds");
+        if (days > 0) result.append(days).append(" days, ");
+        if (hours > 0) result.append(hours).append(" hours, ");
+        if (minutes > 0) result.append(minutes).append(" minutes, ");
+        if (seconds > 0) result.append(seconds).append(" seconds");
         if (result.toString().isEmpty()) result.append("now");
 
         if (result.toString().trim().endsWith(",")) result.delete(result.length() - 1, result.length());
