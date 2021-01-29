@@ -3,12 +3,10 @@ package com.wizardlybump17.wlib.config;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 @Getter
 public class WConfig extends YamlConfiguration {
@@ -56,6 +54,7 @@ public class WConfig extends YamlConfiguration {
 
     public void saveDefaultConfig() {
         plugin.saveResource(name, false);
+        reloadConfig();
     }
 
     public World getWorld(String path) {
@@ -69,14 +68,10 @@ public class WConfig extends YamlConfiguration {
     public static WConfig load(JavaPlugin plugin, String name, boolean saveDefault) {
         WConfig config = new WConfig(plugin, name);
         if (!saveDefault) {
-            try {
-                config.getFile().getParentFile().mkdirs();
-                config.getFile().createNewFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else config.saveDefaultConfig();
-        config.reloadConfig();
+            config.reloadConfig();
+            return config;
+        }
+        config.saveDefaultConfig();
         return config;
     }
 }
