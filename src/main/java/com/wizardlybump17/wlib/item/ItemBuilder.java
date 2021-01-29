@@ -23,7 +23,7 @@ import java.util.*;
 public class ItemBuilder {
 
     private ItemStack itemStack;
-    private final Material material;
+    private Material material;
     private Set<ItemFlag> itemFlags = new HashSet<>();
     private Map<Enchantment, Integer> enchantments = new HashMap<>();
     private int amount;
@@ -158,8 +158,7 @@ public class ItemBuilder {
                                 ? null
                                 : config.getString(path + ".display-name")
                                 .replace('&', '§'))
-                .lore(ListUtil.replace(
-                        config.getStringList(path + ".lore"), "&", "§"))
+                .lore(new ListUtil(config.getStringList(path + ".lore")).replace('&', '§').getList())
                 .enchantments(enchantments)
                 .glow(config.getBoolean(path + ".glow"))
                 .unbreakable(config.getBoolean(path + ".unbreakable"))
@@ -203,6 +202,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder material(Material material) {
+        this.material = material;
+        return this;
+    }
+
     public ItemBuilder glow(boolean glow) {
         this.glow = glow;
         return this;
@@ -225,13 +229,16 @@ public class ItemBuilder {
     public ItemStack build() {
         ItemStack itemStack = this.itemStack == null
                 ? new ItemStack(material, amount, durability) : this.itemStack;
+        itemStack.setType(material);
+        itemStack.setAmount(amount);
+        itemStack.setDurability(durability);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         itemStack.addUnsafeEnchantments(enchantments);
         itemMeta.setDisplayName(displayName == null
                 ? null
                 : displayName.replace('&', '§'));
-        itemMeta.setLore(ListUtil.replace(lore, "&", "§"));
+        itemMeta.setLore(new ListUtil(lore).replace('&', '§').getList());
         itemMeta.spigot().setUnbreakable(isUnbreakable());
         itemMeta.addItemFlags(itemFlags.toArray(new ItemFlag[]{}));
 
