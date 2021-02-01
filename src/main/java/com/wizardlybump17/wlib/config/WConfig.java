@@ -68,6 +68,11 @@ public class WConfig extends YamlConfiguration {
     public static WConfig load(JavaPlugin plugin, String name, boolean saveDefault) {
         WConfig config = new WConfig(plugin, name);
         if (!saveDefault) {
+            try {
+                config.getFile().createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             config.reloadConfig();
             return config;
         }
