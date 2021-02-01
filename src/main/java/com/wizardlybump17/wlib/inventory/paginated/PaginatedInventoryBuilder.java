@@ -15,7 +15,6 @@ import java.util.Map;
 public class PaginatedInventoryBuilder {
 
     private final String title, shape;
-    private final int size;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private ItemButton[] items;
     private ItemStack nextPageItemStack, previousPageItemStack;
@@ -23,8 +22,11 @@ public class PaginatedInventoryBuilder {
 
     public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
-        size = shape.length();
         this.shape = shape;
+    }
+
+    public int getSize() {
+        return shape.length();
     }
 
     @Deprecated
@@ -72,28 +74,21 @@ public class PaginatedInventoryBuilder {
         int presetItems = 0;
         for (char c : shapeChar) if (c != 'x') presetItems++;
 
-        int inventoriesSize = itemsSize == 0
-                ? 1
-                : Math.max(size - presetItems, itemsSize) / Math.min(size - presetItems, itemsSize);
-        if (itemsSize != 0
-                && Math.max(size - presetItems, itemsSize) % Math.min(size - presetItems, itemsSize) != 0)
-            inventoriesSize++;
+        if (previousPageItemStack != null)
+            shapeReplacements.put('<', new ItemButton(previousPageItemStack, event -> paginatedGui.openPreviousPage((Player) event.getWhoClicked())));
+        if (nextPageItemStack != null)
+            shapeReplacements.put('>', new ItemButton(nextPageItemStack, event -> paginatedGui.openNextPage((Player) event.getWhoClicked())));
 
-        shapeReplacements.put('>',
-                new ItemButton(
-                        nextPageItemStack,
-                        event -> paginatedGui.openNextPage((Player) event.getWhoClicked())));
-        shapeReplacements.put('<',
-                new ItemButton(
-                        previousPageItemStack,
-                        event -> paginatedGui.openPreviousPage((Player) event.getWhoClicked())));
+        int inventoriesSize;
+        if (itemsSize < 1) inventoriesSize = 1;
+        else inventoriesSize = (int) Math.ceil((double) itemsSize / (getSize() - presetItems));
 
         int currentItem = 0;
         for (int i = 0; i < inventoriesSize; i++) {
-            CustomInventory customInventory = new CustomInventory(title, size);
+            CustomInventory customInventory = new CustomInventory(title, getSize());
             paginatedGui.addInventory(customInventory);
 
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < getSize(); j++) {
                 char currentChar = shapeChar[j];
 
                 if (currentChar != 'x' && !shapeReplacements.containsKey(currentChar)) continue;
@@ -105,17 +100,17 @@ public class PaginatedInventoryBuilder {
                     continue;
                 }
 
-                if (i == inventoriesSize - 1 && currentChar == '>') {
-                    customInventory.item(j, shapeReplacements.get(ifLastPage));
-                    continue;
-                }
-                if (i == 0 && currentChar == '<') {
+                if (currentChar == '<' && i == 0) {
                     customInventory.item(j, shapeReplacements.get(ifFirstPage));
                     continue;
                 }
 
-                customInventory.item(j, shapeReplacements.getOrDefault(
-                        currentChar, new ItemButton(new ItemStack(Material.AIR))));
+                if (currentChar == '>' && i + 1 == inventoriesSize) {
+                    customInventory.item(j, shapeReplacements.get(ifLastPage));
+                    continue;
+                }
+
+                customInventory.item(j, shapeReplacements.get(currentChar));
             }
         }
         return paginatedGui;
