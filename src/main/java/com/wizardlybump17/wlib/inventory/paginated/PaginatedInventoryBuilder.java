@@ -93,8 +93,7 @@ public class PaginatedInventoryBuilder {
 
                 if (currentChar != 'x' && !shapeReplacements.containsKey(currentChar)) continue;
 
-                if (currentChar == 'x' && itemsSize > 0) {
-                    if (currentItem >= itemsSize) continue;
+                if (currentChar == 'x' && itemsSize > 0 && currentItem < itemsSize) {
                     customInventory.item(j, items[currentItem]);
                     currentItem++;
                     continue;
