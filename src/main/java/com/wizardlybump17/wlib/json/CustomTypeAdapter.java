@@ -56,9 +56,11 @@ public class CustomTypeAdapter extends TypeAdapter<Object> {
 
             case NUMBER: {
                 String n = in.nextString();
-
+                if (isByte(n)) return Byte.parseByte(n);
+                if (isShort(n)) return Short.parseShort(n);
                 if (isInteger(n)) return Integer.parseInt(n);
                 if (isLong(n)) return Long.parseLong(n);
+                if (isFloat(n)) return Float.parseFloat(n);
                 if (isDouble(n)) return Double.parseDouble(n);
                 if (isBigInteger(n)) return new BigInteger(n);
                 return new BigDecimal(n);
