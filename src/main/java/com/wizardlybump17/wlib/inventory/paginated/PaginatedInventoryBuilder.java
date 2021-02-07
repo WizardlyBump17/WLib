@@ -1,9 +1,9 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
+import com.wizardlybump17.wlib.inventory.CloseInventoryAction;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,6 +19,7 @@ public class PaginatedInventoryBuilder {
     private ItemButton[] items;
     private ItemStack nextPageItemStack, previousPageItemStack;
     private char ifLastPage, ifFirstPage;
+    private CloseInventoryAction closeAction;
 
     public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
@@ -66,6 +67,11 @@ public class PaginatedInventoryBuilder {
         return this;
     }
 
+    public PaginatedInventoryBuilder onClose(CloseInventoryAction action) {
+        closeAction = action;
+        return this;
+    }
+
     public PaginatedInventory build() {
         PaginatedInventory paginatedGui = new PaginatedInventory();
 
@@ -85,7 +91,7 @@ public class PaginatedInventoryBuilder {
 
         int currentItem = 0;
         for (int i = 0; i < inventoriesSize; i++) {
-            CustomInventory customInventory = new CustomInventory(title, getSize());
+            CustomInventory customInventory = new CustomInventory(title, getSize(), closeAction);
             paginatedGui.addInventory(customInventory);
 
             for (int j = 0; j < getSize(); j++) {

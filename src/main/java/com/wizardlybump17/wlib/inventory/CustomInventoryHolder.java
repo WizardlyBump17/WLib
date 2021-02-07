@@ -2,9 +2,11 @@ package com.wizardlybump17.wlib.inventory;
 
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -12,19 +14,21 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public class CustomInventoryHolder implements InventoryHolder {
 
     private final Inventory inventory;
-    @Getter
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
+    private final CloseInventoryAction closeAction;
+    @Setter private boolean ignoreCloseEvent;
 
     public CustomInventoryHolder(String title, int size) {
-        inventory = Bukkit.createInventory(this, size, title);
+        this(title, size, null);
     }
 
-    @Override
-    public Inventory getInventory() {
-        return inventory;
+    public CustomInventoryHolder(String title, int size, CloseInventoryAction closeAction) {
+        inventory = Bukkit.createInventory(this, size, title);
+        this.closeAction = closeAction;
     }
 
     public void addButton(int slot, ItemButton button) {
@@ -42,5 +46,9 @@ public class CustomInventoryHolder implements InventoryHolder {
         ItemButton itemButton = buttons.get(event.getRawSlot());
         if (itemButton == null || itemButton.getItemClickAction() == null) return;
         itemButton.getItemClickAction().execute(event);
+    }
+
+    public void onClose(InventoryCloseEvent event) {
+        if (closeAction != null && !ignoreCloseEvent) closeAction.onClose(event);
     }
 }

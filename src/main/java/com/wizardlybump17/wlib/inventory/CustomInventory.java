@@ -17,7 +17,16 @@ public class CustomInventory {
     private final int size;
 
     public CustomInventory(String title, int size) {
-        inventory = (holder = new CustomInventoryHolder(this.title = title, this.size = size)).getInventory();
+        this(title, size, null);
+    }
+
+    public CustomInventory(String title, int size, CloseInventoryAction closeAction) {
+        inventory = (holder = new CustomInventoryHolder(this.title = title, this.size = size, closeAction))
+                .getInventory();
+    }
+
+    public CloseInventoryAction getCloseAction() {
+        return holder.getCloseAction();
     }
 
     public CustomInventory item(int slot, ItemButton itemButton) {
