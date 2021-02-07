@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.location;
+package com.wizardlybump17.wlib.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
