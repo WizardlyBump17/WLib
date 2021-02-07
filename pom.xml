@@ -63,11 +63,18 @@
             <version>1.18.16</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.bukkit</groupId>-->
-<!--            <artifactId>craftbukkit</artifactId>-->
-<!--            <version>1.8.8-R0.1-SNAPSHOT</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.intellectualsites.fawe</groupId>
+            <artifactId>FAWE-Bukkit</artifactId>
+            <version>19.07.12</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>WorldEdit</artifactId>
+            <version>19.07.12</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
