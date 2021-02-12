@@ -1,8 +1,6 @@
 package com.wizardlybump17.wlib.util;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
 import java.util.UUID;

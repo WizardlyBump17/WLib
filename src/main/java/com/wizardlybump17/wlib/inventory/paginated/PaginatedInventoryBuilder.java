@@ -14,7 +14,7 @@ import java.util.Map;
 @Getter
 public class PaginatedInventoryBuilder {
 
-    private final String title, shape;
+    private String title, shape;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private ItemButton[] items;
     private ItemStack nextPageItemStack, previousPageItemStack;
@@ -24,6 +24,16 @@ public class PaginatedInventoryBuilder {
     public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
         this.shape = shape;
+    }
+
+    public PaginatedInventoryBuilder title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public PaginatedInventoryBuilder shape(String shape) {
+        this.shape = shape;
+        return this;
     }
 
     public int getSize() {

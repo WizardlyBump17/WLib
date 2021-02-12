@@ -2,8 +2,10 @@ package com.wizardlybump17.wlib.item;
 
 import com.google.gson.Gson;
 import com.wizardlybump17.wlib.config.WConfig;
+import com.wizardlybump17.wlib.reflection.Reflection;
 import com.wizardlybump17.wlib.util.ListUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -22,6 +24,11 @@ import java.util.*;
 @Getter
 public class ItemBuilder {
 
+    private static final List<String> DEFAULT_ITEM_NBT_TAGS = Arrays.asList(
+            "display", "HideFlags", "ench", "Unbreakable", "SkullOwner", "AttributeModifiers",
+            "CanDestroy", "PickupDelay", "Age", "generation", "Enchantments"
+    );
+
     private ItemStack itemStack;
     private Material material;
     private Set<ItemFlag> itemFlags = new HashSet<>();
@@ -32,6 +39,7 @@ public class ItemBuilder {
     private List<String> lore = new ArrayList<>();
     private boolean glow;
     private boolean unbreakable;
+    private Map<String, Object> nbtTags = new HashMap<>();
 
     public ItemBuilder(Material material) {
         this(material, 1, (short) 0);
@@ -81,6 +89,14 @@ public class ItemBuilder {
         return null;
     }
 
+    public static ItemBuilder getHead(UUID playerId, int amount) {
+        ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, amount, (short) 3);
+        SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
+        itemMeta.setOwner(Bukkit.getOfflinePlayer(playerId).getName());
+        itemStack.setItemMeta(itemMeta);
+        return fromItemStack(itemStack);
+    }
+
     public static ItemBuilder fromItemStack(ItemStack itemStack) {
         ItemBuilder itemBuilder = new ItemBuilder(
                 itemStack.getType(),
@@ -91,11 +107,40 @@ public class ItemBuilder {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemBuilder.displayName = itemMeta.getDisplayName();
         itemBuilder.lore = itemMeta.getLore();
-        itemBuilder.glow = hasNBTTag(itemStack, "ench");
         itemBuilder.enchantments = new HashMap<>(itemStack.getEnchantments());
         itemBuilder.unbreakable = itemMeta.spigot().isUnbreakable();
         itemBuilder.itemFlags = itemBuilder.getItemFlags();
+
+        try {
+            Object nbtTag = getNBTTagCompound(itemStack);
+            Field mapField = nbtTag.getClass().getDeclaredField("map");
+            mapField.setAccessible(true);
+            Map<String, Object> map = (Map<String, Object>) mapField.get(nbtTag);
+            Map<String, Object> fixedMap = new HashMap<>();
+            for (Map.Entry<String, Object> entry : map.entrySet())
+                if (!DEFAULT_ITEM_NBT_TAGS.contains(entry.getKey()))
+                    fixedMap.put(entry.getKey(), entry.getValue());
+            itemBuilder.nbtTags = fixedMap;
+            itemBuilder.glow = map.containsKey("ench");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return itemBuilder;
+    }
+
+    private static Object getNBTTagCompound(ItemStack item) {
+        try {
+            Object nmsCopy = Reflection.getCraftBukkitClass("inventory.CraftItemStack")
+                    .getDeclaredMethod("asNMSCopy", ItemStack.class)
+                    .invoke(null, item);
+
+            return (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
+                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
+                            : Reflection.getNMSClass("NBTTagCompound").newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String toBase64(ItemStack itemStack) {
@@ -152,6 +197,16 @@ public class ItemBuilder {
             for (String flagName : config.getStringList(path + ".item-flags"))
                 flags.add(ItemFlag.valueOf(flagName.toUpperCase()));
 
+        Map<String, Object> nbtTags = new HashMap<>();
+        if (!config.isNull(path + ".nbt-tags")) {
+            Map<String, Object> configTags = config.getMap(path + ".nbt-tags");
+            Map<String, Object> fixedTags = new HashMap<>();
+            for (Map.Entry<String, Object> entry : configTags.entrySet())
+                if (!DEFAULT_ITEM_NBT_TAGS.contains(entry.getKey()))
+                    fixedTags.put(entry.getKey(), entry.getValue());
+            nbtTags = fixedTags;
+        }
+
         itemBuilder
                 .displayName(
                         config.isNull(path + ".display-name")
@@ -162,6 +217,7 @@ public class ItemBuilder {
                 .enchantments(enchantments)
                 .glow(config.getBoolean(path + ".glow"))
                 .unbreakable(config.getBoolean(path + ".unbreakable"))
+                .nbtTags(nbtTags)
                 .itemFlags(flags);
         return itemBuilder;
     }
@@ -226,6 +282,24 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder nbtTag(String tag, Object value) {
+        nbtTags.put(tag, value);
+        return this;
+    }
+
+    public boolean hasNBTTag(String key) {
+        return nbtTags.containsKey(key);
+    }
+
+    public Object getNBTTag(String key) {
+        return Reflection.convertToNBTTag(nbtTags.get(key));
+    }
+
+    public ItemBuilder nbtTags(Map<String, Object> tags) {
+        nbtTags = tags == null ? new HashMap<>() : tags;
+        return this;
+    }
+
     public ItemStack build() {
         ItemStack itemStack = this.itemStack == null
                 ? new ItemStack(material, amount, durability) : this.itemStack;
@@ -245,89 +319,48 @@ public class ItemBuilder {
         itemStack.setItemMeta(itemMeta);
 
         if (isGlow() && enchantments.isEmpty()) {
-            try {
-                itemStack = setNBTTag(
-                        itemStack,
-                        "ench",
-                        Class.forName("net.minecraft.server.v1_8_R3.NBTTagList").newInstance());
-                if ((displayName == null
-                        || displayName.isEmpty())
-                        && (lore == null || lore.isEmpty()))
-                    itemStack = setNBTTag(
-                            itemStack,
-                            "HideFlags",
-                            Class.forName("net.minecraft.server.v1_8_R3.NBTTagInt")
-                                    .getConstructor(int.class).newInstance(1));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            nbtTag("ench", new ArrayList<>());
+            if ((displayName == null || displayName.isEmpty()) && (lore == null || lore.isEmpty()))
+                nbtTag("HideFlags", 1);
+        }
+
+        try {
+            Object nmsStack = applyNBTTags(itemStack, nbtTags);
+            itemStack = (ItemStack) Reflection.getCraftBukkitClass("inventory.CraftItemStack")
+                    .getDeclaredMethod("asCraftMirror", Reflection.getNMSClass("ItemStack"))
+                    .invoke(null, nmsStack);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return itemStack;
     }
 
-    public static <T> ItemStack setNBTTag(ItemStack itemStack, String key, T value) {
+    private static Object applyNBTTags(ItemStack itemStack, Map<String, Object> tags) {
         try {
-            Object nmsCopy = Class.forName(
-                    "org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
+            Object nmsCopy = Reflection.getCraftBukkitClass("inventory.CraftItemStack")
                     .getDeclaredMethod("asNMSCopy", ItemStack.class)
                     .invoke(null, itemStack);
 
-            Object tag =
-                    (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
-                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
-                            : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound")
-                            .newInstance();
-
-            tag.getClass().getDeclaredMethod(
-                    "set",
-                    String.class,
-                    Class.forName("net.minecraft.server.v1_8_R3.NBTBase")).invoke(tag, key, value);
-
+            Object tag = getNBTTagCompound(itemStack);
+            for (Map.Entry<String, Object> entry : tags.entrySet())
+                tag.getClass().getDeclaredMethod(
+                        "set",
+                        String.class,
+                        Reflection.getNMSClass("NBTBase"))
+                        .invoke(tag, entry.getKey(), Reflection.convertToNBTTag(entry.getValue()));
             nmsCopy.getClass().getDeclaredMethod(
-                            "setTag",
-                            Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound"))
-                    .invoke(nmsCopy, tag);
-
-            return (ItemStack) Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
-                            .getDeclaredMethod(
-                                    "asCraftMirror",
-                                    Class.forName(
-                                            "net.minecraft.server.v1_8_R3.ItemStack")).invoke(null, nmsCopy);
+                    "setTag",
+                    Reflection.getNMSClass("NBTTagCompound")).invoke(nmsCopy, tag);
+            return nmsCopy;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
-    public static Object getNBTTag(ItemStack itemStack, String key) {
+    private static boolean hasNBTTag(ItemStack itemStack, String key) {
         try {
-            Object nmsCopy = Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
-                    .getDeclaredMethod("asNMSCopy", ItemStack.class)
-                    .invoke(null, itemStack);
-
-            Object tag =
-                    (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
-                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
-                            : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound").newInstance();
-
-            return tag.getClass().getDeclaredMethod("get", String.class).invoke(tag, key);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static boolean hasNBTTag(ItemStack itemStack, String key) {
-        try {
-            Object nmsCopy = Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack")
-                    .getDeclaredMethod("asNMSCopy", ItemStack.class)
-                    .invoke(null, itemStack);
-
-            Object tag =
-                    (boolean) nmsCopy.getClass().getDeclaredMethod("hasTag").invoke(nmsCopy)
-                            ? nmsCopy.getClass().getDeclaredMethod("getTag").invoke(nmsCopy)
-                            : Class.forName("net.minecraft.server.v1_8_R3.NBTTagCompound").newInstance();
-
+            Object tag = getNBTTagCompound(itemStack);
             return (boolean) tag.getClass().getDeclaredMethod("hasKey", String.class).invoke(tag, key);
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,10 +3,13 @@ package com.wizardlybump17.wlib.config;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Getter
 public class WConfig extends YamlConfiguration {
@@ -39,6 +42,38 @@ public class WConfig extends YamlConfiguration {
         return get(path) == null;
     }
 
+    @Override
+    public void set(String path, Object value) {
+        if (!(value instanceof Map)) {
+            super.set(path, value);
+            return;
+        }
+        LinkedHashMap map = new LinkedHashMap<>((Map) value);
+        for (Object o : map.keySet()) set(path + '.' + o, map.get(o));
+    }
+
+    public Map<String, Object> getMap(String path) {
+        return getMap(path, null);
+    }
+
+    public Map<String, Object> getMap(String path, Map<String, Object> def) {
+        if (isNull(path)) return def;
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        for (String key : getConfigurationSection(path).getKeys(false)) {
+            Object value = get(path + '.' + key);
+            if (value instanceof ConfigurationSection) {
+                map.put(key, getMap(path + '.' + key, def));
+                continue;
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public boolean isMap(String path) {
+        return getMap(path) != null;
+    }
+
     public String getFancyString(String path) {
         if (isNull(path)) return null;
         return getString(path).replace('&', '§').replace("\\n", "\n");
@@ -69,7 +104,9 @@ public class WConfig extends YamlConfiguration {
         WConfig config = new WConfig(plugin, name);
         if (!saveDefault) {
             try {
-                config.getFile().createNewFile();
+                File file = config.getFile();
+                file.getParentFile().mkdirs();
+                file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
