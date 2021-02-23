@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.wizardlybump17.wlib.config.WConfig;
 import com.wizardlybump17.wlib.reflection.Reflection;
 import com.wizardlybump17.wlib.util.ListUtil;
+import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -22,9 +24,10 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Getter
-public class ItemBuilder {
+@Data
+public class ItemBuilder implements ConfigurationSerializable {
 
-    private static final List<String> DEFAULT_ITEM_NBT_TAGS = Arrays.asList(
+    public static final List<String> DEFAULT_ITEM_NBT_TAGS = Arrays.asList(
             "display", "HideFlags", "ench", "Unbreakable", "SkullOwner", "AttributeModifiers",
             "CanDestroy", "PickupDelay", "Age", "generation", "Enchantments"
     );
@@ -102,12 +105,12 @@ public class ItemBuilder {
                 itemStack.getType(),
                 itemStack.getAmount(),
                 itemStack.getDurability());
-        itemBuilder.itemStack = itemStack;
-
         ItemMeta itemMeta = itemStack.getItemMeta();
+
+        itemBuilder.itemStack = itemStack;
         itemBuilder.displayName = itemMeta.getDisplayName();
         itemBuilder.lore = itemMeta.getLore();
-        itemBuilder.enchantments = new HashMap<>(itemStack.getEnchantments());
+        itemBuilder.enchantments = new HashMap<>(itemMeta.getEnchants());
         itemBuilder.unbreakable = itemMeta.spigot().isUnbreakable();
         itemBuilder.itemFlags = itemBuilder.getItemFlags();
 
@@ -169,6 +172,7 @@ public class ItemBuilder {
         return null;
     }
 
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static ItemBuilder fromConfig(WConfig config, String path) {
         Material material = !config.isNull(path + ".skull-base64")
@@ -335,6 +339,50 @@ public class ItemBuilder {
         return itemStack;
     }
 
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("material", material.name());
+        result.put("amount", amount);
+        result.put("durability", durability);
+        result.put("glow", glow);
+        result.put("unbreakable", unbreakable);
+
+        if (displayName != null) result.put("display-name", displayName);
+        if (lore != null && !lore.isEmpty()) result.put("lore", lore);
+        if (!itemFlags.isEmpty()) result.put("item-flags", itemFlags);
+        if (!enchantments.isEmpty()) {
+            Map<String, Integer> fixedEnchantments = new LinkedHashMap<>();
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) fixedEnchantments.put(entry.getKey().getName(), entry.getValue());
+            result.put("enchantments", fixedEnchantments);
+        }
+        if (!nbtTags.isEmpty()) {
+            Map<String, Object> fixedNBTTags = new LinkedHashMap<>();
+            for (Map.Entry<String, Object> entry : nbtTags.entrySet()) fixedNBTTags.put(entry.getKey(), Reflection.convertToJavaType(entry.getValue()));
+            result.put("nbt-tags", fixedNBTTags);
+        }
+        return result;
+    }
+
+    public static ItemBuilder deserialize(Map<String, Object> args) {
+        ItemBuilder itemBuilder = new ItemBuilder(
+                Material.valueOf(args.get("material").toString().toUpperCase()),
+                Integer.parseInt(args.getOrDefault("amount", 1).toString()),
+                Short.parseShort(args.getOrDefault("durability", 0).toString()));
+        itemBuilder
+                .glow((boolean) args.getOrDefault("glow", false))
+                .unbreakable((boolean) args.getOrDefault("unbreakable", false))
+                .displayName(args.getOrDefault("display-name", "").toString())
+                .lore((List<String>) args.getOrDefault("lore", new ArrayList<>()))
+                .nbtTags((Map<String, Object>) args.getOrDefault("nbt-tags", new HashMap<>()));
+        if (args.containsKey("enchantments")) {
+            Map<String, Integer> enchantments = (Map<String, Integer>) args.get("enchantments");
+            for (Map.Entry<String, Integer> entry : enchantments.entrySet())
+                itemBuilder.enchantment(Enchantment.getByName(entry.getKey().toUpperCase()), entry.getValue());
+        }
+        return itemBuilder;
+    }
+
     private static Object applyNBTTags(ItemStack itemStack, Map<String, Object> tags) {
         try {
             Object nmsCopy = Reflection.getCraftBukkitClass("inventory.CraftItemStack")
@@ -342,12 +390,15 @@ public class ItemBuilder {
                     .invoke(null, itemStack);
 
             Object tag = getNBTTagCompound(itemStack);
-            for (Map.Entry<String, Object> entry : tags.entrySet())
-                tag.getClass().getDeclaredMethod(
+            for (Map.Entry<String, Object> entry : tags.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                Reflection.invokeMethod(
+                        tag,
                         "set",
-                        String.class,
-                        Reflection.getNMSClass("NBTBase"))
-                        .invoke(tag, entry.getKey(), Reflection.convertToNBTTag(entry.getValue()));
+                        new Class[]{String.class, Reflection.getNMSClass("NBTBase")},
+                        key, Reflection.convertToNBTTag(value));
+            }
             nmsCopy.getClass().getDeclaredMethod(
                     "setTag",
                     Reflection.getNMSClass("NBTTagCompound")).invoke(nmsCopy, tag);
@@ -361,7 +412,7 @@ public class ItemBuilder {
     private static boolean hasNBTTag(ItemStack itemStack, String key) {
         try {
             Object tag = getNBTTagCompound(itemStack);
-            return (boolean) tag.getClass().getDeclaredMethod("hasKey", String.class).invoke(tag, key);
+            return (boolean) Reflection.invokeMethod(tag, "hasKey", new Class[]{String.class}, key);
         } catch (Exception e) {
             e.printStackTrace();
         }
