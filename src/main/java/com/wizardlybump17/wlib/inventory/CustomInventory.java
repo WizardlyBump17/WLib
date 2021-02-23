@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.inventory;
 
+import com.wizardlybump17.wlib.inventory.action.CloseInventoryAction;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -17,11 +18,11 @@ public class CustomInventory {
     private final int size;
 
     public CustomInventory(String title, int size) {
-        this(title, size, null);
+        this(title, size, null, 20);
     }
 
-    public CustomInventory(String title, int size, CloseInventoryAction closeAction) {
-        inventory = (holder = new CustomInventoryHolder(this.title = title, this.size = size, closeAction))
+    public CustomInventory(String title, int size, CloseInventoryAction closeAction, int updateTime) {
+        inventory = (holder = new CustomInventoryHolder(this.title = title, this.size = size, closeAction, updateTime))
                 .getInventory();
     }
 
@@ -52,6 +53,10 @@ public class CustomInventory {
     public CustomInventory removeItem(int slot) {
         holder.removeButton(slot);
         return this;
+    }
+
+    public ItemButton getItem(int slot) {
+        return holder.getButton(slot);
     }
 
     public void open(Player player) {

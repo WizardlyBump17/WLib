@@ -1,8 +1,9 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
-import com.wizardlybump17.wlib.inventory.CloseInventoryAction;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
+import com.wizardlybump17.wlib.inventory.action.CloseInventoryAction;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.item.UpdatableItemButton;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +21,16 @@ public class PaginatedInventoryBuilder {
     private ItemStack nextPageItemStack, previousPageItemStack;
     private char ifLastPage, ifFirstPage;
     private CloseInventoryAction closeAction;
+    private int updateTime = 20;
 
     public PaginatedInventoryBuilder(String title, String shape) {
         this.title = title;
         this.shape = shape;
+    }
+
+    public PaginatedInventoryBuilder updateTime(int ticks) {
+        updateTime = ticks;
+        return this;
     }
 
     public PaginatedInventoryBuilder title(String title) {
@@ -86,7 +93,13 @@ public class PaginatedInventoryBuilder {
         PaginatedInventory paginatedGui = new PaginatedInventory();
 
         char[] shapeChar = shape.toCharArray();
-        int itemsSize = items == null ? 0 : items.length;
+        int itemsSize = 0;
+        if (items != null) {
+            for (ItemButton item : items) {
+                itemsSize++;
+                if (item instanceof UpdatableItemButton) itemsSize += ((UpdatableItemButton) item).getChildren().size();
+            }
+        }
         int presetItems = 0;
         for (char c : shapeChar) if (c != 'x') presetItems++;
 
@@ -101,7 +114,7 @@ public class PaginatedInventoryBuilder {
 
         int currentItem = 0;
         for (int i = 0; i < inventoriesSize; i++) {
-            CustomInventory customInventory = new CustomInventory(title, getSize(), closeAction);
+            CustomInventory customInventory = new CustomInventory(title, getSize(), closeAction, updateTime);
             paginatedGui.addInventory(customInventory);
 
             for (int j = 0; j < getSize(); j++) {
@@ -109,9 +122,8 @@ public class PaginatedInventoryBuilder {
 
                 if (currentChar != 'x' && !shapeReplacements.containsKey(currentChar)) continue;
 
-                if (currentChar == 'x' && itemsSize > 0 && currentItem < itemsSize) {
-                    customInventory.item(j, items[currentItem]);
-                    currentItem++;
+                if (currentChar == 'x' && itemsSize > 0 && currentItem < items.length && customInventory.getItem(j) == null) {
+                    customInventory.item(j, items[currentItem++]);
                     continue;
                 }
 
@@ -125,6 +137,7 @@ public class PaginatedInventoryBuilder {
                     continue;
                 }
 
+                if (customInventory.getItem(j) != null) continue;
                 customInventory.item(j, shapeReplacements.get(currentChar));
             }
         }
