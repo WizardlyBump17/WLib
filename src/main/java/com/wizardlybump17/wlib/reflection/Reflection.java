@@ -2,6 +2,9 @@ package com.wizardlybump17.wlib.reflection;
 
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,43 @@ public class Reflection {
         }
     }
 
+    public static void setFieldValue(Object obj, String fieldName, Object newValue) {
+        try {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(obj, newValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Object getFieldValue(Object obj, String fieldName) {
+        try {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramTypes, Object... params) {
+        try {
+            Method method;
+            if (obj instanceof Class) method = ((Class<?>) obj).getDeclaredMethod(methodName, paramTypes);
+            else method = obj.getClass().getDeclaredMethod(methodName, paramTypes);
+            return method.invoke(obj, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object invokeMethod(Object obj, String methodName) {
+        return invokeMethod(obj, methodName, new Class[]{});
+    }
+
     public static Class<?> getCraftBukkitClass(String className) {
         try {
             if (CRAFT_BUKKIT_CLASSES_CACHE.containsKey(className)) return CRAFT_BUKKIT_CLASSES_CACHE.get(className);
@@ -41,66 +81,94 @@ public class Reflection {
         }
     }
 
+    public static Object newInstance(Class<?> clazz, Class<?>[] constructorTypes, Object... params) {
+        try {
+            return clazz.getConstructor(constructorTypes).newInstance(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object newInstance(Class<?> clazz) {
+        return newInstance(clazz, new Class[]{});
+    }
+
     public static Object convertToNBTTag(Object object) {
         try {
             if (getNMSClass("NBTBase").isInstance(object))
                 return object;
             if (object instanceof Byte)
-                return getNMSClass("NBTTagByte").getConstructor(byte.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagByte"), new Class[]{byte.class}, object);
             if (object instanceof Byte[])
-                return getNMSClass("NBTTagByteArray").getConstructor(byte[].class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagByteArray"), new Class[]{byte[].class}, object);
             if (object instanceof Short)
-                return getNMSClass("NBTTagShort").getConstructor(short.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagShort"), new Class[]{short.class}, object);
             if (object instanceof Integer)
-                return getNMSClass("NBTTagInt").getConstructor(int.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagInt"), new Class[]{int.class}, object);
             if (object instanceof Integer[])
-                return getNMSClass("NBTTagIntArray").getConstructor(int[].class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagIntArray"), new Class[]{int[].class}, object);
             if (object instanceof Long)
-                return getNMSClass("NBTTagLong").getConstructor(long.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagLong"), new Class[]{long.class}, object);
             if (object instanceof Float)
-                return getNMSClass("NBTTagFloat").getConstructor(float.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagFloat"), new Class[]{float.class}, object);
             if (object instanceof Double)
-                return getNMSClass("NBTTagDouble").getConstructor(double.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagDouble"), new Class[]{double.class}, object);
             if (object instanceof String)
-                return getNMSClass("NBTTagString").getConstructor(String.class)
-                        .newInstance(object);
+                return newInstance(getNMSClass("NBTTagString"), new Class[]{String.class}, object);
             if (object instanceof List) {
-                Object tagList = getNMSClass("NBTTagList").newInstance();
+                Object tagList = newInstance(getNMSClass("NBTTagList"));
                 List<?> list = (List<?>) object;
                 for (Object listValue : list)
-                    tagList.getClass().getDeclaredMethod(
+                    invokeMethod(
+                            tagList,
                             "add",
-                            Reflection.getNMSClass("NBTBase"))
-                            .invoke(tagList, convertToNBTTag(listValue));
+                            new Class[]{Reflection.getNMSClass("NBTBase")},
+                            convertToNBTTag(listValue));
                 return tagList;
             }
             if (object instanceof Map) {
-                Object tagCompound = getNMSClass("NBTTagCompound").newInstance();
+                Object tagCompound = newInstance(getNMSClass("NBTTagCompound"));
                 Map<?, ?> map = (Map<?, ?>) object;
                 for (Map.Entry<?, ?> entry : map.entrySet()) {
                     String key = entry.getKey().toString();
                     Object value = entry.getValue();
-                    tagCompound.getClass().getDeclaredMethod(
+                    invokeMethod(
+                            tagCompound,
                             "set",
-                            String.class,
-                            Reflection.getNMSClass("NBTBase"))
-                            .invoke(tagCompound, key, convertToNBTTag(value));
+                            new Class[]{String.class, Reflection.getNMSClass("NBTBase")},
+                            key, convertToNBTTag(value));
                 }
                 return tagCompound;
             }
-            return getNMSClass("NBTTagString").getConstructor(String.class)
-                    .newInstance(object.toString());
+            return newInstance(getNMSClass("NBTTagString"), new Class[]{String.class}, object.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Object convertToJavaType(Object nbtTag) {
+        try {
+            if (!getNMSClass("NBTBase").isInstance(nbtTag)) return nbtTag;
+            if (getNMSClass("NBTBase.NBTNumber").isInstance(nbtTag)
+                    || getNMSClass("NBTTagString").isInstance(nbtTag)) {
+                return getFieldValue(nbtTag, "data");
+            }
+            if (getNMSClass("NBTTagList").isInstance(nbtTag)) {
+                List<Object> result = new ArrayList<>();
+                for (Object o : (List<?>) getFieldValue(nbtTag, "list")) result.add(convertToJavaType(o));
+                return result;
+            }
+            if (getNMSClass("NBTTagCompound").isInstance(nbtTag)) {
+                Map<String, Object> result = new HashMap<>();
+                Map<String, ?> map = (Map<String, ?>) getFieldValue(nbtTag, "map");
+                for (Map.Entry<String, ?> entry : map.entrySet()) result.put(entry.getKey(), convertToJavaType(entry.getValue()));
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

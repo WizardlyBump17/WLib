@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @AllArgsConstructor
@@ -46,45 +48,46 @@ public class CuboidUtil {
         return generate(to, block, block1 -> true);
     }
 
-    @SuppressWarnings("deprecated")
-    public Set<Block> generate(Location to, Map<MaterialId, Double> blocksMap) {
-        return generate(to, blocksMap, block -> true);
-    }
-
     public Set<Block> generate(Location to, MaterialId block, Predicate<Block> predicate) {
         Set<Block> result = new HashSet<>(getArea(to));
+        long runtime = System.currentTimeMillis();
 
-        FaweQueue faweQueue = FaweAPI.createQueue(
-                FaweAPI.getWorld(location.getWorld().getName()),
-                false);
+        FaweQueue faweQueue = FaweAPI.createQueue(FaweAPI.getWorld(location.getWorld().getName()), false);
         for (Block iBlock : getBlocks(to, predicate)) {
             faweQueue.setBlock(iBlock.getX(), iBlock.getY(), iBlock.getZ(), block.getId(), block.getData());
             result.add(iBlock);
         }
         faweQueue.flush();
+        runtime = System.currentTimeMillis() - runtime;
+        System.out.println("changed " + result.size() + " blocks in " + runtime + "ms");
         return result;
+    }
+
+    @SuppressWarnings("deprecated")
+    public Set<Block> generate(Location to, Map<MaterialId, Double> blocksMap) {
+        return generate(to, blocksMap, block -> true);
     }
 
     public Set<Block> generate(Location to, Map<MaterialId, Double> blocksMap, Predicate<Block> predicate) {
         Set<Block> result = new HashSet<>(getArea(to));
 
-        Random random = new Random();
-
-        FaweQueue faweQueue = FaweAPI.createQueue(
-                FaweAPI.getWorld(location.getWorld().getName()),
-                false);
+        long runtime = System.currentTimeMillis();
+        FaweQueue faweQueue = FaweAPI.createQueue(FaweAPI.getWorld(location.getWorld().getName()), false);
         for (Block block : getBlocks(to, predicate)) {
             MaterialId material = null;
             while (material == null) {
-                List<MaterialId> materials = new ArrayList<>(blocksMap.keySet());
-                MaterialId m = materials.get(random.nextInt(materials.size()));
-                if (!PercentageUtil.check(blocksMap.get(m))) continue;
-                material = m;
+                for (Map.Entry<MaterialId, Double> entry : blocksMap.entrySet())
+                    if (RandomUtil.checkPercentage(entry.getValue())) {
+                        material = entry.getKey();
+                        break;
+                    }
             }
             faweQueue.setBlock(block.getX(), block.getY(), block.getZ(), material.getId(), material.getData());
             result.add(block);
         }
         faweQueue.flush();
+        runtime = System.currentTimeMillis() - runtime;
+        System.out.println("changed " + result.size() + " blocks in " + runtime + "ms");
         return result;
     }
 

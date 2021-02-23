@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.util;
 
-import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -48,6 +47,24 @@ public class ListUtil {
         return new ListUtil(newList);
     }
 
+    public ListUtil trim() {
+        List<String> result = new ArrayList<>();
+        for (String s : list) result.add(s.trim());
+        return new ListUtil(result);
+    }
+
+    public String join(String joinString) {
+        return join(joinString, 0, list.size());
+    }
+
+    public String join(String joinString, int startAt, int endAt) {
+        StringBuilder result = new StringBuilder();
+        for (int i = startAt; i < endAt; i++)
+            result.append(list.get(i)).append(joinString);
+        return result.substring(0, result.length() - joinString.length());
+    }
+
+    @Deprecated
     public static List<String> breakLines(String string, int length) {
         List<String> result = new ArrayList<>();
         int last = 0;

@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util;
 
+@Deprecated
 public class PercentageUtil {
 
     public static boolean check(double percentage) {
