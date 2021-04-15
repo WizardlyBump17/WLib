@@ -38,7 +38,8 @@ public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter 
         Map<String, Object> tags = new HashMap<>();
         NBTTagCompound compound = getMainTag();
         for (String s : compound.c())
-            tags.put(s, getMainAdapter().nbtToJava(compound.get(s)));
+            if (!IGNORED_TAGS.contains(s))
+                tags.put(s, getMainAdapter().nbtToJava(compound.get(s)));
         return tags;
     }
 

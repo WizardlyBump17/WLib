@@ -1,11 +1,13 @@
 package com.wizardlybump17.wlib;
 
-import com.wizardlybump17.wlib.command.ItemCommand;
+import com.wizardlybump17.wlib.command.TestCommand;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
+import com.wizardlybump17.wlib.listener.PlayerListener;
 import com.wizardlybump17.wlib.reflection.ReflectionAdapterRegister;
 import com.wizardlybump17.wlib.reflection.v1_8_R3.ReflectionAdapter;
+import org.bukkit.Bukkit;
 
 public class WLib extends WPlugin {
 
@@ -21,12 +23,13 @@ public class WLib extends WPlugin {
     }
 
     @Override
-    protected String[] enableMessage() {
-        return new String[]{"§aThank you for using §lWLib§r §c§l<3"};
+    public void enable() {
+        getCommand("test").setExecutor(new TestCommand());
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
-    protected void initCommands() {
-        getCommand("item").setExecutor(new ItemCommand());
+    protected String[] enableMessage() {
+        return new String[]{"§aThank you for using §lWLib§r §c§l<3"};
     }
 }

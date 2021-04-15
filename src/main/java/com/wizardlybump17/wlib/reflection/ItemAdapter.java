@@ -5,11 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ItemAdapter {
+
+    protected static final List<String> IGNORED_TAGS = Arrays.asList(
+            "display", "ench", "Enchantments", "HideFlags");
 
     protected ItemStack target;
     protected final ReflectionAdapter mainAdapter;

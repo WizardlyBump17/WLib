@@ -79,13 +79,24 @@ public class Item {
             return this;
         }
 
+        public boolean hasNbtTag(String key) {
+            return nbtTags.containsKey(key);
+        }
+
+        public boolean hasFlag(ItemFlag flag) {
+            return flags.contains(flag);
+        }
+
         public ItemStack build() {
             ItemStack itemStack = new ItemStack(type, amount, durability);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(displayName == null ? null : displayName.replace('&', '§'));
-            itemMeta.setLore(lore);
-            itemMeta.spigot().setUnbreakable(unbreakable);
-            itemMeta.addItemFlags(flags == null ? new ItemFlag[0] : flags.toArray(new ItemFlag[]{}));
+            if (itemMeta != null) {
+                itemMeta.setDisplayName(displayName == null ? null : displayName.replace('&', '§'));
+                itemMeta.setLore(lore);
+                itemMeta.spigot().setUnbreakable(unbreakable);
+                itemMeta.addItemFlags(flags == null ? new ItemFlag[0] : flags.toArray(new ItemFlag[]{}));
+                itemStack.setItemMeta(itemMeta);
+            }
             itemStack.addUnsafeEnchantments(enchantments == null ? new HashMap<>() : enchantments);
 
             if (nbtTags != null && !nbtTags.isEmpty()) {

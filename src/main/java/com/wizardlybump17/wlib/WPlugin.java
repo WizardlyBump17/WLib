@@ -17,8 +17,6 @@ public abstract class WPlugin extends JavaPlugin {
     @Override
     public final void onEnable() {
         enable();
-        initListeners();
-        initCommands();
 
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (String message : enableMessage())
@@ -58,11 +56,11 @@ public abstract class WPlugin extends JavaPlugin {
         return new String[0];
     }
 
-    protected void initListeners() {
-    }
+//    protected void initListeners() {
+//    }
 
-    protected void initCommands() {
-    }
+//    protected void initCommands() {
+//    }
 
     public void saveResources(String... files) {
         for (String file : files)
