@@ -96,7 +96,7 @@ public class ReflectionAdapter extends com.wizardlybump17.wlib.reflection.Reflec
             return compound;
         }
 
-        return new NBTTagString(java == null ? null : java.toString());
+        return new NBTTagString(java == null ? "null" : java.toString());
     }
 
     @Override

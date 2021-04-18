@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.reflection.ItemAdapter;
+import com.wizardlybump17.wlib.reflection.ReflectionAdapter;
 import com.wizardlybump17.wlib.reflection.ReflectionAdapterRegister;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -75,16 +76,29 @@ public class Item {
         }
 
         public ItemBuilder nbtTag(String key, Object value) {
+            if (nbtTags == null)
+                nbtTags = new HashMap<>();
             nbtTags.put(key, value);
             return this;
         }
 
         public boolean hasNbtTag(String key) {
+            if (nbtTags == null)
+                nbtTags = new HashMap<>();
             return nbtTags.containsKey(key);
         }
 
         public boolean hasFlag(ItemFlag flag) {
+            if (flags == null)
+                flags = new HashSet<>();
             return flags.contains(flag);
+        }
+
+        public Object getNbtTag(String key) {
+            if (nbtTags == null)
+                nbtTags = new HashMap<>();
+            ReflectionAdapter adapter = ReflectionAdapterRegister.getInstance().getServerAdapter();
+            return adapter.nbtToJava(nbtTags.get(key));
         }
 
         public ItemStack build() {
@@ -99,7 +113,7 @@ public class Item {
             }
             itemStack.addUnsafeEnchantments(enchantments == null ? new HashMap<>() : enchantments);
 
-            if (nbtTags != null && !nbtTags.isEmpty()) {
+            if (nbtTags != null) {
                 ItemAdapter itemAdapter = ReflectionAdapterRegister.getInstance().getServerAdapter().getItemAdapter(itemStack);
                 itemAdapter.setNbtTags(nbtTags);
                 itemStack = itemAdapter.getTarget();

@@ -4,3 +4,5 @@ main: com.wizardlybump17.wlib.WLib
 author: WizardlyBump17
 commands:
   test:
+  test1:
+  test2:
