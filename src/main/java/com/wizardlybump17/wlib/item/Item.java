@@ -115,7 +115,7 @@ public class Item {
 
             if (nbtTags != null) {
                 ItemAdapter itemAdapter = ReflectionAdapterRegister.getInstance().getServerAdapter().getItemAdapter(itemStack);
-                itemAdapter.setNbtTags(nbtTags);
+                itemAdapter.setNbtTags(nbtTags, false);
                 itemStack = itemAdapter.getTarget();
             }
 

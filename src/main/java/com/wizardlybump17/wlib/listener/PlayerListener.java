@@ -17,10 +17,10 @@ public class PlayerListener implements Listener {
 
         Inventory clickedInventory = event.getClickedInventory();
         if (!(clickedInventory.getHolder() instanceof CustomInventoryHolder)) return;
+        event.setCancelled(true);
 
         CustomInventoryHolder holder = (CustomInventoryHolder) clickedInventory.getHolder();
         if (!holder.hasButton(event.getRawSlot())) return;
-        event.setCancelled(true);
 
         ItemButton item = holder.getButton(event.getRawSlot());
         if (item.getClickAction() != null)

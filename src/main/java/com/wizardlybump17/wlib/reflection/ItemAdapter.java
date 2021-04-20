@@ -20,7 +20,10 @@ public abstract class ItemAdapter {
     protected final ReflectionAdapter mainAdapter;
 
     public abstract void setNbtTag(String key, Object value);
-    public abstract void setNbtTags(Map<String, Object> tags);
+    public void setNbtTags(Map<String, Object> tags) {
+        setNbtTags(tags, true);
+    }
+    public abstract void setNbtTags(Map<String, Object> tags, boolean clearOld);
     public abstract void removeNbtTag(String key);
     public abstract boolean hasNbtTag(String key);
     public abstract Object getNbtTag(String key);

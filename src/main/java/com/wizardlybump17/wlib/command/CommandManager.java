@@ -68,20 +68,4 @@ public class CommandManager {
             return;
         }
     }
-
-    // testano kkkkkkkk
-    @Command(execution = "test1", permission = "test.test1")
-    public void test1(CommandSender sender) {
-        sender.sendMessage("test1");
-    }
-
-    @Command(execution = "test1 <test>", permission = "test.test1.test", permissionMessage = "§ckk, sem perm")
-    public void test1(CommandSender sender, String[] test) {
-        sender.sendMessage("test1 " + Arrays.toString(test));
-    }
-
-    @Command(execution = "test2 test <test1> test <test2>")
-    public void test1(CommandSender sender, String test1, String[] test2) {
-        sender.sendMessage("test2 " + test1 + ' ' + Arrays.asList(test2));
-    }
 }

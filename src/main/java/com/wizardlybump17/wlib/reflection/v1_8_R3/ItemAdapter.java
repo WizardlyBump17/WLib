@@ -23,13 +23,13 @@ public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter 
     }
 
     @Override
-    public void setNbtTags(Map<String, Object> tags) {
+    public void setNbtTags(Map<String, Object> tags, boolean clearOld) {
         NBTTagCompound compound = getMainTag();
-        for (String s : new HashSet<>(compound.c()))
-            compound.remove(s);
-        for (Map.Entry<String, Object> entry : tags.entrySet()) {
+        if (clearOld)
+            for (String s : new HashSet<>(compound.c()))
+                compound.remove(s);
+        for (Map.Entry<String, Object> entry : tags.entrySet())
             compound.set(entry.getKey(), getMainAdapter().javaToNbt(entry.getValue()));
-        }
         setMainTag(compound);
     }
 

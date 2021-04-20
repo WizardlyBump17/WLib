@@ -1,7 +1,5 @@
 package com.wizardlybump17.wlib;
 
-import com.wizardlybump17.wlib.command.CommandManager;
-import com.wizardlybump17.wlib.command.TestCommand;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
@@ -25,10 +23,7 @@ public class WLib extends WPlugin {
 
     @Override
     public void enable() {
-        getCommand("test").setExecutor(new TestCommand());
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        CommandManager manager = new CommandManager(this);
-        manager.registerCommands(manager);
     }
 
     @Override

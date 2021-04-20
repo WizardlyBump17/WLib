@@ -4,6 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Enumeration;
+
 public abstract class WPlugin extends JavaPlugin {
 
     @Override
@@ -40,10 +46,6 @@ public abstract class WPlugin extends JavaPlugin {
     public void disable() {
     }
 
-    public final void disablePlugin() {
-        Bukkit.getPluginManager().disablePlugin(this);
-    }
-
     protected String[] loadMessage() {
         return new String[0];
     }
@@ -55,12 +57,6 @@ public abstract class WPlugin extends JavaPlugin {
     protected String[] disableMessage() {
         return new String[0];
     }
-
-//    protected void initListeners() {
-//    }
-
-//    protected void initCommands() {
-//    }
 
     public void saveResources(String... files) {
         for (String file : files)
