@@ -30,8 +30,17 @@ public final class DatabaseRegister {
         try {
             Properties properties = new Properties();
             properties.load(new FileInputStream(new File(plugin.getDataFolder(), propertiesFile)));
+            return createDatabase(properties, plugin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Database createDatabase(Properties properties, JavaPlugin plugin) {
+        try {
             if (!properties.containsKey("type"))
-                throw new NullPointerException("property \"type\" not found in " + propertiesFile);
+                throw new NullPointerException("property \"type\" not found");
             String type = properties.getProperty("type").toLowerCase();
             if (!databaseTypes.containsKey(type))
                 throw new IllegalArgumentException("invalid database type \"" + type + "\"");
