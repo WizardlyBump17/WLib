@@ -21,6 +21,14 @@ public class SQLiteDatabase extends Database {
     @Override
     public void open(Consumer<Database> callback) {
         new JDBC();
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         super.open(callback);
     }
 

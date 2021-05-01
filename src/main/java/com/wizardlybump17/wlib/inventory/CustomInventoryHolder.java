@@ -14,7 +14,7 @@ public class CustomInventoryHolder implements InventoryHolder {
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
 
     public void setButton(int slot, ItemButton item) {
-        getInventory().setItem(slot, item.getItemStack());
+        getInventory().setItem(slot, item == null ? null : item.getItemStack());
         buttons.put(slot, item);
     }
 
