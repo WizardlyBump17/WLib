@@ -1,11 +1,14 @@
 package com.wizardlybump17.wlib.listener;
 
-import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
-import com.wizardlybump17.wlib.inventory.ItemButton;
+import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
+import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
+import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class PlayerListener implements Listener {
 
@@ -21,5 +24,13 @@ public class PlayerListener implements Listener {
         ItemButton item = holder.getButton(event.getRawSlot());
         if (item.getClickAction() != null)
             item.getClickAction().onClick(event);
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        Inventory inventory = event.getInventory();
+        InventoryHolder holder = inventory.getHolder();
+        if (holder instanceof UpdatableHolder)
+            ((UpdatableHolder) holder).stop();
     }
 }
