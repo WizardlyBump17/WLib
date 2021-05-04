@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.database;
 
-import com.wizardlybump17.wlib.reflection.v1_8_R3.ReflectionAdapter;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 

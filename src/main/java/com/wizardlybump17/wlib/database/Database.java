@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.database;
 
-import com.mysql.jdbc.MySQLConnection;
 import com.sun.rowset.CachedRowSetImpl;
 import lombok.AccessLevel;
 import lombok.Data;

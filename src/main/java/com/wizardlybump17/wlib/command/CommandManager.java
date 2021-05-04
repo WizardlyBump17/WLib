@@ -21,7 +21,7 @@ public class CommandManager {
                 continue;
 
             Class<?>[] parameterTypes = method.getParameterTypes();
-            if (Arrays.asList(parameterTypes[0].getInterfaces()).contains(CommandSender.class))
+            if (!Arrays.asList(parameterTypes[0].getInterfaces()).contains(CommandSender.class) && parameterTypes[0].equals(CommandSender.class))
                 continue;
 
             Command command = method.getAnnotation(Command.class);

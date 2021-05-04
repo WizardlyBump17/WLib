@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.reflection.v1_8_R3;
 
-import net.minecraft.server.v1_8_R3.NBTBase;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;

@@ -30,4 +30,8 @@ public class WLib extends WPlugin {
     protected String[] enableMessage() {
         return new String[]{"§aThank you for using §lWLib§r §c§l<3"};
     }
+
+    public static WLib getInstance() {
+        return getPlugin(WLib.class);
+    }
 }

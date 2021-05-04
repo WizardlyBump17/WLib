@@ -47,6 +47,14 @@ public class Item {
 
     public static class ItemBuilder {
 
+        private boolean amountSet;
+
+        public ItemBuilder amount(int amount) {
+            this.amount = amount;
+            amountSet = true;
+            return this;
+        }
+
         public ItemBuilder lore(String... lore) {
             return lore(Arrays.asList(lore));
         }
@@ -102,7 +110,7 @@ public class Item {
         }
 
         public ItemStack build() {
-            ItemStack itemStack = new ItemStack(type, amount, durability);
+            ItemStack itemStack = new ItemStack(type, amountSet ? amount : 1, durability);
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta != null) {
                 itemMeta.setDisplayName(displayName == null ? null : displayName.replace('&', '§'));
