@@ -2,8 +2,11 @@ package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.google.gson.Gson;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
-import com.wizardlybump17.wlib.inventory.ItemButton;
+import com.wizardlybump17.wlib.inventory.UpdatableInventory;
+import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
+import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
+import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +24,14 @@ public class PaginatedInventoryBuilder implements Cloneable {
     private List<ItemButton> content;
     private String title, shape;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
+    private final Map<Character, UpdatableItem> updatableShapeReplacements = new HashMap<>();
     private ItemStack nextPage, previousPage;
+    private int updateTime;
+
+    public PaginatedInventoryBuilder updateTime(int time) {
+        updateTime = time;
+        return this;
+    }
 
     public PaginatedInventoryBuilder title(String title) {
         this.title = title;
@@ -46,7 +56,10 @@ public class PaginatedInventoryBuilder implements Cloneable {
     }
 
     public PaginatedInventoryBuilder shapeReplacement(char character, ItemButton item) {
-        shapeReplacements.put(character, item);
+        if (item instanceof UpdatableItem)
+            updatableShapeReplacements.put(character, (UpdatableItem) item);
+        else
+            shapeReplacements.put(character, item);
         return this;
     }
 
@@ -71,8 +84,8 @@ public class PaginatedInventoryBuilder implements Cloneable {
             if (c != 'x')
                 presetItems++;
 
-
-        int inventoriesAmount = content.size() == 0
+        int contentSize = content == null ? 0 : content.size();
+        int inventoriesAmount = contentSize == 0
                 ? 1
                 : (int) Math.ceil((double) content.size() / (shape.length() - presetItems));
 
@@ -84,13 +97,21 @@ public class PaginatedInventoryBuilder implements Cloneable {
             for (int slot = 0; slot < shape.length(); slot++) {
                 char currentChar = shapeChar[slot];
 
-                if (currentChar != 'x' && currentChar != '>' && currentChar != '<' && !shapeReplacements.containsKey(currentChar))
-                    continue;
-
                 switch (currentChar) {
                     case 'x': {
-                        if (content.size() > 0 && currentItem < content.size())
-                            holder.setButton(slot, content.get(currentItem++));
+                        if (contentSize > 0 && currentItem < contentSize) {
+                            ItemButton button = content.get(currentItem++);
+                            if (button instanceof UpdatableItem) {
+                                if (!(holder instanceof UpdatableHolder)) {
+                                    inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(i + 1)), shape.length(), updateTime);
+                                    UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
+                                    for (Map.Entry<Integer, ItemButton> entry : holder.getButtons().entrySet())
+                                        tempHolder.setButton(entry.getKey(), entry.getValue());
+                                    holder = tempHolder;
+                                }
+                            }
+                            holder.setButton(slot, button);
+                        }
                         continue;
                     }
 
@@ -108,9 +129,22 @@ public class PaginatedInventoryBuilder implements Cloneable {
                         continue;
                     }
 
-                    default:
+                    default: {
                         if (shapeReplacements.containsKey(currentChar))
                             holder.setButton(slot, shapeReplacements.get(currentChar));
+                        if (updatableShapeReplacements.containsKey(currentChar)) {
+                            if (holder instanceof UpdatableHolder) {
+                                holder.setButton(slot, updatableShapeReplacements.get(currentChar));
+                                continue;
+                            }
+
+                            inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(i + 1)), shape.length(), updateTime);
+                            UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
+                            for (Map.Entry<Integer, ItemButton> entry : holder.getButtons().entrySet())
+                                tempHolder.setButton(entry.getKey(), entry.getValue());
+                            (holder = tempHolder).setButton(slot, updatableShapeReplacements.get(currentChar));
+                        }
+                    }
                 }
             }
 

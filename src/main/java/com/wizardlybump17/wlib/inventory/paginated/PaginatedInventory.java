@@ -1,11 +1,10 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
-import com.wizardlybump17.wlib.inventory.ItemButton;
-import lombok.*;
+import com.wizardlybump17.wlib.inventory.UpdatableInventory;
+import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
+import lombok.Data;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +22,13 @@ public class PaginatedInventory {
     }
 
     public void show(Player player, int page) {
-        page = page < 0 ? 0 : page >= inventories.size() ? inventories.size() - 1 : page;
+        if (page < 0 || page >= inventories.size())
+            return;
         playerPages.put(player, page);
-        player.openInventory(inventories.get(page).getBukkitInventory());
+        CustomInventory inventory = inventories.get(page);
+        if (inventory instanceof UpdatableInventory)
+            ((UpdatableHolder) inventory.getOwner()).start();
+        player.openInventory(inventory.getBukkitInventory());
     }
 
     public void showNextPage(Player player) {
