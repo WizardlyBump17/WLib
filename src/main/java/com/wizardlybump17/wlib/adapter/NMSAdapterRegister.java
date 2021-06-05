@@ -1,18 +1,18 @@
-package com.wizardlybump17.wlib.reflection;
+package com.wizardlybump17.wlib.adapter;
 
 import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ReflectionAdapterRegister {
+public final class NMSAdapterRegister {
 
-    private static ReflectionAdapterRegister instance;
+    private static NMSAdapterRegister instance;
 
-    private final Map<String, ReflectionAdapter> adapters = new HashMap<>();
-    private ReflectionAdapter serverAdapter;
+    private final Map<String, NMSAdapter> adapters = new HashMap<>();
+    private NMSAdapter serverAdapter;
 
-    public void registerAdapter(ReflectionAdapter adapter) {
+    public void registerAdapter(NMSAdapter adapter) {
         adapters.put(adapter.getTargetVersion(), adapter);
     }
 
@@ -20,21 +20,21 @@ public final class ReflectionAdapterRegister {
         return adapters.containsKey(targetVersion);
     }
 
-    public ReflectionAdapter getAdapter(String targetVersion) {
+    public NMSAdapter getAdapter(String targetVersion) {
         return adapters.get(targetVersion);
     }
 
-    public ReflectionAdapter getServerAdapter() {
+    public NMSAdapter getServerAdapter() {
         if (serverAdapter != null)
             return serverAdapter;
         String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        ReflectionAdapter adapter = getAdapter(serverVersion);
+        NMSAdapter adapter = getAdapter(serverVersion);
         if (adapter == null)
             throw new NullPointerException("this server version has no ReflectionAdapter available from WLib");
         return serverAdapter = adapter;
     }
 
-    public static ReflectionAdapterRegister getInstance() {
-        return instance == null ? instance = new ReflectionAdapterRegister() : instance;
+    public static NMSAdapterRegister getInstance() {
+        return instance == null ? instance = new NMSAdapterRegister() : instance;
     }
 }

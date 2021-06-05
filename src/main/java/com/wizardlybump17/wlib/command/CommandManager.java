@@ -20,8 +20,7 @@ public class CommandManager {
             if (!method.isAnnotationPresent(Command.class))
                 continue;
 
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            if (!Arrays.asList(parameterTypes[0].getInterfaces()).contains(CommandSender.class) && parameterTypes[0].equals(CommandSender.class))
+            if (!CommandSender.class.isAssignableFrom(method.getParameterTypes()[0]))
                 continue;
 
             Command command = method.getAnnotation(Command.class);

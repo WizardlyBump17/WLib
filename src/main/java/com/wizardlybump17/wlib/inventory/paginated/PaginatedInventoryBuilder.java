@@ -7,7 +7,10 @@ import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +28,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     private String title, shape;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private final Map<Character, UpdatableItem> updatableShapeReplacements = new HashMap<>();
-    private ItemStack nextPage, previousPage;
+    private InventoryNavigator nextPage, previousPage;
     private int updateTime;
 
     public PaginatedInventoryBuilder updateTime(int time) {
@@ -63,13 +66,13 @@ public class PaginatedInventoryBuilder implements Cloneable {
         return this;
     }
 
-    public PaginatedInventoryBuilder nextPage(ItemStack item) {
-        nextPage = item;
+    public PaginatedInventoryBuilder nextPage(InventoryNavigator navigator) {
+        nextPage = navigator;
         return this;
     }
 
-    public PaginatedInventoryBuilder previousPage(ItemStack item) {
-        previousPage = item;
+    public PaginatedInventoryBuilder previousPage(InventoryNavigator navigator) {
+        previousPage = navigator;
         return this;
     }
 
@@ -84,10 +87,13 @@ public class PaginatedInventoryBuilder implements Cloneable {
             if (c != 'x')
                 presetItems++;
 
-        int contentSize = content == null ? 0 : content.size();
+        int contentSize = 0;
+        if (content != null)
+            for (ItemButton button : content)
+                if (button != null) contentSize++;
         int inventoriesAmount = contentSize == 0
                 ? 1
-                : (int) Math.ceil((double) content.size() / (shape.length() - presetItems));
+                : (int) Math.ceil((double) contentSize / (shape.length() - presetItems));
 
         int currentItem = 0;
         for (int i = 0; i < inventoriesAmount; i++) {
@@ -99,7 +105,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
 
                 switch (currentChar) {
                     case 'x': {
-                        if (contentSize > 0 && currentItem < contentSize) {
+                        if (contentSize > 0 && currentItem < content.size()) {
                             ItemButton button = content.get(currentItem++);
                             if (button instanceof UpdatableItem) {
                                 if (!(holder instanceof UpdatableHolder)) {
@@ -110,28 +116,53 @@ public class PaginatedInventoryBuilder implements Cloneable {
                                     holder = tempHolder;
                                 }
                             }
+                            if (button == null) continue;
                             holder.setButton(slot, button);
                         }
                         continue;
                     }
 
                     case '<': {
+                        if (i == 0) {
+                            if (nextPage.replacer != null)
+                                holder.setButton(slot, nextPage.replacer);
+                            else if (nextPage.replacerChar != '\u0000')
+                                holder.setButton(slot, shapeReplacements.get(nextPage.replacerChar));
+                            else
+                                holder.setButton(slot, new ItemButton(
+                                        nextPage.item,
+                                        event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
+                            continue;
+                        }
                         holder.setButton(slot, new ItemButton(
-                                previousPage,
-                                event -> paginatedInventory.showPreviousPage((Player) event.getWhoClicked())));
+                                nextPage.item,
+                                event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
                         continue;
                     }
 
                     case '>': {
+                        if (i + 1 == inventoriesAmount) {
+                            if (previousPage.replacer != null)
+                                holder.setButton(slot, previousPage.replacer);
+                            else if (previousPage.replacerChar != '\u0000')
+                                holder.setButton(slot, shapeReplacements.get(previousPage.replacerChar));
+                            else
+                                holder.setButton(slot, new ItemButton(
+                                        previousPage.item,
+                                        event -> paginatedInventory.showNextPage(event.getWhoClicked())));
+                            continue;
+                        }
                         holder.setButton(slot, new ItemButton(
-                                nextPage,
-                                event -> paginatedInventory.showNextPage((Player) event.getWhoClicked())));
+                                previousPage.item,
+                                event -> paginatedInventory.showNextPage(event.getWhoClicked())));
                         continue;
                     }
 
                     default: {
-                        if (shapeReplacements.containsKey(currentChar))
+                        if (shapeReplacements.containsKey(currentChar)) {
                             holder.setButton(slot, shapeReplacements.get(currentChar));
+                            continue;
+                        }
                         if (updatableShapeReplacements.containsKey(currentChar)) {
                             if (holder instanceof UpdatableHolder) {
                                 holder.setButton(slot, updatableShapeReplacements.get(currentChar));
@@ -162,6 +193,25 @@ public class PaginatedInventoryBuilder implements Cloneable {
             return builder;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class InventoryNavigator {
+
+        private final ItemStack item;
+        private ItemButton replacer;
+        private char replacerChar;
+
+        public InventoryNavigator(ItemStack item, ItemButton replacer) {
+            this.item = item;
+            this.replacer = replacer;
+        }
+
+        public InventoryNavigator(ItemStack item, char replacer) {
+            this.item = item;
+            replacerChar = replacer;
         }
     }
 }

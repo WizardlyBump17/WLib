@@ -18,6 +18,12 @@ public class RegisteredCommand {
     private final CommandExecutor executor;
     private final Method method;
 
+    /*
+     * do a system that automatically do it for us. This system will not runt this entire method, it will only parse the args directly to what we expect
+     *
+     * Blabla#getParams(String[] args);
+     * Blabla#setupCommandParams(this);
+     */
     public List<Object> getParams(String[] args) {
         List<Object> params = new ArrayList<>();
 

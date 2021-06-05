@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.database;
 
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.sqlite.JDBC;
 
 import java.io.File;
 import java.util.Properties;
@@ -20,14 +19,14 @@ public class SQLiteDatabase extends Database {
 
     @Override
     public void open(Consumer<Database> callback) {
-        new JDBC();
-        if (!file.exists()) {
-            try {
+        try {
+            if (!file.exists()) {
+                Class.forName("org.sqlite.JDBC");
                 file.getParentFile().mkdirs();
                 file.createNewFile();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.open(callback);
     }

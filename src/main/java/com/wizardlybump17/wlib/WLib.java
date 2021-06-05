@@ -4,21 +4,25 @@ import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.listener.PlayerListener;
-import com.wizardlybump17.wlib.reflection.ReflectionAdapterRegister;
-import com.wizardlybump17.wlib.reflection.v1_8_R3.ReflectionAdapter;
+import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import org.bukkit.Bukkit;
 
 public class WLib extends WPlugin {
 
     private final DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
-    private final ReflectionAdapterRegister reflectionAdapterRegister = ReflectionAdapterRegister.getInstance();
+    private final NMSAdapterRegister nmsAdapterRegister = NMSAdapterRegister.getInstance();
 
     @Override
     public void load() {
+        try {
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {}
+        try {
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v_1_16_R3.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {}
+
         databaseRegister.registerDatabaseClass(MySQLDatabase.class);
         databaseRegister.registerDatabaseClass(SQLiteDatabase.class);
-
-        reflectionAdapterRegister.registerAdapter(new ReflectionAdapter());
     }
 
     @Override

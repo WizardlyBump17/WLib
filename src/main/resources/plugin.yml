@@ -2,5 +2,4 @@ name: WLib
 version: ${project.version}
 main: com.wizardlybump17.wlib.WLib
 author: WizardlyBump17
-commands:
-  test:
+api-version: 1.13

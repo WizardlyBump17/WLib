@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -22,6 +23,7 @@ public class Config extends YamlConfiguration {
     
     public void saveDefaultConfig() {
         plugin.saveResource(name, false);
+        reloadConfig();
     }
 
     public void saveConfig() {
@@ -41,17 +43,16 @@ public class Config extends YamlConfiguration {
     }
 
     @Override
-    public Object get(String path, Object def) {
-        if (!loaded) {
-            loaded = true;
-            try {
-                load(file);
-            } catch (FileAlreadyExistsException ignored) {
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
+    public void set(String path, Object value) {
+        if (value instanceof Map) {
+            super.set(path, createSection(path, (Map<?, ?>) value));
+            return;
         }
-        return super.get(path, def);
+        if (value instanceof ConfigurationSerializable) {
+            set(path, ((ConfigurationSerializable) value).serialize());
+            return;
+        }
+        super.set(path, value);
     }
 
     public Map<String, Object> getMap(String path, Map<String, Object> def) {
@@ -87,7 +88,6 @@ public class Config extends YamlConfiguration {
     }
 
     public static Config load(String filePath, JavaPlugin plugin) {
-        File file = new File(plugin.getDataFolder(), filePath);
-        return new Config(plugin, filePath, file);
+        return new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
     }
 }

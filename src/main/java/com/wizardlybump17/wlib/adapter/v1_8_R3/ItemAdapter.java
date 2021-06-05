@@ -1,17 +1,15 @@
-package com.wizardlybump17.wlib.reflection.v1_8_R3;
+package com.wizardlybump17.wlib.adapter.v1_8_R3;
 
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
-public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter {
+public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
-    protected ItemAdapter(ItemStack target, ReflectionAdapter mainAdapter) {
-        super(target, mainAdapter);
+    protected ItemAdapter(ItemStack target, NMSAdapter mainAdapter) {
+        super(target, CraftItemStack.asNMSCopy(target), mainAdapter);
     }
 
     @Override
@@ -25,8 +23,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter 
     public void setNbtTags(Map<String, Object> tags, boolean clearOld) {
         NBTTagCompound compound = getMainTag();
         if (clearOld)
-            for (String s : new HashSet<>(compound.c()))
-                compound.remove(s);
+            compound = new NBTTagCompound();
         for (Map.Entry<String, Object> entry : tags.entrySet())
             compound.set(entry.getKey(), getMainAdapter().javaToNbt(entry.getValue()));
         setMainTag(compound);
@@ -34,12 +31,10 @@ public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter 
 
     @Override
     public Map<String, Object> getNbtTags() {
-        Map<String, Object> tags = new HashMap<>();
-        NBTTagCompound compound = getMainTag();
-        for (String s : compound.c())
-            if (!IGNORED_TAGS.contains(s))
-                tags.put(s, getMainAdapter().nbtToJava(compound.get(s)));
-        return tags;
+        Map<String, Object> map = (Map<String, Object>) getMainAdapter().nbtToJava(getMainTag());
+        for (String ignoredTag : IGNORED_TAGS)
+            map.remove(ignoredTag);
+        return map;
     }
 
     @Override
@@ -56,36 +51,39 @@ public class ItemAdapter extends com.wizardlybump17.wlib.reflection.ItemAdapter 
 
     @Override
     public Object getNbtTag(String key) {
-        NBTTagCompound compound = getMainTag();
-        if (!compound.hasKey(key))
-            return null;
-        return mainAdapter.nbtToJava(compound.get(key));
-    }
-
-    @Override
-    public net.minecraft.server.v1_8_R3.ItemStack toNmsStack() {
-        return CraftItemStack.asNMSCopy(target);
+        return mainAdapter.nbtToJava(getMainTag().get(key));
     }
 
     @Override
     public NBTTagCompound getMainTag() {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = toNmsStack();
-        if (!nmsStack.hasTag()) {
-            nmsStack.setTag(new NBTTagCompound());
-            target = CraftItemStack.asBukkitCopy(nmsStack);
-        }
-        return nmsStack.getTag();
+        net.minecraft.server.v1_8_R3.ItemStack nmsStack = (net.minecraft.server.v1_8_R3.ItemStack) this.nmsStack;
+        return nmsStack.getTag() == null ? new NBTTagCompound() : nmsStack.getTag();
     }
 
     @Override
     public void setMainTag(Object tag) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = toNmsStack();
+        net.minecraft.server.v1_8_R3.ItemStack nmsStack = (net.minecraft.server.v1_8_R3.ItemStack) this.nmsStack;
         nmsStack.setTag((NBTTagCompound) tag);
         target = CraftItemStack.asBukkitCopy(nmsStack);
     }
 
     @Override
-    public ReflectionAdapter getMainAdapter() {
-        return (ReflectionAdapter) mainAdapter;
+    public boolean isUnbreakable() {
+        return getMainTag().getBoolean("Unbreakable");
+    }
+
+    @Override
+    public NMSAdapter getMainAdapter() {
+        return (NMSAdapter) mainAdapter;
+    }
+
+    @Override
+    public void setUnbreakable(boolean unbreakable) {
+        NBTTagCompound compound = getMainTag();
+        if (unbreakable)
+            compound.setBoolean("Unbreakable", true);
+        else
+            compound.remove("Unbreakable");
+        setMainTag(compound);
     }
 }

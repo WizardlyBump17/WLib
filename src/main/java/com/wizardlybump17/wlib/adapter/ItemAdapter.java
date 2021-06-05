@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.reflection;
+package com.wizardlybump17.wlib.adapter;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,11 +13,11 @@ import java.util.Map;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ItemAdapter {
 
-    protected static final List<String> IGNORED_TAGS = Arrays.asList(
-            "display", "ench", "Enchantments", "HideFlags");
+    protected static final String[] IGNORED_TAGS = {"display", "ench", "Enchantments", "HideFlags"};
 
     protected ItemStack target;
-    protected final ReflectionAdapter mainAdapter;
+    protected Object nmsStack;
+    protected final NMSAdapter mainAdapter;
 
     public abstract void setNbtTag(String key, Object value);
     public void setNbtTags(Map<String, Object> tags) {
@@ -28,7 +28,10 @@ public abstract class ItemAdapter {
     public abstract boolean hasNbtTag(String key);
     public abstract Object getNbtTag(String key);
     public abstract Map<String, Object> getNbtTags();
+
     public abstract Object getMainTag();
     public abstract void setMainTag(Object tag);
-    public abstract Object toNmsStack();
+
+    public abstract boolean isUnbreakable();
+    public abstract void setUnbreakable(boolean unbreakable);
 }

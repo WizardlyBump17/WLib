@@ -1,7 +1,6 @@
-package com.wizardlybump17.wlib.reflection.v1_8_R3;
+package com.wizardlybump17.wlib.adapter.v_1_16_R3;
 
-import com.wizardlybump17.wlib.reflection.ItemAdapter;
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReflectionAdapter extends com.wizardlybump17.wlib.reflection.ReflectionAdapter {
+public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     @Override
     public Object nbtToJava(Object nbt) {
@@ -18,37 +17,36 @@ public class ReflectionAdapter extends com.wizardlybump17.wlib.reflection.Reflec
         NBTBase base = (NBTBase) nbt;
 
         if (base instanceof NBTTagByte)
-            return ((NBTTagByte) base).f();
+            return ((NBTTagByte) base).asByte();
         if (base instanceof NBTTagByteArray)
-            return ((NBTTagByteArray) base).c();
+            return ((NBTTagByteArray) base).getBytes();
         if (base instanceof NBTTagShort)
-            return ((NBTTagShort) base).e();
+            return ((NBTTagShort) base).asShort();
         if (base instanceof NBTTagInt)
-            return ((NBTTagInt) base).d();
+            return ((NBTTagInt) base).asInt();
         if (base instanceof NBTTagIntArray)
-            return ((NBTTagIntArray) base).c();
+            return ((NBTTagIntArray) base).getInts();
         if (base instanceof NBTTagLong)
-            return ((NBTTagLong) base).c();
+            return ((NBTTagLong) base).asLong();
         if (base instanceof NBTTagFloat)
-            return ((NBTTagFloat) base).h();
+            return ((NBTTagFloat) base).asFloat();
         if (base instanceof NBTTagDouble)
-            return ((NBTTagDouble) base).g();
+            return ((NBTTagDouble) base).asDouble();
 
         if (base instanceof NBTTagString)
-            return ((NBTTagString) base).a_();
+            return base.asString();
 
         if (base instanceof NBTTagList) {
             NBTTagList list = (NBTTagList) base;
             List<Object> javaList = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++)
-                javaList.add(nbtToJava(list.g(i)));
+            for (NBTBase nbtBase : list) javaList.add(nbtToJava(nbtBase));
             return javaList;
         }
 
         if (base instanceof NBTTagCompound) {
             NBTTagCompound compound = (NBTTagCompound) base;
             Map<String, Object> map = new LinkedHashMap<>();
-            for (String key : compound.c())
+            for (String key : compound.getKeys())
                 map.put(key, nbtToJava(compound.get(key)));
             return map;
         }
@@ -62,21 +60,21 @@ public class ReflectionAdapter extends com.wizardlybump17.wlib.reflection.Reflec
             return (NBTBase) java;
 
         if (java instanceof Byte)
-            return new NBTTagByte((byte) java);
+            return NBTTagByte.a((byte) java);
         if (java instanceof byte[])
             return new NBTTagByteArray((byte[]) java);
         if (java instanceof Short)
-            return new NBTTagShort((short) java);
+            return NBTTagShort.a((short) java);
         if (java instanceof Integer)
-            return new NBTTagInt((int) java);
+            return NBTTagInt.a((int) java);
         if (java instanceof int[])
             return new NBTTagIntArray((int[]) java);
         if (java instanceof Long)
-            return new NBTTagLong((long) java);
+            return NBTTagLong.a((long) java);
         if (java instanceof Float)
-            return new NBTTagFloat((float) java);
+            return NBTTagFloat.a((float) java);
         if (java instanceof Double)
-            return new NBTTagDouble((double) java);
+            return NBTTagDouble.a((double) java);
 
         if (java instanceof List) {
             List list = (List) java;
@@ -96,16 +94,16 @@ public class ReflectionAdapter extends com.wizardlybump17.wlib.reflection.Reflec
             return compound;
         }
 
-        return new NBTTagString(java == null ? "null" : java.toString());
+        return NBTTagString.a(java == null ? "null" : java.toString());
     }
 
     @Override
     public String getTargetVersion() {
-        return "v1_8_R3";
+        return "v1_16_R3";
     }
 
     @Override
     public ItemAdapter getItemAdapter(ItemStack item) {
-        return new com.wizardlybump17.wlib.reflection.v1_8_R3.ItemAdapter(item, this);
+        return new ItemAdapter(item, this);
     }
 }
