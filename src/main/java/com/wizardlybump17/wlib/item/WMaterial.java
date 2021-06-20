@@ -1,7 +1,11 @@
 package com.wizardlybump17.wlib.item;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.Material;
+
+import java.util.Map;
 
 public enum WMaterial {
 
@@ -14,6 +18,66 @@ public enum WMaterial {
             new MaterialData(3, "PLAYER_HEAD"),
             new MaterialData(4, "CREEPER_HEAD"),
             new MaterialData(5, "DRAGON_HEAD")),
+    SKELETON_SKULL(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 0);
+            }
+        }
+    },
+    WITHER_SKELETON_SKULL(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 1);
+            }
+        }
+    },
+    ZOMBIE_HEAD(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 2);
+            }
+        }
+    },
+    PLAYER_HEAD(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 3);
+            }
+        }
+    },
+    CREEPER_HEAD(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 4);
+            }
+        }
+    },
+    DRAGON_HEAD(new MaterialData(0, "SKULL_ITEM")) {
+        @Override
+        public WMaterialData of(byte data) {
+            try {
+                return new WMaterialData(Material.valueOf(name()), data);
+            } catch (IllegalArgumentException e) {
+                return new WMaterialData(Material.valueOf("SKULL_ITEM"), (byte) 3, ImmutableMap.of("head-base64", DRAGON_HEAD_BASE64));
+            }
+        }
+    },
 
     STAINED_GLASS_PANE(
             new MaterialData(0, "WHITE_STAINED_GLASS_PANE"),
@@ -55,6 +119,7 @@ public enum WMaterial {
         }
     };
 
+    private static final String DRAGON_HEAD_BASE64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFjZDZkMmQwM2YxMzVlN2M2YjVkNmNkYWUxYjNhNjg3NDNkYjRlYjc0OWZhZjczNDFlOWZiMzQ3YWEyODNiIn19fQ==";
 
     private final MaterialData[] related;
 
@@ -69,7 +134,7 @@ public enum WMaterial {
             for (MaterialData materialData : related)
                 if (materialData.data == data) {
                     try {
-                        return new WMaterialData(Material.valueOf(materialData.result), data);
+                        return new WMaterialData(Material.valueOf(materialData.result), (byte) 0);
                     } catch (IllegalArgumentException ignored) {
                     }
                 }
@@ -85,8 +150,14 @@ public enum WMaterial {
     }
 
     @Data
+    @AllArgsConstructor
     public static class WMaterialData {
         final Material type;
-        final byte data;
+        byte data;
+        Map<String, Object> args;
+
+        public WMaterialData(Material type, byte data) {
+            this(type, data, null);
+        }
     }
 }

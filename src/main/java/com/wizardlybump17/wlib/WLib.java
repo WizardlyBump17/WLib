@@ -18,6 +18,12 @@ public class WLib extends WPlugin {
             nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {}
         try {
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {}
+        try {
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {}
+        try {
             nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v_1_16_R3.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {}
 

@@ -39,7 +39,7 @@ public class Item {
 
     public static ItemBuilder getHead(String base64, int amount) {
         try {
-            ItemStack itemStack = builder().type(WMaterial.SKULL_ITEM).amount(amount).durability((short) 3).build();
+            ItemStack itemStack = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
             SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
             GameProfile gameProfile = new GameProfile(UUID.nameUUIDFromBytes(base64.getBytes()), null);
@@ -60,9 +60,9 @@ public class Item {
     }
 
     public static ItemBuilder getHead(UUID player, int amount) {
-        ItemStack item = builder().type(WMaterial.SKULL_ITEM).amount(amount).durability((short) 3).build();
+        ItemStack item = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwner(Bukkit.getPlayer(player).getName());
+        meta.setOwner(Bukkit.getOfflinePlayer(player).getName());
         item.setItemMeta(meta);
         return fromItemStack(item);
     }
@@ -93,6 +93,27 @@ public class Item {
 
         public String getDisplayName() {
             return displayName;
+        }
+
+        public Material getType() {
+            fixMaterial();
+            return type;
+        }
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public short getDurability() {
+            return durability;
+        }
+
+        public Map<Enchantment, Integer> getEnchantments() {
+            return enchantments;
+        }
+
+        public Set<ItemFlag> getFlags() {
+            return flags;
         }
 
         public ItemBuilder amount(int amount) {
@@ -216,7 +237,7 @@ public class Item {
             Map<String, Object> map = new LinkedHashMap<>();
 
             map.put("material", type);
-            if (amountSet) map.put("amount", amount);
+            map.put("amount", amountSet ? amount : 1);
             if (durability != 0) map.put("durability", durability);
             if (displayName != null) map.put("display-name", displayName);
             if (lore != null) map.put("lore", lore);
@@ -296,7 +317,14 @@ public class Item {
                 } catch (IllegalArgumentException e) {
                     WMaterial.WMaterialData fixed = wmaterial.of((byte) durability);
                     type = fixed.type;
-                    durability = (short) 0;
+                    durability = fixed.data;
+                    if (fixed.args == null) return;
+                    if (fixed.args.containsKey("head-base64")) {
+                        Map<String, Object> serialized = serialize();
+                        serialized.remove("type");
+                        serialized.remove("durability");
+                        setData(Item.getHead(fixed.args.get("head-base64").toString(), amount).setData(serialized).serialize());
+                    }
                 }
             }
         }
