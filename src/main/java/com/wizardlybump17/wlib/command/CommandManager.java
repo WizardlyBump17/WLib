@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CommandManager {
@@ -25,27 +26,31 @@ public class CommandManager {
 
             Command command = method.getAnnotation(Command.class);
             String commandName = command.execution().split(" ")[0].toLowerCase();
-            Set<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new HashSet<>());
-            commands.add(new RegisteredCommand(
+            Set<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new TreeSet<>(Comparator.comparingInt(c -> -c.getPattern().pattern().split(" ").length)));
+            RegisteredCommand registeredCommand = new RegisteredCommand(
                     command,
-                    (sender, args, params) -> {
+                    method,
+                    object,
+                    sender -> {
                         try {
                             if (!method.getParameterTypes()[0].isInstance(sender))
-                                return;
+                                return false;
 
                             if (!command.permission().isEmpty()) {
                                 if (!sender.hasPermission(command.permission())) {
                                     if (!command.permissionMessage().isEmpty())
                                         sender.sendMessage(command.permissionMessage().replace('&', '§'));
-                                    return;
+                                    return false;
                                 }
                             }
-                            method.invoke(object, params);
+                            return true;
                         } catch (Exception e) {
                             e.printStackTrace();
+                            return false;
                         }
-                    },
-                    method));
+                    });
+            registeredCommand.preparePattern();
+            commands.add(registeredCommand);
             if (!this.commands.containsKey(commandName)) {
                 PluginCommand pluginCommand = plugin.getCommand(commandName);
                 if (pluginCommand == null) {
@@ -60,11 +65,11 @@ public class CommandManager {
 
     public void execute(CommandSender sender, String commandName, String[] args) {
         for (RegisteredCommand command : commands.get(commandName.toLowerCase())) {
-            List<Object> params = command.getParams(args);
-            if (params == null)
-                continue;
-            command.fire(sender, args);
-            return;
+            RegisteredCommand.ArgsMap map = command.getArgs(args);
+            if (map != null) {
+                command.execute(map, sender);
+                return;
+            }
         }
     }
 }

@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class WPlugin extends JavaPlugin {
+public abstract class WPlugin extends JavaPlugin { //useless but useful
 
     @Override
-    public final void onLoad() {
+    public void onLoad() {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (String message : loadMessage())
             console.sendMessage('[' + getName() + "] " + message);
@@ -15,44 +15,49 @@ public abstract class WPlugin extends JavaPlugin {
     }
 
     @Override
-    public final void onEnable() {
+    public void onEnable() {
         enable();
-
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (String message : enableMessage())
             console.sendMessage('[' + getName() + "] " + message);
     }
 
     @Override
-    public final void onDisable() {
+    public void onDisable() {
         disable();
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (String message : disableMessage())
             console.sendMessage('[' + getName() + "] " + message);
     }
 
+    @Deprecated
     public void load() {
     }
 
+    @Deprecated
     public void enable() {
     }
 
+    @Deprecated
     public void disable() {
     }
 
+    @Deprecated
     protected String[] loadMessage() {
         return new String[0];
     }
 
+    @Deprecated
     protected String[] enableMessage() {
         return new String[0];
     }
 
+    @Deprecated
     protected String[] disableMessage() {
         return new String[0];
     }
 
-    public void saveResources(String... files) {
+    protected void saveResources(String... files) {
         for (String file : files)
             saveResource(file, false);
     }
