@@ -12,10 +12,11 @@ import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class RegisteredCommand {
 
-    public static final Pattern REQUIRED = Pattern.compile("<[a-zA-Z0-9_]+>");
-    public static final Pattern OPTIONAL = Pattern.compile("\\[[a-zA-Z0-9_]+]");
+    public static final Pattern REQUIRED = Pattern.compile(" ?<[a-zA-Z0-9_]+> ?");
+    public static final Pattern OPTIONAL = Pattern.compile(" ?\\[[a-zA-Z0-9_]+] ?");
 
     private final Command command;
     private final Method method;
@@ -41,7 +42,7 @@ public class RegisteredCommand {
 
         groupsName = new ArrayList<>(ints.size());
         for (int i : ints)
-            groupsName.add(indexes.get(i));
+            groupsName.add(indexes.get(i).trim());
     }
 
     protected void preparePattern() {
@@ -52,45 +53,28 @@ public class RegisteredCommand {
         Class<?>[] types = method.getParameterTypes();
         for (int i = 1; i < method.getParameterCount(); i++) {
             String groupName = groupsName.get(i - 1);
-            if (types[i].equals(String.class)) {
-                if (groupName.matches(REQUIRED.pattern()))
-                    currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), "(\\\\S+)");
-                if (groupName.matches(OPTIONAL.pattern()))
-                    currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), "(\\\\S+)?");
-                groups.add(new Arg(groupName, Arg.Type.STRING));
-            }
-            if (types[i].equals(String[].class)) {
-                if (groupName.matches(REQUIRED.pattern()))
-                    currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), "(.*)");
-                if (groupName.matches(OPTIONAL.pattern()))
-                    currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), "(.*)?");
-                groups.add(new Arg(groupName, Arg.Type.ARRAY));
-            }
+            currentCommand = addGroup(types[i], groupName, currentCommand);
         }
 
         pattern = Pattern.compile(currentCommand.trim() + ".*?");
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RegisteredCommand that = (RegisteredCommand) o;
-
-        if (!command.equals(that.command)) return false;
-        if (!method.equals(that.method)) return false;
-        if (!object.equals(that.object)) return false;
-        return executor.equals(that.executor);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = command.hashCode();
-        result = 31 * result + method.hashCode();
-        result = 31 * result + object.hashCode();
-        result = 31 * result + executor.hashCode();
-        return result;
+    String addGroup(Class<?> type, String groupName, String currentCommand) {
+        if (type.equals(String.class)) {
+            if (groupName.matches(REQUIRED.pattern()))
+                currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(\\\\S+) ?");
+            if (groupName.matches(OPTIONAL.pattern()))
+                currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), " ?(\\\\S+)? ?");
+            groups.add(new Arg(groupName, Arg.Type.STRING));
+        }
+        if (type.equals(String[].class)) {
+            if (groupName.matches(REQUIRED.pattern()))
+                currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(.*) ?");
+            if (groupName.matches(OPTIONAL.pattern()))
+                currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), " ?(.*)? ?");
+            groups.add(new Arg(groupName, Arg.Type.ARRAY));
+        }
+        return currentCommand;
     }
 
     public ArgsMap getArgs(String[] args) {

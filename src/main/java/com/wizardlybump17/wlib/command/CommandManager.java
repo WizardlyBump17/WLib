@@ -13,8 +13,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommandManager {
 
+    public static final Comparator<RegisteredCommand> COMMAND_COMPARATOR = Comparator.comparingInt(command -> -command.getCommand().execution().split(" ").length);
+
     private final JavaPlugin plugin;
-    private final Map<String, Set<RegisteredCommand>> commands = new HashMap<>();
+    private final Map<String, List<RegisteredCommand>> commands = new HashMap<>();
     
     public void registerCommands(Object object) {
         for (Method method : object.getClass().getDeclaredMethods()) {
@@ -26,7 +28,7 @@ public class CommandManager {
 
             Command command = method.getAnnotation(Command.class);
             String commandName = command.execution().split(" ")[0].toLowerCase();
-            Set<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new TreeSet<>(Comparator.comparingInt(c -> -c.getCommand().execution().split(" ").length)));
+            List<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new ArrayList<>());
             RegisteredCommand registeredCommand = new RegisteredCommand(
                     command,
                     method,
@@ -61,6 +63,9 @@ public class CommandManager {
                 this.commands.put(commandName, commands);
             }
         }
+
+        for (List<RegisteredCommand> commandList : commands.values())
+            commandList.sort(COMMAND_COMPARATOR);
     }
 
     public void execute(CommandSender sender, String commandName, String[] args) {
