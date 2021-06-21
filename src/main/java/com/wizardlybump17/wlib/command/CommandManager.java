@@ -26,7 +26,7 @@ public class CommandManager {
 
             Command command = method.getAnnotation(Command.class);
             String commandName = command.execution().split(" ")[0].toLowerCase();
-            Set<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new TreeSet<>(Comparator.comparingInt(c -> -c.getPattern().pattern().split(" ").length)));
+            Set<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new TreeSet<>(Comparator.comparingInt(c -> -c.getCommand().execution().split(" ").length)));
             RegisteredCommand registeredCommand = new RegisteredCommand(
                     command,
                     method,
@@ -49,8 +49,8 @@ public class CommandManager {
                             return false;
                         }
                     });
-            registeredCommand.preparePattern();
             commands.add(registeredCommand);
+            registeredCommand.preparePattern();
             if (!this.commands.containsKey(commandName)) {
                 PluginCommand pluginCommand = plugin.getCommand(commandName);
                 if (pluginCommand == null) {

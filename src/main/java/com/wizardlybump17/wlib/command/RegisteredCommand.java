@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.command;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-@EqualsAndHashCode
 @Getter
 public class RegisteredCommand {
 
@@ -71,6 +69,28 @@ public class RegisteredCommand {
         }
 
         pattern = Pattern.compile(currentCommand.trim() + ".*?");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RegisteredCommand that = (RegisteredCommand) o;
+
+        if (!command.equals(that.command)) return false;
+        if (!method.equals(that.method)) return false;
+        if (!object.equals(that.object)) return false;
+        return executor.equals(that.executor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = command.hashCode();
+        result = 31 * result + method.hashCode();
+        result = 31 * result + object.hashCode();
+        result = 31 * result + executor.hashCode();
+        return result;
     }
 
     public ArgsMap getArgs(String[] args) {
