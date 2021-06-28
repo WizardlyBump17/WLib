@@ -1,0 +1,23 @@
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+
+    implementation project(':versions:adapter')
+
+    implementation project(':versions:v1_8_R3')
+    implementation project(':versions:v1_13_R2')
+    implementation project(':versions:v1_16_R3')
+}
+
+buildscript {
+    apply plugin: 'com.github.johnrengelman.shadow'
+}
+
+processResources {
+    filesMatching("**/plugin.yml") {
+        expand "version": project.version
+    }
+}
+

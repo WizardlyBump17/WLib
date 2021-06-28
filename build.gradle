@@ -1,0 +1,25 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+allprojects {
+    group = 'com.wizardlybump17.wlib'
+    version = '1.0.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    sourceCompatibility = '1.8'
+
+    tasks {
+        compileJava {
+            options.encoding = "UTF-8"
+        }
+    }
+}
