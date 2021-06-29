@@ -8,6 +8,7 @@ dependencies {
 
     implementation project(':versions:v1_8_R3')
     implementation project(':versions:v1_13_R2')
+    implementation project(':versions:v1_15_R1')
     implementation project(':versions:v1_16_R3')
 }
 
@@ -19,5 +20,9 @@ processResources {
     filesMatching("**/plugin.yml") {
         expand "version": project.version
     }
+}
+
+shadowJar {
+    archiveFileName.set(project.name + '-' + project.version + '.' + archiveExtension.get())
 }
 
