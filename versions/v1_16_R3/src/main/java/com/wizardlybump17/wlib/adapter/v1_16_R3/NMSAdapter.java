@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.adapter.v_1_16_R3;
+package com.wizardlybump17.wlib.adapter.v1_16_R3;
 
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import net.minecraft.server.v1_16_R3.*;

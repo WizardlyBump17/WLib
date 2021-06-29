@@ -16,19 +16,19 @@ public class WLib extends WPlugin {
     public void onLoad() {
         String version = null;
         try {
-//            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
             version = "1.8.8";
         } catch (NoClassDefFoundError ignored) {}
         try {
-//            nmsAdapterRegister.registerAdapter(new com.wlizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
             version = "1.13.1";
         } catch (NoClassDefFoundError ignored) {}
         try {
-//            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
             version = "1.15.2";
         } catch (NoClassDefFoundError ignored) {}
         try {
-//            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v_1_16_R3.NMSAdapter());
+            nmsAdapterRegister.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_16_R3.NMSAdapter());
             version = "1.16.5";
         } catch (NoClassDefFoundError ignored) {}
         if (version == null)

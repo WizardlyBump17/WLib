@@ -2,7 +2,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    implementation files('libs/spigot-1.8.8-R0.1-SNAPSHOT.jar')
+    implementation files('../libs/spigot-1.8.8-R0.1-SNAPSHOT.jar')
 
     implementation project(':versions:adapter')
 
@@ -23,6 +23,7 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName.set(project.name + '-' + project.version + '.' + archiveExtension.get())
+    exclude 'spigot*'
+    archiveFileName.set('WLib-' + project.version + '.' + archiveExtension.get())
 }
 

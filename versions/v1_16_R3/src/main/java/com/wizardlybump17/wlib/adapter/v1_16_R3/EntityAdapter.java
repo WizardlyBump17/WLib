@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.adapter.v_1_16_R3;
+package com.wizardlybump17.wlib.adapter.v1_16_R3;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
