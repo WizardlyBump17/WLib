@@ -1,4 +1,4 @@
-rootProject.name = 'WLib-gradle'
+rootProject.name = 'WLib'
 
 include 'core'
 
