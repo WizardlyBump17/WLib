@@ -5,6 +5,11 @@ plugins {
 allprojects {
     group = 'com.wizardlybump17.wlib'
     version = '1.0.0'
+
+    buildscript {
+        apply plugin: 'com.github.johnrengelman.shadow'
+        apply plugin: 'maven'
+    }
 }
 
 subprojects {

@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.config;
 
 import com.wizardlybump17.wlib.item.Item;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class Config extends YamlConfiguration {
 
@@ -76,11 +78,20 @@ public class Config extends YamlConfiguration {
         return map;
     }
 
+    public String getFancyString(String path, String[] placeholders, Object[] replacements) {
+        String string = getFancyString(path);
+        if (string == null)
+            return null;
+        for (int i = 0; i < placeholders.length; i++)
+            string = string.replace('{' + placeholders[i] + '}', replacements[i].toString());
+        return string;
+    }
+
     public String getFancyString(String path, String def) {
         String string = getString(path, def);
         if (string == null)
-            return null;
-        return def.replace("\\n", "\n").replace('&', '§');
+            return def;
+        return string.replace("\\n", "\n").replace('&', '§');
     }
 
     public String getFancyString(String path) {

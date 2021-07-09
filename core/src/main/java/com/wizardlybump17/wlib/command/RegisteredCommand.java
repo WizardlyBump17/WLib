@@ -60,20 +60,28 @@ public class RegisteredCommand {
     }
 
     String addGroup(Class<?> type, String groupName, String currentCommand) {
+        boolean required = false;
+        Arg.Type argType = null;
         if (type.equals(String.class)) {
-            if (groupName.matches(REQUIRED.pattern()))
+            argType = Arg.Type.STRING;
+            if (groupName.matches(REQUIRED.pattern())) {
                 currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(\\\\S+) ?");
+                required = true;
+            }
             if (groupName.matches(OPTIONAL.pattern()))
                 currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), " ?(\\\\S+)? ?");
-            groups.add(new Arg(groupName, Arg.Type.STRING));
         }
         if (type.equals(String[].class)) {
-            if (groupName.matches(REQUIRED.pattern()))
+            argType = Arg.Type.ARRAY;
+            if (groupName.matches(REQUIRED.pattern())) {
                 currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(.*) ?");
+                required = true;
+            }
             if (groupName.matches(OPTIONAL.pattern()))
                 currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), " ?(.*)? ?");
-            groups.add(new Arg(groupName, Arg.Type.ARRAY));
         }
+        if (argType != null)
+            groups.add(new Arg(groupName, argType, required));
         return currentCommand;
     }
 
@@ -154,6 +162,7 @@ public class RegisteredCommand {
 
         final String name;
         final Type type;
+        final boolean required;
 
         enum Type {
             STRING, ARRAY

@@ -26,7 +26,7 @@ public class CommandManager {
                 continue;
 
             Command command = method.getAnnotation(Command.class);
-            String commandName = command.execution().split(" ")[0].toLowerCase();
+            String commandName = command.execution().split(" ")[0].toLowerCase().replaceAll("[^a-zA-Z0-9_?]", "");
             List<RegisteredCommand> commands = this.commands.getOrDefault(commandName, new ArrayList<>());
             RegisteredCommand registeredCommand = new RegisteredCommand(
                     command,

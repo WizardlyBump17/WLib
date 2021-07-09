@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.adapter.v1_15_R1;
 
+import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -111,5 +112,10 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     @Override
     public EntityAdapter getEntityAdapter(Entity entity) {
         return new EntityAdapter(entity);
+    }
+
+    @Override
+    public ItemStack getFixedMaterial(WMaterial material) {
+        return new ItemStack(material.getMaterial());
     }
 }

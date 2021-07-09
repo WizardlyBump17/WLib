@@ -1,19 +1,25 @@
+repositories {
+    mavenLocal()
+}
+
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly(
+            'org.projectlombok:lombok:1.18.20',
+            'org.jetbrains:annotations:16.0.2'
+    )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+//    compileOnly('org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT')
     implementation files('../libs/spigot-1.8.8-R0.1-SNAPSHOT.jar')
 
+    implementation project(':utils')
     implementation project(':versions:adapter')
 
     implementation project(':versions:v1_8_R3')
+    implementation project(':versions:v1_12_R1')
     implementation project(':versions:v1_13_R2')
     implementation project(':versions:v1_15_R1')
     implementation project(':versions:v1_16_R3')
-}
-
-buildscript {
-    apply plugin: 'com.github.johnrengelman.shadow'
 }
 
 processResources {

@@ -13,4 +13,6 @@ public abstract class NMSAdapter {
 
     public abstract ItemAdapter getItemAdapter(ItemStack item);
     public abstract EntityAdapter getEntityAdapter(Entity entity);
+
+    public abstract ItemStack getFixedMaterial(WMaterial material);
 }

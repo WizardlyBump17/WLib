@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
+import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.ListUtil;
 import lombok.*;
 import org.bukkit.Bukkit;
@@ -25,7 +26,7 @@ import java.util.*;
 @Builder
 public class Item {
 
-    private static final NMSAdapter ADAPTER = NMSAdapterRegister.getInstance().getServerAdapter();
+    private static final NMSAdapter ADAPTER = NMSAdapterRegister.getInstance().current();
 
     private Material type;
     private int amount;
@@ -70,7 +71,7 @@ public class Item {
     public static ItemBuilder fromItemStack(ItemStack item) {
         if (item == null)
             return builder();
-        ItemAdapter itemAdapter = NMSAdapterRegister.getInstance().getServerAdapter().getItemAdapter(item);
+        ItemAdapter itemAdapter = ADAPTER.getItemAdapter(item);
         ItemMeta itemMeta = item.getItemMeta();
         return builder()
                 .type(item.getType())
@@ -186,8 +187,7 @@ public class Item {
         public Object getNbtTag(String key) {
             if (nbtTags == null)
                 nbtTags = new HashMap<>();
-            NMSAdapter adapter = NMSAdapterRegister.getInstance().getServerAdapter();
-            return adapter.nbtToJava(nbtTags.get(key));
+            return ADAPTER.nbtToJava(nbtTags.get(key));
         }
 
         public ItemBuilder copy(ItemStack item) {
@@ -205,10 +205,16 @@ public class Item {
         }
 
         public ItemStack build() {
-            fixMaterial();
-            ItemStack itemStack = new ItemStack(type, amountSet ? amount : 1, durability);
+            ItemStack itemStack;
+            if (wmaterial != null) { //ill add all the items in WMaterial :D
+                itemStack = fixMaterial();
+                itemStack.setAmount(amountSet ? amount : 1);
+            } else
+                itemStack = new ItemStack(type, amountSet ? amount : 1, durability);
 
             ItemMeta itemMeta = itemStack.getItemMeta();
+            if (itemMeta == null)
+                return itemStack;
             itemMeta.setDisplayName(displayName == null ? null : displayName.replace('&', '§'));
             itemMeta.setLore(lore);
 
@@ -238,6 +244,7 @@ public class Item {
         public Map<String, Object> serialize() {
             Map<String, Object> map = new LinkedHashMap<>();
 
+            fixMaterial();
             map.put("material", type);
             map.put("amount", amountSet ? amount : 1);
             if (durability != 0) map.put("durability", durability);
@@ -311,23 +318,15 @@ public class Item {
             return this;
         }
 
-        private void fixMaterial() {
-            if (type == null && wmaterial != null) {
-                try {
-                    type = Material.valueOf(wmaterial.name());
-                } catch (IllegalArgumentException e) {
-                    WMaterial.WMaterialData fixed = wmaterial.of((byte) durability);
-                    type = fixed.type;
-                    durability = fixed.data;
-                    if (fixed.args == null) return;
-                    if (fixed.args.containsKey("head-base64")) {
-                        Map<String, Object> serialized = serialize();
-                        serialized.remove("type");
-                        serialized.remove("durability");
-                        setData(Item.getHead(fixed.args.get("head-base64").toString(), amount).setData(serialized).serialize());
-                    }
-                }
+        private ItemStack fixMaterial() {
+            if (wmaterial != null) {
+                ItemStack item = ADAPTER.getFixedMaterial(wmaterial);
+                type = item.getType();
+                if (!wmaterial.name().endsWith("_SPAWN_EGG"))
+                    durability = item.getDurability();
+                return item;
             }
+            return null;
         }
     }
 }

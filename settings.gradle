@@ -2,11 +2,14 @@ rootProject.name = 'WLib'
 
 include 'core'
 
+include 'versions:adapter'
+findProject(':versions:adapter')?.name = 'adapter'
+
 include 'versions:v1_8_R3'
 findProject(':versions:v1_8_R3')?.name = 'v1_8_R3'
 
-include 'versions:adapter'
-findProject(':versions:adapter')?.name = 'adapter'
+include 'versions:v1_12_R1'
+findProject(':versions:v1_12_R1')?.name = 'v1_12_R1'
 
 include 'versions:v1_13_R2'
 findProject(':versions:v1_13_R2')?.name = 'v1_13_R2'
@@ -16,4 +19,5 @@ findProject(':versions:v1_16_R3')?.name = 'v1_16_R3'
 
 include 'versions:v1_15_R1'
 findProject(':versions:v1_15_R1')?.name = 'v1_15_R1'
+include 'utils'
 

@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.adapter.v1_16_R3;
 
-import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
+import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -11,13 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
-
-    static {
-        try {
-            NMSAdapterRegister.getInstance().registerAdapter(new NMSAdapter());
-        } catch (Exception ignored) {
-        }
-    }
 
     @Override
     public Object nbtToJava(Object nbt) {
@@ -119,5 +112,10 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     @Override
     public EntityAdapter getEntityAdapter(Entity entity) {
         return new EntityAdapter(entity);
+    }
+
+    @Override
+    public ItemStack getFixedMaterial(WMaterial material) {
+        return new ItemStack(material.getMaterial());
     }
 }
