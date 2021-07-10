@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
+import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.ListUtil;
 import lombok.*;
 import org.bukkit.Bukkit;
@@ -322,11 +323,23 @@ public class Item {
             if (wmaterial != null) {
                 ItemStack item = ADAPTER.getFixedMaterial(wmaterial);
                 type = item.getType();
+
+                if (type.name().equals("AIR") && !wmaterial.name().equals("AIR")) //lets try get the right item using the related
+                    item.setType(type = getFixedMaterialFromRelated());
+
                 if (!wmaterial.name().endsWith("_SPAWN_EGG"))
                     durability = item.getDurability();
                 return item;
             }
             return null;
+        }
+
+        private Material getFixedMaterialFromRelated() {
+            WMaterial[] values = WMaterial.values();
+            for (WMaterial value : values)
+                if (value.getData() == durability && ArrayUtils.contains(value.getRelated(), wmaterial.name()))
+                    return value.getMaterial();
+            return Material.AIR;
         }
     }
 }

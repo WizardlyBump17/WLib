@@ -108,7 +108,28 @@ public enum WMaterial {
     ZOMBIE_VILLAGER_SPAWN_EGG(54, MapUtils.mapOf("spawn-egg", "ZOMBIE_VILLAGER"), "MONSTER_EGG"),
     ZOMBIFIED_PIGLIN_SPAWN_EGG(57, "MONSTER_EGG"),
 
-    CLAY_BRICK("BRICK");
+    CLAY_BRICK("BRICK"),
+
+    INK_SACK(ArrayUtils.arrayOfRange(0, 15)),
+    COCOA_BEANS(3, "INK_SACK"),
+    BONE_MEAL(15, "INK_SACK"),
+    LAPIS_LAZULI(4, "INK_SACK"),
+    WHITE_DYE(15, "INK_SACK"),
+    ORANGE_DYE(14, "INK_SACK"),
+    MAGENTA_DYE(13, "INK_SACK"),
+    LIGHT_BLUE_DYE(12, "INK_SACK"),
+    YELLOW_DYE(11, "INK_SACK"),
+    LIME_DYE(10, "INK_SACK"),
+    PINK_DYE(9, "INK_SACK"),
+    GRAY_DYE(8, "INK_SACK"),
+    LIGHT_GRAY_DYE(7, "INK_SACK"),
+    CYAN_DYE(6, "INK_SACK"),
+    PURPLE_DYE(5, "INK_SACK"),
+    BLUE_DYE(4, "INK_SACK"),
+    BROWN_DYE(3, "INK_SACK"),
+    GREEN_DYE(2, "INK_SACK"),
+    RED_DYE(1, "INK_SACK"),
+    BLACK_DYE(0, "INK_SACK");
 
     private final Material material;
     private final int data;
