@@ -9,7 +9,6 @@ dependencies {
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-//    compileOnly('org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT')
     implementation files('../libs/spigot-1.8.8-R0.1-SNAPSHOT.jar')
 
     implementation project(':utils')

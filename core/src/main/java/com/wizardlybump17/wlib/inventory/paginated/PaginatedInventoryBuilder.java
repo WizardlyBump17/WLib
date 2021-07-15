@@ -7,10 +7,7 @@ import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
-import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,11 +104,8 @@ public class PaginatedInventoryBuilder implements Cloneable {
                             ItemButton button = content.get(currentItem++);
                             if (button instanceof UpdatableItem) {
                                 if (!(holder instanceof UpdatableHolder)) {
-                                    inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(i + 1)), shape.length(), updateTime);
-                                    UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
-                                    for (Map.Entry<Integer, ItemButton> entry : holder.getButtons().entrySet())
-                                        tempHolder.setButton(entry.getKey(), entry.getValue());
-                                    holder = tempHolder;
+                                    inventory = fromHolder(i, holder);
+                                    holder = inventory.getOwner();
                                 }
                             }
                             if (button == null) continue;
@@ -167,11 +161,8 @@ public class PaginatedInventoryBuilder implements Cloneable {
                                 continue;
                             }
 
-                            inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(i + 1)), shape.length(), updateTime);
-                            UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
-                            for (Map.Entry<Integer, ItemButton> entry : holder.getButtons().entrySet())
-                                tempHolder.setButton(entry.getKey(), entry.getValue());
-                            (holder = tempHolder).setButton(slot, updatableShapeReplacements.get(currentChar));
+                            inventory = fromHolder(i, holder);
+                            (holder = inventory.getOwner()).setButton(slot, updatableShapeReplacements.get(currentChar));
                         }
                     }
                 }
@@ -183,6 +174,14 @@ public class PaginatedInventoryBuilder implements Cloneable {
         return paginatedInventory;
     }
 
+    private UpdatableInventory fromHolder(int page, CustomInventoryHolder original) {
+        UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime);
+        UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
+        for (Map.Entry<Integer, ItemButton> entry : original.getButtons().entrySet())
+            tempHolder.setButton(entry.getKey(), entry.getValue());
+        return inventory;
+    }
+
     @Override
     public PaginatedInventoryBuilder clone() {
         try {
@@ -191,25 +190,6 @@ public class PaginatedInventoryBuilder implements Cloneable {
             return builder;
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    @Data
-    @RequiredArgsConstructor
-    public static class InventoryNavigator {
-
-        private final ItemStack item;
-        private ItemButton replacer;
-        private char replacerChar;
-
-        public InventoryNavigator(ItemStack item, ItemButton replacer) {
-            this.item = item;
-            this.replacer = replacer;
-        }
-
-        public InventoryNavigator(ItemStack item, char replacer) {
-            this.item = item;
-            replacerChar = replacer;
         }
     }
 }

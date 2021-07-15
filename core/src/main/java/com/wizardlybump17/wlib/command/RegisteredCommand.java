@@ -74,7 +74,7 @@ public class RegisteredCommand {
         if (type.equals(String[].class)) {
             argType = Arg.Type.ARRAY;
             if (groupName.matches(REQUIRED.pattern())) {
-                currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(.*) ?");
+                currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " (.+) ?");
                 required = true;
             }
             if (groupName.matches(OPTIONAL.pattern()))

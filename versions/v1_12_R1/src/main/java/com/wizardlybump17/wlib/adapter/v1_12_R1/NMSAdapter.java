@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.adapter.v1_12_R1;
 
-import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Material;
@@ -137,10 +136,19 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
                     if (!(meta instanceof SpawnEggMeta))
                         return;
 
-                    try {
-                        ((SpawnEggMeta) meta).setSpawnedType(EntityType.valueOf(value.toString()));
-                    } catch (IllegalArgumentException ignored) {
+                    EntityType entityType = null;
+                    if (value instanceof String)
+                        entityType = getType(value.toString());
+                    else if (value instanceof String[]) {
+                        for (String string : (String[]) value) {
+                            if (entityType != null)
+                                break;
+                            entityType = getType(string);
+                        }
                     }
+                    if (entityType == null) //oh no :C
+                        return;
+                    ((SpawnEggMeta) meta).setSpawnedType(entityType);
                     return;
                 }
             }
@@ -148,5 +156,13 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
         itemStack.setItemMeta(meta);
         return itemStack;
+    }
+
+    private static EntityType getType(String name) {
+        try {
+            return EntityType.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

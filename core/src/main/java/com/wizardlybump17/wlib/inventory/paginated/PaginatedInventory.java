@@ -24,11 +24,19 @@ public class PaginatedInventory {
     public void show(HumanEntity player, int page) {
         if (page < 0 || page >= inventories.size())
             return;
+        if (playerPages.containsKey(player))
+            if (inventories.get(page).equals(inventories.get(playerPages.get(player))))
+                return;
+
         playerPages.put(player, page);
         CustomInventory inventory = inventories.get(page);
         if (inventory instanceof UpdatableInventory)
             ((UpdatableHolder) inventory.getOwner()).start();
         player.openInventory(inventory.getBukkitInventory());
+    }
+
+    public void show(HumanEntity player) {
+        show(player, 0);
     }
 
     public void showNextPage(HumanEntity player) {

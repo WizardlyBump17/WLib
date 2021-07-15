@@ -46,4 +46,8 @@ public class CustomInventoryHolder implements InventoryHolder {
     public Inventory getInventory() {
         return inventory.getBukkitInventory();
     }
+
+    public CustomInventory getOriginalInventory() {
+        return inventory;
+    }
 }

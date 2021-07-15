@@ -9,7 +9,10 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.ListUtil;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -321,7 +324,11 @@ public class Item {
 
         private ItemStack fixMaterial() {
             if (wmaterial != null) {
-                ItemStack item = ADAPTER.getFixedMaterial(wmaterial);
+                ItemStack item;
+                if (ArrayUtils.contains(wmaterial.getAcceptedData(), (int) durability))
+                    item = new ItemStack(getFixedMaterialFromRelated(), 1, durability);
+                else
+                    item = ADAPTER.getFixedMaterial(wmaterial);
                 type = item.getType();
 
                 if (type.name().equals("AIR") && !wmaterial.name().equals("AIR")) //lets try get the right item using the related

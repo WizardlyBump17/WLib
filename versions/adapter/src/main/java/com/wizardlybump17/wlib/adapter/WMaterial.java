@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import org.bukkit.Material;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Getter
@@ -12,7 +13,7 @@ public enum WMaterial {
 
     AIR,
 
-    SKULL_ITEM(ArrayUtils.arrayOfRange(0, 5)),
+    SKULL_ITEM(ArrayUtils.arrayOfRange(0, 5), "SKELETON_SKULL"),
     SKELETON_SKULL("SKULL_ITEM"),
     WITHER_SKELETON_SKULL(1, "SKULL_ITEM"),
     ZOMBIE_HEAD(2, "SKULL_ITEM"),
@@ -20,7 +21,7 @@ public enum WMaterial {
     CREEPER_HEAD(4, "SKULL_ITEM"),
     DRAGON_HEAD(5, "SKULL_ITEM"),
 
-    STAINED_GLASS_PANE(ArrayUtils.arrayOfRange(0, 15)),
+    STAINED_GLASS_PANE(ArrayUtils.arrayOfRange(0, 15), "WHITE_STAINED_GLASS_PANE"),
     WHITE_STAINED_GLASS_PANE("STAINED_GLASS_PANE"),
     ORANGE_STAINED_GLASS_PANE(1, "STAINED_GLASS_PANE"),
     MAGENTA_STAINED_GLASS_PANE(2, "STAINED_GLASS_PANE"),
@@ -38,7 +39,7 @@ public enum WMaterial {
     RED_STAINED_GLASS_PANE(14, "STAINED_GLASS_PANE"),
     BLACK_STAINED_GLASS_PANE(15, "STAINED_GLASS_PANE"),
 
-    MAP,
+    MAP("FILLED_MAP"),
     EMPTY_MAP("MAP"),
     FILLED_MAP("MAP"),
 
@@ -50,67 +51,67 @@ public enum WMaterial {
     CAVE_SPIDER_SPAWN_EGG(59, MapUtils.mapOf("spawn-egg", "CAVE_SPIDER"), "MONSTER_EGG"),
     CHICKEN_SPAWN_EGG(93, MapUtils.mapOf("spawn-egg", "CHICKEN"), "MONSTER_EGG"),
     COD_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "COD"), "MONSTER_EGG"),
-    COW_SPAWN_EGG(92, "MONSTER_EGG"),
-    CREEPER_SPAWN_EGG(50, "MONSTER_EGG"),
+    COW_SPAWN_EGG(92, MapUtils.mapOf("spawn-egg", "COW"), "MONSTER_EGG"),
+    CREEPER_SPAWN_EGG(50, MapUtils.mapOf("spawn-egg", "CREEPER"), "MONSTER_EGG"),
     DOLPHIN_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "DOLPHIN"), "MONSTER_EGG"),
-    DONKEY_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "DONKEY"), "MONSTER_EGG"),
+    DONKEY_SPAWN_EGG(54, MapUtils.mapOf("spawn-egg", "DONKEY"), "MONSTER_EGG"),
     DROWNED_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "DROWNED"), "MONSTER_EGG"),
     ELDER_GUARDIAN_SPAWN_EGG(68, MapUtils.mapOf("spawn-egg", "ELDER-GUARDIAN"), "MONSTER_EGG"),
-    ENDERMAN_SPAWN_EGG(58, "MONSTER_EGG"),
-    ENDERMITE_SPAWN_EGG(67, "MONSTER_EGG"),
-    EVOKER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "EVOKER"), "MONSTER_EGG"),
+    ENDERMAN_SPAWN_EGG(58, MapUtils.mapOf("spawn-egg", "ENDERMAN"), "MONSTER_EGG"),
+    ENDERMITE_SPAWN_EGG(67, MapUtils.mapOf("spawn-egg", "ENDERMITE"), "MONSTER_EGG"),
+    EVOKER_SPAWN_EGG(120, MapUtils.mapOf("spawn-egg", "EVOKER"), "MONSTER_EGG"),
     FOX_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "FOX"), "MONSTER_EGG"),
-    GHAST_SPAWN_EGG(56, "MONSTER_EGG"),
-    GUARDIAN_SPAWN_EGG(68, "MONSTER_EGG"),
+    GHAST_SPAWN_EGG(56, MapUtils.mapOf("spawn-egg", "GHAST"), "MONSTER_EGG"),
+    GUARDIAN_SPAWN_EGG(68, MapUtils.mapOf("spawn-egg", "GUARDIAN"), "MONSTER_EGG"),
     HOGLIN_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "HOGLIN"), "MONSTER_EGG"),
-    HORSE_SPAWN_EGG(100, "MONSTER_EGG"),
+    HORSE_SPAWN_EGG(100, MapUtils.mapOf("spawn-egg", "HORSE"), "MONSTER_EGG"),
     HUSK_SPAWN_EGG(54, MapUtils.mapOf("spawn-egg", "HUSK"), "MONSTER_EGG"),
-    LLAMA_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "LLAMA"), "MONSTER_EGG"),
-    MAGMA_CUBE_SPAWN_EGG(62, "MONSTER_EGG"),
-    MOOSHROOM_SPAWN_EGG(96, "MONSTER_EGG"),
-    MULE_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "MULE"), "MONSTER_EGG"),
-    OCELOT_SPAWN_EGG(98, "MONSTER_EGG"),
+    LLAMA_SPAWN_EGG(100, MapUtils.mapOf("spawn-egg", "LLAMA"), "MONSTER_EGG"),
+    MAGMA_CUBE_SPAWN_EGG(62, MapUtils.mapOf("spawn-egg", "MAGMA_CUBE"), "MONSTER_EGG"),
+    MOOSHROOM_SPAWN_EGG(96, MapUtils.mapOf("spawn-egg", "MOOSHROOM_COW"), "MONSTER_EGG"),
+    MULE_SPAWN_EGG(100, MapUtils.mapOf("spawn-egg", "MULE"), "MONSTER_EGG"),
+    OCELOT_SPAWN_EGG(98, MapUtils.mapOf("spawn-egg", "OCELOT"), "MONSTER_EGG"),
     PANDA_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PANDA"), "MONSTER_EGG"),
     PARROT_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PARROT"), "MONSTER_EGG"),
     PHANTOM_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PHANTOM"), "MONSTER_EGG"),
-    PIG_SPAWN_EGG(90, "MONSTER_EGG"),
+    PIG_SPAWN_EGG(90, MapUtils.mapOf("spawn-egg", "PIG"), "MONSTER_EGG"),
     PIGLIN_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PIGLIN"), "MONSTER_EGG"),
     PIGLIN_BRUTE_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PIGLIN_BRUTE"), "MONSTER_EGG"),
-    PILLAGER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PILLAGER"), "MONSTER_EGG"),
+    PILLAGER_SPAWN_EGG(120, MapUtils.mapOf("spawn-egg", "PILLAGER"), "MONSTER_EGG"),
     POLAR_BEAR_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "POLAR_BEAR"), "MONSTER_EGG"),
     PUFFERFISH_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "PUFFERFISH"), "MONSTER_EGG"),
-    RABBIT_SPAWN_EGG(101, "MONSTER_EGG"),
+    RABBIT_SPAWN_EGG(101, MapUtils.mapOf("spawn-egg", "RABBIT"), "MONSTER_EGG"),
     RAVAGER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "RAVAGER"), "MONSTER_EGG"),
     SALMON_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "SALMON"), "MONSTER_EGG"),
-    SHEEP_SPAWN_EGG(91, "MONSTER_EGG"),
+    SHEEP_SPAWN_EGG(91, MapUtils.mapOf("spawn-egg", "SHEEP"), "MONSTER_EGG"),
     SHULKER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "SHULKER"), "MONSTER_EGG"),
-    SILVERFISH_SPAWN_EGG(60, "MONSTER_EGG"),
-    SKELETON_SPAWN_EGG(51, "MONSTER_EGG"),
-    SKELETON_HORSE_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "SKELETON_HORSE"), "MONSTER_EGG"),
-    SLIME_SPAWN_EGG(55, "MONSTER_EGG"),
-    SPIDER_SPAWN_EGG(52, "MONSTER_EGG"),
-    SQUID_SPAWN_EGG(94, "MONSTER_EGG"),
+    SILVERFISH_SPAWN_EGG(60, MapUtils.mapOf("spawn-egg", "SILVERFISH"), "MONSTER_EGG"),
+    SKELETON_SPAWN_EGG(51, MapUtils.mapOf("spawn-egg", "SKELETON"), "MONSTER_EGG"),
+    SKELETON_HORSE_SPAWN_EGG(100, MapUtils.mapOf("spawn-egg", "SKELETON_HORSE"), "MONSTER_EGG"),
+    SLIME_SPAWN_EGG(55, MapUtils.mapOf("spawn-egg", "SLIME"), "MONSTER_EGG"),
+    SPIDER_SPAWN_EGG(52, MapUtils.mapOf("spawn-egg", "SPIDER"), "MONSTER_EGG"),
+    SQUID_SPAWN_EGG(94, MapUtils.mapOf("spawn-egg", "SQUID"), "MONSTER_EGG"),
     STRAY_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "STRAY"), "MONSTER_EGG"),
     STRIDER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "STRIDER"), "MONSTER_EGG"),
     TRADER_LLAMA_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "TRADER"), "MONSTER_EGG"),
     TROPICAL_FISH_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "TROPICAL"), "MONSTER_EGG"),
     TURTLE_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "TURTLE"), "MONSTER_EGG"),
     VEX_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "VEX"), "MONSTER_EGG"),
-    VILLAGER_SPAWN_EGG(120, "MONSTER_EGG"),
-    VINDICATOR_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "VINDICATOR"), "MONSTER_EGG"),
-    WANDERING_TRADER_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "WANDERING_TRADER"), "MONSTER_EGG"),
-    WITCH_SPAWN_EGG(66, "MONSTER_EGG"),
+    VILLAGER_SPAWN_EGG(120, MapUtils.mapOf("spawn-egg", "VILLAGER"), "MONSTER_EGG"),
+    VINDICATOR_SPAWN_EGG(120, MapUtils.mapOf("spawn-egg", "VINDICATOR"), "MONSTER_EGG"),
+    WANDERING_TRADER_SPAWN_EGG(120, MapUtils.mapOf("spawn-egg", "WANDERING_TRADER"), "MONSTER_EGG"),
+    WITCH_SPAWN_EGG(66, MapUtils.mapOf("spawn-egg", "WITCH"), "MONSTER_EGG"),
     WITHER_SKELETON_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "WITHER_SKELETON"), "MONSTER_EGG"),
-    WOLF_SPAWN_EGG(95, "MONSTER_EGG"),
+    WOLF_SPAWN_EGG(95, MapUtils.mapOf("spawn-egg", "WOLF"), "MONSTER_EGG"),
     ZOGLIN_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "ZOGLIN"), "MONSTER_EGG"),
-    ZOMBIE_SPAWN_EGG(54, "MONSTER_EGG"),
+    ZOMBIE_SPAWN_EGG(54, MapUtils.mapOf("spawn-egg", "ZOMBIE"), "MONSTER_EGG"),
     ZOMBIE_HORSE_SPAWN_EGG(100, MapUtils.mapOf("spawn-egg", "ZOMBIE_HORSE"), "MONSTER_EGG"),
     ZOMBIE_VILLAGER_SPAWN_EGG(54, MapUtils.mapOf("spawn-egg", "ZOMBIE_VILLAGER"), "MONSTER_EGG"),
-    ZOMBIFIED_PIGLIN_SPAWN_EGG(57, "MONSTER_EGG"),
+    ZOMBIFIED_PIGLIN_SPAWN_EGG(57, MapUtils.mapOf("spawn-egg", new String[] {"ZOMBIFIED_PIGLIN", "ZOMBIE_PIGMAN"}), "MONSTER_EGG"),
 
     CLAY_BRICK("BRICK"),
 
-    INK_SACK(ArrayUtils.arrayOfRange(0, 15)),
+    INK_SACK(ArrayUtils.arrayOfRange(0, 15), "INK_SAC"),
     COCOA_BEANS(3, "INK_SACK"),
     BONE_MEAL(15, "INK_SACK"),
     LAPIS_LAZULI(4, "INK_SACK"),
@@ -129,7 +130,17 @@ public enum WMaterial {
     BROWN_DYE(3, "INK_SACK"),
     GREEN_DYE(2, "INK_SACK"),
     RED_DYE(1, "INK_SACK"),
-    BLACK_DYE(0, "INK_SACK");
+    BLACK_DYE(0, "INK_SACK"),
+
+    SIGN("OAK_SIGN"),
+    OAK_SIGN("SIGN"),
+    SPRUCE_SIGN("SIGN"),
+    BIRCH_SIGN("SIGN"),
+    JUNGLE_SIGN("SIGN"),
+    ACACIA_SIGN("SIGN"),
+    DARK_OAK_SIGN("SIGN"),
+    CRIMSON_SIGN("SIGN"),
+    WARPED_SIGN("SIGN");
 
     private final Material material;
     private final int data;
@@ -188,5 +199,9 @@ public enum WMaterial {
             } catch (IllegalArgumentException ignored) {}
         }
         return Material.AIR;
+    }
+
+    public Integer[] getAcceptedData() {
+        return Arrays.stream(acceptedData).boxed().toArray(Integer[]::new);
     }
 }
