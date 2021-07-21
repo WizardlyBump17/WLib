@@ -36,6 +36,14 @@ public abstract class Database {
         }
     }
 
+    public void open() {
+        open(null);
+    }
+
+    public void close() {
+        close(null);
+    }
+
     public void close(Consumer<Database> callback) {
         try {
             if (isClosed()) return;

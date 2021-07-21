@@ -116,24 +116,6 @@ public class PaginatedInventoryBuilder implements Cloneable {
 
                     case '<': {
                         if (i == 0) {
-                            if (nextPage.replacer != null)
-                                holder.setButton(slot, nextPage.replacer);
-                            else if (nextPage.replacerChar != '\u0000')
-                                holder.setButton(slot, shapeReplacements.get(nextPage.replacerChar));
-                            else
-                                holder.setButton(slot, new ItemButton(
-                                        nextPage.item,
-                                        event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
-                            continue;
-                        }
-                        holder.setButton(slot, new ItemButton(
-                                nextPage.item,
-                                event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
-                        continue;
-                    }
-
-                    case '>': {
-                        if (i + 1 == inventoriesAmount) {
                             if (previousPage.replacer != null)
                                 holder.setButton(slot, previousPage.replacer);
                             else if (previousPage.replacerChar != '\u0000')
@@ -141,11 +123,29 @@ public class PaginatedInventoryBuilder implements Cloneable {
                             else
                                 holder.setButton(slot, new ItemButton(
                                         previousPage.item,
-                                        event -> paginatedInventory.showNextPage(event.getWhoClicked())));
+                                        event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
                             continue;
                         }
                         holder.setButton(slot, new ItemButton(
                                 previousPage.item,
+                                event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
+                        continue;
+                    }
+
+                    case '>': {
+                        if (i + 1 == inventoriesAmount) {
+                            if (nextPage.replacer != null)
+                                holder.setButton(slot, nextPage.replacer);
+                            else if (nextPage.replacerChar != '\u0000')
+                                holder.setButton(slot, shapeReplacements.get(nextPage.replacerChar));
+                            else
+                                holder.setButton(slot, new ItemButton(
+                                        nextPage.item,
+                                        event -> paginatedInventory.showNextPage(event.getWhoClicked())));
+                            continue;
+                        }
+                        holder.setButton(slot, new ItemButton(
+                                nextPage.item,
                                 event -> paginatedInventory.showNextPage(event.getWhoClicked())));
                         continue;
                     }

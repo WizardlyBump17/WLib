@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Data
 public class ListUtil {
 
@@ -22,22 +23,6 @@ public class ListUtil {
         for (String s : list)
             result.add(s.replace(old, replacement));
         return new ListUtil(result);
-    }
-
-    @Deprecated
-    public static List<String> replace(List<String> list, char old, char replacement) {
-        List<String> result = new ArrayList<>(list.size());
-        for (String s : list)
-            result.add(s.replace(old, replacement));
-        return result;
-    }
-
-    @Deprecated
-    public static List<String> replace(List<String> list, String old, String replacement) {
-        List<String> result = new ArrayList<>(list.size());
-        for (String s : list)
-            result.add(s.replace(old, replacement));
-        return result;
     }
 
     public static List<String> breakLines(String string, int length, String prefix) {
