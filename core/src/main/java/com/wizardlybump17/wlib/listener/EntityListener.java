@@ -1,21 +1,19 @@
 package com.wizardlybump17.wlib.listener;
 
+import com.wizardlybump17.wlib.adapter.EntityAdapter;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.SpawnEgg;
 
-public class PlayerListener implements Listener {
+public class EntityListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
@@ -37,5 +35,15 @@ public class PlayerListener implements Listener {
         InventoryHolder holder = inventory.getHolder();
         if (holder instanceof UpdatableHolder)
             ((UpdatableHolder) holder).stop();
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        EntityAdapter.deleteFromCache(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onDeath(EntityDeathEvent event) {
+        EntityAdapter.deleteFromCache(event.getEntity());
     }
 }

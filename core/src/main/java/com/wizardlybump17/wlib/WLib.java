@@ -1,11 +1,10 @@
 package com.wizardlybump17.wlib;
 
-import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
-import com.wizardlybump17.wlib.listener.PlayerListener;
+import com.wizardlybump17.wlib.listener.EntityListener;
 import org.bukkit.Bukkit;
 
 public class WLib extends WPlugin {
@@ -22,7 +21,7 @@ public class WLib extends WPlugin {
     @Override
     public void onEnable() {
         initAdapters();
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         getLogger().info("WLib enabled.");
     }
 

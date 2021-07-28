@@ -112,7 +112,7 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     }
 
     @Override
-    public EntityAdapter getEntityAdapter(Entity entity) {
+    public EntityAdapter newEntityAdapter(Entity entity) {
         return new EntityAdapter(entity);
     }
 
