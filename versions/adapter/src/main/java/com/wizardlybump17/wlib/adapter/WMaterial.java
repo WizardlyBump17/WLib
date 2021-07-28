@@ -140,15 +140,35 @@ public enum WMaterial {
     ACACIA_SIGN("SIGN"),
     DARK_OAK_SIGN("SIGN"),
     CRIMSON_SIGN("SIGN"),
-    WARPED_SIGN("SIGN");
+    WARPED_SIGN("SIGN"),
+
+    WOOD_DOOR("OAK_DOOR"),
+    SPRUCE_DOOR_ITEM("SPRUCE_DOOR"),
+    BIRCH_DOOR_ITEM("BIRCH_DOOR"),
+    JUNGLE_DOOR_ITEM("JUNGLE_DOOR"),
+    ACACIA_DOOR_ITEM("ACACIA_DOOR"),
+    DARK_OAK_DOOR_ITEM("DARK_OAK_DOOR"),
+    OAK_DOOR("WOOD_DOOR"),
+    SPRUCE_DOOR("SPRUCE_DOOR_ITEM"),
+    BIRCH_DOOR("BIRCH_DOOR_ITEM"),
+    JUNGLE_DOOR("JUNGLE_DOOR_ITEM"),
+    ACACIA_DOOR("ACACIA_DOOR_ITEM"),
+    DARK_OAK_DOOR("DARK_OAK_DOOR"),
+    CRISMON_DOOR("WOOD_DOOR"),
+    WARPED_DOOR("WOOD_DOOR"),
+    IRON_DOOR;
 
     private final Material material;
     private final int data;
-    private final String[] related;
+    private final String related;
     private final int[] acceptedData;
     private final Map<String, Object> itemData;
 
-    WMaterial(int data, String... related) {
+    WMaterial() {
+        this(-1, null);
+    }
+
+    WMaterial(int data, String related) {
         this.data = data;
         this.related = related;
         this.acceptedData = new int[0];
@@ -156,11 +176,11 @@ public enum WMaterial {
         itemData = null;
     }
 
-    WMaterial(String... related) {
+    WMaterial(String related) {
         this(-1, related);
     }
 
-    WMaterial(int data, Map<String, Object> itemData, String... related) {
+    WMaterial(int data, Map<String, Object> itemData, String related) {
         this.data = data;
         this.related = related;
         acceptedData = new int[0];
@@ -168,15 +188,19 @@ public enum WMaterial {
         this.itemData = itemData;
     }
 
-    WMaterial(Map<String, Object> itemData, String... related) {
+    WMaterial(Map<String, Object> itemData, String related) {
         this(-1, itemData, related);
     }
 
-    WMaterial(int[] acceptedData, String... related) {
+    WMaterial(int[] acceptedData) {
+        this(acceptedData, null);
+    }
+
+    WMaterial(int[] acceptedData, String related) {
         this(acceptedData, null, related);
     }
 
-    WMaterial(int[] acceptedData, Map<String, Object> itemData, String... related) {
+    WMaterial(int[] acceptedData, Map<String, Object> itemData, String related) {
         this.acceptedData = acceptedData;
         this.data = -1;
         this.related = related;
@@ -193,11 +217,11 @@ public enum WMaterial {
     }
 
     private Material fromRelated() {
-        for (String s : related) {
-            try {
-                return Material.valueOf(s);
-            } catch (IllegalArgumentException ignored) {}
-        }
+        if (related == null)
+            return Material.AIR;
+        try {
+            return Material.valueOf(related);
+        } catch (IllegalArgumentException ignored) {}
         return Material.AIR;
     }
 

@@ -115,40 +115,13 @@ public class PaginatedInventoryBuilder implements Cloneable {
                     }
 
                     case '<': {
-                        if (i == 0) {
-                            if (previousPage.replacer != null)
-                                holder.setButton(slot, previousPage.replacer);
-                            else if (previousPage.replacerChar != '\u0000')
-                                holder.setButton(slot, shapeReplacements.get(previousPage.replacerChar));
-                            else
-                                holder.setButton(slot, new ItemButton(
-                                        previousPage.item,
-                                        event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
-                            continue;
-                        }
-                        holder.setButton(slot, new ItemButton(
-                                previousPage.item,
-                                event -> paginatedInventory.showPreviousPage(event.getWhoClicked())));
+                        setNavigator(i, inventoriesAmount, slot, holder, previousPage, paginatedInventory, false);
                         continue;
                     }
 
-                    case '>': {
-                        if (i + 1 == inventoriesAmount) {
-                            if (nextPage.replacer != null)
-                                holder.setButton(slot, nextPage.replacer);
-                            else if (nextPage.replacerChar != '\u0000')
-                                holder.setButton(slot, shapeReplacements.get(nextPage.replacerChar));
-                            else
-                                holder.setButton(slot, new ItemButton(
-                                        nextPage.item,
-                                        event -> paginatedInventory.showNextPage(event.getWhoClicked())));
-                            continue;
-                        }
-                        holder.setButton(slot, new ItemButton(
-                                nextPage.item,
-                                event -> paginatedInventory.showNextPage(event.getWhoClicked())));
+                    case '>':
+                        setNavigator(i, inventoriesAmount, slot, holder, nextPage, paginatedInventory, true);
                         continue;
-                    }
 
                     default: {
                         if (shapeReplacements.containsKey(currentChar)) {
@@ -180,6 +153,33 @@ public class PaginatedInventoryBuilder implements Cloneable {
         for (Map.Entry<Integer, ItemButton> entry : original.getButtons().entrySet())
             tempHolder.setButton(entry.getKey(), entry.getValue());
         return inventory;
+    }
+
+    private void setNavigator(int page, int totalInventories, int slot, CustomInventoryHolder holder, InventoryNavigator navigator, PaginatedInventory inventories, boolean next) {
+        if (page + 1 == totalInventories) {
+            if (navigator.replacer != null)
+                holder.setButton(slot, navigator.replacer);
+            else if (navigator.replacerChar != '\u0000')
+                holder.setButton(slot, shapeReplacements.get(navigator.replacerChar));
+            else
+                holder.setButton(slot, new ItemButton(
+                        navigator.item,
+                        event -> {
+                            if (next)
+                                inventories.showNextPage(event.getWhoClicked());
+                            else
+                                inventories.showPreviousPage(event.getWhoClicked());
+                        }));
+        } else {
+            holder.setButton(slot, new ItemButton(
+                    navigator.item,
+                    event -> {
+                        if (next)
+                            inventories.showNextPage(event.getWhoClicked());
+                        else
+                            inventories.showPreviousPage(event.getWhoClicked());
+                    }));
+        }
     }
 
     @Override

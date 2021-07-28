@@ -344,7 +344,7 @@ public class Item {
         private Material getFixedMaterialFromRelated() {
             WMaterial[] values = WMaterial.values();
             for (WMaterial value : values)
-                if (value.getData() == durability && ArrayUtils.contains(value.getRelated(), wmaterial.name()))
+                if (value.getData() == durability && value.getRelated().equals(wmaterial.name()))
                     return value.getMaterial();
             return Material.AIR;
         }

@@ -31,4 +31,3 @@ shadowJar {
     exclude 'spigot*'
     archiveFileName.set('WLib-' + project.version + '.' + archiveExtension.get())
 }
-

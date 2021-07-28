@@ -1,21 +1,32 @@
 package com.wizardlybump17.wlib.adapter;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 @Data
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ItemAdapter {
 
     protected static final String[] IGNORED_TAGS = {"display", "ench", "Enchantments", "HideFlags"};
 
+    @NotNull
     protected ItemStack target;
+    @NotNull
+    protected final ItemMeta meta;
+    @NotNull
     protected Object nmsStack;
+    @NotNull
     protected final NMSAdapter mainAdapter;
+
+    public ItemAdapter(ItemStack itemStack, @NotNull Object nmsStack, @NotNull NMSAdapter mainAdapter) {
+        target = itemStack;
+        meta = itemStack.getItemMeta();
+        this.nmsStack = nmsStack;
+        this.mainAdapter = mainAdapter;
+    }
 
     public abstract void setNbtTag(String key, Object value);
     public void setNbtTags(Map<String, Object> tags) {

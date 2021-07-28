@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.inventory;
 
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
+import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -19,5 +20,21 @@ public class CustomInventory {
 
     public CustomInventory(String title, int size, CustomInventoryHolder holder) {
         bukkitInventory = Bukkit.createInventory(owner = holder, this.size = size, this.title = title);
+    }
+
+    public void setButton(int slot, ItemButton button) {
+        owner.setButton(slot, button);
+    }
+
+    public void removeButton(int slot) {
+        owner.removeButton(slot);
+    }
+
+    public ItemButton getButton(int slot) {
+        return owner.getButton(slot);
+    }
+
+    public boolean hasButton(int slot) {
+        return owner.hasButton(slot);
     }
 }

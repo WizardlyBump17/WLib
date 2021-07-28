@@ -19,7 +19,7 @@ public class ItemButton {
         this(item, null);
     }
 
-    public static interface ClickAction {
+    public interface ClickAction {
         void onClick(InventoryClickEvent event);
     }
 }
