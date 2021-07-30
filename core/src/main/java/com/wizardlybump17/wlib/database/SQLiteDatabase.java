@@ -1,15 +1,22 @@
 package com.wizardlybump17.wlib.database;
 
+import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.sqlite.JDBC;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
 
 @Getter
 public class SQLiteDatabase extends Database {
+
+    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.<String, String>builder()
+            .put("AUTO_INCREMENT", "AUTOINCREMENT")
+            .build();
 
     private final File file;
 
@@ -36,11 +43,23 @@ public class SQLiteDatabase extends Database {
     }
 
     @Override
+    public Database update(String command, Object... replacements) {
+        return super.update(replaceCommand(command), replacements);
+    }
+
+    @Override
     public String getJdbcUrl() {
         return "jdbc:sqlite:" + file;
     }
 
     public static String getType() {
         return "sqlite";
+    }
+
+    private static String replaceCommand(String command) {
+        command = command.toLowerCase();
+        for (Map.Entry<String, String> entry : COMMAND_REPLACEMENTS.entrySet())
+            command = command.replace(entry.getKey().toLowerCase(), entry.getValue().toLowerCase());
+        return command;
     }
 }
