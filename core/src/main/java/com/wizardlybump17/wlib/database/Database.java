@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.sql.rowset.CachedRowSet;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.Properties;
 import java.util.function.Consumer;
 
@@ -57,15 +55,26 @@ public abstract class Database {
     }
 
     public Database update(String command, Object... replacements) {
-        if (isClosed()) return this;
-        try (PreparedStatement statement = connection.prepareStatement(command)) {
-            for (int i = 0; i < replacements.length; i++)
-                statement.setObject(i + 1, replacements[i]);
-            statement.executeUpdate();
-        } catch (Exception e) {
+        try {
+            returnUpdate(command, replacements).close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return this;
+    }
+
+    public PreparedStatement returnUpdate(String command, Object... replacements) {
+        if (isClosed()) return null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < replacements.length; i++)
+                statement.setObject(i + 1, replacements[i]);
+            statement.executeUpdate();
+            return statement;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public CachedRowSet query(String query, Object... replacements) {

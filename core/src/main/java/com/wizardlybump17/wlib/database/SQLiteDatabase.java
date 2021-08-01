@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.sqlite.JDBC;
 
 import java.io.File;
-import java.util.Locale;
+import java.sql.PreparedStatement;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -45,6 +45,11 @@ public class SQLiteDatabase extends Database {
     @Override
     public Database update(String command, Object... replacements) {
         return super.update(replaceCommand(command), replacements);
+    }
+
+    @Override
+    public PreparedStatement returnUpdate(String command, Object... replacements) {
+        return super.returnUpdate(replaceCommand(command), replacements);
     }
 
     @Override
