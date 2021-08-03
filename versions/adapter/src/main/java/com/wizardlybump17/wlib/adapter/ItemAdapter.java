@@ -15,7 +15,7 @@ public abstract class ItemAdapter {
     @NotNull
     protected ItemStack target;
     @NotNull
-    protected final ItemMeta meta;
+    protected ItemMeta meta;
     @NotNull
     protected Object nmsStack;
     @NotNull
@@ -43,4 +43,6 @@ public abstract class ItemAdapter {
 
     public abstract boolean isUnbreakable();
     public abstract void setUnbreakable(boolean unbreakable);
+
+    public abstract String getEnchantmentTagName();
 }

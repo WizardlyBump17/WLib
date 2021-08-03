@@ -8,7 +8,7 @@ import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.ArrayUtils;
-import com.wizardlybump17.wlib.util.ListUtil;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -86,7 +86,12 @@ public class Item {
                 .flags(itemMeta.getItemFlags())
                 .unbreakable(itemAdapter.isUnbreakable())
                 .enchantments(item.getEnchantments())
-                .nbtTags(itemAdapter.getNbtTags());
+                .nbtTags(itemAdapter.getNbtTags())
+                .glow(
+                        itemAdapter.hasNbtTag("WLib-glow") ||
+                                (itemAdapter.hasNbtTag(itemAdapter.getEnchantmentTagName())
+                                        && ((Map<Enchantment, Integer>) itemAdapter.getNbtTag(itemAdapter.getEnchantmentTagName())).isEmpty())
+                );
     }
 
     public static ItemBuilder deserialize(Map<String, Object> args) {
@@ -233,10 +238,18 @@ public class Item {
             itemStack.addUnsafeEnchantments(enchantments == null ? new HashMap<>() : enchantments);
 
             itemAdapter = ADAPTER.getItemAdapter(itemStack);
+
+            if (glow)
+                if (enchantments == null || enchantments.isEmpty()) {
+                    nbtTag("WLib-glow", "glowing");
+                    nbtTag("ench", new ArrayList<>()); //TODO add support to newer versions
+                }
+
             if (nbtTags != null) {
                 itemAdapter.setNbtTags(nbtTags, false);
                 itemStack = itemAdapter.getTarget();
             }
+
             return itemStack;
         }
 
@@ -266,7 +279,7 @@ public class Item {
         public ItemBuilder setData(Map<String, Object> args) {
             List<String> lore = new ArrayList<>();
             if (args.get("lore") != null)
-                lore = new ListUtil((List<String>) args.get("lore")).replace('&', '§').getList();
+                lore = new CollectionUtil<>((List<String>) args.get("lore")).replace('&', '§').getList();
 
             Set<ItemFlag> flags = new HashSet<>();
             if (args.get("flags") != null) {

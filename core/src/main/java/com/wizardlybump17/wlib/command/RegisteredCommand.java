@@ -15,8 +15,9 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode
 public class RegisteredCommand {
 
-    public static final Pattern REQUIRED = Pattern.compile(" ?<[a-zA-Z0-9_]+> ?");
-    public static final Pattern OPTIONAL = Pattern.compile(" ?\\[[a-zA-Z0-9_]+] ?");
+    public static final Pattern REQUIRED = Pattern.compile(" ?<\\S+> ?");
+    public static final Pattern OPTIONAL = Pattern.compile(" ?\\[\\S+] ?");
+    public static final Pattern RAW_PATTERN = Pattern.compile(" ?\\(\\S+\\) ?");
 
     private final Command command;
     private final Method method;
@@ -30,12 +31,25 @@ public class RegisteredCommand {
     private void prepareGroupsList() {
         Matcher requiredMatcher = REQUIRED.matcher(command.execution());
         Matcher optionalMatcher = OPTIONAL.matcher(command.execution());
+        Matcher rawPatternMatcher = RAW_PATTERN.matcher(command.execution());
 
         Map<Integer, String> indexes = new HashMap<>();
-        while (requiredMatcher.find())
-            indexes.put(requiredMatcher.start(), command.execution().substring(requiredMatcher.start(), requiredMatcher.end()));
-        while (optionalMatcher.find())
-            indexes.put(optionalMatcher.start(), command.execution().substring(optionalMatcher.start(), optionalMatcher.end()));
+        List<String> rawPatterns = new ArrayList<>();
+        while (rawPatternMatcher.find()) {
+            String pattern = command.execution().substring(rawPatternMatcher.start(), rawPatternMatcher.end());
+            indexes.put(rawPatternMatcher.start(), pattern);
+            rawPatterns.add(pattern);
+        }
+        while (requiredMatcher.find()) {
+            String substring = command.execution().substring(requiredMatcher.start(), requiredMatcher.end());
+            if (rawPatterns.stream().noneMatch(string -> string.contains(substring)))
+                indexes.put(requiredMatcher.start(), substring);
+        }
+        while (optionalMatcher.find()) {
+            String substring = command.execution().substring(optionalMatcher.start(), optionalMatcher.end());
+            if (rawPatterns.stream().noneMatch(string -> string.contains(substring)))
+                indexes.put(optionalMatcher.start(), substring);
+        }
 
         ArrayList<Integer> ints = new ArrayList<>(indexes.keySet());
         Collections.sort(ints);
@@ -51,10 +65,9 @@ public class RegisteredCommand {
         String currentCommand = command.execution();
 
         Class<?>[] types = method.getParameterTypes();
-        for (int i = 1; i < method.getParameterCount(); i++) {
-            String groupName = groupsName.get(i - 1);
-            currentCommand = addGroup(types[i], groupName, currentCommand);
-        }
+        int typeIndex = 1;
+        for (String groupName : groupsName)
+            currentCommand = addGroup(groupName.matches(RAW_PATTERN.pattern()) ? null : types[typeIndex++], groupName.trim(), currentCommand);
 
         pattern = Pattern.compile(currentCommand.trim() + (command.acceptAny() ? ".*?" : ""));
     }
@@ -62,7 +75,10 @@ public class RegisteredCommand {
     String addGroup(Class<?> type, String groupName, String currentCommand) {
         boolean required = false;
         Arg.Type argType = null;
-        if (type.equals(String.class)) {
+        if (groupName.matches(RAW_PATTERN.pattern())) {
+            argType = Arg.Type.RAW_PATTERN;
+            required = true;
+        } else if (type.equals(String.class)) {
             argType = Arg.Type.STRING;
             if (groupName.matches(REQUIRED.pattern())) {
                 currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " ?(\\\\S+) ?");
@@ -70,8 +86,7 @@ public class RegisteredCommand {
             }
             if (groupName.matches(OPTIONAL.pattern()))
                 currentCommand = currentCommand.replaceFirst(OPTIONAL.pattern(), " ?(\\\\S+)? ?");
-        }
-        if (type.equals(String[].class)) {
+        } else if (type.equals(String[].class)) {
             argType = Arg.Type.ARRAY;
             if (groupName.matches(REQUIRED.pattern())) {
                 currentCommand = currentCommand.replaceFirst(REQUIRED.pattern(), " (.+) ?");
@@ -90,9 +105,15 @@ public class RegisteredCommand {
         Matcher matcher = pattern.matcher(String.join(" ", args));
         if (!matcher.matches())
             return null;
+
+        if (groupsName.isEmpty())
+            return new ArgsMap(map);
+
         for (int i = 0; i < matcher.groupCount(); i++) {
             String groupName = groupsName.get(i);
             Arg group = groups.get(i);
+            if (group.type == Arg.Type.RAW_PATTERN)
+                continue;
             if (group.type == Arg.Type.ARRAY)
                 map.put(groupName.toLowerCase(), new Args(matcher.group(i + 1).split(" ")));
             if (group.type == Arg.Type.STRING)
@@ -165,7 +186,7 @@ public class RegisteredCommand {
         final boolean required;
 
         enum Type {
-            STRING, ARRAY
+            STRING, ARRAY, RAW_PATTERN
         }
     }
 }

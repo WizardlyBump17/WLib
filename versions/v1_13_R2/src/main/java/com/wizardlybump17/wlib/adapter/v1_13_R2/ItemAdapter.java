@@ -66,6 +66,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         net.minecraft.server.v1_13_R2.ItemStack nmsStack = (net.minecraft.server.v1_13_R2.ItemStack) this.nmsStack;
         nmsStack.setTag((NBTTagCompound) tag);
         target = CraftItemStack.asBukkitCopy(nmsStack);
+        meta = target.getItemMeta();
     }
 
     @Override
@@ -74,17 +75,18 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     }
 
     @Override
-    public void setUnbreakable(boolean unbreakable) {
-        NBTTagCompound compound = getMainTag();
-        if (unbreakable)
-            compound.setBoolean("Unbreakable", true);
-        else
-            compound.remove("Unbreakable");
-        setMainTag(compound);
+    public boolean isUnbreakable() {
+        return meta.isUnbreakable();
     }
 
     @Override
-    public boolean isUnbreakable() {
-        return getMainTag().getBoolean("Unbreakable");
+    public void setUnbreakable(boolean unbreakable) {
+        meta.setUnbreakable(unbreakable);
+        target.setItemMeta(meta);
+    }
+
+    @Override
+    public String getEnchantmentTagName() {
+        return "Enchantments";
     }
 }
