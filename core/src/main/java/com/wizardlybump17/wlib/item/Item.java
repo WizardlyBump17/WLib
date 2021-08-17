@@ -9,8 +9,6 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.CollectionUtil;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Bukkit;
@@ -26,7 +24,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Data
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class Item {
 

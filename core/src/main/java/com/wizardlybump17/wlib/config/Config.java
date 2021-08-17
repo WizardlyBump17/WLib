@@ -83,7 +83,7 @@ public class Config extends YamlConfiguration {
         if (string == null)
             return null;
         for (int i = 0; i < placeholders.length; i++)
-            string = string.replace('{' + placeholders[i] + '}', replacements[i].toString());
+            string = string.replace('{' + placeholders[i] + '}', replacements[i] == null ? "null" : replacements[i].toString());
         return string;
     }
 
