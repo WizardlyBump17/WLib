@@ -5,4 +5,7 @@ before_install:
   - echo $ARTIFACT
   - echo $VERSION
   - echo "Downloading release jar for version $VERSION from `echo $GROUP | grep -oP '(?<=com\.github\.)\w+'`/$REPO"
-  - wget https://github.com/`echo $GROUP | grep -oP '(?<=com\.github\.)\w+'`/$REPO/releases/download/$VERSION/release.jar -O release.jar
+  - wget https://github.com/`echo $GROUP | grep -oP '(?<=com\.github\.)\w+'`/$REPO/releases/download/$VERSION/$ARTIFACT-$VERSION.jar -O release.jar
+
+install:
+  - mvn install:install-file -Dfile=release.jar -DartifactId=$ARTIFACT -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=jar
