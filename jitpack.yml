@@ -1,3 +1,8 @@
+env:
+  REPO: WLib
 before_install:
-  - chmod +x run_build_tools.sh
-  - ./run_build_tools.sh
+  - echo $GROUP
+  - echo $ARTIFACT
+  - echo $VERSION
+  - echo "Downloading release jar for version $VERSION from `echo $GROUP | grep -oP '(?<=com\.github\.)\w+'`/$REPO"
+  - wget https://github.com/`echo $GROUP | grep -oP '(?<=com\.github\.)\w+'`/$REPO/releases/download/$VERSION/release.jar -O release.jar
