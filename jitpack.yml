@@ -1,0 +1,2 @@
+before_install:
+  - ./run_build_tools.sh
