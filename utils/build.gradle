@@ -1,7 +1,7 @@
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.20',
-            'org.jetbrains:annotations:16.0.2'
+            'org.jetbrains:annotations:22.0.0'
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }

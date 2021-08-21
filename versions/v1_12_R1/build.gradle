@@ -1,8 +1,9 @@
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly (
+            'org.projectlombok:lombok:1.18.20',
+            'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT',
+            project(':versions:adapter'),
+            project(':utils')
+    )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
-    implementation files('../../libs/spigot-1.12.2-R0.1-SNAPSHOT.jar')
-    compileOnly project(':versions:adapter')
-    compileOnly project(':utils')
 }

@@ -5,11 +5,10 @@ repositories {
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.20',
-            'org.jetbrains:annotations:16.0.2'
+            'org.jetbrains:annotations:16.0.2',
+            'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
-    implementation files('../libs/spigot-1.8.8-R0.1-SNAPSHOT.jar')
 
     implementation project(':utils')
     implementation project(':versions:adapter')
