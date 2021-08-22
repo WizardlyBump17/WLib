@@ -10,6 +10,6 @@ before_install:
   - wget $RELEASE_DOWNLOAD_LINK/adapter-$VERSION.jar -O adapter.jar
 
 install:
-  - mvn install:install-file -Dfile=core.jar -DartifactId=core -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=ja
+  - mvn install:install-file -Dfile=core.jar -DartifactId=core -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=jar
   - mvn install:install-file -Dfile=utils.jar -DartifactId=utils -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=jar
-  - mvn install:install-file -Dfile=adapter.jar -DartifactId=adapter -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=ja
+  - mvn install:install-file -Dfile=adapter.jar -DartifactId=adapter -DgroupId=$GROUP -Dversion=$VERSION -Dpackaging=jar
