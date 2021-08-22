@@ -3,17 +3,13 @@ plugins {
     id 'maven-publish'
 }
 
+apply plugin: 'maven-publish'
+
 allprojects {
     group = 'com.wizardlybump17.wlib'
     version = '1.2.0'
 
-    buildscript {
-        apply plugin: 'com.github.johnrengelman.shadow'
-        apply plugin: 'maven-publish'
-    }
-}
-
-subprojects {
+    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
 
     repositories {
@@ -26,6 +22,14 @@ subprojects {
     tasks {
         compileJava {
             options.encoding = 'UTF-8'
+        }
+    }
+}
+
+publishing {
+    publications {
+        defaultPublication(MavenPublication) {
+            from components.java
         }
     }
 }

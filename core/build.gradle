@@ -27,6 +27,14 @@ processResources {
 }
 
 shadowJar {
-    exclude 'spigot*'
     archiveFileName.set('WLib-v' + project.version + '.' + archiveExtension.get())
+}
+
+publishing {
+    publications {
+        core(MavenPublication) {
+            from components.java
+            artifactId = project.name
+        }
+    }
 }
