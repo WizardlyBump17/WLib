@@ -7,7 +7,6 @@ public final class NMSAdapterRegister {
     private NMSAdapter serverAdapter;
 
     public void registerAdapter(NMSAdapter adapter) {
-        System.out.println("kappa " + adapter.getClass().getName());
         serverAdapter = adapter;
     }
 

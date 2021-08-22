@@ -165,4 +165,9 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
             return null;
         }
     }
+
+    @Override
+    public String getEnchantmentTagName() {
+        return "Enchantments";
+    }
 }

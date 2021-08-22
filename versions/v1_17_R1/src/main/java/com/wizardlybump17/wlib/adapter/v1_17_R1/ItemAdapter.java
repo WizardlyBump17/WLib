@@ -1,7 +1,7 @@
-package com.wizardlybump17.wlib.adapter.v1_13_R2;
+package com.wizardlybump17.wlib.adapter.v1_17_R1;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -56,27 +56,27 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @Override
     public NBTTagCompound getMainTag() {
-        net.minecraft.server.v1_13_R2.ItemStack nmsStack = (net.minecraft.server.v1_13_R2.ItemStack) this.nmsStack;
+        net.minecraft.world.item.ItemStack nmsStack = (net.minecraft.world.item.ItemStack) this.nmsStack;
         if (!nmsStack.hasTag()) setMainTag(new NBTTagCompound());
         return nmsStack.getTag();
     }
 
     @Override
     public void setMainTag(Object tag) {
-        net.minecraft.server.v1_13_R2.ItemStack nmsStack = (net.minecraft.server.v1_13_R2.ItemStack) this.nmsStack;
+        net.minecraft.world.item.ItemStack nmsStack = (net.minecraft.world.item.ItemStack) this.nmsStack;
         nmsStack.setTag((NBTTagCompound) tag);
         target = CraftItemStack.asBukkitCopy(nmsStack);
         meta = target.getItemMeta();
     }
 
     @Override
-    public NMSAdapter getMainAdapter() {
-        return (NMSAdapter) mainAdapter;
+    public boolean isUnbreakable() {
+        return meta.isUnbreakable();
     }
 
     @Override
-    public boolean isUnbreakable() {
-        return meta.isUnbreakable();
+    public NMSAdapter getMainAdapter() {
+        return (NMSAdapter) mainAdapter;
     }
 
     @Override

@@ -83,9 +83,4 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         meta.setUnbreakable(unbreakable);
         target.setItemMeta(meta);
     }
-
-    @Override
-    public String getEnchantmentTagName() {
-        return "Enchantments";
-    }
 }

@@ -43,6 +43,4 @@ public abstract class ItemAdapter {
 
     public abstract boolean isUnbreakable();
     public abstract void setUnbreakable(boolean unbreakable);
-
-    public abstract String getEnchantmentTagName();
 }

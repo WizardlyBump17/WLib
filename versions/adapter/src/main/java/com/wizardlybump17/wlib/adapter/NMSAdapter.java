@@ -22,4 +22,5 @@ public abstract class NMSAdapter {
     public abstract EntityAdapter newEntityAdapter(Entity entity);
 
     public abstract ItemStack getFixedMaterial(WMaterial material);
+    public abstract String getEnchantmentTagName();
 }

@@ -86,8 +86,8 @@ public class Item {
                 .nbtTags(itemAdapter.getNbtTags())
                 .glow(
                         itemAdapter.hasNbtTag("WLib-glow") ||
-                                (itemAdapter.hasNbtTag(itemAdapter.getEnchantmentTagName())
-                                        && ((Map<Enchantment, Integer>) itemAdapter.getNbtTag(itemAdapter.getEnchantmentTagName())).isEmpty())
+                                (itemAdapter.hasNbtTag(ADAPTER.getEnchantmentTagName())
+                                        && ((Map<Enchantment, Integer>) itemAdapter.getNbtTag(ADAPTER.getEnchantmentTagName())).isEmpty())
                 );
     }
 
@@ -239,7 +239,7 @@ public class Item {
             if (glow)
                 if (enchantments == null || enchantments.isEmpty()) {
                     nbtTag("WLib-glow", "glowing");
-                    nbtTag("ench", new ArrayList<>()); //TODO add support to newer versions
+                    nbtTag(ADAPTER.getEnchantmentTagName(), new ArrayList<>());
                 }
 
             if (nbtTags != null) {

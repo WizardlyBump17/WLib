@@ -10,14 +10,17 @@ dependencies {
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    implementation project(':utils')
-    implementation project(':versions:adapter')
+    implementation(
+            project(':utils'),
+            project(':versions:adapter'),
 
-    implementation project(':versions:v1_8_R3')
-    implementation project(':versions:v1_12_R1')
-    implementation project(':versions:v1_13_R2')
-    implementation project(':versions:v1_15_R1')
-    implementation project(':versions:v1_16_R3')
+            project(':versions:v1_8_R3'),
+            project(':versions:v1_12_R1'),
+            project(':versions:v1_13_R2'),
+            project(':versions:v1_15_R1'),
+            project(':versions:v1_16_R3'),
+            project(':versions:v1_17_R1')
+    )
 }
 
 processResources {

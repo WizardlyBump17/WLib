@@ -20,4 +20,8 @@ findProject(':versions:v1_16_R3')?.name = 'v1_16_R3'
 include 'versions:v1_15_R1'
 findProject(':versions:v1_15_R1')?.name = 'v1_15_R1'
 
+include 'versions:v1_17_R1'
+findProject(':versions:v1_17_R1')?.name = 'v1_17_R1'
+
 include 'utils'
+
