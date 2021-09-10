@@ -6,6 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @AllArgsConstructor
 @Data
 public class ItemButton {
@@ -14,9 +17,18 @@ public class ItemButton {
 
     private ItemStack itemStack;
     private final ClickAction clickAction;
+    private final Map<Integer, ItemButton> children = new HashMap<>();
 
     public ItemButton(ItemStack item) {
         this(item, null);
+    }
+
+    public void addChild(int slot, ItemButton item) {
+        children.put(slot, item);
+    }
+
+    public void removeChild(int slot) {
+        children.remove(slot);
     }
 
     public interface ClickAction {

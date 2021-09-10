@@ -19,6 +19,8 @@
 2. Enter the directory
 3. Run `gradle shadowJar`
 
+<br>
+
 ### Add as dependency
 Add the JitPack repository.<br>
 Maven:

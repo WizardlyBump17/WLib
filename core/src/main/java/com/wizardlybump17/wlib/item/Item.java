@@ -192,6 +192,10 @@ public class Item {
             return ADAPTER.nbtToJava(nbtTags.get(key));
         }
 
+        public Map<String, Object> getNbtTags() {
+            return (Map<String, Object>) ADAPTER.nbtToJava(nbtTags);
+        }
+
         public ItemBuilder copy(ItemStack item) {
             ItemBuilder builder = Item.fromItemStack(item);
             return type(builder.type)

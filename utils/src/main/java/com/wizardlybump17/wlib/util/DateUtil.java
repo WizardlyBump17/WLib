@@ -22,13 +22,20 @@ public class DateUtil {
         long hours = diff / (60 * 60 * 1000) % 24;
         long days = diff / (24 * 60 * 60 * 1000);
 
-        if (days > 0) result.append(days).append(full ? " days, " : "d ");
-        if (hours > 0) result.append(hours).append(full ? " hours, " : "h ");
-        if (minutes > 0) result.append(minutes).append(full ? " minutes, " : "m ");
-        if (seconds > 0) result.append(seconds).append(full ? " seconds " : "s ");
-        if (result.toString().isEmpty()) return "now ";
+        if (days > 0)
+            result.append(days).append(full ? "days, " : "d ");
+        if (hours > 0)
+            result.append(hours).append(full ? "hours, " : "h ");
+        if (minutes > 0)
+            result.append(minutes).append(full ? "minutes, " : "m ");
+        if (seconds > 0)
+            result.append(seconds).append(full ? "seconds" : "s");
+        if (result.toString().isEmpty())
+            return "now";
 
-        return result.substring(0, result.length() - (full ? 2 : 1)).trim();
+        return result.toString().endsWith(",")
+                ? result.toString().trim().substring(0, result.length() - 1)
+                : result.toString().trim();
     }
 
     public String format(DateFormat format) {

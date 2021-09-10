@@ -82,10 +82,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
             if (c != 'x')
                 presetItems++;
 
-        int contentSize = 0;
-        if (content != null)
-            for (ItemButton button : content)
-                if (button != null) contentSize++;
+        int contentSize = getItems();
         int inventoriesAmount = contentSize == 0
                 ? 1
                 : (int) Math.ceil((double) contentSize / (shape.length() - presetItems));
@@ -102,14 +99,28 @@ public class PaginatedInventoryBuilder implements Cloneable {
                     case 'x': {
                         if (contentSize > 0 && currentItem < content.size()) {
                             ItemButton button = content.get(currentItem++);
+                            if (button == null) continue;
+
                             if (button instanceof UpdatableItem) {
                                 if (!(holder instanceof UpdatableHolder)) {
                                     inventory = fromHolder(i, holder);
                                     holder = inventory.getOwner();
                                 }
                             }
-                            if (button == null) continue;
                             holder.setButton(slot, button);
+
+                            for (Map.Entry<Integer, ItemButton> entry : button.getChildren().entrySet()) {
+                                int newSlot = slot + entry.getKey();
+                                if (newSlot < shape.length()) {
+                                    holder.setButton(newSlot, entry.getValue());
+                                    if (entry.getValue() instanceof UpdatableItem) {
+                                        if (!(holder instanceof UpdatableHolder)) {
+                                            inventory = fromHolder(i, holder);
+                                            holder = inventory.getOwner();
+                                        }
+                                    }
+                                }
+                            }
                         }
                         continue;
                     }
@@ -145,6 +156,16 @@ public class PaginatedInventoryBuilder implements Cloneable {
         }
 
         return paginatedInventory;
+    }
+
+    private int getItems() {
+        if (content == null || content.isEmpty())
+            return 0;
+
+        int total = content.size();
+        for (ItemButton button : content)
+            total += button.getChildren().size();
+        return total;
     }
 
     private UpdatableInventory fromHolder(int page, CustomInventoryHolder original) {
