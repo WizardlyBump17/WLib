@@ -84,11 +84,7 @@ public class Item {
                 .unbreakable(itemAdapter.isUnbreakable())
                 .enchantments(item.getEnchantments())
                 .nbtTags(itemAdapter.getNbtTags())
-                .glow(
-                        itemAdapter.hasNbtTag("WLib-glow") ||
-                                (itemAdapter.hasNbtTag(ADAPTER.getEnchantmentTagName())
-                                        && ((Map<Enchantment, Integer>) itemAdapter.getNbtTag(ADAPTER.getEnchantmentTagName())).isEmpty())
-                );
+                .glow(itemAdapter.hasGlow());
     }
 
     public static ItemBuilder deserialize(Map<String, Object> args) {
@@ -236,12 +232,10 @@ public class Item {
 
             itemAdapter = ADAPTER.getItemAdapter(itemStack);
 
-            if (glow)
-                if (enchantments == null || enchantments.isEmpty()) {
-                    nbtTag("WLib-glow", "glowing");
-                    nbtTag(ADAPTER.getEnchantmentTagName(), new ArrayList<>());
-                }
-
+            if (enchantments == null || enchantments.isEmpty()) {
+                itemAdapter.setGlow(glow);
+                itemStack = itemAdapter.getTarget();
+            }
             if (nbtTags != null) {
                 itemAdapter.setNbtTags(nbtTags, false);
                 itemStack = itemAdapter.getTarget();
@@ -276,7 +270,7 @@ public class Item {
         public ItemBuilder setData(Map<String, Object> args) {
             List<String> lore = new ArrayList<>();
             if (args.get("lore") != null)
-                lore = new CollectionUtil<>((List<String>) args.get("lore")).replace('&', '§').getList();
+                lore = (List<String>) new CollectionUtil<>((List<String>) args.get("lore")).replace('&', '§').getCollection();
 
             Set<ItemFlag> flags = new HashSet<>();
             if (args.get("flags") != null) {

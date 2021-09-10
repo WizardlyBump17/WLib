@@ -122,9 +122,4 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
         short data = (short) (material.getData() == -1 ? 0 : material.getData());
         return new ItemStack(bukkitMaterial, 1, data);
     }
-
-    @Override
-    public String getEnchantmentTagName() {
-        return "Enchantments";
-    }
 }

@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.database;
 
 import lombok.Getter;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,25 +24,25 @@ public final class DatabaseRegister {
         }
     }
 
-    public Database createDatabase(String propertiesFile, JavaPlugin plugin) {
+    public Database createDatabase(String propertiesFile, DatabaseHolder holder) {
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new File(plugin.getDataFolder(), propertiesFile)));
-            return createDatabase(properties, plugin);
+            properties.load(new FileInputStream(new File(holder.getDataFolder(), propertiesFile)));
+            return createDatabase(properties, holder);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public Database createDatabase(Properties properties, JavaPlugin plugin) {
+    public Database createDatabase(Properties properties, DatabaseHolder holder) {
         try {
             if (!properties.containsKey("type"))
                 throw new NullPointerException("property \"type\" not found");
             String type = properties.getProperty("type").toLowerCase();
             if (!databaseTypes.containsKey(type))
                 throw new IllegalArgumentException("invalid database type \"" + type + "\"");
-            return databaseTypes.get(type).getDeclaredConstructor(Properties.class, JavaPlugin.class).newInstance(properties, plugin);
+            return databaseTypes.get(type).getDeclaredConstructor(Properties.class, DatabaseHolder.class).newInstance(properties, holder);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

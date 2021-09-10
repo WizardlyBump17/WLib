@@ -1,0 +1,18 @@
+dependencies {
+    compileOnly(
+            'org.projectlombok:lombok:1.18.20',
+            'org.jetbrains:annotations:22.0.0',
+            'org.xerial:sqlite-jdbc:3.36.0.3',
+            project(':utils')
+    )
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+}
+
+publishing {
+    publications {
+        database(MavenPublication) {
+            from components.java
+            artifactId = project.name
+        }
+    }
+}

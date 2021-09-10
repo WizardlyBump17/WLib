@@ -1,9 +1,13 @@
 package com.wizardlybump17.wlib.listener;
 
 import com.wizardlybump17.wlib.adapter.EntityAdapter;
+import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -12,6 +16,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class EntityListener implements Listener {
 
@@ -45,5 +52,22 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         EntityAdapter.deleteFromCache(event.getEntity());
+    }
+
+    @EventHandler
+    public void onCreativeClick(InventoryClickEvent event) {
+        if (event.getWhoClicked().getGameMode() != GameMode.CREATIVE)
+            return;
+
+        final ItemStack cursor = event.getCursor();
+        if (cursor == null || cursor.getType() == Material.AIR)
+            return;
+
+        if (NMSAdapterRegister.getInstance().current().getItemAdapter(cursor).hasGlow()) {
+            final ItemMeta itemMeta = cursor.getItemMeta();
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.removeEnchant(Enchantment.ARROW_INFINITE);
+            cursor.setItemMeta(itemMeta);
+        }
     }
 }

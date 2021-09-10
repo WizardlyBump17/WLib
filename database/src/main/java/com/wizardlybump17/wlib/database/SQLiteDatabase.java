@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.database;
 
 import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.sqlite.JDBC;
 
 import java.io.File;
@@ -20,10 +19,10 @@ public class SQLiteDatabase extends Database {
 
     private final File file;
 
-    protected SQLiteDatabase(Properties properties, JavaPlugin plugin) {
-        super(plugin, properties);
+    protected SQLiteDatabase(Properties properties, DatabaseHolder holder) {
+        super(holder, properties);
         if (properties.getOrDefault("use-plugin-folder", "true").toString().equalsIgnoreCase("true"))
-            file = new File(plugin.getDataFolder(), properties.getProperty("database", "database.db"));
+            file = new File(holder.getDataFolder(), properties.getProperty("database", "database.db"));
         else
             file = new File(properties.getProperty("database", "database.db"));
     }

@@ -83,4 +83,17 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         meta.setUnbreakable(unbreakable);
         target.setItemMeta(meta);
     }
+
+    @Override
+    public boolean hasGlow() {
+        return hasNbtTag(mainAdapter.getGlowTag());
+    }
+
+    @Override
+    public void setGlow(boolean glow) {
+        if (glow)
+            setNbtTag(mainAdapter.getGlowTag(), "glow");
+        else
+            removeNbtTag(mainAdapter.getGlowTag());
+    }
 }

@@ -4,6 +4,7 @@ import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
@@ -82,5 +83,22 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     public void setUnbreakable(boolean unbreakable) {
         meta.spigot().setUnbreakable(unbreakable);
         target.setItemMeta(meta);
+    }
+
+    @Override
+    public boolean hasGlow() {
+        return hasNbtTag(mainAdapter.getGlowTag());
+    }
+
+    @Override
+    public void setGlow(boolean glow) {
+        if (glow) {
+            setNbtTag(mainAdapter.getGlowTag(), "glow");
+            setNbtTag("ench", new ArrayList<>());
+        }
+        else {
+            removeNbtTag(mainAdapter.getGlowTag());
+            removeNbtTag("ench");
+        }
     }
 }

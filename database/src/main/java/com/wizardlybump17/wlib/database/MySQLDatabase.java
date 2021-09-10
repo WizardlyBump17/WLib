@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.database;
 
 import com.wizardlybump17.wlib.util.MapUtils;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -13,15 +12,15 @@ public class MySQLDatabase extends Database {
             .put("AUTOINCREMENT", "AUTO_INCREMENT")
             .build();
 
-    protected MySQLDatabase(Properties properties, JavaPlugin plugin) {
-        super(plugin, properties);
+    protected MySQLDatabase(Properties properties, DatabaseHolder holder) {
+        super(holder, properties);
     }
 
     @Override
     public final String getJdbcUrl() {
         return "jdbc:mysql://" + properties.getProperty("host", "localhost") + ':' +
                 properties.getProperty("port", "3306") + '/' +
-                properties.getProperty("database", getPlugin().getName().toLowerCase());
+                properties.getProperty("database", getHolder().getName().toLowerCase());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.adapter.v1_12_R1;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Material;
@@ -15,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
+
+    static {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener(new NMSAdapter()));
+    }
 
     @Override
     public Object nbtToJava(Object nbt) {
@@ -164,10 +169,5 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }
-
-    @Override
-    public String getEnchantmentTagName() {
-        return "Enchantments";
     }
 }

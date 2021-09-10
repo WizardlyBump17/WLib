@@ -73,7 +73,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
 
     public PaginatedInventory build() {
         if (title == null || shape == null)
-            throw new NullPointerException();
+            throw new NullPointerException("title or shape is null");
         PaginatedInventory paginatedInventory = new PaginatedInventory();
 
         char[] shapeChar = shape.toCharArray();
@@ -156,30 +156,32 @@ public class PaginatedInventoryBuilder implements Cloneable {
     }
 
     private void setNavigator(int page, int totalInventories, int slot, CustomInventoryHolder holder, InventoryNavigator navigator, PaginatedInventory inventories, boolean next) {
-        if (page + 1 == totalInventories) {
-            if (navigator.replacer != null)
-                holder.setButton(slot, navigator.replacer);
-            else if (navigator.replacerChar != '\u0000')
-                holder.setButton(slot, shapeReplacements.get(navigator.replacerChar));
-            else
+        ItemButton item;
+        if (navigator.replacer != null)
+            item = navigator.replacer;
+        else if (navigator.replacerChar != '\u0000')
+            item = shapeReplacements.get(navigator.replacerChar);
+        else
+            item = new ItemButton(navigator.item);
+
+        if (next) {
+            if (page + 1 < totalInventories)
                 holder.setButton(slot, new ItemButton(
                         navigator.item,
-                        event -> {
-                            if (next)
-                                inventories.showNextPage(event.getWhoClicked());
-                            else
-                                inventories.showPreviousPage(event.getWhoClicked());
-                        }));
-        } else {
+                        event -> inventories.showNextPage(event.getWhoClicked())
+                ));
+            else
+                holder.setButton(slot, item);
+            return;
+        }
+
+        if (page != 0)
             holder.setButton(slot, new ItemButton(
                     navigator.item,
-                    event -> {
-                        if (next)
-                            inventories.showNextPage(event.getWhoClicked());
-                        else
-                            inventories.showPreviousPage(event.getWhoClicked());
-                    }));
-        }
+                    event -> inventories.showPreviousPage(event.getWhoClicked())
+            ));
+        else
+            holder.setButton(slot, item);
     }
 
     @Override

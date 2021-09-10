@@ -12,7 +12,11 @@ import java.util.logging.Level;
 @RequiredArgsConstructor
 public class CommandManager {
 
-    public static final Comparator<RegisteredCommand> COMMAND_COMPARATOR = Comparator.comparingInt(command -> -command.getCommand().execution().split(" ").length);
+    public static final Comparator<RegisteredCommand> COMMAND_COMPARATOR = Comparator.comparingInt(command -> {
+        if (command.getCommand().priority() == -1)
+            return -command.getCommand().execution().split(" ").length;
+        return -command.getCommand().priority();
+    });
 
     private final JavaPlugin plugin;
     private final Map<String, List<RegisteredCommand>> commands = new HashMap<>();

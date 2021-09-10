@@ -78,6 +78,10 @@ public class Config extends YamlConfiguration {
         return map;
     }
 
+    public Map<String, Object> asMap() {
+        return convertToMap(this);
+    }
+
     public String getFancyString(String path, String[] placeholders, Object[] replacements) {
         String string = getFancyString(path);
         if (string == null)

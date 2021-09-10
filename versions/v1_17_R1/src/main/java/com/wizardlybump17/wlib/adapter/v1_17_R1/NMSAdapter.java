@@ -118,9 +118,4 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     public ItemStack getFixedMaterial(WMaterial material) {
         return new ItemStack(material.getMaterial());
     }
-
-    @Override
-    public String getEnchantmentTagName() {
-        return "Enchantments";
-    }
 }

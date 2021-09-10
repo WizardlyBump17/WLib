@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -10,20 +11,21 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class CollectionUtil<E> {
 
+    @Getter
     private final Collection<E> collection;
 
-    public ListUtil replace(String old, String replacement) {
+    public CollectionUtil<String> replace(String old, String replacement) {
         List<String> result = new ArrayList<>(collection.size());
         for (E e : collection)
             result.add(e.toString().replace(old, replacement));
-        return new ListUtil(result);
+        return new CollectionUtil<String>(result);
     }
 
-    public ListUtil replace(char old, char replacement) {
+    public CollectionUtil<String> replace(char old, char replacement) {
         List<String> result = new ArrayList<>(collection.size());
         for (E e : collection)
             result.add(e.toString().replace(old, replacement));
-        return new ListUtil(result);
+        return new CollectionUtil<String>(result);
     }
 
     public E getIf(Predicate<E> predicate) {

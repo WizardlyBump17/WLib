@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
-import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
@@ -24,8 +23,6 @@ public class WLib extends WPlugin {
         initAdapters();
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         getLogger().info("WLib enabled.");
-
-        new CommandManager(this).registerCommands(this);
     }
 
     private void initAdapters() { //with my language it would be easier :sunglasses:
@@ -62,6 +59,8 @@ public class WLib extends WPlugin {
 
         if (ADAPTER_REGISTER.current() == null)
             getLogger().severe("No NMS adapter found for the current version!!!");
+        else
+            getLogger().info("Loaded NMS adapter for version " + ADAPTER_REGISTER.current().getTargetVersion());
     }
 
     public static WLib getInstance() {

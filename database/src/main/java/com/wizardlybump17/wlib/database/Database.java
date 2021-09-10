@@ -4,7 +4,6 @@ import com.sun.rowset.CachedRowSetImpl;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.*;
@@ -15,7 +14,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Database {
 
-    private final JavaPlugin plugin;
+    private final DatabaseHolder holder;
     protected final Properties properties;
     private Connection connection;
 
