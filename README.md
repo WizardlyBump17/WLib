@@ -1,7 +1,4 @@
 # WLib
-
-[![](https://jitpack.io/v/WizardlyBump17/WLib.svg)](https://jitpack.io/#WizardlyBump17/WLib)
-<br>
 <br>
 
 ### Build yourself
@@ -22,13 +19,13 @@
 <br>
 
 ### Add as dependency
-Add the JitPack repository.<br>
+Add the Maven repository.<br>
 Maven:
 ```xml
 <repositories>
     <repository>
-        <id>jitpack</id>
-        <url>https://jitpack.io</url>
+        <id>wb17</id>
+        <url>https://raw.githubusercontent.com/WizardlyBump17/WizardlyBump17/maven/</url>
     </repository>
 </repositories>
 ```
@@ -36,7 +33,7 @@ Gradle:
 ```groovy
 repositories {
     maven {
-        url('https://jitpack.io')
+        url = 'https://raw.githubusercontent.com/WizardlyBump17/WizardlyBump17/maven/'
     }
 }
 ```
@@ -47,7 +44,7 @@ Maven:
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.github.WizardlyBump17.WLib</groupId>
+        <groupId>com.wizardlybump17.wlib</groupId>
         <artifactId>MODULE</artifactId>
         <version>VERSION</version>
         <scope>provided</scope>
@@ -57,7 +54,7 @@ Maven:
 Gradle:
 ```groovy
 dependencies {
-    implementation('com.github.WizardlyBump17.WLib:MODULE:VERSION')
+    implementation('com.wizardlybump17.wlib:MODULE:VERSION')
 }
 ```
 <br>
