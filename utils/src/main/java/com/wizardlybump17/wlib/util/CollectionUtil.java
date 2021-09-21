@@ -42,4 +42,17 @@ public class CollectionUtil<E> {
             result.add(prefix + string.substring(current, current + length > string.length() ? (current = string.length()) : (current += length)));
         return result;
     }
+
+    public static List<String> breakLines(String string, int length, String prefix, String... firstPrefixes) {
+        List<String> result = new ArrayList<>(string.length() / length + 1);
+        int current = 0;
+        while (current < string.length())
+            result.add(prefix + string.substring(current, current + length > string.length() ? (current = string.length()) : (current += length)));
+
+        for (int i = 0; i < firstPrefixes.length && i < result.size(); i++) {
+            result.set(i, firstPrefixes[i] + result.get(i).substring(prefix.length()));
+        }
+
+        return result;
+    }
 }

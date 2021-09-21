@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import java.util.Arrays;
 import java.util.Map;
 
+//TODO refactor
 @Getter
 public enum WMaterial {
 

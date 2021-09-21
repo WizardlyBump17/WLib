@@ -126,12 +126,14 @@ public class PaginatedInventoryBuilder implements Cloneable {
                     }
 
                     case '<': {
-                        setNavigator(i, inventoriesAmount, slot, holder, previousPage, paginatedInventory, false);
+                        if (previousPage != null)
+                            setNavigator(i, inventoriesAmount, slot, holder, previousPage, paginatedInventory, false);
                         continue;
                     }
 
                     case '>':
-                        setNavigator(i, inventoriesAmount, slot, holder, nextPage, paginatedInventory, true);
+                        if (nextPage != null)
+                            setNavigator(i, inventoriesAmount, slot, holder, nextPage, paginatedInventory, true);
                         continue;
 
                     default: {
@@ -169,7 +171,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     }
 
     private UpdatableInventory fromHolder(int page, CustomInventoryHolder original) {
-        UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime);
+        UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime, page);
         UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
         for (Map.Entry<Integer, ItemButton> entry : original.getButtons().entrySet())
             tempHolder.setButton(entry.getKey(), entry.getValue());

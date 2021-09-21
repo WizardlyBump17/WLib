@@ -32,8 +32,12 @@ public class EntityListener implements Listener {
         if (!holder.hasButton(event.getRawSlot())) return;
 
         ItemButton item = holder.getButton(event.getRawSlot());
-        if (item != null && item.getClickAction() != null)
-            item.getClickAction().onClick(event);
+        if (item != null) {
+            if (item.getClickAction() != null)
+                item.getClickAction().onClick(event);
+            if (item.getClickAction0() != null)
+                item.getClickAction0().onClick(event, holder.getPage());
+        }
     }
 
     @EventHandler

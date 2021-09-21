@@ -18,6 +18,10 @@ public class CustomInventory {
         bukkitInventory = Bukkit.createInventory(owner = new CustomInventoryHolder(this), this.size = size, this.title = title);
     }
 
+    public CustomInventory(String title, int size, int page) {
+        bukkitInventory = Bukkit.createInventory(owner = new CustomInventoryHolder(this, page), this.size = size, this.title = title);
+    }
+
     public CustomInventory(String title, int size, CustomInventoryHolder holder) {
         bukkitInventory = Bukkit.createInventory(owner = holder, this.size = size, this.title = title);
     }

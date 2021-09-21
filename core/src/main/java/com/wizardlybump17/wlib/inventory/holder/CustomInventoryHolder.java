@@ -14,9 +14,17 @@ public class CustomInventoryHolder implements InventoryHolder {
     protected CustomInventory inventory;
     @Getter
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
+    @Getter
+    private final int page;
 
     public CustomInventoryHolder(CustomInventory inventory) {
         this.inventory = inventory;
+        page = 0;
+    }
+
+    public CustomInventoryHolder(CustomInventory inventory, int page) {
+        this.inventory = inventory;
+        this.page = page;
     }
 
     public void setInventory(CustomInventory inventory) {

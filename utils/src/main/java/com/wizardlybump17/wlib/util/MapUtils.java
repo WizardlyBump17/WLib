@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class MapUtils {
 
@@ -18,6 +19,18 @@ public class MapUtils {
     public static class MapBuilder<K, V> {
 
         private final Map<K, V> map = new HashMap<>();
+
+        public <T> MapBuilder<K, V> putIf(RawPredicate predicate, K key, T t, Function<T, V> function) {
+            if (predicate.test())
+                return put(key, function.apply(t));
+            return this;
+        }
+
+        public MapBuilder<K, V> putIf(RawPredicate predicate, K key, V value) {
+            if (predicate.test())
+                return put(key, value);
+            return this;
+        }
 
         public MapBuilder<K, V> put(K key, V value) {
             map.put(key, value);

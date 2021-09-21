@@ -8,7 +8,7 @@ dependencies {
             'org.jetbrains:annotations:22.0.0',
             'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
     )
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor('org.projectlombok:lombok:1.18.20')
 
     implementation(
             project(':utils'),
@@ -21,7 +21,9 @@ dependencies {
             project(':versions:v1_16_R3'),
             project(':versions:v1_17_R1'),
 
-            project(':database')
+            project(':database'),
+
+            project(':objects')
     )
 }
 

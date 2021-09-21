@@ -19,14 +19,17 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import sun.management.counter.perf.PerfLongArrayCounter;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
+//TODO refactor
 @Data
 @Builder
 public class Item {
 
+    private static final Map<UUID, ItemStack> HEADS = new HashMap<>();
     private static final NMSAdapter ADAPTER = NMSAdapterRegister.getInstance().current();
 
     private Material type;
@@ -40,11 +43,15 @@ public class Item {
     private Map<String, Object> nbtTags;
 
     public static ItemBuilder getHead(String base64, int amount) {
+        final UUID uuid = UUID.nameUUIDFromBytes(base64.getBytes());
+        if (HEADS.containsKey(uuid))
+            return fromItemStack(HEADS.get(uuid));
+
         try {
             ItemStack itemStack = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
             SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
-            GameProfile gameProfile = new GameProfile(UUID.nameUUIDFromBytes(base64.getBytes()), null);
+            GameProfile gameProfile = new GameProfile(uuid, null);
             PropertyMap properties = gameProfile.getProperties();
 
             properties.put("textures", new Property("textures", base64));
@@ -54,6 +61,9 @@ public class Item {
             profileField.set(itemMeta, gameProfile);
 
             itemStack.setItemMeta(itemMeta);
+
+            HEADS.put(uuid, itemStack);
+
             return fromItemStack(itemStack);
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,10 +72,16 @@ public class Item {
     }
 
     public static ItemBuilder getHead(UUID player, int amount) {
+        if (HEADS.containsKey(player))
+            return fromItemStack(HEADS.get(player));
+
         ItemStack item = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(Bukkit.getOfflinePlayer(player).getName());
         item.setItemMeta(meta);
+
+        HEADS.put(player, item);
+
         return fromItemStack(item);
     }
 
@@ -309,6 +325,8 @@ public class Item {
 
             if (args.containsKey("material"))
                 type(Material.valueOf(args.get("material").toString().toUpperCase()));
+            if (args.containsKey("type"))
+                type(Material.valueOf(args.get("type").toString().toUpperCase()));
             if (args.containsKey("amount"))
                 amount((int) args.get("amount"));
             if (args.containsKey("durability"))
