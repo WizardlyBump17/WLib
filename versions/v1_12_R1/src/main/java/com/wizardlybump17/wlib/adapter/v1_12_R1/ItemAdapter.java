@@ -96,4 +96,19 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         else
             removeNbtTag(mainAdapter.getGlowTag());
     }
+
+    @Override
+    public void setCustomModelData(int data) {
+        setNbtTag("CustomModelData", data);
+    }
+
+    @Override
+    public int getCustomModelData() {
+        return (int) getNbtTags().getOrDefault("CustomModelData", -1);
+    }
+
+    @Override
+    public boolean hasCustomModelData() {
+        return getCustomModelData() != -1;
+    }
 }

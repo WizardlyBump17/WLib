@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
+//TODO add support to glowing items
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     protected ItemAdapter(ItemStack target, NMSAdapter mainAdapter) {
@@ -96,5 +97,21 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
             setNbtTag(mainAdapter.getGlowTag(), "glow");
         else
             removeNbtTag(mainAdapter.getGlowTag());
+    }
+
+    @Override
+    public void setCustomModelData(int data) {
+        meta.setCustomModelData(data);
+        target.setItemMeta(meta);
+    }
+
+    @Override
+    public int getCustomModelData() {
+        return meta.getCustomModelData();
+    }
+
+    @Override
+    public boolean hasCustomModelData() {
+        return meta.hasCustomModelData();
     }
 }

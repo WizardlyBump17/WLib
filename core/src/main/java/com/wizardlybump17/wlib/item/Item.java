@@ -19,8 +19,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import sun.management.counter.perf.PerfLongArrayCounter;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -41,6 +45,7 @@ public class Item {
     private Map<Enchantment, Integer> enchantments;
     private Set<ItemFlag> flags;
     private Map<String, Object> nbtTags;
+    private Integer customModelData;
 
     public static ItemBuilder getHead(String base64, int amount) {
         final UUID uuid = UUID.nameUUIDFromBytes(base64.getBytes());
@@ -100,11 +105,38 @@ public class Item {
                 .unbreakable(itemAdapter.isUnbreakable())
                 .enchantments(item.getEnchantments())
                 .nbtTags(itemAdapter.getNbtTags())
-                .glow(itemAdapter.hasGlow());
+                .glow(itemAdapter.hasGlow())
+                .customModelData(itemAdapter.getCustomModelData());
     }
 
     public static ItemBuilder deserialize(Map<String, Object> args) {
         return builder().setData(args);
+    }
+
+    public static String toBase64(ItemStack item) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeObject(item);
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ItemStack fromBase64(String base64) {
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            ItemStack item = (ItemStack) dataInput.readObject();
+            dataInput.close();
+            return item;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static class ItemBuilder implements ConfigurationSerializable {
@@ -223,7 +255,8 @@ public class Item {
                     .nbtTags(builder.nbtTags)
                     .flags(builder.flags)
                     .glow(builder.glow)
-                    .unbreakable(builder.unbreakable);
+                    .unbreakable(builder.unbreakable)
+                    .customModelData(builder.customModelData);
         }
 
         public ItemStack build() {
@@ -255,9 +288,15 @@ public class Item {
             if (enchantments == null || enchantments.isEmpty()) {
                 itemAdapter.setGlow(glow);
                 itemStack = itemAdapter.getTarget();
+                itemAdapter = ADAPTER.getItemAdapter(itemStack);
             }
             if (nbtTags != null) {
                 itemAdapter.setNbtTags(nbtTags, false);
+                itemStack = itemAdapter.getTarget();
+                itemAdapter = ADAPTER.getItemAdapter(itemStack);
+            }
+            if (customModelData != null) {
+                itemAdapter.setCustomModelData(customModelData);
                 itemStack = itemAdapter.getTarget();
             }
 
@@ -283,6 +322,7 @@ public class Item {
             if (unbreakable) map.put("unbreakable", true);
             if (glow) map.put("glow", true);
             if (enchantments != null) map.put("enchantments", enchantments);
+            if (customModelData != null) map.put("custom-model-data", customModelData);
 
             return map;
         }
@@ -345,6 +385,8 @@ public class Item {
                 enchantments(enchantments);
             if (args.containsKey("nbt-tags"))
                 nbtTags((Map<String, Object>) args.get("nbt-tags"));
+            if (args.containsKey("custom-model-data"))
+                customModelData((int) args.get("custom-model-data"));
             return this;
         }
 

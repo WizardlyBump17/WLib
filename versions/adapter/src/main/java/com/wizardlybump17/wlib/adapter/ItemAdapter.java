@@ -38,6 +38,15 @@ public abstract class ItemAdapter {
     public abstract Object getNbtTag(String key);
     public abstract Map<String, Object> getNbtTags();
 
+    /**
+     * Sets the custom model data. If in older versions,
+     * it will simply add the CustomModelData tag and won't have results in client-side
+     * @param data
+     */
+    public abstract void setCustomModelData(int data);
+    public abstract boolean hasCustomModelData();
+    public abstract int getCustomModelData();
+
     public abstract Object getMainTag();
     public abstract void setMainTag(Object tag);
 
