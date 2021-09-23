@@ -1,5 +1,6 @@
-package com.wizardlybump17.wlib;
+package com.wizardlybump17.wlib.task;
 
+import com.wizardlybump17.wlib.WLib;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 

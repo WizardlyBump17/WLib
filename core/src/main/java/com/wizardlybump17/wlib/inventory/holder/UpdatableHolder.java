@@ -1,13 +1,11 @@
 package com.wizardlybump17.wlib.inventory.holder;
 
-import com.wizardlybump17.wlib.UpdateInventoryTask;
+import com.wizardlybump17.wlib.task.UpdateInventoryTask;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
 import com.wizardlybump17.wlib.item.Item;
 import lombok.Getter;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 
 import java.util.Map;
 
@@ -35,17 +33,14 @@ public class UpdatableHolder extends CustomInventoryHolder {
             ItemButton value = entry.getValue();
             if (value instanceof UpdatableItem) {
                 UpdatableItem item = (UpdatableItem) value;
-                if (item.getUpdateAction() != null) {
-                    Item.ItemBuilder builder = Item.fromItemStack(item.getItemStack());
-                    item.getUpdateAction().update(builder, (UpdatableInventory) inventory);
-
-                    getInventory().setItem(entry.getKey(), builder.build());
-                }
+                Item.ItemBuilder builder = Item.fromItemStack(item.getItemStack());
+                item.getUpdateAction().update(builder, (UpdatableInventory) inventory);
+                getInventory().setItem(entry.getKey(), builder.build());
+                continue;
             }
+            if (Item.fromItemStack(value.getItemStack()).hasGlow())
+                getInventory().setItem(entry.getKey(), value.getItemStack());
         }
-
-        for (HumanEntity viewer : inventory.getBukkitInventory().getViewers())
-            ((Player) viewer).updateInventory();
     }
 
     public void stop() {

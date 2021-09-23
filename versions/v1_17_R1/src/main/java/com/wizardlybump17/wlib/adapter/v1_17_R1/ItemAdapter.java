@@ -107,7 +107,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @Override
     public int getCustomModelData() {
-        return meta.getCustomModelData();
+        return hasCustomModelData() ? meta.getCustomModelData() : -1;
     }
 
     @Override

@@ -4,18 +4,18 @@ import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Map;
 
-//TODO refactor
 @Getter
 public enum WMaterial {
 
     AIR,
 
     SKULL_ITEM(ArrayUtils.arrayOfRange(0, 5), "SKELETON_SKULL"),
-    SKELETON_SKULL("SKULL_ITEM"),
+    SKELETON_SKULL(0, "SKULL_ITEM"),
     WITHER_SKELETON_SKULL(1, "SKULL_ITEM"),
     ZOMBIE_HEAD(2, "SKULL_ITEM"),
     PLAYER_HEAD(3, "SKULL_ITEM"),
@@ -44,7 +44,7 @@ public enum WMaterial {
     EMPTY_MAP("MAP"),
     FILLED_MAP("MAP"),
 
-    MONSTER_EGG(ArrayUtils.arrayOfRange(0, 120)),
+    MONSTER_EGG(ArrayUtils.arrayOfRange(0, 120), "PIG_SPAWN_EGG"),
     BAT_SPAWN_EGG(65, MapUtils.mapOf("spawn-egg", "BAT"), "MONSTER_EGG"),
     BEE_SPAWN_EGG(MapUtils.mapOf("spawn-egg", "BEE"), "MONSTER_EGG"),
     BLAZE_SPAWN_EGG(61, MapUtils.mapOf("spawn-egg", "BLAZE"), "MONSTER_EGG"),
@@ -143,23 +143,32 @@ public enum WMaterial {
     CRIMSON_SIGN("SIGN"),
     WARPED_SIGN("SIGN"),
 
-    WOOD_DOOR("OAK_DOOR"),
+    WOODEN_DOOR("OAK_DOOR"),
     SPRUCE_DOOR_ITEM("SPRUCE_DOOR"),
     BIRCH_DOOR_ITEM("BIRCH_DOOR"),
     JUNGLE_DOOR_ITEM("JUNGLE_DOOR"),
     ACACIA_DOOR_ITEM("ACACIA_DOOR"),
     DARK_OAK_DOOR_ITEM("DARK_OAK_DOOR"),
-    OAK_DOOR("WOOD_DOOR"),
+    OAK_DOOR("WOODEN_DOOR"),
     SPRUCE_DOOR("SPRUCE_DOOR_ITEM"),
     BIRCH_DOOR("BIRCH_DOOR_ITEM"),
     JUNGLE_DOOR("JUNGLE_DOOR_ITEM"),
     ACACIA_DOOR("ACACIA_DOOR_ITEM"),
     DARK_OAK_DOOR("DARK_OAK_DOOR"),
-    CRISMON_DOOR("WOOD_DOOR"),
-    WARPED_DOOR("WOOD_DOOR"),
-    IRON_DOOR;
+    CRIMSON_DOOR("WOODEN_DOOR"),
+    WARPED_DOOR("WOODEN_DOOR"),
+    IRON_DOOR,
 
-    private final Material material;
+    NETHERITE_BLOCK("DIAMOND_BLOCK"),
+    NETHERITE_INGOT("DIAMOND"),
+    NETHERITE_SCRAP("DIAMOND"),
+    NETHERITE_SWORD("DIAMOND_SWORD"),
+    NETHERITE_SHOVEL("DIAMOND_SPADE"),
+    NETHERITE_PICKAXE("DIAMOND_PICKAXE"),
+    NETHERITE_HOE("DIAMOND_HOE"),
+    NETHERITE_AXE("DIAMOND_AXE");
+
+    private final ItemStack itemStack;
     private final int data;
     private final String related;
     private final int[] acceptedData;
@@ -169,24 +178,24 @@ public enum WMaterial {
         this(-1, null);
     }
 
+    WMaterial(String related) {
+        this(-1, related);
+    }
+
     WMaterial(int data, String related) {
         this.data = data;
         this.related = related;
-        this.acceptedData = new int[0];
-        material = getBukkitMaterial();
+        acceptedData = null;
         itemData = null;
-    }
-
-    WMaterial(String related) {
-        this(-1, related);
+        itemStack = toItemStack();
     }
 
     WMaterial(int data, Map<String, Object> itemData, String related) {
         this.data = data;
         this.related = related;
-        acceptedData = new int[0];
-        material = getBukkitMaterial();
+        acceptedData = null;
         this.itemData = itemData;
+        itemStack = toItemStack();
     }
 
     WMaterial(Map<String, Object> itemData, String related) {
@@ -205,28 +214,38 @@ public enum WMaterial {
         this.acceptedData = acceptedData;
         this.data = -1;
         this.related = related;
-        material = getBukkitMaterial();
         this.itemData = itemData;
+        itemStack = toItemStack();
     }
 
-    private Material getBukkitMaterial() {
+    private ItemStack toItemStack() {
         try {
-            return Material.valueOf(name());
+            Material material = Material.valueOf(name());
+            return new ItemStack(material); //we got it by the name. it should not have durability
         } catch (IllegalArgumentException e) {
-            return fromRelated();
+            try {
+                if (related == null)
+                    return new ItemStack(Material.AIR);
+                Material material = Material.valueOf(related);
+                return new ItemStack(material, 1, (short) (data == -1 ? 0 : data)); //if we are here, the items are pre 1.13 (unless it is certain pre 1.13 items)
+            } catch (IllegalArgumentException e1) {
+                System.err.println("Error while trying to convert WMaterial to Material. (" + name() + ")");
+            }
+            return null;
         }
     }
 
-    private Material fromRelated() {
-        if (related == null)
-            return Material.AIR;
-        try {
-            return Material.valueOf(related);
-        } catch (IllegalArgumentException ignored) {}
-        return Material.AIR;
+    public ItemStack getItemStack() {
+        return itemStack.clone();
+    }
+
+    public boolean dataDependent() {
+        return acceptedData != null;
     }
 
     public Integer[] getAcceptedData() {
+        if (acceptedData == null)
+            return null;
         return Arrays.stream(acceptedData).boxed().toArray(Integer[]::new);
     }
 }

@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.adapter.v1_8_R3;
 
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -118,8 +117,6 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     @Override
     public ItemStack getFixedMaterial(WMaterial material) {
-        Material bukkitMaterial = material.getMaterial();
-        short data = (short) (material.getData() == -1 ? 0 : material.getData());
-        return new ItemStack(bukkitMaterial, 1, data);
+        return material.getItemStack();
     }
 }

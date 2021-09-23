@@ -7,7 +7,6 @@ import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
-import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import lombok.Builder;
 import lombok.Data;
@@ -261,10 +260,9 @@ public class Item {
 
         public ItemStack build() {
             ItemStack itemStack;
-            if (wmaterial != null) { //ill add all the items in WMaterial :D
+            if (wmaterial != null) //ill add all the items in WMaterial :D
                 itemStack = fixMaterial();
-                itemStack.setAmount(amountSet ? amount : 1);
-            } else
+            else
                 itemStack = new ItemStack(type, amountSet ? amount : 1, durability);
 
             ItemMeta itemMeta = itemStack.getItemMeta();
@@ -305,6 +303,10 @@ public class Item {
 
         public List<String> getLore() {
             return lore == null ? lore = new ArrayList<>() : new ArrayList<>(lore);
+        }
+
+        public boolean hasGlow() {
+            return glow;
         }
 
         @Override
@@ -392,29 +394,14 @@ public class Item {
 
         private ItemStack fixMaterial() {
             if (wmaterial != null) {
-                ItemStack item;
-                if (ArrayUtils.contains(wmaterial.getAcceptedData(), (int) durability))
-                    item = new ItemStack(getFixedMaterialFromRelated(), 1, durability);
-                else
-                    item = ADAPTER.getFixedMaterial(wmaterial);
-                type = item.getType();
-
-                if (type.name().equals("AIR") && !wmaterial.name().equals("AIR")) //lets try get the right item using the related
-                    item.setType(type = getFixedMaterialFromRelated());
-
-                if (!wmaterial.name().endsWith("_SPAWN_EGG"))
-                    durability = item.getDurability();
-                return item;
+                if (wmaterial.dataDependent())
+                    return new ItemStack(Material.valueOf(wmaterial.name()), 1, durability);
+                final ItemStack stack = wmaterial.getItemStack();
+                type = stack.getType();
+                durability = stack.getDurability();
+                return stack;
             }
             return null;
-        }
-
-        private Material getFixedMaterialFromRelated() {
-            WMaterial[] values = WMaterial.values();
-            for (WMaterial value : values)
-                if (value.getData() == durability && value.getRelated().equals(wmaterial.name()))
-                    return value.getMaterial();
-            return Material.AIR;
         }
     }
 }

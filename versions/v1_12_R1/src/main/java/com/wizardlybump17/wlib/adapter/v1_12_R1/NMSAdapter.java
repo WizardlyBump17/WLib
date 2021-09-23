@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.adapter.v1_12_R1;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import net.minecraft.server.v1_12_R1.*;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -126,14 +125,8 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     @Override
     public ItemStack getFixedMaterial(WMaterial material) {
-        Material bukkitMaterial = material.getMaterial();
-        short data = (short) (material.getData() == -1 ? 0 : material.getData());
-        ItemStack itemStack = new ItemStack(bukkitMaterial, 1, data);
-
-        if (material.getItemData() == null)
-            return itemStack;
-
-        ItemMeta meta = itemStack.getItemMeta();
+        ItemStack itemStack = material.getItemStack();
+        final ItemMeta meta = itemStack.getItemMeta();
 
         material.getItemData().forEach((type, value) -> {
             switch (type) { //can have more

@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.util;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ArrayUtils {
 
     public static byte[] arrayOfRange(byte from, byte to) {
@@ -34,7 +36,9 @@ public class ArrayUtils {
         return result;
     }
 
-    public static <T> boolean contains(T[] array, T value) {
+    public static <T> boolean contains(@Nullable T[] array, T value) {
+        if (array == null)
+            return false;
         for (T t : array)
             if (t.equals(value))
                 return true;

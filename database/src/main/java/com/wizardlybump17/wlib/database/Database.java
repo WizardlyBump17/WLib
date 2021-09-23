@@ -1,11 +1,9 @@
 package com.wizardlybump17.wlib.database;
 
-import com.sun.rowset.CachedRowSetImpl;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.sql.rowset.CachedRowSet;
 import java.sql.*;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -76,14 +74,19 @@ public abstract class Database {
         return null;
     }
 
-    public CachedRowSet query(String query, Object... replacements) {
+    /**
+     * Executes a query. Remember to close the ResultSet!
+     * @param query
+     * @param replacements
+     * @return
+     */
+    public ResultSet query(String query, Object... replacements) {
         if (isClosed()) return null;
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
             for (int i = 0; i < replacements.length; i++)
                 statement.setObject(i + 1, replacements[i]);
-            CachedRowSet rowSet = new CachedRowSetImpl();
-            rowSet.populate(statement.executeQuery());
-            return rowSet;
+            return statement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

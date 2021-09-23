@@ -116,6 +116,6 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     @Override
     public ItemStack getFixedMaterial(WMaterial material) {
-        return new ItemStack(material.getMaterial());
+        return material.getItemStack();
     }
 }
