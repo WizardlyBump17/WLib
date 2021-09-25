@@ -6,8 +6,9 @@ import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class WLib extends WPlugin {
+public class WLib extends JavaPlugin {
 
     private static final NMSAdapterRegister ADAPTER_REGISTER = NMSAdapterRegister.getInstance();
     private final DatabaseRegister databaseRegister = DatabaseRegister.getInstance();

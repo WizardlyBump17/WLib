@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public abstract class WPlugin extends JavaPlugin { //useless but useful
 
     @Override

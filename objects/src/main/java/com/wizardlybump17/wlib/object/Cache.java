@@ -46,6 +46,10 @@ public abstract class Cache<K, V, T> {
         return cache.values();
     }
 
+    public void clear() {
+        cache.clear();
+    }
+
     /**
      * This converts the given object to a valid pair to use in the map
      * @param t the object
