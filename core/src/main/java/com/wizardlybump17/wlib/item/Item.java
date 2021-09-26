@@ -365,8 +365,8 @@ public class Item {
                 }
             }
 
-            if (args.containsKey("material"))
-                type(Material.valueOf(args.get("material").toString().toUpperCase()));
+            if (args.containsKey("material") || args.containsKey("type"))
+                type(Material.valueOf(args.getOrDefault("material", args.get("type")).toString().toUpperCase()));
             if (args.containsKey("type"))
                 type(Material.valueOf(args.get("type").toString().toUpperCase()));
             if (args.containsKey("amount"))

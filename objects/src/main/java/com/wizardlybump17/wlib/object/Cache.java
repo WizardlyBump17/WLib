@@ -15,7 +15,11 @@ import java.util.Optional;
  */
 public abstract class Cache<K, V, T> {
 
-    protected final Map<K, V> cache = new HashMap<>();
+    protected final Map<K, V> cache;
+
+    public Cache() {
+        cache = getInitialMap();
+    }
 
     public void add(T t) {
         final Pair<K, V> apply = apply(t);
@@ -56,4 +60,11 @@ public abstract class Cache<K, V, T> {
      * @return the pair
      */
     public abstract Pair<K, V> apply(T t);
+
+    /**
+     * @return the initial map to be used
+     */
+    protected Map<K, V> getInitialMap() {
+        return new HashMap<>();
+    }
 }

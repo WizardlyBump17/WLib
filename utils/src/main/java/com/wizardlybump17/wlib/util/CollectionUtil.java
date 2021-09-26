@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class CollectionUtil<E> {
 
+    private static final String[] EMPTY_STRING_ARRAY = new String[]{};
+
     @Getter
     private final Collection<E> collection;
 
@@ -35,7 +37,16 @@ public class CollectionUtil<E> {
         return null;
     }
 
+    /**
+     * Will breaks the string into a list. The list will have strings with the specified length
+     * @param string the string to be broke
+     * @param length the length that the parts will have
+     * @param prefix the prefix
+     * @return the list
+     */
     public static List<String> breakLines(String string, int length, String prefix) {
+        if (prefix == null)
+            prefix = "";
         List<String> result = new ArrayList<>();
         int current = 0;
         while (current < string.length())
@@ -43,8 +54,16 @@ public class CollectionUtil<E> {
         return result;
     }
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[]{};
-
+    /**
+     * Will breaks the string into a list. The list will have strings with the specified length.
+     * If spaces is true, then it will split the string by spaces and will append each part to the final list.
+     * If the current split part is bigger or equals the length it will break to the next list index
+     * @param string the string to be broke
+     * @param length the length that the parts will have
+     * @param prefix the prefix
+     * @param spaces if it needs to split the string by the spaces
+     * @return the list
+     */
     public static List<String> breakLines(String string, int length, String prefix, boolean spaces) {
         if (spaces) {
             List<String> result = new ArrayList<>();

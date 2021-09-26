@@ -107,7 +107,10 @@ public class PaginatedInventoryBuilder implements Cloneable {
                                     holder = inventory.getOwner();
                                 }
                             }
-                            holder.setButton(slot, button);
+                            if (holder.getButton(slot) != null)
+                                currentItem--;
+                            else
+                                holder.setButton(slot, button);
 
                             for (Map.Entry<Integer, ItemButton> entry : button.getChildren().entrySet()) {
                                 int newSlot = slot + entry.getKey();

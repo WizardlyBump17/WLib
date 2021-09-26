@@ -1,13 +1,40 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.item.Item;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @Data
 @RequiredArgsConstructor
 public class InventoryNavigator {
+
+    /**
+     * Common navigator that takes the viewer to the next page.
+     * It uses an arrow with the display name "§aNext page".
+     * Also, it uses the '#' char as replacer, but it can be bypassed using the constructors
+     */
+    public static InventoryNavigator NEXT_PAGE = new InventoryNavigator(
+            Item.builder()
+                    .type(Material.ARROW)
+                    .displayName("§aNext page")
+                    .build(),
+            '#'
+    );
+    /**
+     * Common navigator that takes the viewer to the previous page.
+     * It uses an arrow with the display name "§aPrevious page".
+     * Also, it uses the '#' char as replacer, but it can be bypassed using the constructors
+     */
+    public static InventoryNavigator PREVIOUS_PAGE = new InventoryNavigator(
+            Item.builder()
+                    .type(Material.ARROW)
+                    .displayName("§aPrevious page")
+                    .build(),
+            '#'
+    );
 
     protected final ItemStack item;
     protected ItemButton replacer;
