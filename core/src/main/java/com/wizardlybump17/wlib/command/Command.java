@@ -9,8 +9,21 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Command {
 
+    /**
+     * How the command must be executed.
+     * It accepts regex inside ()
+     * @return how the command must be executed
+     */
     String execution();
+
+    /**
+     * @return the permission the sender must have to execute the command
+     */
     String permission() default "";
+
+    /**
+     * @return the message sent to the sender when he does not have the permission to execute the command
+     */
     String permissionMessage() default "";
 
     /**
