@@ -25,23 +25,15 @@ public class ItemButton {
 
     private ItemStack itemStack;
     private final ClickAction clickAction;
-    private final ClickAction0 clickAction0;
     private final Map<Integer, ItemButton> children = new HashMap<>();
 
     public ItemButton(ItemStack item) {
-        this(item, (ClickAction) null);
+        this(item, null);
     }
 
     public ItemButton(ItemStack item, ClickAction clickAction) {
         itemStack = item;
         this.clickAction = clickAction;
-        clickAction0 = null;
-    }
-
-    public ItemButton(ItemStack item, ClickAction0 clickAction) {
-        itemStack = item;
-        this.clickAction = null;
-        clickAction0 = clickAction;
     }
 
     public void addChild(int slot, ItemButton item) {
@@ -53,10 +45,6 @@ public class ItemButton {
     }
 
     public interface ClickAction {
-        void onClick(InventoryClickEvent event);
-    }
-
-    public interface ClickAction0 {
-        void onClick(InventoryClickEvent event, int page);
+        void onClick(InventoryClickEvent event, Map<String, Object> data);
     }
 }

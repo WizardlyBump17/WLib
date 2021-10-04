@@ -5,7 +5,9 @@ import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class UpdateInventoryTask extends BukkitRunnable {
 
@@ -13,26 +15,35 @@ public class UpdateInventoryTask extends BukkitRunnable {
 
     private int currentTick;
     private final Set<UpdatableHolder> holders = new HashSet<>();
-    private final Set<UpdatableHolder> cancelled = new HashSet<>();
 
     @Override
     public void run() {
-        for (UpdatableHolder holder : holders) {
-            if (holder.getUpdateTime() < 1)
-                holder.update();
-            else if (currentTick != 0 && currentTick % holder.getUpdateTime() == 0)
-                holder.update();
+        final Iterator<UpdatableHolder> iterator = holders.iterator();
+        while (iterator.hasNext()) {
+            final UpdatableHolder holder = iterator.next();
+
+            if (holder.isStopped())
+                iterator.remove();
+
+            try {
+                if (holder.getUpdateTime() < 1)
+                    holder.update();
+                else if (currentTick != 0 && currentTick % holder.getUpdateTime() == 0)
+                    holder.update();
+            } catch (Throwable throwable) {
+                WLib.getInstance().getLogger().log(
+                        Level.SEVERE,
+                        "An exception happened when trying to update an inventory named " + holder.getOriginalInventory().getTitle() + ". It was removed from the update list to avoid new exceptions.",
+                        throwable
+                );
+                iterator.remove();
+            }
         }
         currentTick++;
-        holders.removeAll(cancelled);
     }
 
     public void add(UpdatableHolder holder) {
         holders.add(holder);
-    }
-
-    public void remove(UpdatableHolder holder) {
-        cancelled.add(holder);
     }
 
     public static UpdateInventoryTask getInstance() {

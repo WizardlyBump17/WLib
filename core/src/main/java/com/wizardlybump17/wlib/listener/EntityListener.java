@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.util.MapUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -34,9 +35,7 @@ public class EntityListener implements Listener {
         ItemButton item = holder.getButton(event.getRawSlot());
         if (item != null) {
             if (item.getClickAction() != null)
-                item.getClickAction().onClick(event);
-            if (item.getClickAction0() != null)
-                item.getClickAction0().onClick(event, holder.getPage());
+                item.getClickAction().onClick(event, MapUtils.mapOf("page", holder.getPage()));
         }
     }
 

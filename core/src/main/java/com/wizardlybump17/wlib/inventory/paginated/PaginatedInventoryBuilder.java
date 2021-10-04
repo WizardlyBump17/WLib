@@ -194,7 +194,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
             if (page + 1 < totalInventories)
                 holder.setButton(slot, new ItemButton(
                         navigator.item,
-                        event -> inventories.showNextPage(event.getWhoClicked())
+                        (event, data) -> inventories.showNextPage(event.getWhoClicked())
                 ));
             else
                 holder.setButton(slot, item);
@@ -204,7 +204,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
         if (page != 0)
             holder.setButton(slot, new ItemButton(
                     navigator.item,
-                    event -> inventories.showPreviousPage(event.getWhoClicked())
+                    (event, data) -> inventories.showPreviousPage(event.getWhoClicked())
             ));
         else
             holder.setButton(slot, item);

@@ -13,6 +13,7 @@ import java.util.Map;
 public class UpdatableHolder extends CustomInventoryHolder {
 
     private final int updateTime;
+    private boolean stopped;
 
     public UpdatableHolder(UpdatableInventory inventory, int updateTime) {
         super(inventory);
@@ -34,16 +35,16 @@ public class UpdatableHolder extends CustomInventoryHolder {
             if (value instanceof UpdatableItem) {
                 UpdatableItem item = (UpdatableItem) value;
                 Item.ItemBuilder builder = Item.fromItemStack(item.getItemStack());
-                item.getUpdateAction().update(builder, (UpdatableInventory) inventory);
+                item.getUpdateAction().update(builder);
                 getInventory().setItem(entry.getKey(), builder.build());
                 continue;
             }
-            if (Item.fromItemStack(value.getItemStack()).hasGlow())
+            if (Item.fromItemStack(value.getItemStack()).hasGlow()) //set the item in the inventory again so the packet is sent
                 getInventory().setItem(entry.getKey(), value.getItemStack());
         }
     }
 
     public void stop() {
-        UpdateInventoryTask.getInstance().remove(this);
+        stopped = true;
     }
 }
