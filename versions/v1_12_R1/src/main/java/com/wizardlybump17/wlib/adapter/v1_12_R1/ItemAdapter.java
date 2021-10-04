@@ -29,6 +29,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         setMainTag(compound);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> getNbtTags() {
         Map<String, Object> map = (Map<String, Object>) getMainAdapter().nbtToJava(getMainTag());
@@ -98,17 +99,20 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     }
 
     @Override
-    public void setCustomModelData(int data) {
-        setNbtTag("CustomModelData", data);
+    public void setCustomModelData(Integer data) {
+        if (data == null)
+            removeNbtTag("CustomModelData");
+        else
+            setNbtTag("CustomModelData", data);
     }
 
     @Override
-    public int getCustomModelData() {
-        return (int) getNbtTags().getOrDefault("CustomModelData", -1);
+    public Integer getCustomModelData() {
+        return (Integer) getNbtTags().get("CustomModelData");
     }
 
     @Override
     public boolean hasCustomModelData() {
-        return getCustomModelData() != -1;
+        return getCustomModelData() != null;
     }
 }

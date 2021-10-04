@@ -60,6 +60,12 @@ public abstract class Database {
         return this;
     }
 
+    /**
+     * Executes an update and returns the PreparedStatement
+     * @param command the update command
+     * @param replacements the replacements to be put in the "?" at the command, if present
+     * @return the PreparedStatement
+     */
     public PreparedStatement returnUpdate(String command, Object... replacements) {
         if (isClosed()) return null;
         try {
@@ -76,9 +82,9 @@ public abstract class Database {
 
     /**
      * Executes a query. Remember to close the ResultSet!
-     * @param query
-     * @param replacements
-     * @return
+     * @param query the query to be executed
+     * @param replacements the replacements to be put in the "?" at the query, if present
+     * @return the ResultSet
      */
     public ResultSet query(String query, Object... replacements) {
         if (isClosed()) return null;

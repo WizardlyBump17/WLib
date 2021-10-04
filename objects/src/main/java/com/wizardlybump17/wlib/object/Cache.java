@@ -1,5 +1,8 @@
 package com.wizardlybump17.wlib.object;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,24 +24,35 @@ public abstract class Cache<K, V, T> {
         cache = getInitialMap();
     }
 
-    public void add(T t) {
+    public void add(@NotNull T t) {
         final Pair<K, V> apply = apply(t);
         cache.put(apply.getFirst(), apply.getSecond());
     }
 
-    public void remove(K key) {
+    public void addAll(@NotNull Collection<T> collection) {
+        for (T t : collection)
+            add(t);
+    }
+
+    public void addAll(@NotNull Map<K, V> map) {
+        cache.putAll(map);
+    }
+
+    public void remove(@NotNull K key) {
         cache.remove(key);
     }
 
-    public boolean has(K key) {
+    public boolean has(@NotNull K key) {
         return cache.containsKey(key);
     }
 
-    public Optional<V> get(K key) {
+    @NotNull
+    public Optional<V> get(@NotNull K key) {
         return Optional.ofNullable(cache.get(key));
     }
 
-    public V getOrInsert(K key, T def) {
+    @Nullable
+    public V getOrInsert(@NotNull K key, @NotNull T def) {
         if (has(key))
             return get(key).orElse(null);
         final Pair<K, V> pair = apply(def);
@@ -46,6 +60,7 @@ public abstract class Cache<K, V, T> {
         return pair.getSecond();
     }
 
+    @NotNull
     public Collection<V> getAll() {
         return cache.values();
     }
@@ -59,11 +74,13 @@ public abstract class Cache<K, V, T> {
      * @param t the object
      * @return the pair
      */
+    @NotNull
     public abstract Pair<K, V> apply(T t);
 
     /**
      * @return the initial map to be used
      */
+    @NotNull
     protected Map<K, V> getInitialMap() {
         return new HashMap<>();
     }

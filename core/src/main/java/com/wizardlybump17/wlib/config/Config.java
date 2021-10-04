@@ -67,7 +67,7 @@ public class Config extends YamlConfiguration {
         return getMap(path, null);
     }
 
-    public Map<String, Object> convertToMap(ConfigurationSection section) {
+    public static Map<String, Object> convertToMap(ConfigurationSection section) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (String key : section.getKeys(false)) {
             Object object = section.get(key);
@@ -114,5 +114,22 @@ public class Config extends YamlConfiguration {
 
     public static Config load(String filePath, JavaPlugin plugin) {
         return new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
+    }
+
+    public static Config load(File file, JavaPlugin plugin) {
+        final String absolutePath = file.getAbsolutePath();
+        final Config config = new Config(
+                plugin,
+                absolutePath.substring(absolutePath.indexOf(plugin.getDataFolder().getAbsolutePath())),
+                file
+        );
+
+        try {
+            config.load(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return config;
     }
 }

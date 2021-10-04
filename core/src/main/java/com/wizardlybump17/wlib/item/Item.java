@@ -36,7 +36,7 @@ public class Item {
     private static final NMSAdapter ADAPTER = NMSAdapterRegister.getInstance().current();
 
     private Material type;
-    private int amount;
+    private Integer amount;
     private short durability;
     private String displayName;
     private List<String> lore;
@@ -46,13 +46,13 @@ public class Item {
     private Map<String, Object> nbtTags;
     private Integer customModelData;
 
-    public static ItemBuilder getHead(String base64, int amount) {
+    public static ItemBuilder getHead(String base64) {
         final UUID uuid = UUID.nameUUIDFromBytes(base64.getBytes());
         if (HEADS.containsKey(uuid))
             return fromItemStack(HEADS.get(uuid));
 
         try {
-            ItemStack itemStack = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
+            ItemStack itemStack = builder().type(WMaterial.PLAYER_HEAD).build();
             SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
             GameProfile gameProfile = new GameProfile(uuid, null);
@@ -75,11 +75,11 @@ public class Item {
         return null;
     }
 
-    public static ItemBuilder getHead(UUID player, int amount) {
+    public static ItemBuilder getHead(UUID player) {
         if (HEADS.containsKey(player))
             return fromItemStack(HEADS.get(player));
 
-        ItemStack item = builder().type(WMaterial.PLAYER_HEAD).amount(amount).build();
+        ItemStack item = builder().type(WMaterial.PLAYER_HEAD).build();
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(Bukkit.getOfflinePlayer(player).getName());
         item.setItemMeta(meta);
@@ -89,23 +89,37 @@ public class Item {
         return fromItemStack(item);
     }
 
+    /**
+     * Attempts to create an ItemBuilder of the item.
+     * If the item is null it will return an empty ItemBuilder
+     * @param item the item
+     * @return the ItemBuilder based on the item
+     */
     public static ItemBuilder fromItemStack(ItemStack item) {
+        final ItemBuilder builder = builder();
         if (item == null)
-            return builder();
+            return builder;
+
         ItemAdapter itemAdapter = ADAPTER.getItemAdapter(item);
         ItemMeta itemMeta = item.getItemMeta();
-        return builder()
+
+        builder
                 .type(item.getType())
                 .amount(item.getAmount())
                 .durability(item.getDurability())
-                .displayName(itemMeta.getDisplayName())
-                .lore(itemMeta.getLore())
-                .flags(itemMeta.getItemFlags())
-                .unbreakable(itemAdapter.isUnbreakable())
                 .enchantments(item.getEnchantments())
                 .nbtTags(itemAdapter.getNbtTags())
-                .glow(itemAdapter.hasGlow())
-                .customModelData(itemAdapter.getCustomModelData());
+                .glow(itemAdapter.hasGlow());
+
+        if (item.hasItemMeta())
+            builder
+                    .displayName(itemMeta.getDisplayName())
+                    .lore(itemMeta.getLore())
+                    .flags(itemMeta.getItemFlags())
+                    .customModelData(itemAdapter.getCustomModelData())
+                    .unbreakable(itemAdapter.isUnbreakable());
+
+        return builder;
     }
 
     public static ItemBuilder deserialize(Map<String, Object> args) {
@@ -140,7 +154,6 @@ public class Item {
 
     public static class ItemBuilder implements ConfigurationSerializable {
 
-        private boolean amountSet;
         private WMaterial wmaterial;
 
         public String getDisplayName() {
@@ -166,12 +179,6 @@ public class Item {
 
         public Set<ItemFlag> getFlags() {
             return flags;
-        }
-
-        public ItemBuilder amount(int amount) {
-            this.amount = amount;
-            amountSet = true;
-            return this;
         }
 
         public ItemBuilder type(Material type) {
@@ -240,6 +247,8 @@ public class Item {
         }
 
         public Map<String, Object> getNbtTags() {
+            if (nbtTags == null)
+                return new HashMap<>();
             return (Map<String, Object>) ADAPTER.nbtToJava(nbtTags);
         }
 
@@ -263,7 +272,7 @@ public class Item {
             if (wmaterial != null) //ill add all the items in WMaterial :D
                 itemStack = fixMaterial();
             else
-                itemStack = new ItemStack(type, amountSet ? amount : 1, durability);
+                itemStack = new ItemStack(type, amount == null ? 1 : amount, durability);
 
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta == null)
@@ -315,7 +324,8 @@ public class Item {
 
             fixMaterial();
             map.put("material", type);
-            map.put("amount", amountSet ? amount : 1);
+            if (amount != null)
+                map.put("amount", amount);
             if (durability != 0) map.put("durability", durability);
             if (displayName != null) map.put("display-name", displayName);
             if (lore != null) map.put("lore", lore);

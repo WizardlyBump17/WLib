@@ -43,9 +43,9 @@ public abstract class ItemAdapter {
      * it will simply add the CustomModelData tag and won't have results in client-side
      * @param data
      */
-    public abstract void setCustomModelData(int data);
+    public abstract void setCustomModelData(Integer data);
     public abstract boolean hasCustomModelData();
-    public abstract int getCustomModelData();
+    public abstract Integer getCustomModelData();
 
     public abstract Object getMainTag();
     public abstract void setMainTag(Object tag);
