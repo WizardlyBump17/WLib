@@ -43,8 +43,4 @@ public class ItemButton {
     public void removeChild(int slot) {
         children.remove(slot);
     }
-
-    public interface ClickAction {
-        void onClick(InventoryClickEvent event, Map<String, Object> data);
-    }
 }

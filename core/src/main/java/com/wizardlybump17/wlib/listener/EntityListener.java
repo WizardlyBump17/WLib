@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import com.wizardlybump17.wlib.util.MapUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -43,6 +44,10 @@ public class EntityListener implements Listener {
     public void onClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
+        if (holder instanceof CustomInventoryHolder) {
+            final PaginatedInventory paginatedHolder = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
+            paginatedHolder.stopListeners();
+        }
         if (holder instanceof UpdatableHolder)
             ((UpdatableHolder) holder).stop();
     }

@@ -1,29 +1,26 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
-import com.google.gson.Gson;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
+import com.wizardlybump17.wlib.inventory.ListenerBuilder;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
 import lombok.Getter;
+import org.bukkit.event.Event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class PaginatedInventoryBuilder implements Cloneable {
-
-    private static final Gson GSON = new Gson();
 
     private List<ItemButton> content;
     private String title, shape;
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private final Map<Character, UpdatableItem> updatableShapeReplacements = new HashMap<>();
     private InventoryNavigator nextPage, previousPage;
+    private final Set<ListenerBuilder<? extends Event>> listeners = new HashSet<>();
     private int updateTime;
 
     public PaginatedInventoryBuilder updateTime(int time) {
@@ -74,7 +71,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     public PaginatedInventory build() {
         if (title == null || shape == null)
             throw new NullPointerException("title or shape is null");
-        PaginatedInventory paginatedInventory = new PaginatedInventory();
+        PaginatedInventory paginatedInventory = new PaginatedInventory(listeners, new ArrayList<>());
 
         char[] shapeChar = shape.toCharArray();
         int presetItems = 0;
@@ -91,6 +88,8 @@ public class PaginatedInventoryBuilder implements Cloneable {
         for (int i = 0; i < inventoriesAmount; i++) {
             CustomInventory inventory = new CustomInventory(title.replace("{page}", Integer.toString(i + 1)), shape.length());
             CustomInventoryHolder holder = inventory.getOwner();
+            inventory.setPaginatedHolder(paginatedInventory);
+            holder.setShape(shape);
 
             for (int slot = 0; slot < shape.length(); slot++) {
                 char currentChar = shapeChar[slot];
@@ -163,6 +162,11 @@ public class PaginatedInventoryBuilder implements Cloneable {
         return paginatedInventory;
     }
 
+    public PaginatedInventoryBuilder listener(ListenerBuilder listener) {
+        listeners.add(listener);
+        return this;
+    }
+
     private int getItems() {
         if (content == null || content.isEmpty())
             return 0;
@@ -176,8 +180,13 @@ public class PaginatedInventoryBuilder implements Cloneable {
     private UpdatableInventory fromHolder(int page, CustomInventoryHolder original) {
         UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime, page);
         UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
+
         for (Map.Entry<Integer, ItemButton> entry : original.getButtons().entrySet())
             tempHolder.setButton(entry.getKey(), entry.getValue());
+
+        inventory.setPaginatedHolder(original.getOriginalInventory().getPaginatedHolder());
+        tempHolder.setShape(shape);
+
         return inventory;
     }
 

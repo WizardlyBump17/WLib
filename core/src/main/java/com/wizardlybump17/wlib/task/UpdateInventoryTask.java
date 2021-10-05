@@ -22,8 +22,10 @@ public class UpdateInventoryTask extends BukkitRunnable {
         while (iterator.hasNext()) {
             final UpdatableHolder holder = iterator.next();
 
-            if (holder.isStopped())
+            if (holder.isStopped()) {
                 iterator.remove();
+                continue;
+            }
 
             try {
                 if (holder.getUpdateTime() < 1)
