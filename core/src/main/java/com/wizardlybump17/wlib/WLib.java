@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WLib extends JavaPlugin {
@@ -22,8 +23,13 @@ public class WLib extends JavaPlugin {
     @Override
     public void onEnable() {
         initAdapters();
+        initSerializables();
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         getLogger().info("WLib enabled.");
+    }
+
+    private void initSerializables() {
+        ConfigurationSerialization.registerClass(com.wizardlybump17.wlib.item.Item.ItemBuilder.class, "item-builder");
     }
 
     private void initAdapters() { //with my language it would be easier :sunglasses:

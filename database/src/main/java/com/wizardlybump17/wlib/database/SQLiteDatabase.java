@@ -13,9 +13,7 @@ import java.util.function.Consumer;
 @Getter
 public class SQLiteDatabase extends Database {
 
-    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.<String, String>builder()
-            .put("AUTO_INCREMENT", "AUTOINCREMENT")
-            .build();
+    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.mapOf("AUTO_INCREMENT", "AUTOINCREMENT");
 
     private final File file;
 

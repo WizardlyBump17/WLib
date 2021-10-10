@@ -6,12 +6,13 @@ import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = false)
@@ -50,11 +51,16 @@ public class Config extends YamlConfiguration {
             super.set(path, createSection(path, (Map<?, ?>) value));
             return;
         }
-        if (value instanceof ConfigurationSerializable) {
-            set(path, ((ConfigurationSerializable) value).serialize());
-            return;
-        }
         super.set(path, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getByType(String path, T def) {
+        return (T) get(path, def);
+    }
+
+    public <T> T getByType(String path) {
+        return getByType(path, null);
     }
 
     public Map<String, Object> getMap(String path, Map<String, Object> def) {
@@ -67,12 +73,23 @@ public class Config extends YamlConfiguration {
         return getMap(path, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> convertToMap(ConfigurationSection section) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (String key : section.getKeys(false)) {
             Object object = section.get(key);
             if (object instanceof ConfigurationSection)
                 object = convertToMap((ConfigurationSection) object);
+            if (object instanceof List) {
+                try {
+                    final List<ConfigurationSection> list = (List<ConfigurationSection>) object;
+                    List<Map<String, Object>> fixedList = new ArrayList<>(list.size());
+                    for (ConfigurationSection configurationSection : list)
+                        fixedList.add(convertToMap(configurationSection));
+                    object = fixedList;
+                } catch (ClassCastException ignored) {
+                }
+            }
             map.put(key, object);
         }
         return map;

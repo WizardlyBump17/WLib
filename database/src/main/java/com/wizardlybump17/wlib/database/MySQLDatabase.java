@@ -8,9 +8,7 @@ import java.util.Properties;
 
 public class MySQLDatabase extends Database {
 
-    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.<String, String>builder()
-            .put("AUTOINCREMENT", "AUTO_INCREMENT")
-            .build();
+    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.mapOf("AUTOINCREMENT", "AUTO_INCREMENT");
 
     protected MySQLDatabase(Properties properties, DatabaseHolder holder) {
         super(holder, properties);

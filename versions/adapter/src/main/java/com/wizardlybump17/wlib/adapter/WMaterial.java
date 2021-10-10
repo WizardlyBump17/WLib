@@ -13,6 +13,8 @@ import java.util.Map;
 public enum WMaterial {
 
     AIR,
+    BARRIER,
+    ARROW,
 
     SKULL_ITEM(ArrayUtils.arrayOfRange(0, 5), "SKELETON_SKULL"),
     SKELETON_SKULL(0, "SKULL_ITEM"),

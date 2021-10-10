@@ -22,6 +22,13 @@ public class ItemButton {
             .type(WMaterial.BLACK_STAINED_GLASS_PANE)
             .displayName(" ")
             .build());
+    /**
+     * Item for creating a back button
+     */
+    public static final ItemStack BACK_BARRIER = Item.builder()
+            .type(Material.BARRIER)
+            .displayName("§cBack")
+            .build();
 
     private ItemStack itemStack;
     private final ClickAction clickAction;

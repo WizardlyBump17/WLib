@@ -8,11 +8,13 @@ import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.CollectionUtil;
+import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -26,8 +28,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
-//TODO refactor
+//TODO refactor. Move the builder to a proper class
 @Data
 @Builder
 public class Item {
@@ -105,17 +108,17 @@ public class Item {
 
         builder
                 .type(item.getType())
-                .amount(item.getAmount())
+                .amount(item.getAmount() == 1 ? null : item.getAmount())
                 .durability(item.getDurability())
-                .enchantments(item.getEnchantments())
-                .nbtTags(itemAdapter.getNbtTags())
+                .enchantments(item.getEnchantments().isEmpty() ? null : item.getEnchantments())
+                .nbtTags(itemAdapter.getNbtTags().isEmpty() ? null : itemAdapter.getNbtTags())
                 .glow(itemAdapter.hasGlow());
 
         if (item.hasItemMeta())
             builder
                     .displayName(itemMeta.getDisplayName())
                     .lore(itemMeta.getLore())
-                    .flags(itemMeta.getItemFlags())
+                    .flags(itemMeta.getItemFlags().isEmpty() ? null : itemMeta.getItemFlags())
                     .customModelData(itemAdapter.getCustomModelData())
                     .unbreakable(itemAdapter.isUnbreakable());
 
@@ -152,7 +155,15 @@ public class Item {
         }
     }
 
+    @SerializableAs("item-builder")
     public static class ItemBuilder implements ConfigurationSerializable {
+
+        public ItemBuilder() {
+        }
+
+        public ItemBuilder(Map<String, Object> data) {
+            setData(data);
+        }
 
         private WMaterial wmaterial;
 
@@ -174,7 +185,7 @@ public class Item {
         }
 
         public Map<Enchantment, Integer> getEnchantments() {
-            return enchantments == null ? enchantments = new HashMap<>() : enchantments;
+            return enchantments == null ? new HashMap<>() : enchantments;
         }
 
         public Set<ItemFlag> getFlags() {
@@ -230,7 +241,7 @@ public class Item {
 
         public boolean hasNbtTag(String key) {
             if (nbtTags == null)
-                nbtTags = new HashMap<>();
+                return false;
             return nbtTags.containsKey(key);
         }
 
@@ -242,10 +253,11 @@ public class Item {
 
         public Object getNbtTag(String key) {
             if (nbtTags == null)
-                nbtTags = new HashMap<>();
+                return null;
             return ADAPTER.nbtToJava(nbtTags.get(key));
         }
 
+        @SuppressWarnings("unchecked")
         public Map<String, Object> getNbtTags() {
             if (nbtTags == null)
                 return new HashMap<>();
@@ -311,7 +323,7 @@ public class Item {
         }
 
         public List<String> getLore() {
-            return lore == null ? lore = new ArrayList<>() : new ArrayList<>(lore);
+            return lore == null ? new ArrayList<>() : new ArrayList<>(lore);
         }
 
         public boolean hasGlow() {
@@ -323,22 +335,32 @@ public class Item {
             Map<String, Object> map = new LinkedHashMap<>();
 
             fixMaterial();
-            map.put("material", type);
+            map.put("material", type.name());
             if (amount != null)
                 map.put("amount", amount);
-            if (durability != 0) map.put("durability", durability);
-            if (displayName != null) map.put("display-name", displayName);
-            if (lore != null) map.put("lore", lore);
-            if (flags != null) map.put("flags", flags);
-            if (nbtTags != null) map.put("nbt-tags", nbtTags);
-            if (unbreakable) map.put("unbreakable", true);
-            if (glow) map.put("glow", true);
-            if (enchantments != null) map.put("enchantments", enchantments);
-            if (customModelData != null) map.put("custom-model-data", customModelData);
+            if (durability != 0)
+                map.put("durability", durability);
+            if (displayName != null)
+                map.put("display-name", displayName);
+            if (lore != null)
+                map.put("lore", lore);
+            if (flags != null)
+                map.put("flags", flags.stream().map(ItemFlag::name).collect(Collectors.toList()));
+            if (nbtTags != null)
+                map.put("nbt-tags", nbtTags);
+            if (unbreakable)
+                map.put("unbreakable", true);
+            if (glow)
+                map.put("glow", true);
+            if (enchantments != null)
+                map.put("enchantments", MapUtils.mapKeys(enchantments, Enchantment::getName));
+            if (customModelData != null)
+                map.put("custom-model-data", customModelData);
 
             return map;
         }
 
+        @SuppressWarnings("unchecked")
         public ItemBuilder setData(Map<String, Object> args) {
             List<String> lore = new ArrayList<>();
             if (args.get("lore") != null)
@@ -346,33 +368,16 @@ public class Item {
 
             Set<ItemFlag> flags = new HashSet<>();
             if (args.get("flags") != null) {
-                Collection<Object> flags1 = (Collection<Object>) args.get("flags");
-                if (!flags1.isEmpty()) {
-                    Object object = flags1.iterator().next();
-                    if (object instanceof String)
-                        for (Object o : flags1)
-                            flags.add(ItemFlag.valueOf(o.toString().toUpperCase()));
-
-                    if (object instanceof ItemFlag)
-                        flags.add((ItemFlag)object);
-                }
+                final List<String> flagList = (List<String>) args.get("flags");
+                for (String s : flagList)
+                    flags.add(ItemFlag.valueOf(s.toUpperCase()));
             }
 
             Map<Enchantment, Integer> enchantments = new HashMap<>();
             if (args.get("enchantments") != null) {
-                Map enchantments1 = (Map) args.get("enchantments");
-                if (!enchantments1.isEmpty()) {
-                    for (Object o : enchantments1.entrySet()) {
-                        Map.Entry entry = (Map.Entry) o;
-                        if (entry.getKey() instanceof String) {
-                            Map<String, Integer> ench = (Map<String, Integer>) enchantments1;
-                            ench.forEach((name, level) -> enchantments.put(Enchantment.getByName(name.toUpperCase()), level));
-                        }
-                        if (entry.getKey() instanceof Enchantment)
-                            enchantments.putAll(enchantments1);
-                        break;
-                    }
-                }
+                Map<String, Number> enchantmentsMap = (Map<String, Number>) args.get("enchantments");
+                for (Map.Entry<String, Number> entry : enchantmentsMap.entrySet())
+                    enchantments.put(Enchantment.getByName(entry.getKey()), entry.getValue().intValue());
             }
 
             if (args.containsKey("material") || args.containsKey("type"))
@@ -382,7 +387,7 @@ public class Item {
             if (args.containsKey("amount"))
                 amount((int) args.get("amount"));
             if (args.containsKey("durability"))
-                durability((short) args.get("durability"));
+                durability(((Number) args.get("durability")).shortValue());
             if (args.containsKey("display-name"))
                 displayName(args.get("display-name").toString().replace('&', '§'));
             if (args.containsKey("lore"))
@@ -400,6 +405,14 @@ public class Item {
             if (args.containsKey("custom-model-data"))
                 customModelData((int) args.get("custom-model-data"));
             return this;
+        }
+
+        public static ItemBuilder valueOf(Map<String, Object> args) {
+            return deserialize(args);
+        }
+
+        public static ItemBuilder deserialize(Map<String, Object> args) {
+            return new ItemBuilder(args);
         }
 
         private ItemStack fixMaterial() {
