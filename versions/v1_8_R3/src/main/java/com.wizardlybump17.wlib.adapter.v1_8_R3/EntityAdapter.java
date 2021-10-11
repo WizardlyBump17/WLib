@@ -33,6 +33,7 @@ public class EntityAdapter extends com.wizardlybump17.wlib.adapter.EntityAdapter
         return getItemInMainHand();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Conversation> getConversations() {
         if (!(entity instanceof Player))

@@ -30,6 +30,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         setMainTag(compound);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> getNbtTags() {
         Map<String, Object> map = (Map<String, Object>) getMainAdapter().nbtToJava(getMainTag());

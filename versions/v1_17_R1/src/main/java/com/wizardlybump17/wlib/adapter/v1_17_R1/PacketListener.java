@@ -96,6 +96,7 @@ public class PacketListener extends PacketAdapter {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @SneakyThrows
     private void entityMetadata(World world, PacketContainer packet, PacketPlayOutEntityMetadata handle) {
         final Entity entity;

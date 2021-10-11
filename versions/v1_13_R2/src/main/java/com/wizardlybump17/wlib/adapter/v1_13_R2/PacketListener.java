@@ -48,9 +48,9 @@ public class PacketListener extends PacketAdapter {
             entityEquipment((PacketPlayOutEntityEquipment) handle);
     }
 
-    private boolean isValidItem(ItemStack itemStack) {
+    private boolean isInvalid(ItemStack itemStack) {
         final net.minecraft.server.v1_13_R2.ItemStack copy = CraftItemStack.asNMSCopy(itemStack);
-        return copy.hasTag() && copy.getTag().hasKey(adapter.getGlowTag());
+        return !copy.hasTag() || !copy.getTag().hasKey(adapter.getGlowTag());
     }
 
     private ItemStack fixItem(ItemStack itemStack) {
@@ -67,7 +67,7 @@ public class PacketListener extends PacketAdapter {
         field.setAccessible(true);
 
         net.minecraft.server.v1_13_R2.ItemStack item = (net.minecraft.server.v1_13_R2.ItemStack) field.get(handle);
-        if (!isValidItem(CraftItemStack.asCraftMirror(item)))
+        if (isInvalid(CraftItemStack.asCraftMirror(item)))
             return;
 
         field.set(handle, CraftItemStack.asNMSCopy(fixItem(CraftItemStack.asCraftMirror(item.cloneItemStack()))));
@@ -80,7 +80,7 @@ public class PacketListener extends PacketAdapter {
             return;
 
         final ItemStack itemStack = ((org.bukkit.entity.Item) entity).getItemStack().clone();
-        if (!isValidItem(itemStack))
+        if (isInvalid(itemStack))
             return;
 
         final Field field = handle.getClass().getDeclaredField("b");
@@ -109,7 +109,7 @@ public class PacketListener extends PacketAdapter {
 
         final net.minecraft.server.v1_13_R2.ItemStack stack = ((net.minecraft.server.v1_13_R2.ItemStack) field.get(packet)).cloneItemStack();
         final CraftItemStack newItemStack = CraftItemStack.asCraftMirror(stack);
-        if (!isValidItem(newItemStack))
+        if (isInvalid(newItemStack))
             return;
 
         field.set(packet, CraftItemStack.asNMSCopy(fixItem(newItemStack)));

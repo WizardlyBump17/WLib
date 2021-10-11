@@ -80,7 +80,7 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
             return new NBTTagDouble((double) java);
 
         if (java instanceof List) {
-            List list = (List) java;
+            List<?> list = (List<?>) java;
             NBTTagList tagList = new NBTTagList();
             for (Object o : list)
                 tagList.add(javaToNbt(o));
@@ -88,10 +88,10 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
         }
 
         if (java instanceof Map) {
-            Map map = (Map) java;
+            Map<?, ?> map = (Map<?, ?>) java;
             NBTTagCompound compound = new NBTTagCompound();
             for (Object o : map.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                 compound.set(entry.getKey().toString(), javaToNbt(entry.getValue()));
             }
             return compound;

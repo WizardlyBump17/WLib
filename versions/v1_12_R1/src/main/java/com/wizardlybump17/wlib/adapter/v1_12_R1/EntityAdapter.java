@@ -35,6 +35,7 @@ public class EntityAdapter extends com.wizardlybump17.wlib.adapter.EntityAdapter
         return ((HumanEntity) entity).getInventory().getItemInOffHand();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Conversation> getConversations() {
         if (!(entity instanceof Player))
