@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutWindowItems;
 import net.minecraft.network.syncher.DataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -33,7 +34,8 @@ public class PacketListener extends PacketAdapter {
                 Bukkit.getPluginManager().getPlugin("WLib"),
                 PacketType.fromClass(PacketPlayOutSetSlot.class),
                 PacketType.fromClass(PacketPlayOutEntityMetadata.class),
-                PacketType.fromClass(PacketPlayOutEntityEquipment.class)
+                PacketType.fromClass(PacketPlayOutEntityEquipment.class),
+                PacketType.fromClass(PacketPlayOutWindowItems.class)
         );
         this.adapter = adapter;
     }
@@ -48,6 +50,8 @@ public class PacketListener extends PacketAdapter {
             entityMetadata(event.getPlayer().getWorld(), event.getPacket(), (PacketPlayOutEntityMetadata) handle);
         if (handle instanceof PacketPlayOutEntityEquipment)
             entityEquipment((PacketPlayOutEntityEquipment) handle);
+        if (handle instanceof PacketPlayOutWindowItems)
+            windowItems(((PacketPlayOutWindowItems) handle));
     }
 
     private boolean isValidItem(ItemStack itemStack) {
@@ -63,9 +67,18 @@ public class PacketListener extends PacketAdapter {
         return itemStack;
     }
 
+    private void windowItems(PacketPlayOutWindowItems handle) {
+        final List<net.minecraft.world.item.ItemStack> items = handle.c();
+        for (int i = 0; i < items.size(); i++) {
+            final CraftItemStack itemStack = CraftItemStack.asCraftMirror(items.get(i));
+            if (isValidItem(itemStack))
+                items.set(i, CraftItemStack.asNMSCopy(fixItem(itemStack)));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public void entityEquipment(PacketPlayOutEntityEquipment handle) {
+    private void entityEquipment(PacketPlayOutEntityEquipment handle) {
         final Field field = handle.getClass().getDeclaredField("c");
         field.setAccessible(true);
 
