@@ -98,7 +98,13 @@ public class PacketListener extends PacketAdapter {
 
     @SneakyThrows
     private void entityMetadata(World world, PacketContainer packet, PacketPlayOutEntityMetadata handle) {
-        final Entity entity = packet.getEntityModifier(world).read(0);
+        final Entity entity;
+        try {
+            entity = packet.getEntityModifier(world).read(0);
+        } catch (RuntimeException ignored) {
+            return;
+        }
+
         if (!(entity instanceof org.bukkit.entity.Item))
             return;
 
