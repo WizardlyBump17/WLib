@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.util;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -139,13 +141,40 @@ public class MapUtils {
         return mapOf((Supplier<Map<K,V>>) HashMap::new, predicate, data);
     }
 
+    /**
+     * "clones" the specified map. It tries to create a new instance of the map reflectively, exceptions may be thrown
+     * @param map the original map
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param <T> the type of the map
+     * @return the result map
+     */
+    @SuppressWarnings("unchecked")
+    @NotNull
+    public static <K, V, T> T clone(Map<K, V> map) {
+        try {
+            final Map<K, V> result = map.getClass().newInstance();
+            result.putAll(map);
+            return (T) result;
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return (T) new HashMap<K, V>();
+        }
+    }
+
+    /**
+     * @param <K>
+     * @param <V>
+     * @return
+     * @deprecated use {{@link #mapOf(Object...)}}
+     */
     @Deprecated
     public static <K, V> MapBuilder<K, V> builder() {
         return new MapBuilder<>();
     }
 
     /**
-     * @deprecated Use {@link MapUtils#mapOf(Object...)}
+     * @deprecated Use {@link #mapOf(Object...)}
      * @param <K>
      * @param <V>
      */

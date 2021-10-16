@@ -2,11 +2,13 @@ package com.wizardlybump17.wlib.listener;
 
 import com.wizardlybump17.wlib.adapter.EntityAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
+import com.wizardlybump17.wlib.inventory.CustomInventory;
+import com.wizardlybump17.wlib.inventory.InventoryCache;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
-import com.wizardlybump17.wlib.util.MapUtils;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,39 +19,47 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+@RequiredArgsConstructor
 public class EntityListener implements Listener {
+
+    private final InventoryCache cache;
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        if (!(inventory.getHolder() instanceof CustomInventoryHolder)) return;
+        final PaginatedInventory paginatedInventory = cache.get(inventory);
+        if (paginatedInventory == null)
+            return;
+
         event.setCancelled(true);
 
-        CustomInventoryHolder holder = (CustomInventoryHolder) inventory.getHolder();
-        if (!holder.hasButton(event.getRawSlot())) return;
+        final CustomInventory customInventory = paginatedInventory.current();
 
-        ItemButton item = holder.getButton(event.getRawSlot());
-        if (item != null) {
+        ItemButton item = customInventory.getButton(event.getRawSlot());
+        if (item != null)
             if (item.getClickAction() != null)
-                item.getClickAction().onClick(event, MapUtils.mapOf("page", holder.getPage()));
-        }
+                item.getClickAction().onClick(event, paginatedInventory);
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
-        InventoryHolder holder = inventory.getHolder();
-        if (holder instanceof CustomInventoryHolder) {
-            final PaginatedInventory paginatedHolder = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
-            paginatedHolder.stopListeners();
-        }
-        if (holder instanceof UpdatableHolder)
-            ((UpdatableHolder) holder).stop();
+        final PaginatedInventory paginatedInventory = cache.get(inventory);
+        if (paginatedInventory == null)
+            return;
+
+        final CustomInventory current = paginatedInventory.current();
+        final CustomInventoryHolder owner = current.getOwner();
+
+        if (owner instanceof UpdatableHolder)
+            ((UpdatableHolder) owner).stop();
+        paginatedInventory.stopListeners();
+
+        cache.remove(paginatedInventory);
     }
 
     @EventHandler
@@ -68,7 +78,7 @@ public class EntityListener implements Listener {
             return;
 
         final ItemStack cursor = event.getCursor();
-        if (cursor == null || cursor.getType() == Material.AIR)
+        if (cursor == null)
             return;
 
         if (NMSAdapterRegister.getInstance().current().getItemAdapter(cursor).hasGlow()) {

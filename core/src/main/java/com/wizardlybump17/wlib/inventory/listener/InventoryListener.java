@@ -1,5 +1,6 @@
-package com.wizardlybump17.wlib.inventory;
+package com.wizardlybump17.wlib.inventory.listener;
 
+import com.wizardlybump17.wlib.inventory.CustomInventory;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.function.Predicate;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ListenerBuilder<T extends Event> {
+public class InventoryListener<T extends Event> {
 
     private Class<T> event;
     private InventoryEventListener<T> listener;
@@ -29,31 +30,31 @@ public class ListenerBuilder<T extends Event> {
         HandlerList.unregisterAll(listener);
     }
 
-    public static <T extends Event> ListenerBuilder<T> builder() {
-        return new ListenerBuilder<>();
+    public static <T extends Event> InventoryListener<T> builder() {
+        return new InventoryListener<>();
     }
 
-    public ListenerBuilder<T> listenerPredicate(Predicate<T> predicate) {
+    public InventoryListener<T> listenerPredicate(Predicate<T> predicate) {
         listenerPredicate = predicate;
         return this;
     }
 
-    public ListenerBuilder<T> event(Class<T> event) {
+    public InventoryListener<T> event(Class<T> event) {
         this.event = event;
         return this;
     }
 
-    public ListenerBuilder<T> priority(EventPriority priority) {
+    public InventoryListener<T> priority(EventPriority priority) {
         this.priority = priority;
         return this;
     }
 
-    public ListenerBuilder<T> ignoreCancelled(boolean ignore) {
+    public InventoryListener<T> ignoreCancelled(boolean ignore) {
         ignoreCancelled = ignore;
         return this;
     }
 
-    public ListenerBuilder<T> listener(InventoryEventListener<T> listener) {
+    public InventoryListener<T> listener(InventoryEventListener<T> listener) {
         this.listener = listener;
         return this;
     }

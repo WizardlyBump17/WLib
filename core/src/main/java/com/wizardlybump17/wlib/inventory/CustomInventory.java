@@ -17,15 +17,13 @@ public class CustomInventory {
     private PaginatedInventory paginatedHolder;
 
     public CustomInventory(String title, int size) {
-        bukkitInventory = Bukkit.createInventory(owner = new CustomInventoryHolder(this), this.size = size, this.title = title);
-    }
-
-    public CustomInventory(String title, int size, int page) {
-        bukkitInventory = Bukkit.createInventory(owner = new CustomInventoryHolder(this, page), this.size = size, this.title = title);
+        bukkitInventory = Bukkit.createInventory(null, this.size = size, this.title = title);
+        owner = new CustomInventoryHolder(this);
     }
 
     public CustomInventory(String title, int size, CustomInventoryHolder holder) {
-        bukkitInventory = Bukkit.createInventory(owner = holder, this.size = size, this.title = title);
+        bukkitInventory = Bukkit.createInventory(null, this.size = size, this.title = title);
+        owner = holder;
     }
 
     public void setPaginatedHolder(PaginatedInventory paginatedHolder) {

@@ -3,31 +3,19 @@ package com.wizardlybump17.wlib.inventory.holder;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomInventoryHolder implements InventoryHolder {
+@Getter
+public class CustomInventoryHolder {
 
     protected CustomInventory inventory;
-    @Getter
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
-    @Getter
     private String shape;
-    @Getter
-    private final int page;
 
     public CustomInventoryHolder(CustomInventory inventory) {
         this.inventory = inventory;
-        page = 0;
-    }
-
-    public CustomInventoryHolder(CustomInventory inventory, int page) {
-        this.inventory = inventory;
-        this.page = page;
     }
 
     public void setInventory(CustomInventory inventory) {
@@ -56,12 +44,12 @@ public class CustomInventoryHolder implements InventoryHolder {
     }
 
     public void setButton(int slot, ItemButton item) {
-        getInventory().setItem(slot, item == null ? null : item.getItemStack());
+        inventory.getBukkitInventory().setItem(slot, item == null ? null : item.getItemStack());
         buttons.put(slot, item);
     }
 
     public void removeButton(int slot) {
-        getInventory().setItem(slot, null);
+        inventory.getBukkitInventory().setItem(slot, null);
         buttons.remove(slot);
     }
 
@@ -71,11 +59,6 @@ public class CustomInventoryHolder implements InventoryHolder {
 
     public boolean hasButton(int slot) {
         return buttons.containsKey(slot);
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return inventory.getBukkitInventory();
     }
 
     public CustomInventory getOriginalInventory() {

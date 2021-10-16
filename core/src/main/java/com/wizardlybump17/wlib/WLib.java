@@ -4,9 +4,11 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WLib extends JavaPlugin {
@@ -24,8 +26,14 @@ public class WLib extends JavaPlugin {
     public void onEnable() {
         initAdapters();
         initSerializables();
-        Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityListener(PaginatedInventory.CACHE), this);
         getLogger().info("WLib enabled.");
+    }
+
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(this);
+        PaginatedInventory.CACHE.clear();
     }
 
     private void initSerializables() {

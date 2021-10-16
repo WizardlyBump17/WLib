@@ -1,11 +1,9 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'maven-publish'
-//    id 'java-library'
 }
 
 apply plugin: 'maven-publish'
-//apply plugin: 'java-library'
 
 allprojects {
     group = 'com.wizardlybump17.wlib'
@@ -20,6 +18,7 @@ allprojects {
     }
 
     sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
     tasks {
         compileJava {

@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.ListenerBuilder;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
@@ -20,7 +20,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private final Map<Character, UpdatableItem> updatableShapeReplacements = new HashMap<>();
     private InventoryNavigator nextPage, previousPage;
-    private final Set<ListenerBuilder<? extends Event>> listeners = new HashSet<>();
+    private final Set<InventoryListener<? extends Event>> listeners = new HashSet<>();
     private int updateTime;
 
     public PaginatedInventoryBuilder updateTime(int time) {
@@ -71,7 +71,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     public PaginatedInventory build() {
         if (title == null || shape == null)
             throw new NullPointerException("title or shape is null");
-        PaginatedInventory paginatedInventory = new PaginatedInventory(listeners, new ArrayList<>());
+        PaginatedInventory paginatedInventory = new PaginatedInventory(listeners, new ArrayList<>(), new HashMap<>());
 
         char[] shapeChar = shape.toCharArray();
         int presetItems = 0;
@@ -159,10 +159,12 @@ public class PaginatedInventoryBuilder implements Cloneable {
             paginatedInventory.addInventory(inventory);
         }
 
+        PaginatedInventory.CACHE.add(paginatedInventory);
+
         return paginatedInventory;
     }
 
-    public PaginatedInventoryBuilder listener(ListenerBuilder listener) {
+    public PaginatedInventoryBuilder listener(InventoryListener<?> listener) {
         listeners.add(listener);
         return this;
     }
@@ -178,7 +180,7 @@ public class PaginatedInventoryBuilder implements Cloneable {
     }
 
     private UpdatableInventory fromHolder(int page, CustomInventoryHolder original) {
-        UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime, page);
+        UpdatableInventory inventory = new UpdatableInventory(title.replace("{page}", Integer.toString(page + 1)), shape.length(), updateTime);
         UpdatableHolder tempHolder = (UpdatableHolder) inventory.getOwner();
 
         for (Map.Entry<Integer, ItemButton> entry : original.getButtons().entrySet())

@@ -1,5 +1,6 @@
-package com.wizardlybump17.wlib.inventory;
+package com.wizardlybump17.wlib.inventory.listener;
 
+import com.wizardlybump17.wlib.inventory.CustomInventory;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 

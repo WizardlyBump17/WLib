@@ -27,7 +27,7 @@ public class CollectionUtil<E> {
         List<String> result = new ArrayList<>(collection.size());
         for (E e : collection)
             result.add(e.toString().replace(old, replacement));
-        return new CollectionUtil<String>(result);
+        return new CollectionUtil<>(result);
     }
 
     public E getIf(Predicate<E> predicate) {
@@ -35,6 +35,28 @@ public class CollectionUtil<E> {
             if (predicate.test(e))
                 return e;
         return null;
+    }
+
+    /**
+     * "clones" the specified collection in the target by reflectively creating a new collection of the instance
+     * (an exception can be thrown) and adding all elements into it
+     * @param collection the original collection
+     * @param <E> the element type
+     * @param <T> the original collection type
+     * @return the cloned collection
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, T extends Collection<E>> T clone(T collection) {
+        try {
+            final Collection<E> result = collection.getClass().newInstance();
+            result.addAll(collection);
+            return (T) result;
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

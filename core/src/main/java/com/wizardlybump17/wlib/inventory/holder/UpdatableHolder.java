@@ -20,11 +20,6 @@ public class UpdatableHolder extends CustomInventoryHolder {
         this.updateTime = updateTime;
     }
 
-    public UpdatableHolder(UpdatableInventory inventory, int updateTime, int page) {
-        super(inventory, page);
-        this.updateTime = updateTime;
-    }
-
     public void start() {
         UpdateInventoryTask.getInstance().add(this);
     }
@@ -36,11 +31,11 @@ public class UpdatableHolder extends CustomInventoryHolder {
                 UpdatableItem item = (UpdatableItem) value;
                 Item.ItemBuilder builder = Item.fromItemStack(item.getItemStack());
                 item.getUpdateAction().update(builder);
-                getInventory().setItem(entry.getKey(), builder.build());
+                getInventory().getBukkitInventory().setItem(entry.getKey(), builder.build());
                 continue;
             }
             if (Item.fromItemStack(value.getItemStack()).hasGlow()) //set the item in the inventory again so the packet is sent
-                getInventory().setItem(entry.getKey(), value.getItemStack());
+                getInventory().getBukkitInventory().setItem(entry.getKey(), value.getItemStack());
         }
     }
 
