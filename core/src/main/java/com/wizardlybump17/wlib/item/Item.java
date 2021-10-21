@@ -177,7 +177,7 @@ public class Item {
         }
 
         public int getAmount() {
-            return amount;
+            return amount == null ? 1 : amount;
         }
 
         public short getDurability() {
