@@ -79,9 +79,10 @@ public class PaginatedInventory {
         CustomInventory inventory = inventories.get(page);
         if (inventory instanceof UpdatableInventory)
             ((UpdatableHolder) inventory.getOwner()).start();
+        player.closeInventory();
         player.openInventory(inventory.getBukkitInventory());
 
-            startListeners();
+        startListeners();
     }
 
     private void startListeners() {

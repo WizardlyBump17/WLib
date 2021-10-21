@@ -23,6 +23,7 @@ public class CommandManager {
     
     public void registerCommands(Object object) {
         for (Method method : object.getClass().getDeclaredMethods()) {
+            method.setAccessible(true);
             if (!method.isAnnotationPresent(Command.class))
                 continue;
 

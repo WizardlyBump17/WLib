@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -36,6 +37,21 @@ public class MapUtils {
         Map<K, V> map = supplier.get();
         map.put(key, value);
         return map;
+    }
+
+    /**
+     * Apply the function to the map, converting it to a string
+     * @param map the map target
+     * @param function the function to be used to convert
+     * @param <K> the map key type
+     * @param <V> the map value type
+     * @return the map converted to string
+     */
+    public static <K, V> String mapToString(Map<K, V> map, BiFunction<K, V, String> function) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<K, V> entry : map.entrySet())
+            builder.append(function.apply(entry.getKey(), entry.getValue()));
+        return builder.toString();
     }
 
     /**

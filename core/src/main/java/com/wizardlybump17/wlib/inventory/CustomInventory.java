@@ -4,6 +4,8 @@ import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
@@ -13,6 +15,8 @@ public class CustomInventory {
     private final String title;
     private final int size;
     private final Inventory bukkitInventory;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     protected final CustomInventoryHolder owner;
     private PaginatedInventory paginatedHolder;
 
