@@ -2,10 +2,9 @@ package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.WLib;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.InventoryCache;
-import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Data;
@@ -15,12 +14,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 public class PaginatedInventory {
-
-    public static final InventoryCache CACHE = new InventoryCache();
 
     private final Set<InventoryListener<? extends Event>> listeners;
     private final List<CustomInventory> inventories;
@@ -79,7 +78,6 @@ public class PaginatedInventory {
         CustomInventory inventory = inventories.get(page);
         if (inventory instanceof UpdatableInventory)
             ((UpdatableHolder) inventory.getOwner()).start();
-        player.closeInventory();
         player.openInventory(inventory.getBukkitInventory());
 
         startListeners();

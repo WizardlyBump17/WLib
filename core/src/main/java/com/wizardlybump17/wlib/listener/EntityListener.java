@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.listener;
 import com.wizardlybump17.wlib.adapter.EntityAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.InventoryCache;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
@@ -19,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,12 +26,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 @RequiredArgsConstructor
 public class EntityListener implements Listener {
 
-    private final InventoryCache cache;
-
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        final PaginatedInventory paginatedInventory = cache.get(inventory);
+        if (!(inventory.getHolder() instanceof CustomInventoryHolder))
+            return;
+
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) inventory.getHolder()).getOriginalInventory().getPaginatedHolder();
         if (paginatedInventory == null)
             return;
 
@@ -48,7 +49,11 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
-        final PaginatedInventory paginatedInventory = cache.get(inventory);
+        final InventoryHolder holder = inventory.getHolder();
+        if (!(holder instanceof CustomInventoryHolder))
+            return;
+
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
         if (paginatedInventory == null)
             return;
 
@@ -58,8 +63,6 @@ public class EntityListener implements Listener {
         if (owner instanceof UpdatableHolder)
             ((UpdatableHolder) owner).stop();
         paginatedInventory.stopListeners();
-
-        cache.remove(paginatedInventory);
     }
 
     @EventHandler
@@ -78,7 +81,7 @@ public class EntityListener implements Listener {
             return;
 
         final ItemStack cursor = event.getCursor();
-        if (cursor == null)
+        if (cursor == null || cursor.getType() == Material.AIR)
             return;
 
         if (NMSAdapterRegister.getInstance().current().getItemAdapter(cursor).hasGlow()) {

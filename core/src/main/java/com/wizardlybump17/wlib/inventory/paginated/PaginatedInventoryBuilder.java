@@ -1,12 +1,12 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.item.UpdatableItem;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import lombok.Getter;
 import org.bukkit.event.Event;
 
@@ -158,8 +158,6 @@ public class PaginatedInventoryBuilder implements Cloneable {
 
             paginatedInventory.addInventory(inventory);
         }
-
-        PaginatedInventory.CACHE.add(paginatedInventory);
 
         return paginatedInventory;
     }

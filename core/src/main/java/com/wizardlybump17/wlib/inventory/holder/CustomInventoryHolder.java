@@ -3,12 +3,14 @@ package com.wizardlybump17.wlib.inventory.holder;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import lombok.Getter;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class CustomInventoryHolder {
+public class CustomInventoryHolder implements InventoryHolder {
 
     protected CustomInventory inventory;
     private final Map<Integer, ItemButton> buttons = new HashMap<>();
@@ -26,6 +28,11 @@ public class CustomInventoryHolder {
     public void setShape(String shape) {
         if (this.shape == null)
             this.shape = shape;
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory.getBukkitInventory();
     }
 
     /**

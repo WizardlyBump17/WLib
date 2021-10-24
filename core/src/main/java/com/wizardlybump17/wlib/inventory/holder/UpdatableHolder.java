@@ -31,11 +31,11 @@ public class UpdatableHolder extends CustomInventoryHolder {
                 UpdatableItem item = (UpdatableItem) value;
                 Item.ItemBuilder builder = Item.fromItemStack(item.getItemStack());
                 item.getUpdateAction().update(builder);
-                getInventory().getBukkitInventory().setItem(entry.getKey(), builder.build());
+                getInventory().setItem(entry.getKey(), builder.build());
                 continue;
             }
             if (Item.fromItemStack(value.getItemStack()).hasGlow()) //set the item in the inventory again so the packet is sent
-                getInventory().getBukkitInventory().setItem(entry.getKey(), value.getItemStack());
+                getInventory().setItem(entry.getKey(), value.getItemStack());
         }
     }
 
