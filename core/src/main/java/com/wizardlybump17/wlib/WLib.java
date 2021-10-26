@@ -39,35 +39,44 @@ public class WLib extends JavaPlugin {
     }
 
     private void initAdapters() { //with my language it would be easier :sunglasses:
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_12_R1.NMSAdapter());
-        } catch (NoClassDefFoundError ignored) {
-            try {
-                ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
-            } catch (NoClassDefFoundError ignored1) {
-                try {
-                    ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
-                } catch (NoClassDefFoundError ignored2) {
-                    try {
-                        ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
-                    } catch (NoClassDefFoundError ignored3) {
-                        try {
-                            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_16_R3.NMSAdapter());
-                        } catch (NoClassDefFoundError ignored4) {
-                            try {
-                                ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
-                            } catch (NoClassDefFoundError ignored5) {
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+        selectAdapter();
         if (ADAPTER_REGISTER.current() == null)
             getLogger().severe("No NMS adapter found for the current version!!!");
         else
             getLogger().info("Loaded NMS adapter for version " + ADAPTER_REGISTER.current().getTargetVersion());
+    }
+
+    private void selectAdapter() {
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_12_R1.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_16_R3.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+            return;
+        }
     }
 
     public static WLib getInstance() {
