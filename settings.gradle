@@ -26,4 +26,5 @@ findProject(':versions:v1_17_R1')?.name = 'v1_17_R1'
 include 'utils'
 include 'database'
 include 'objects'
+include 'commands'
 

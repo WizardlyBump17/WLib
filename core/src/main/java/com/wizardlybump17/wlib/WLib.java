@@ -1,10 +1,16 @@
 package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
+import com.wizardlybump17.wlib.command.BukkitCommandManagerListener;
+import com.wizardlybump17.wlib.command.CommandManager;
+import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
+import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
+import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.listener.EntityListener;
+import com.wizardlybump17.wlib.listener.PluginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -25,13 +31,26 @@ public class WLib extends JavaPlugin {
     public void onEnable() {
         initAdapters();
         initSerializables();
+        initCommandSystem();
+
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PluginListener(), this);
+
         getLogger().info("WLib enabled.");
     }
 
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
+        if (CommandManager.getCreateListener() instanceof BukkitCommandManagerListener)
+            ((BukkitCommandManagerListener) CommandManager.getCreateListener()).getExecutors().clear();
+    }
+
+    private void initCommandSystem() {
+        ArgsReaderRegistry.INSTANCE.add(new PlayerReader());
+        ArgsReaderRegistry.INSTANCE.add(new OfflinePlayerReader());
+
+        CommandManager.setCreateListener(new BukkitCommandManagerListener());
     }
 
     private void initSerializables() {
@@ -50,32 +69,30 @@ public class WLib extends JavaPlugin {
         try {
             ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_12_R1.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {
-            return;
-        }
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
-        } catch (NoClassDefFoundError ignored) {
-            return;
         }
         try {
             ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_16_R3.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {
-            return;
         }
         try {
             ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {
-            return;
-        }
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
-        } catch (NoClassDefFoundError ignored) {
-            return;
         }
         try {
             ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
         } catch (NoClassDefFoundError ignored) {
-            return;
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
+        }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
+        } catch (NoClassDefFoundError ignored) {
         }
     }
 

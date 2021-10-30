@@ -23,7 +23,9 @@ dependencies {
 
             project(':database'),
 
-            project(':objects')
+            project(':objects'),
+
+            project(':commands')
     )
 }
 
