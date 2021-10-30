@@ -158,13 +158,6 @@ public class Item {
     @SerializableAs("item-builder")
     public static class ItemBuilder implements ConfigurationSerializable {
 
-        public ItemBuilder() {
-        }
-
-        public ItemBuilder(Map<String, Object> data) {
-            setData(data);
-        }
-
         private WMaterial wmaterial;
 
         public String getDisplayName() {
@@ -330,6 +323,10 @@ public class Item {
             return glow;
         }
 
+        public boolean isUnbreakable() {
+            return unbreakable;
+        }
+
         @Override
         public Map<String, Object> serialize() {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -382,8 +379,6 @@ public class Item {
 
             if (args.containsKey("material") || args.containsKey("type"))
                 type(Material.valueOf(args.getOrDefault("material", args.get("type")).toString().toUpperCase()));
-            if (args.containsKey("type"))
-                type(Material.valueOf(args.get("type").toString().toUpperCase()));
             if (args.containsKey("amount"))
                 amount((int) args.get("amount"));
             if (args.containsKey("durability"))
@@ -407,12 +402,8 @@ public class Item {
             return this;
         }
 
-        public static ItemBuilder valueOf(Map<String, Object> args) {
-            return deserialize(args);
-        }
-
         public static ItemBuilder deserialize(Map<String, Object> args) {
-            return new ItemBuilder(args);
+            return new ItemBuilder().setData(args);
         }
 
         private ItemStack fixMaterial() {
