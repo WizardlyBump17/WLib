@@ -5,10 +5,10 @@ import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Getter
 public class CommandManager {
@@ -17,7 +17,7 @@ public class CommandManager {
 
     private static CommandManagerListener createListener;
 
-    private final Set<RegisteredCommand> commands = new TreeSet<>();
+    private final List<RegisteredCommand> commands = new ArrayList<>();
     private final CommandHolder holder;
 
     public CommandManager(CommandHolder holder) {
@@ -45,6 +45,8 @@ public class CommandManager {
                 createListener.onCommandCreate(this, command);
             }
         }
+
+        commands.sort(null);
     }
 
     public void unregisterCommands() {

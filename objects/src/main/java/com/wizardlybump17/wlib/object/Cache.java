@@ -3,10 +3,7 @@ package com.wizardlybump17.wlib.object;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -58,6 +55,16 @@ public abstract class Cache<K, V, T> {
         final Pair<K, V> pair = apply(def);
         add(def);
         return pair.getSecond();
+    }
+
+    @NotNull
+    public Set<K> keySet() {
+        return cache.keySet();
+    }
+
+    @NotNull
+    public Map<K, V> getMap() {
+        return Collections.unmodifiableMap(cache);
     }
 
     @NotNull

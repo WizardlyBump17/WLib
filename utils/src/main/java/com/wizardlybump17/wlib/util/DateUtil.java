@@ -74,6 +74,10 @@ public class DateUtil {
     }
 
     public static long toMillis(String string) {
+        try {
+            return Long.parseLong(string) * 1000L;
+        } catch (NumberFormatException ignored) {
+        }
         long result = 0;
 
         for (Map.Entry<Pattern, TimeUnit> entry : TIME_UNITS.entrySet()) {
