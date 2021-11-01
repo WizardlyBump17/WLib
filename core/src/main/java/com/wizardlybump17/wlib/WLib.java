@@ -9,6 +9,8 @@ import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
+import com.wizardlybump17.wlib.item.Item;
+import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import com.wizardlybump17.wlib.listener.PluginListener;
 import org.bukkit.Bukkit;
@@ -54,7 +56,8 @@ public class WLib extends JavaPlugin {
     }
 
     private void initSerializables() {
-        ConfigurationSerialization.registerClass(com.wizardlybump17.wlib.item.Item.ItemBuilder.class, "item-builder");
+        ConfigurationSerialization.registerClass(Item.ItemBuilder.class, "item-builder");
+        ConfigurationSerialization.registerClass(ItemFilter.class, "item-filter");
     }
 
     private void initAdapters() { //with my language it would be easier :sunglasses:

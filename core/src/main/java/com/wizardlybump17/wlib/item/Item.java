@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -79,15 +80,19 @@ public class Item {
     }
 
     public static ItemBuilder getHead(UUID player) {
-        if (HEADS.containsKey(player))
-            return fromItemStack(HEADS.get(player));
+        return getHead(Bukkit.getOfflinePlayer(player));
+    }
+
+    public static ItemBuilder getHead(OfflinePlayer player) {
+        if (HEADS.containsKey(player.getUniqueId()))
+            return fromItemStack(HEADS.get(player.getUniqueId()));
 
         ItemStack item = builder().type(WMaterial.PLAYER_HEAD).build();
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwner(Bukkit.getOfflinePlayer(player).getName());
+        meta.setOwner(player.getName());
         item.setItemMeta(meta);
 
-        HEADS.put(player, item);
+        HEADS.put(player.getUniqueId(), item);
 
         return fromItemStack(item);
     }
@@ -153,6 +158,185 @@ public class Item {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * @param item the item
+     * @return the display item name in the client (in english)
+     */
+    public static String getRealName(ItemStack item) {
+        if (item.hasItemMeta() && item.getItemMeta().getDisplayName() != null)
+            return item.getItemMeta().getDisplayName();
+
+        switch (item.getType().name()) {
+            case "BANNER":
+                return getColorName((byte) (15 - item.getDurability())) + " Banner";
+            case "INK_SACK":
+                if (item.getDurability() == 0)
+                    return "Ink Sac";
+                return getColorName((byte) (15 - item.getDurability())) + " Dye";
+            case "STAINED_GLASS":
+                return getColorName((byte) item.getDurability()) + " Stained Glass";
+            case "STAINED_GLASS_PANE":
+                return getColorName((byte) item.getDurability()) + " Stained Glass Pane";
+            case "CARPET":
+                return getColorName((byte) item.getDurability()) + " Carpet";
+            case "BED":
+                return getColorName((byte) item.getDurability()) + " Bed";
+            case "WOOL":
+                return getColorName((byte) item.getDurability()) + " Wool";
+            case "CONCRETE":
+                return getColorName((byte) item.getDurability()) + " Concrete";
+            case "CONCRETE_POWDER":
+                return getColorName((byte) item.getDurability()) + " Concrete Powder";
+            case "SKULL_ITEM": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Skeleton Skull";
+                    case 1:
+                        return "White Skeleton Skull";
+                    case 2:
+                        return "Zombie Head";
+                    case 3:
+                        return "Head";
+                    case 4:
+                        return "Creeper Head";
+                    case 5:
+                        return "Dragon Head";
+                    default:
+                        return "Unknown Skull";
+                }
+            }
+            case "WOOD": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Oak Wood Planks";
+                    case 1:
+                        return "Spruce Wood Planks";
+                    case 2:
+                        return "Birch Wood Planks";
+                    case 3:
+                        return "Jungle Wood Planks";
+                    case 4:
+                        return "Acacia Wood Planks";
+                    case 5:
+                        return "Dark Oak Wood Planks";
+                    default:
+                        return "Unknown Wood Planks";
+                }
+            }
+            case "LOG": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Oak Wood";
+                    case 1:
+                        return "Spruce Wood";
+                    case 2:
+                        return "Birch Wood";
+                    case 3:
+                        return "Jungle Wood";
+                    default:
+                        return "Unknown Wood";
+                }
+            }
+            case "LOG_2": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Acacia Wood";
+                    case 1:
+                        return "Dark Wood";
+                    default:
+                        return "Unknown Wood";
+                }
+            }
+            case "WOOD_STEP": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Oak Wood Slab";
+                    case 1:
+                        return "Spruce Wood Slab";
+                    case 2:
+                        return "Birch Wood Slab";
+                    case 3:
+                        return "Jungle Wood Slab";
+                    case 4:
+                        return "Acacia Wood Slab";
+                    case 5:
+                        return "Dark Wood Slab";
+                    default:
+                        return "Unknown Wood Slab";
+                }
+            }
+            case "STEP": {
+                switch (item.getDurability()) {
+                    case 0:
+                        return "Stone Slab";
+                    case 1:
+                        return "Sandstone Slab";
+                    case 3:
+                        return "Cobblestone Slab";
+                    case 4:
+                        return "Bricks Slab";
+                    case 5:
+                        return "Stone Bricks Slab";
+                    case 6:
+                        return "Nether Brick Slab";
+                    case 7:
+                        return "Quartz Slab";
+                    default:
+                        return "Unknown Slab";
+                }
+            }
+            default:
+                return fixName(item.getType());
+        }
+    }
+
+    private static String getColorName(byte color) {
+        switch (color) {
+            case 0:
+                return "White";
+            case 1:
+                return "Orange";
+            case 2:
+                return "Magenta";
+            case 3:
+                return "Light Blue";
+            case 4:
+                return "Yellow";
+            case 5:
+                return "Lime";
+            case 6:
+                return "Pink";
+            case 7:
+                return "Gray";
+            case 8:
+                return "Light Gray";
+            case 9:
+                return "Cyan";
+            case 10:
+                return "Purple";
+            case 11:
+                return "Blue";
+            case 12:
+                return "Brown";
+            case 13:
+                return "Green";
+            case 14:
+                return "Red";
+            case 15:
+                return "Black";
+            default:
+                return "Unknown";
+        }
+    }
+
+    private static String fixName(Material material) {
+        final String[] split = material.name().split("_");
+        StringBuilder result = new StringBuilder();
+        for (String s : split)
+            result.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1).toLowerCase()).append(" ");
+        return result.toString().trim();
     }
 
     @SerializableAs("item-builder")
