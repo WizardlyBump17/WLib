@@ -14,5 +14,6 @@ public class PluginListener implements Listener {
         final CommandManager manager = CommandManager.MANAGERS.get(BukkitCommandHolder.of((JavaPlugin) event.getPlugin()));
         if (manager != null)
             manager.unregisterCommands();
+        BukkitCommandHolder.removeFromCache((JavaPlugin) event.getPlugin());
     }
 }

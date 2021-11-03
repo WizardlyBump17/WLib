@@ -27,4 +27,12 @@ public class BukkitCommandHolder implements CommandHolder<JavaPlugin> {
         cache.putIfAbsent(handle, new BukkitCommandHolder(handle));
         return cache.get(handle);
     }
+
+    public static void clearCache() {
+        cache.clear();
+    }
+
+    public static void removeFromCache(JavaPlugin plugin) {
+        cache.remove(plugin);
+    }
 }

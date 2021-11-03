@@ -173,7 +173,8 @@ public class PaginatedInventoryBuilder implements Cloneable {
 
         int total = content.size();
         for (ItemButton button : content)
-            total += button.getChildren().size();
+            if (button != null)
+                total += button.getChildren().size();
         return total;
     }
 

@@ -18,6 +18,8 @@ public class CustomInventory {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     protected final CustomInventoryHolder owner;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private PaginatedInventory paginatedHolder;
 
     public CustomInventory(String title, int size) {

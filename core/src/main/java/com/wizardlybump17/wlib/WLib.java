@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.command.BukkitCommandManagerListener;
 import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
+import com.wizardlybump17.wlib.command.holder.BukkitCommandHolder;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
 import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
@@ -46,6 +47,7 @@ public class WLib extends JavaPlugin {
         HandlerList.unregisterAll(this);
         if (CommandManager.getCreateListener() instanceof BukkitCommandManagerListener)
             CommandManager.getCreateListener().getExecutors().clear();
+        BukkitCommandHolder.clearCache();
     }
 
     private void initCommandSystem() {
