@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
@@ -38,7 +39,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         final Class<?>[] types = method.getParameterTypes();
         int currentIndex = 1; //skipping the first type because of the CommandSender
         for (String commandArg : commandArgs) {
-            if (requiredArgs(commandArg) || optionalArgs(commandArg))
+            if (requiredArgs(commandArg))
                 nodes.add(new ArgsNode(
                         trim(commandArg),
                         requiredArgs(commandArg),
@@ -55,75 +56,95 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         return Integer.compare(o.command.execution().split(" ").length, command.execution().split(" ").length);
     }
 
-    public Object[] parse(String string) throws ArgsReaderException {
-        List<Object> list = new ArrayList<>();
-        final String[] args = string.split(" ");
+    public Optional<Object[]> parse(String string) throws ArgsReaderException {
+        String[] stringSplit = string.split(" ");
 
-        for (ArgsNode node : nodes)
-            if (node.isUserInput())
-                if (args.length != nodes.size())
-                    return null;
+        arrayCheck: { //check for array nodes
+            for (ArgsNode node : nodes)
+                if (node.getReader() != null && node.getReader().getType().isArray())
+                    break arrayCheck;
 
-        boolean plainCommand = true;
-        for (ArgsNode node : nodes)
-            if (node.isUserInput()) {
-                plainCommand = false;
-                break;
-            }
+            if (stringSplit.length < nodes.size())
+                return Optional.empty();
+        }
 
-        if (plainCommand) {
+        userInputCheck: { //check for nodes that requires the user input
+            for (ArgsNode node : nodes)
+                if (node.isUserInput())
+                    break userInputCheck;
+
             if (string.toLowerCase().startsWith(command.execution().toLowerCase()))
-                return new Object[0];
-            return null;
+                return Optional.of(new Object[0]);
+
+            return Optional.empty();
         }
 
+        if (stringSplit.length < nodes.size())
+            return Optional.empty();
 
-        List<Object> arrayElements = new ArrayList<>();
-        ArgsNode lastNode = null;
-        for (int i = 0; i < args.length; i++) {
-            try {
-                String arg = args[i];
-                ArgsNode node = arrayElements.isEmpty() ? nodes.get(i) : lastNode;
+        List<Object> resultList = new ArrayList<>(nodes.size());
 
-                final ArgsReader<?> reader = node.getReader();
-                if (reader == null) {
-                    if (arg.equalsIgnoreCase(node.getName()))
-                        continue;
-                    throw new ArgsReaderException("expected " + node.getName() + " but got " + arg);
+        int nodeIndex = 0;
+        List<String> currentArray = new ArrayList<>(stringSplit.length);
+        boolean inArray = false;
+        for (String arg : stringSplit) {
+            if (nodeIndex == nodes.size())
+                break;
+
+            ArgsNode node = nodes.get(nodeIndex);
+            ArgsReader<?> reader = node.getReader();
+            if (!node.isUserInput() && !node.getName().equalsIgnoreCase(arg))
+                return Optional.empty();
+
+            nodeIndex++;
+
+            if (!node.isUserInput())
+                continue;
+
+            if (inArray) { //we are in an array
+                if (arg.endsWith("\"") && !arg.endsWith("\\\"")) { //end of array
+                    inArray = false;
+                    currentArray.add(arg);
+
+                    Object read = reader.read(String.join(" ", currentArray));
+                    resultList.add(read);
+                    currentArray.clear();
+                    continue;
                 }
-                if (reader.getType().isArray()) {
-                    arrayElements.add(reader.read(arg));
-                    lastNode = node;
-                } else {
-                    if (!arrayElements.isEmpty()) {
-                        fix(lastNode, arrayElements, list);
-                        arrayElements.clear();
-                    }
-                    list.add(reader.read(arg));
-                }
-            } catch (IndexOutOfBoundsException e) {
-                return null;
+
+                currentArray.add(arg); //continue the array
+                nodeIndex--;
+                continue;
             }
+
+            if (reader.isArray() && arg.startsWith("\"")) { //start of an array
+                if (arg.endsWith("\"") && !arg.endsWith("\\\"")) {
+                    resultList.add(reader.read(arg));
+                    continue;
+                }
+
+                inArray = true;
+                currentArray.add(arg);
+                nodeIndex--;
+                continue;
+            }
+
+            resultList.add(reader.read(arg));
         }
 
-        if (!arrayElements.isEmpty())
-            fix(lastNode, arrayElements, list);
+        if (inArray)
+            throw new ArgsReaderException("last array never finished");
 
-        return list.toArray();
-    }
-
-    private static void fix(ArgsNode node, List<Object> list, List<Object> target) {
-        final ArgsReader<?> reader = node.getReader();
-        if (reader.isArray())
-            target.add(reader.cast(list.toArray()));
+        return Optional.of(resultList.toArray());
     }
 
     public void execute(CommandSender<?> sender, String string) throws ArgsReaderException {
-        Object[] objects = parse(string);
-        try {
-            if (objects == null)
-                throw new IllegalArgumentException("invalid args for command " + command.execution());
+        Optional<Object[]> parse = parse(string);
+        if (!parse.isPresent())
+            throw new ArgsReaderException("invalid args for command " + command.execution());
 
+        Object[] objects = parse.get();
+        try {
             if (!command.permission().isEmpty() && !sender.hasPermission(command.permission()))
                 return;
 
@@ -132,8 +153,8 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             if (isSenderGeneric())
                 list.set(0, sender.toGeneric());
             method.invoke(object, list.toArray());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+            throw new ArgsReaderException(e.getMessage());
         }
     }
 
@@ -162,9 +183,5 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
     private static boolean requiredArgs(String string) {
         return string.startsWith("<") && string.endsWith(">");
-    }
-
-    private static boolean optionalArgs(String string) {
-        return string.startsWith("[") && string.endsWith("]");
     }
 }

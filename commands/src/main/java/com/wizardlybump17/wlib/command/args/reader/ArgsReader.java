@@ -10,10 +10,6 @@ public abstract class ArgsReader<T> {
     public abstract T read(String string) throws ArgsReaderException;
 
     public boolean isArray() {
-        return false;
-    }
-
-    public T cast(Object[] original) {
-        throw new UnsupportedOperationException("not implemented");
+        return getType().isArray();
     }
 }

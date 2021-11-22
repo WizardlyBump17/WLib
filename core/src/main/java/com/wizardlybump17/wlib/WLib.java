@@ -1,10 +1,7 @@
 package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
-import com.wizardlybump17.wlib.command.BukkitCommandManagerListener;
-import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
-import com.wizardlybump17.wlib.command.holder.BukkitCommandHolder;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
 import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
@@ -13,7 +10,6 @@ import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.item.Item;
 import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.listener.EntityListener;
-import com.wizardlybump17.wlib.listener.PluginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -37,7 +33,6 @@ public class WLib extends JavaPlugin {
         initCommandSystem();
 
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PluginListener(), this);
 
         getLogger().info("WLib enabled.");
     }
@@ -45,16 +40,11 @@ public class WLib extends JavaPlugin {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
-        if (CommandManager.getCreateListener() instanceof BukkitCommandManagerListener)
-            CommandManager.getCreateListener().getExecutors().clear();
-        BukkitCommandHolder.clearCache();
     }
 
     private void initCommandSystem() {
         ArgsReaderRegistry.INSTANCE.add(new PlayerReader());
         ArgsReaderRegistry.INSTANCE.add(new OfflinePlayerReader());
-
-        CommandManager.setCreateListener(new BukkitCommandManagerListener());
     }
 
     private void initSerializables() {

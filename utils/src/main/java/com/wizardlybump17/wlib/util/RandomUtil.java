@@ -40,4 +40,13 @@ public class RandomUtil {
             builder.append(NUMERIC_CHARS[RANDOM.nextInt(NUMERIC_CHARS.length)]);
         return builder.toString();
     }
+
+    /**
+     * @param array the array
+     * @param <T> the array type
+     * @return a random element from the array
+     */
+    public static <T> T randomElement(T[] array) {
+        return array[RANDOM.nextInt(array.length)];
+    }
 }

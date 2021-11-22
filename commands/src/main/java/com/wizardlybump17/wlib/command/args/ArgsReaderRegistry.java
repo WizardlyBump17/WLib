@@ -1,11 +1,9 @@
 package com.wizardlybump17.wlib.command.args;
 
 import com.wizardlybump17.wlib.command.args.reader.*;
+import com.wizardlybump17.wlib.object.Registry;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class ArgsReaderRegistry {
+public class ArgsReaderRegistry extends Registry<Class<?>, ArgsReader<?>> {
 
     public static final ArgsReaderRegistry INSTANCE = new ArgsReaderRegistry();
 
@@ -28,21 +26,7 @@ public class ArgsReaderRegistry {
     private ArgsReaderRegistry() {
     }
 
-    private final Map<Class<?>, ArgsReader<?>> readers = new HashMap<>();
-
     public void add(ArgsReader<?> reader) {
-       readers.put(reader.getType(), reader);
-    }
-
-    public void remove(Class<?> type) {
-        readers.remove(type);
-    }
-
-    public boolean has(Class<?> type) {
-        return readers.containsKey(type);
-    }
-
-    public ArgsReader<?> get(Class<?> type) {
-        return readers.get(type);
+        put(reader.getType(), reader);
     }
 }
