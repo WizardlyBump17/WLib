@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.util;
 
-
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapUtils {
 
     /**
@@ -94,7 +96,21 @@ public class MapUtils {
      * @return the result map
      */
     public static <K, V, T> Map<T, V> mapKeys(Map<K, V> map, Function<K, T> function) {
-        Map<T, V> newMap = new HashMap<>(map.size());
+        return mapKeys(map, HashMap::new, function);
+    }
+
+    /**
+     * Maps the map into a new Map provided by the supplier
+     * @param map the map to be mapped
+     * @param function the function
+     * @param supplier the supplier to give us the new map
+     * @param <K> the original key type
+     * @param <V> the value type
+     * @param <T> the new key type
+     * @return the result map
+     */
+    public static <K, V, T> Map<T, V> mapKeys(Map<K, V> map, Supplier<Map<T, V>> supplier, Function<K, T> function) {
+        Map<T, V> newMap = supplier.get();
 
         for (Map.Entry<K, V> entry : map.entrySet())
             newMap.put(function.apply(entry.getKey()), entry.getValue());
@@ -187,58 +203,6 @@ public class MapUtils {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return (T) new HashMap<K, V>();
-        }
-    }
-
-    /**
-     * @param <K>
-     * @param <V>
-     * @return
-     * @deprecated use {{@link #mapOf(Object...)}}
-     */
-    @Deprecated
-    public static <K, V> MapBuilder<K, V> builder() {
-        return new MapBuilder<>();
-    }
-
-    /**
-     * @deprecated Use {@link #mapOf(Object...)}
-     * @param <K>
-     * @param <V>
-     */
-    @Deprecated
-    public static class MapBuilder<K, V> {
-
-        private final Map<K, V> map = new HashMap<>();
-
-        public <T> MapBuilder<K, V> putIf(RawPredicate predicate, K key, T t, Function<T, V> function) {
-            if (predicate.test())
-                return put(key, function.apply(t));
-            return this;
-        }
-
-        public MapBuilder<K, V> putIf(RawPredicate predicate, K key, V value) {
-            if (predicate.test())
-                return put(key, value);
-            return this;
-        }
-
-        public MapBuilder<K, V> put(K key, V value) {
-            map.put(key, value);
-            return this;
-        }
-
-        public MapBuilder<K, V> remove(K key) {
-            map.remove(key);
-            return this;
-        }
-
-        public boolean contains(K key) {
-            return map.containsKey(key);
-        }
-
-        public Map<K, V> build() {
-            return map;
         }
     }
 }

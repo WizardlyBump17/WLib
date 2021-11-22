@@ -3,17 +3,20 @@ package com.wizardlybump17.wlib.config;
 import com.wizardlybump17.wlib.item.Item;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -45,6 +48,50 @@ public class Config extends YamlConfiguration {
         }
     }
 
+    public Location getLocation(String path, Location def) {
+        Map<String, Object> map = getMap(path);
+        if (map == null)
+            return def;
+
+        World world = Bukkit.getWorld(map.get("world").toString());
+        double x = ((Number) map.get("x")).doubleValue();
+        double y = ((Number) map.get("y")).doubleValue();
+        double z = ((Number) map.get("z")).doubleValue();
+
+        return new Location(world, x, y, z);
+    }
+
+    public Location getLocation(String path) {
+        return getLocation(path, null);
+    }
+
+    @Override
+    public Vector getVector(String path, Vector def) {
+        Map<String, Object> map = getMap(path);
+        if (map == null)
+            return def;
+
+        double x = ((Number) map.get("x")).doubleValue();
+        double y = ((Number) map.get("y")).doubleValue();
+        double z = ((Number) map.get("z")).doubleValue();
+
+        return new Vector(x, y, z);
+    }
+
+    @Override
+    public Vector getVector(String path) {
+        return getVector(path, null);
+    }
+
+    public World getWorld(String path, World def) {
+        World world = Bukkit.getWorld(getString(path));
+        return world == null ? def : world;
+    }
+
+    public World getWorld(String path) {
+        return getWorld(path, null);
+    }
+
     @Override
     public void set(String path, Object value) {
         if (value instanceof Map) {
@@ -52,6 +99,14 @@ public class Config extends YamlConfiguration {
             return;
         }
         super.set(path, value);
+    }
+
+    public Number getNumber(String path, Number def) {
+        return getByType(path, def);
+    }
+
+    public Number getNumber(String path) {
+        return getByType(path);
     }
 
     @SuppressWarnings("unchecked")
@@ -74,6 +129,38 @@ public class Config extends YamlConfiguration {
     }
 
     @SuppressWarnings("unchecked")
+    public <T extends Enum<T>> Map<T, Object> getEnumMap(String path, Class<T> classType, Map<T, Object> def) {
+        Object defObject = get(path, def);
+        if (!(defObject instanceof ConfigurationSection))
+            return def;
+
+        EnumMap<T, Object> map = new EnumMap<>(classType);
+        Map<String, Object> originalMap = convertToMap(((ConfigurationSection) defObject));
+
+        Method method;
+        try {
+            method = classType.getDeclaredMethod("valueOf", String.class);
+        } catch (NoSuchMethodException ignored) {
+            return def; //???????????????? ^^^^^
+        }
+
+        originalMap.forEach((key, value) -> {
+            try {
+                map.put((T) method.invoke(null, key.toUpperCase()), value);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException ignored) { //we don't want a console log for this
+            }
+        });
+
+        return map;
+    }
+
+    public <T extends Enum<T>> Map<T, Object> getEnumMap(String path, Class<T> classType) {
+        return getEnumMap(path, classType, null);
+    }
+
+        @SuppressWarnings("unchecked")
     public static Map<String, Object> convertToMap(ConfigurationSection section) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (String key : section.getKeys(false)) {
@@ -130,7 +217,9 @@ public class Config extends YamlConfiguration {
     }
 
     public static Config load(String filePath, JavaPlugin plugin) {
-        return new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
+        Config config = new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
+        config.reloadConfig();
+        return config;
     }
 
     public static Config load(File file, JavaPlugin plugin) {
@@ -140,13 +229,7 @@ public class Config extends YamlConfiguration {
                 absolutePath.substring(absolutePath.indexOf(plugin.getDataFolder().getAbsolutePath())),
                 file
         );
-
-        try {
-            config.load(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        config.reloadConfig();
         return config;
     }
 }
