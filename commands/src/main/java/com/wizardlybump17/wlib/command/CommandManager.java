@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.command;
 
-import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,16 +42,21 @@ public class CommandManager {
         commands.clear();
     }
 
-    public void execute(CommandSender<?> sender, String string) throws ArgsReaderException {
+    public void execute(CommandSender<?> sender, String string) throws Exception {
         if (commands.isEmpty())
             return;
 
+        Exception lastException = null;
         for (RegisteredCommand command : commands) {
             try {
                 command.execute(sender, string);
                 return;
-            } catch (ArgsReaderException ignored) {
+            } catch (Exception e) {
+                lastException = e;
             }
         }
+
+        if (lastException != null)
+            throw lastException;
     }
 }

@@ -218,7 +218,7 @@ public class Config extends YamlConfiguration {
 
     public static Config load(String filePath, JavaPlugin plugin) {
         Config config = new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
-        config.reloadConfig();
+        config.saveDefaultConfig();
         return config;
     }
 
@@ -229,7 +229,7 @@ public class Config extends YamlConfiguration {
                 absolutePath.substring(absolutePath.indexOf(plugin.getDataFolder().getAbsolutePath())),
                 file
         );
-        config.reloadConfig();
+        config.saveDefaultConfig();
         return config;
     }
 }

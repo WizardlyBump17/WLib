@@ -158,6 +158,11 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         }
     }
 
+    @Override
+    public String toString() {
+        return "RegisteredCommand{" + command.execution() + "}";
+    }
+
     @SuppressWarnings("unchecked")
     public Class<? extends CommandSender<?>> getSenderType() {
         return (Class<? extends CommandSender<?>>) method.getParameterTypes()[0];

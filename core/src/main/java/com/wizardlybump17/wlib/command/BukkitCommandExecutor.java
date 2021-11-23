@@ -37,6 +37,8 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
         try {
             manager.execute(sender, commandExecution);
         } catch (ArgsReaderException ignored) { //an exception is not needed here
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
