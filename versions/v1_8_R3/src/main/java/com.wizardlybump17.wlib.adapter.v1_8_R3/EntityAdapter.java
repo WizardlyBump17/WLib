@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.adapter.v1_8_R3;
 
+import com.wizardlybump17.wlib.adapter.MessageType;
 import com.wizardlybump17.wlib.util.CollectionUtil;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.craftbukkit.v1_8_R3.conversations.ConversationTracker;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -37,7 +39,7 @@ public class EntityAdapter extends com.wizardlybump17.wlib.adapter.EntityAdapter
     @Override
     public List<Conversation> getConversations() {
         if (!(entity instanceof Player))
-            return null;
+            return new ArrayList<>();
 
         try {
             CraftPlayer player = (CraftPlayer) entity;
@@ -53,7 +55,54 @@ public class EntityAdapter extends com.wizardlybump17.wlib.adapter.EntityAdapter
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void sendMessage(MessageType type, String message) {
+        if (!(entity instanceof Player))
+            return;
+
+        Player player = (Player) this.entity;
+
+        switch (type) {
+            case CHAT:
+                player.sendMessage(message);
+                return;
+
+            case TITLE: {
+                String[] lines = message.split("\n");
+
+                PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, new ChatComponentText(lines[0]), 10, 70, 20);
+                PacketPlayOutTitle subtitlePacket;
+                if (lines.length >= 2)
+                    subtitlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, new ChatComponentText(lines[1]), 10, 70, 20);
+                else
+                    subtitlePacket = null;
+
+                sendPacket(titlePacket, subtitlePacket);
+                return;
+            }
+
+            case ACTION_BAR:
+                sendPacket(new PacketPlayOutChat(new ChatComponentText(message), (byte) 2));
+        }
+    }
+
+    @Override
+    public void sendPacket(Object... packets) {
+        if (!(entity instanceof Player))
+            return;
+
+        EntityPlayer player = ((CraftPlayer) entity).getHandle();
+        PlayerConnection connection = player.playerConnection;
+
+        for (Object packet : packets) {
+            if (!(packet instanceof Packet))
+                continue;
+
+            connection.sendPacket(((Packet<?>) packet));
+        }
     }
 
     @Override

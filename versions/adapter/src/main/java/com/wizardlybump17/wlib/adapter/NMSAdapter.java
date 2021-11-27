@@ -7,11 +7,14 @@ import org.bukkit.inventory.ItemStack;
 @Data
 public abstract class NMSAdapter {
 
+    public static final String GLOW_TAG = "WLib-glowing";
+
     public abstract Object nbtToJava(Object nbt);
     public abstract Object javaToNbt(Object java);
     public abstract String getTargetVersion();
 
     public abstract ItemAdapter getItemAdapter(ItemStack item);
+
     public EntityAdapter getEntityAdapter(Entity entity) {
         if (EntityAdapter.ENTITY_CACHE.containsKey(entity.getUniqueId()))
             return EntityAdapter.ENTITY_CACHE.get(entity.getUniqueId());
@@ -19,10 +22,13 @@ public abstract class NMSAdapter {
         EntityAdapter.ENTITY_CACHE.put(entity.getUniqueId(), adapter);
         return adapter;
     }
+
     public abstract EntityAdapter newEntityAdapter(Entity entity);
 
     public abstract ItemStack getFixedMaterial(WMaterial material);
+
+    @Deprecated
     public final String getGlowTag() {
-        return "WLib-glowing";
+        return GLOW_TAG;
     }
 }

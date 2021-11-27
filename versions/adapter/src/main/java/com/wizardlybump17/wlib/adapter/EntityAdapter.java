@@ -25,6 +25,9 @@ public abstract class EntityAdapter {
     public abstract List<Conversation> getConversations();
     public abstract boolean abandonConversation(Predicate<Conversation> predicate);
 
+    public abstract void sendMessage(MessageType type, String message);
+    public abstract void sendPacket(Object... packets);
+
     public static void deleteFromCache(Entity entity) {
         ENTITY_CACHE.remove(entity.getUniqueId());
     }
