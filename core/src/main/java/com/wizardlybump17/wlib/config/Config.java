@@ -229,7 +229,7 @@ public class Config extends YamlConfiguration {
                 absolutePath.substring(absolutePath.indexOf(plugin.getDataFolder().getAbsolutePath())),
                 file
         );
-        config.saveDefaultConfig();
+        config.reloadConfig();
         return config;
     }
 }
