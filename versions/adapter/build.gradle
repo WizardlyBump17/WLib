@@ -1,18 +1,9 @@
 dependencies {
     compileOnly (
-            'org.projectlombok:lombok:1.18.20',
+            'org.projectlombok:lombok:1.18.22',
             'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
             'org.jetbrains:annotations:22.0.0',
             project(':utils')
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-}
-
-publishing {
-    publications {
-        adapter(MavenPublication) {
-            from components.java
-            artifactId = project.name
-        }
-    }
 }

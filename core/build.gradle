@@ -4,7 +4,7 @@ repositories {
 
 dependencies {
     compileOnly(
-            'org.projectlombok:lombok:1.18.20',
+            'org.projectlombok:lombok:1.18.22',
             'org.jetbrains:annotations:22.0.0',
             'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
     )
@@ -30,20 +30,11 @@ dependencies {
 }
 
 processResources {
-    filesMatching("**/plugin.yml") {
-        expand "version": project.version
+    filesMatching('**/plugin.yml') {
+        expand 'version': project.version
     }
 }
 
 shadowJar {
-    archiveFileName.set('WLib-v' + project.version + '.' + archiveExtension.get())
-}
-
-publishing {
-    publications {
-        core(MavenPublication) {
-            from components.java
-            artifactId = project.name
-        }
-    }
+    archiveFileName = 'WLib-v' + project.version + '.' + archiveExtension.get()
 }

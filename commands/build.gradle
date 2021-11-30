@@ -6,12 +6,3 @@ dependencies {
     )
     annotationProcessor('org.projectlombok:lombok:1.18.22')
 }
-
-publishing {
-    publications {
-        commands(MavenPublication) {
-            from components.java
-            artifactId = project.name
-        }
-    }
-}

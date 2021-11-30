@@ -31,10 +31,28 @@ allprojects {
     }
 }
 
-publishing {
-    publications {
-        defaultPublication(MavenPublication) {
-            from components.java
+subprojects {
+    apply plugin: 'maven-publish'
+
+    if (project.name == "versions" || project.name.matches('v\\d_\\d+_R\\d+'))
+        return
+
+    publishing {
+        repositories {
+            maven {
+                name = 'GitHubPackages'
+                url = uri('https://maven.pkg.github.com/wizardlybump17/wlib')
+                credentials {
+                    username = project.findProperty('gpr.user') ?: System.getenv('USERNAME')
+                    password = project.findProperty('gpr.key') ?: System.getenv('TOKEN')
+                }
+            }
+        }
+
+        publications {
+            gpr(MavenPublication) {
+                from(components.java)
+            }
         }
     }
 }
