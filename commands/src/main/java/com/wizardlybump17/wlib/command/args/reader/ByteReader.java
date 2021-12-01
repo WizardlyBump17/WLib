@@ -12,7 +12,7 @@ public class ByteReader extends ArgsReader<Byte> {
         try {
             return Byte.parseByte(string);
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException("expected a byte but got " + string);
+            throw new ArgsReaderException(e, "expected a byte but got " + string);
         }
     }
 }

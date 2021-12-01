@@ -12,7 +12,7 @@ public class ShortReader extends ArgsReader<Short> {
         try {
             return Short.parseShort(string);
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException("expected a short but got " + string);
+            throw new ArgsReaderException(e, "expected a short but got " + string);
         }
     }
 }

@@ -8,7 +8,7 @@ dependencies {
             'org.jetbrains:annotations:22.0.0',
             'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
     )
-    annotationProcessor('org.projectlombok:lombok:1.18.20')
+    annotationProcessor('org.projectlombok:lombok:1.18.22')
 
     implementation(
             project(':utils'),
@@ -36,5 +36,5 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = 'WLib-v' + project.version + '.' + archiveExtension.get()
+    archiveFileName = 'WLib-v' + project.version + '.jar'
 }

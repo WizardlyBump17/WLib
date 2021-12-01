@@ -19,7 +19,7 @@ public class FloatArrayReader extends ArrayReader<Float[]> {
                 result[i] = Float.parseFloat(strings[i]);
             return result;
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException("expected a float array in string form but got " + string);
+            throw new ArgsReaderException(e, "expected a float array in string form but got " + string);
         }
     }
 }

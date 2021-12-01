@@ -7,5 +7,5 @@ import com.wizardlybump17.wlib.command.CommandSender;
  */
 public interface CommandExecutor {
 
-    void execute(CommandSender<?> sender, String commandName, String[] args);
+    void execute(CommandSender<?> sender, String commandName, String[] args) throws Throwable;
 }

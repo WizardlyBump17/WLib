@@ -12,7 +12,7 @@ public class FloatReader extends ArgsReader<Float> {
         try {
             return Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException("expected a float but got " + string);
+            throw new ArgsReaderException(e, "expected a float but got " + string);
         }
     }
 }

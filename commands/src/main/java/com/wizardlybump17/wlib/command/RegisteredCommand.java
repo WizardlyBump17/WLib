@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
+import com.wizardlybump17.wlib.object.Pair;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -133,28 +134,39 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         }
 
         if (inArray)
-            throw new ArgsReaderException("last array never finished");
+            throw new ArgsReaderException(null, "last array never finished");
 
         return Optional.of(resultList.toArray());
     }
 
-    public void execute(CommandSender<?> sender, String string) throws ArgsReaderException {
-        Optional<Object[]> parse = parse(string);
-        if (!parse.isPresent())
-            throw new ArgsReaderException("invalid args for command " + command.execution());
+    public Pair<Boolean, ArgsReaderException> execute(CommandSender<?> sender, String string) {
+        try {
+            Optional<Object[]> parse = parse(string);
+            if (!parse.isPresent())
+                throw new ArgsReaderException(null, "invalid args for command " + command.execution());
 
-        Object[] objects = parse.get();
+            Object[] objects = parse.get();
+            return executeInternal(sender, objects);
+        } catch (ArgsReaderException e) {
+            return new Pair<>(false, e);
+        }
+    }
+
+    private Pair<Boolean, ArgsReaderException> executeInternal(CommandSender<?> sender, Object[] objects) {
         try {
             if (!command.permission().isEmpty() && !sender.hasPermission(command.permission()))
-                return;
+                return new Pair<>(true, null);
 
             final ArrayList<Object> list = new ArrayList<>(Arrays.asList(objects));
             list.add(0, sender);
             if (isSenderGeneric())
                 list.set(0, sender.toGeneric());
             method.invoke(object, list.toArray());
-        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-            throw new ArgsReaderException(e.getMessage());
+            return new Pair<>(true, null);
+        } catch (InvocationTargetException e) {
+            return new Pair<>(true, new ArgsReaderException(e.getTargetException(), e.getTargetException().getMessage()));
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            return new Pair<>(true, new ArgsReaderException(e.getCause(), e.getMessage()));
         }
     }
 

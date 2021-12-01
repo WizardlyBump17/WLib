@@ -1,10 +1,10 @@
 package com.wizardlybump17.wlib.command;
 
-import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
 import com.wizardlybump17.wlib.command.sender.ConsoleSender;
 import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +16,7 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
 
     private final CommandManager manager;
 
+    @SneakyThrows
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         com.wizardlybump17.wlib.command.CommandSender<?> commandSender;
@@ -32,13 +33,8 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
     }
 
     @Override
-    public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) {
+    public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) throws Throwable {
         String commandExecution = commandName + " " + String.join(" ", args);
-        try {
-            manager.execute(sender, commandExecution);
-        } catch (ArgsReaderException ignored) { //an exception is not needed here
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        manager.execute(sender, commandExecution);
     }
 }
