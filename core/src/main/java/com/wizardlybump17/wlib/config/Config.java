@@ -84,7 +84,10 @@ public class Config extends YamlConfiguration {
     }
 
     public World getWorld(String path, World def) {
-        World world = Bukkit.getWorld(getString(path));
+        String name = getString(path);
+        if (name == null)
+            return def;
+        World world = Bukkit.getWorld(name);
         return world == null ? def : world;
     }
 
@@ -216,20 +219,68 @@ public class Config extends YamlConfiguration {
         return getItemBuilder(path, null);
     }
 
-    public static Config load(String filePath, JavaPlugin plugin) {
+    /**
+     * Loads the config from the given file path.
+     * If saveDefault is true, the config will be saved using {@link JavaPlugin#saveResource(String, boolean)}.
+     * If saveDefault is false, the config will be saved using {@link YamlConfiguration#save(File)}
+     * @param filePath where this configuration should be loaded from
+     * @param plugin the plugin that is using this configuration
+     * @param saveDefault if it must save the default config
+     * @return the configuration loaded in the given file path
+     */
+    public static Config load(String filePath, JavaPlugin plugin, boolean saveDefault) {
         Config config = new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
-        config.saveDefaultConfig();
+        if (saveDefault)
+            config.saveDefaultConfig();
+        else
+            config.saveConfig();
+
         return config;
     }
 
+    /**
+     * Loads the config from the given file path.
+     * It will use the {@link Config#load(String, JavaPlugin, boolean)} method with saveDefault = true
+     * @param filePath where this configuration should be loaded from
+     * @param plugin the plugin that is using this configuration
+     * @return the config loaded in the given file path
+     */
+    public static Config load(String filePath, JavaPlugin plugin) {
+        return load(filePath, plugin, true);
+    }
+
+    /**
+     * Loads the config from the given file.
+     * It will use the {@link Config#load(File, JavaPlugin, boolean)} method with saveDefault = true
+     * @param file the file that have the config
+     * @param plugin the plugin that is using this config
+     * @return the config loaded in the given file
+     */
     public static Config load(File file, JavaPlugin plugin) {
+        return load(file, plugin, true);
+    }
+
+    /**
+     * Loads the config from the given file.
+     * If load is true, the config will be loaded using {@link YamlConfiguration#load(File)}.
+     * If load is false, the config will be saved using {@link YamlConfiguration#save(File)}
+     * @param file the file that have the config
+     * @param plugin the plugin that is using this config
+     * @param load if it must load the config or just save it
+     * @return the config loaded in the given file
+     */
+    public static Config load(File file, JavaPlugin plugin, boolean load) {
         final String absolutePath = file.getAbsolutePath();
         final Config config = new Config(
                 plugin,
                 absolutePath.substring(absolutePath.indexOf(plugin.getDataFolder().getAbsolutePath())),
                 file
         );
-        config.reloadConfig();
+        if (load)
+            config.reloadConfig();
+        else
+            config.saveConfig();
+
         return config;
     }
 }
