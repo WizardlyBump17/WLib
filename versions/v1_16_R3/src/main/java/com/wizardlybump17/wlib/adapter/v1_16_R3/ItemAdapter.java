@@ -6,6 +6,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
+import static com.wizardlybump17.wlib.adapter.NMSAdapter.GLOW_TAG;
+
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     protected ItemAdapter(ItemStack target, NMSAdapter mainAdapter) {
@@ -88,15 +90,15 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @Override
     public boolean hasGlow() {
-        return hasNbtTag(mainAdapter.getGlowTag());
+        return hasNbtTag(GLOW_TAG);
     }
 
     @Override
     public void setGlow(boolean glow) {
         if (glow)
-            setNbtTag(mainAdapter.getGlowTag(), "glow");
+            setNbtTag(GLOW_TAG, "glow");
         else
-            removeNbtTag(mainAdapter.getGlowTag());
+            removeNbtTag(GLOW_TAG);
     }
 
     @Override
