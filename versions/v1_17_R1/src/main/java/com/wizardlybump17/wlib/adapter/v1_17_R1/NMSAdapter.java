@@ -14,7 +14,7 @@ import java.util.Map;
 public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     static {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener(new NMSAdapter()));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener());
     }
 
     @Override
@@ -46,7 +46,8 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
         if (base instanceof NBTTagList) {
             NBTTagList list = (NBTTagList) base;
             List<Object> javaList = new ArrayList<>();
-            for (NBTBase nbtBase : list) javaList.add(nbtToJava(nbtBase));
+            for (NBTBase nbtBase : list)
+                javaList.add(nbtToJava(nbtBase));
             return javaList;
         }
 
@@ -94,10 +95,8 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
         if (java instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) java;
             NBTTagCompound compound = new NBTTagCompound();
-            for (Object o : map.entrySet()) {
-                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
+            for (Map.Entry<?, ?> entry : map.entrySet())
                 compound.set(entry.getKey().toString(), javaToNbt(entry.getValue()));
-            }
             return compound;
         }
 

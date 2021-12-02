@@ -6,7 +6,10 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.mojang.datafixers.util.Pair;
 import lombok.SneakyThrows;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
+import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutWindowItems;
 import net.minecraft.network.syncher.DataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -22,11 +25,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wizardlybump17.wlib.adapter.NMSAdapter.GLOW_TAG;
+
 public class PacketListener extends PacketAdapter {
 
-    private final NMSAdapter adapter;
-
-    public PacketListener(NMSAdapter adapter) {
+    public PacketListener() {
         super(
                 Bukkit.getPluginManager().getPlugin("WLib"),
                 PacketType.fromClass(PacketPlayOutSetSlot.class),
@@ -34,7 +37,6 @@ public class PacketListener extends PacketAdapter {
                 PacketType.fromClass(PacketPlayOutEntityEquipment.class),
                 PacketType.fromClass(PacketPlayOutWindowItems.class)
         );
-        this.adapter = adapter;
     }
 
     @SneakyThrows
@@ -53,7 +55,7 @@ public class PacketListener extends PacketAdapter {
 
     private boolean isValidItem(ItemStack itemStack) {
         final net.minecraft.world.item.ItemStack copy = CraftItemStack.asNMSCopy(itemStack);
-        return copy.hasTag() && copy.getTag().hasKey(adapter.getGlowTag());
+        return copy.hasTag() && copy.getTag().hasKey(GLOW_TAG);
     }
 
     private ItemStack fixItem(ItemStack itemStack) {

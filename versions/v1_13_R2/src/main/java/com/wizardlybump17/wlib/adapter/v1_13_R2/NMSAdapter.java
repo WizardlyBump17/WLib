@@ -14,7 +14,7 @@ import java.util.Map;
 public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     static {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener(new NMSAdapter()));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener());
     }
 
     @Override

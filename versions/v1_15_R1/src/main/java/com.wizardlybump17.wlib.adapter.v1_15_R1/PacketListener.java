@@ -22,18 +22,17 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wizardlybump17.wlib.adapter.NMSAdapter.GLOW_TAG;
+
 public class PacketListener extends PacketAdapter {
 
-    private final NMSAdapter adapter;
-
-    public PacketListener(NMSAdapter adapter) {
+    public PacketListener() {
         super(
                 Bukkit.getPluginManager().getPlugin("WLib"),
                 PacketType.fromClass(PacketPlayOutSetSlot.class),
                 PacketType.fromClass(PacketPlayOutEntityMetadata.class),
                 PacketType.fromClass(PacketPlayOutEntityEquipment.class)
         );
-        this.adapter = adapter;
     }
 
     @SneakyThrows
@@ -50,7 +49,7 @@ public class PacketListener extends PacketAdapter {
 
     private boolean isInvalid(ItemStack itemStack) {
         final net.minecraft.server.v1_15_R1.ItemStack copy = CraftItemStack.asNMSCopy(itemStack);
-        return !copy.hasTag() || !copy.getTag().hasKey(adapter.getGlowTag());
+        return !copy.hasTag() || !copy.getTag().hasKey(GLOW_TAG);
     }
 
     private ItemStack fixItem(ItemStack itemStack) {
