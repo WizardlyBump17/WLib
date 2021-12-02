@@ -17,7 +17,7 @@ public abstract class Cache<K, V, T> {
 
     protected final Map<K, V> cache;
 
-    public Cache() {
+    protected Cache() {
         cache = getInitialMap();
     }
 
@@ -62,6 +62,9 @@ public abstract class Cache<K, V, T> {
         return cache.keySet();
     }
 
+    /**
+     * @return an immutable copy of the backing map of this cache
+     */
     @NotNull
     public Map<K, V> getMap() {
         return Collections.unmodifiableMap(cache);
@@ -76,10 +79,19 @@ public abstract class Cache<K, V, T> {
         cache.clear();
     }
 
+    public int size() {
+        return cache.size();
+    }
+
+    public boolean isEmpty() {
+        return cache.isEmpty();
+    }
+
     /**
-     * This converts the given object to a valid pair to use in the map
+     * This converts the given object to a valid pair to use in the map.
+     * The first element of the Pair is the key, and the second is the value.
      * @param t the object
-     * @return the pair
+     * @return the pair to be used in the map
      */
     @NotNull
     public abstract Pair<K, V> apply(T t);
