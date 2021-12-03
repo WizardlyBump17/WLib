@@ -40,15 +40,15 @@ public class NumberFormatter {
         return (negative ? "-" : "") +  DECIMAL_FORMAT.format(value) + suffixes.get(index);
     }
 
-    public double parseString(String value) throws Exception {
+    public double parseString(String value) throws NumberFormatException {
         try {
             return Double.parseDouble(value);
-        } catch (Exception ignored) {
+        } catch (NumberFormatException ignored) {
         }
 
         Matcher matcher = PATTERN.matcher(value);
         if (!matcher.find())
-            throw new Exception("Invalid format");
+            throw new NumberFormatException("Invalid format");
 
         double amount = Double.parseDouble(matcher.group(1));
         String suffix = matcher.group(2);
