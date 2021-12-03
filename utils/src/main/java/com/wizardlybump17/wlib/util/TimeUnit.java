@@ -1,20 +1,17 @@
 package com.wizardlybump17.wlib.util;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+// all time units in milliseconds from second up to years
+public final class TimeUnit {
 
-@RequiredArgsConstructor
-@Getter
-public enum TimeUnit {
+    public static final long MILLISECOND = 1;
+    public static final long SECOND = MILLISECOND * 1000;
+    public static final long MINUTE = SECOND * 60;
+    public static final long HOUR = MINUTE * 60;
+    public static final long DAY = HOUR * 24;
+    public static final long WEEK = DAY * 7;
+    public static final long MONTH = DAY * 30;
+    public static final long YEAR = DAY * 365;
 
-    MILLISECOND(1),
-    SECOND(MILLISECOND.millis * 1000),
-    MINUTE(SECOND.millis * 60),
-    HOUR(MINUTE.millis * 60),
-    DAY(HOUR.millis * 24),
-    WEEK(DAY.millis * 7),
-    MONTH(DAY.millis * 30),
-    YEAR(DAY.millis * 365);
-
-    private final long millis;
+    private TimeUnit() {
+    }
 }

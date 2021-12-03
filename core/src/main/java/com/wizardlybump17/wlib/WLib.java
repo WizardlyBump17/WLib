@@ -91,6 +91,11 @@ public class WLib extends JavaPlugin {
             return;
         } catch (NoClassDefFoundError ignored) {
         }
+        try {
+            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R1.NMSAdapter());
+            return;
+        } catch (NoClassDefFoundError ignored) {
+        }
     }
 
     public static WLib getInstance() {
