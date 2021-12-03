@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util;
 
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomUtil {
@@ -47,6 +48,20 @@ public class RandomUtil {
      * @return a random element from the array
      */
     public static <T> T randomElement(T[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
         return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param collection the collection
+     * @param <T> the collection type
+     * @return a random element from the collection
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T randomElement(Collection<T> collection) {
+        if (collection.isEmpty())
+            throw new ArrayIndexOutOfBoundsException("Collection is empty");
+        return (T) randomElement(collection.toArray());
     }
 }
