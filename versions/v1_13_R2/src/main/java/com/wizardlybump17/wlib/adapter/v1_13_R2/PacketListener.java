@@ -72,6 +72,7 @@ public class PacketListener extends PacketAdapter {
         field.set(handle, CraftItemStack.asNMSCopy(fixItem(CraftItemStack.asCraftMirror(item.cloneItemStack()))));
     }
 
+    @SuppressWarnings("unchecked")
     @SneakyThrows
     private void entityMetadata(World world, PacketContainer packet, PacketPlayOutEntityMetadata handle) {
         final Entity entity = packet.getEntityModifier(world).read(0);

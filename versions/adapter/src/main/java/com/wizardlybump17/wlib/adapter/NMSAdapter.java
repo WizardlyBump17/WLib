@@ -1,10 +1,13 @@
 package com.wizardlybump17.wlib.adapter;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 @Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class NMSAdapter {
 
     public static final String GLOW_TAG = "WLib-glowing";

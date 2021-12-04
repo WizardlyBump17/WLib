@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -134,7 +134,7 @@ public class ItemFilter implements ConfigurationSerializable {
 
     @SuppressWarnings("unchecked")
     public static ItemFilter deserialize(Map<String, Object> args) {
-        Map<FilterType, Object> filters = new HashMap<>();
+        Map<FilterType, Object> filters = new EnumMap<>(FilterType.class);
 
         for (Map.Entry<String, Object> entry : ((Map<String, Object>) args.get("filters")).entrySet()) {
             final Object value = entry.getValue();

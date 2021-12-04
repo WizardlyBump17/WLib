@@ -143,13 +143,13 @@ public class DateUtil {
 
         StringBuilder sb = new StringBuilder();
         if (diffDays > 0)
-            sb.append(diffDays).append(" ").append(fullName ? "days" : "d").append(" ");
+            sb.append(diffDays).append(fullName ? " days" : "d").append(" ");
         if (diffHours > 0)
-            sb.append(diffHours).append(" ").append(fullName ? "hours" : "h").append(" ");
+            sb.append(diffHours).append(fullName ? " hours" : "h").append(" ");
         if (diffMinutes > 0)
-            sb.append(diffMinutes).append(" ").append(fullName ? "minutes" : "m").append(" ");
+            sb.append(diffMinutes).append(fullName ? " minutes" : "m").append(" ");
         if (diffSeconds > 0)
-            sb.append(diffSeconds).append(" ").append(fullName ? "seconds" : "s").append(" ");
+            sb.append(diffSeconds).append(fullName ? " seconds" : "s").append(" ");
 
         return sb.toString();
     }
@@ -161,6 +161,15 @@ public class DateUtil {
      */
     public static String getDifference(long date, boolean fullName) {
         return getDifference(date, System.currentTimeMillis(), fullName);
+    }
+
+    /**
+     * @param date the date
+     * @param fullName if the full name of the time unit should be used
+     * @return the date as a duration string
+     */
+    public static String toDuration(long date, boolean fullName) {
+        return getDifference(date, 0, fullName);
     }
 
     public static String format(long date, FormatType type) {
