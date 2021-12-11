@@ -27,6 +27,18 @@ public class ItemFilter implements ConfigurationSerializable {
     private final Map<FilterType, Object> filters;
 
     /**
+     * Tests if any of the items in the collection matches this filter
+     * @param items the items to test
+     * @return true if any of the items in the collection matches this filter
+     */
+    public boolean anyPass(Collection<ItemStack> items) {
+        for (ItemStack item : items)
+            if (accept(item))
+                return true;
+        return false;
+    }
+
+    /**
      * Checks if the item passes to this filter.
      * @param item the item to be tested
      * @return if the item passes to this filter.
@@ -121,6 +133,50 @@ public class ItemFilter implements ConfigurationSerializable {
                     }
                     return false;
                 }
+
+                case AMOUNT: {
+                    if (filter instanceof Integer) {
+                        if (item.getAmount() != (int) filter)
+                            return false;
+                        continue;
+                    }
+
+                    String amount = filter.toString();
+                    lessCheck: {
+                        Matcher matcher = STARTS_WITH.matcher(amount);
+                        if (!matcher.matches())
+                            break lessCheck;
+
+                        int value = Integer.parseInt(matcher.group(1));
+                        if (item.getAmount() >= value)
+                            return false;
+                        continue;
+                    }
+
+                    equalsCheck: {
+                        Matcher matcher = CONTAINS.matcher(amount);
+                        if (!matcher.matches())
+                            break equalsCheck;
+
+                        int value = Integer.parseInt(matcher.group(1));
+                        if (item.getAmount() != value)
+                            return false;
+                        continue;
+                    }
+
+                    greaterCheck: {
+                        Matcher matcher = ENDS_WITH.matcher(amount);
+                        if (!matcher.matches())
+                            break greaterCheck;
+
+                        int value = Integer.parseInt(matcher.group(1));
+                        if (item.getAmount() <= value)
+                            return false;
+                        continue;
+                    }
+
+                    return false;
+                }
             }
         }
 
@@ -199,6 +255,13 @@ public class ItemFilter implements ConfigurationSerializable {
                     filters.put(FilterType.NBT_TAGS, value);
                     continue;
                 }
+
+                case "amount": {
+                    if (value != null && !(value instanceof String || value instanceof Integer))
+                        notValid("amount", String.class, value.getClass());
+                    filters.put(FilterType.AMOUNT, value);
+                    continue;
+                }
             }
         }
 
@@ -212,7 +275,7 @@ public class ItemFilter implements ConfigurationSerializable {
     private static boolean test(String filter, String string) {
         final Matcher containsMatcher = CONTAINS.matcher(filter);
         if (containsMatcher.matches())
-            return string.startsWith(containsMatcher.group(1));
+            return string.contains(containsMatcher.group(1));
 
         final Matcher startMatcher = STARTS_WITH.matcher(filter);
         if (startMatcher.matches())
@@ -220,7 +283,7 @@ public class ItemFilter implements ConfigurationSerializable {
 
         final Matcher endMatcher = ENDS_WITH.matcher(filter);
         if (endMatcher.matches())
-            return string.startsWith(endMatcher.group(1));
+            return string.endsWith(endMatcher.group(1));
 
         return string.equals(filter);
     }

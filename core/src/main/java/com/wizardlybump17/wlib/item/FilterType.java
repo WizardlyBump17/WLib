@@ -33,5 +33,9 @@ public enum FilterType {
     /**
      * Checks if the item is or not unbreakable. *true* :sunglasses:
      */
-    UNBREAKABLE
+    UNBREAKABLE,
+    /**
+     * Checks if the item amount is equal to the given amount. Accepts regex
+     */
+    AMOUNT
 }

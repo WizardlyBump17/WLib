@@ -28,6 +28,7 @@ public class PaginatedInventory {
     private boolean listenersStarted;
     @NotNull
     private final Map<String, Object> data;
+    private boolean changingPages;
 
     public CustomInventory current() {
         return inventories.get(page);
@@ -112,11 +113,15 @@ public class PaginatedInventory {
     }
 
     public void showNextPage(HumanEntity player) {
+        changingPages = true;
         show(player, page + 1);
+        changingPages = false;
     }
 
     public void showPreviousPage(HumanEntity player) {
+        changingPages = true;
         show(player, page - 1);
+        changingPages = false;
     }
 
     public void stopListeners() {

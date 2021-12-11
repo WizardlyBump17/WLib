@@ -4,7 +4,7 @@ public class BooleanReader extends ArgsReader<Boolean> {
 
     @Override
     public Class<Boolean> getType() {
-        return Boolean.class;
+        return boolean.class;
     }
 
     @Override

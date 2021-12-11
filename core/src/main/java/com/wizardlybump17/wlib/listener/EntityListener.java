@@ -54,7 +54,7 @@ public class EntityListener implements Listener {
             return;
 
         final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
-        if (paginatedInventory == null)
+        if (paginatedInventory == null || paginatedInventory.isChangingPages())
             return;
 
         final CustomInventory current = paginatedInventory.current();
