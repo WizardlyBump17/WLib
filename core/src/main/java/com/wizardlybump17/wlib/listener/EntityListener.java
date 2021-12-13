@@ -3,8 +3,7 @@ package com.wizardlybump17.wlib.listener;
 import com.wizardlybump17.wlib.adapter.EntityAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
-import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
-import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
+import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,38 +29,37 @@ public class EntityListener implements Listener {
         if (!(inventory.getHolder() instanceof CustomInventoryHolder))
             return;
 
-        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) inventory.getHolder()).getOriginalInventory().getPaginatedHolder();
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) inventory.getHolder()).getCustomInventory().getPaginatedHolder();
         if (paginatedInventory == null)
             return;
 
         event.setCancelled(true);
 
-        final CustomInventory customInventory = paginatedInventory.current();
+        final CustomInventory customInventory = paginatedInventory.getCurrentInventory();
 
         ItemButton item = customInventory.getButton(event.getRawSlot());
-        if (item != null)
-            if (item.getClickAction() != null)
-                item.getClickAction().onClick(event, paginatedInventory);
+        if (item != null && item.getClickAction() != null)
+            item.getClickAction().onClick(event, customInventory);
     }
 
-    @EventHandler
-    public void onClose(InventoryCloseEvent event) {
-        Inventory inventory = event.getInventory();
-        final InventoryHolder holder = inventory.getHolder();
-        if (!(holder instanceof CustomInventoryHolder))
-            return;
-
-        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
-        if (paginatedInventory == null || paginatedInventory.isChangingPages())
-            return;
-
-        final CustomInventory current = paginatedInventory.current();
-        final CustomInventoryHolder owner = current.getOwner();
-
-        if (owner instanceof UpdatableHolder)
-            ((UpdatableHolder) owner).stop();
-        paginatedInventory.stopListeners();
-    }
+//    @EventHandler
+//    public void onClose(InventoryCloseEvent event) {
+//        Inventory inventory = event.getInventory();
+//        final InventoryHolder holder = inventory.getHolder();
+//        if (!(holder instanceof CustomInventoryHolder))
+//            return;
+//
+//        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
+//        if (paginatedInventory == null || paginatedInventory.isChangingPages())
+//            return;
+//
+//        final CustomInventory current = paginatedInventory.current();
+//        final CustomInventoryHolder owner = current.getOwner();
+//
+//        if (owner instanceof UpdatableHolder)
+//            ((UpdatableHolder) owner).stop();
+//        paginatedInventory.stopListeners();
+//    }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {

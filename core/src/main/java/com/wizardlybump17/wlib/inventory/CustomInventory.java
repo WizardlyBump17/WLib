@@ -1,58 +1,55 @@
 package com.wizardlybump17.wlib.inventory;
 
-import com.wizardlybump17.wlib.inventory.holder.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Data
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
 public class CustomInventory {
 
-    private final String title;
-    private final int size;
+    private final Map<Integer, ItemButton> buttons;
     private final Inventory bukkitInventory;
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    protected final CustomInventoryHolder owner;
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private PaginatedInventory paginatedHolder;
 
     public CustomInventory(String title, int size) {
-        bukkitInventory = Bukkit.createInventory(owner = new CustomInventoryHolder(this), this.size = size, this.title = title);
-    }
-
-    public CustomInventory(String title, int size, CustomInventoryHolder holder) {
-        bukkitInventory = Bukkit.createInventory(owner = holder, this.size = size, this.title = title);
+        CustomInventoryHolder holder = new CustomInventoryHolder(this);
+        bukkitInventory = Bukkit.createInventory(holder, size, title);
+        holder.setInventory(bukkitInventory);
+        buttons = new HashMap<>(size);
     }
 
     public void setPaginatedHolder(PaginatedInventory paginatedHolder) {
-        if (this.paginatedHolder != null)
-            return;
-        this.paginatedHolder = paginatedHolder;
+        if (this.paginatedHolder == null)
+            this.paginatedHolder = paginatedHolder;
     }
 
-    public void setButton(int slot, ItemButton button) {
-        owner.setButton(slot, button);
+    public void addButton(int slot, @NotNull ItemButton button) {
+        buttons.put(slot, button);
+        bukkitInventory.setItem(slot, button.getItem().get());
     }
 
-    public void setButton(char c, ItemButton button) {
-        owner.setButton(c, button);
+    public void updateButton(int slot) {
+        bukkitInventory.setItem(slot, buttons.get(slot).getItem().get());
     }
 
     public void removeButton(int slot) {
-        owner.removeButton(slot);
-    }
-
-    public ItemButton getButton(int slot) {
-        return owner.getButton(slot);
+        buttons.remove(slot);
+        bukkitInventory.clear(slot);
     }
 
     public boolean hasButton(int slot) {
-        return owner.hasButton(slot);
+        return buttons.containsKey(slot);
+    }
+
+    @Nullable
+    public ItemButton getButton(int slot) {
+        return buttons.get(slot);
     }
 }

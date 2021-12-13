@@ -1,11 +1,9 @@
 package com.wizardlybump17.wlib.inventory.item;
 
-import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
+import com.wizardlybump17.wlib.inventory.CustomInventory;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.util.Map;
 
 public interface ClickAction {
 
-    void onClick(InventoryClickEvent event, PaginatedInventory inventory);
+    void onClick(InventoryClickEvent event, CustomInventory inventory);
 }
