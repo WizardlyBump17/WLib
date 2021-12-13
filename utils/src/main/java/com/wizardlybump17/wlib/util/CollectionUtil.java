@@ -44,8 +44,6 @@ public class CollectionUtil<E> {
      * @param <E> the element type
      * @param <T> the original collection type
      * @return the cloned collection
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
     public static <E, T extends Collection<E>> T clone(T collection) {
@@ -131,5 +129,15 @@ public class CollectionUtil<E> {
             result.set(i, firstPrefixes[i] + result.get(i).substring(prefix.length()));
 
         return result;
+    }
+
+    public static <T> boolean equals(Collection<T> collection1, Collection<T> collection2) {
+        if (collection1 == collection2)
+            return true;
+        if (collection1 == null || collection2 == null)
+            return false;
+        if (collection1.size() != collection2.size())
+            return false;
+        return collection1.containsAll(collection2);
     }
 }

@@ -84,7 +84,7 @@ public class PaginatedInventory {
         startListeners();
     }
 
-    private void startListeners() {
+    public void startListeners() {
         if (!listenersStarted) {
             for (InventoryListener<? extends Event> listener : listeners)
                 Bukkit.getPluginManager().registerEvent(
@@ -127,5 +127,6 @@ public class PaginatedInventory {
     public void stopListeners() {
         for (InventoryListener<? extends Event> listener : listeners)
             HandlerList.unregisterAll(listener.getListener());
+        listenersStarted = false;
     }
 }

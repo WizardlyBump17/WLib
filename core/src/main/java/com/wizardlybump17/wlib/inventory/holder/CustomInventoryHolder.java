@@ -8,6 +8,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 public class CustomInventoryHolder implements InventoryHolder {
@@ -33,6 +34,21 @@ public class CustomInventoryHolder implements InventoryHolder {
     @Override
     public Inventory getInventory() {
         return inventory.getBukkitInventory();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        CustomInventoryHolder that = (CustomInventoryHolder) o;
+        return Objects.equals(inventory, that.inventory) && Objects.equals(buttons, that.buttons) && Objects.equals(shape, that.shape);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inventory, buttons, shape);
     }
 
     /**

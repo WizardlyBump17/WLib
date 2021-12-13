@@ -9,6 +9,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -26,7 +28,7 @@ public class Config extends YamlConfiguration {
     private final String name;
     private final File file;
     private boolean loaded;
-    
+
     public void saveDefaultConfig() {
         plugin.saveResource(name, false);
         reloadConfig();
@@ -95,13 +97,45 @@ public class Config extends YamlConfiguration {
         return getWorld(path, null);
     }
 
+    /**
+     * Sets the value at the specified path.
+     * If the path is empty and the value is a Map or ConfigurationSerializable, the value is set at the root.
+     * @param path the path to set the value at
+     * @param value the value to set
+     */
+    @SuppressWarnings("unchecked")
     @Override
     public void set(String path, Object value) {
+        if (path.isEmpty()) {
+            if (value instanceof Map) {
+                ((Map<?, ?>) value).forEach((key, value1) -> set(key.toString(), value1));
+                return;
+            }
+
+            if (value instanceof ConfigurationSerializable) {
+                Map<String, Object> map = ((ConfigurationSerializable) value).serialize();
+                LinkedHashMap<String, Object> linkedMap = new LinkedHashMap<>();
+                linkedMap.put("==", ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) value.getClass()));
+                linkedMap.putAll(map);
+                set("", linkedMap);
+                return;
+            }
+        }
+
         if (value instanceof Map) {
             super.set(path, createSection(path, (Map<?, ?>) value));
             return;
         }
         super.set(path, value);
+    }
+
+    @Override
+    public Object get(String path, Object def) {
+        if (path.isEmpty() && map.containsKey("==")) {
+            ConfigurationSerializable object = ConfigurationSerialization.deserializeObject(map);
+            return object == null ? def : object;
+        }
+        return super.get(path, def);
     }
 
     public Number getNumber(String path, Number def) {
@@ -163,7 +197,7 @@ public class Config extends YamlConfiguration {
         return getEnumMap(path, classType, null);
     }
 
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> convertToMap(ConfigurationSection section) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (String key : section.getKeys(false)) {
@@ -177,7 +211,7 @@ public class Config extends YamlConfiguration {
                     for (ConfigurationSection configurationSection : list)
                         fixedList.add(convertToMap(configurationSection));
                     object = fixedList;
-                } catch (ClassCastException ignored) {
+                } catch (ClassCastException ignored) { //never
                 }
             }
             map.put(key, object);
@@ -185,8 +219,14 @@ public class Config extends YamlConfiguration {
         return map;
     }
 
+    /**
+     * Returns the backing map of this configuration.
+     * The map is unmodifiable
+     *
+     * @return the backing map of this configuration
+     */
     public Map<String, Object> asMap() {
-        return convertToMap(this);
+        return Collections.unmodifiableMap(map);
     }
 
     public String getFancyString(String path, String[] placeholders, Object[] replacements) {
@@ -223,8 +263,9 @@ public class Config extends YamlConfiguration {
      * Loads the config from the given file path.
      * If saveDefault is true, the config will be saved using {@link JavaPlugin#saveResource(String, boolean)}.
      * If saveDefault is false, the config will be saved using {@link YamlConfiguration#save(File)}
-     * @param filePath where this configuration should be loaded from
-     * @param plugin the plugin that is using this configuration
+     *
+     * @param filePath    where this configuration should be loaded from
+     * @param plugin      the plugin that is using this configuration
      * @param saveDefault if it must save the default config
      * @return the configuration loaded in the given file path
      */
@@ -232,8 +273,6 @@ public class Config extends YamlConfiguration {
         Config config = new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
         if (saveDefault)
             config.saveDefaultConfig();
-        else
-            config.saveConfig();
 
         return config;
     }
@@ -241,8 +280,9 @@ public class Config extends YamlConfiguration {
     /**
      * Loads the config from the given file path.
      * It will use the {@link Config#load(String, JavaPlugin, boolean)} method with saveDefault = true
+     *
      * @param filePath where this configuration should be loaded from
-     * @param plugin the plugin that is using this configuration
+     * @param plugin   the plugin that is using this configuration
      * @return the config loaded in the given file path
      */
     public static Config load(String filePath, JavaPlugin plugin) {
@@ -252,7 +292,8 @@ public class Config extends YamlConfiguration {
     /**
      * Loads the config from the given file.
      * It will use the {@link Config#load(File, JavaPlugin, boolean)} method with saveDefault = true
-     * @param file the file that have the config
+     *
+     * @param file   the file that have the config
      * @param plugin the plugin that is using this config
      * @return the config loaded in the given file
      */
@@ -264,9 +305,10 @@ public class Config extends YamlConfiguration {
      * Loads the config from the given file.
      * If load is true, the config will be loaded using {@link YamlConfiguration#load(File)}.
      * If load is false, the config will be saved using {@link YamlConfiguration#save(File)}
-     * @param file the file that have the config
+     *
+     * @param file   the file that have the config
      * @param plugin the plugin that is using this config
-     * @param load if it must load the config or just save it
+     * @param load   if it must load the config or just save it
      * @return the config loaded in the given file
      */
     public static Config load(File file, JavaPlugin plugin, boolean load) {
@@ -278,8 +320,6 @@ public class Config extends YamlConfiguration {
         );
         if (load)
             config.reloadConfig();
-        else
-            config.saveConfig();
 
         return config;
     }
