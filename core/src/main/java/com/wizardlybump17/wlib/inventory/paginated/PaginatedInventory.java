@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
-import com.wizardlybump17.wlib.WLib;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.UpdatableInventory;
 import com.wizardlybump17.wlib.inventory.holder.UpdatableHolder;
@@ -28,7 +27,7 @@ public class PaginatedInventory {
     private boolean listenersStarted;
     @NotNull
     private final Map<String, Object> data;
-    private boolean changingPages;
+    private boolean cancelListeners = true;
 
     public CustomInventory current() {
         return inventories.get(page);
@@ -93,7 +92,7 @@ public class PaginatedInventory {
                         listener.getPriority(),
                         (l, event) ->
                                 listener.call(event, inventories.get(page)),
-                        WLib.getInstance()
+                        listener.getPlugin()
                 );
             listenersStarted = true;
         }
@@ -113,15 +112,15 @@ public class PaginatedInventory {
     }
 
     public void showNextPage(HumanEntity player) {
-        changingPages = true;
+        cancelListeners = false;
         show(player, page + 1);
-        changingPages = false;
+        cancelListeners = true;
     }
 
     public void showPreviousPage(HumanEntity player) {
-        changingPages = true;
+        cancelListeners = false;
         show(player, page - 1);
-        changingPages = false;
+        cancelListeners = true;
     }
 
     public void stopListeners() {

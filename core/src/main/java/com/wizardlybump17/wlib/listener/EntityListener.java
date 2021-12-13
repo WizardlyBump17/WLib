@@ -41,9 +41,8 @@ public class EntityListener implements Listener {
         final CustomInventory customInventory = paginatedInventory.current();
 
         ItemButton item = customInventory.getButton(event.getRawSlot());
-        if (item != null)
-            if (item.getClickAction() != null)
-                item.getClickAction().onClick(event, paginatedInventory);
+        if (item != null && item.getClickAction() != null)
+            item.getClickAction().onClick(event, paginatedInventory);
     }
 
     @EventHandler
@@ -54,7 +53,7 @@ public class EntityListener implements Listener {
             return;
 
         final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
-        if (paginatedInventory == null || paginatedInventory.isChangingPages())
+        if (paginatedInventory == null || !paginatedInventory.isCancelListeners())
             return;
 
         final CustomInventory current = paginatedInventory.current();

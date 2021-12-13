@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 
 import java.util.function.Predicate;
 
@@ -19,6 +20,7 @@ public class InventoryListener<T extends Event> {
     private EventPriority priority = EventPriority.NORMAL;
     private Predicate<T> listenerPredicate;
     private boolean ignoreCancelled;
+    private Plugin plugin;
 
     @SuppressWarnings("unchecked")
     public void call(Event event, CustomInventory inventory) {
@@ -36,6 +38,11 @@ public class InventoryListener<T extends Event> {
 
     public InventoryListener<T> listenerPredicate(Predicate<T> predicate) {
         listenerPredicate = predicate;
+        return this;
+    }
+
+    public InventoryListener<T> plugin(Plugin plugin) {
+        this.plugin = plugin;
         return this;
     }
 
