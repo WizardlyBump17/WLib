@@ -17,12 +17,14 @@ public class CustomInventory {
     private final Map<Integer, ItemButton> buttons;
     private final Inventory bukkitInventory;
     private PaginatedInventory paginatedHolder;
+    private final String shape;
 
-    public CustomInventory(String title, int size) {
+    public CustomInventory(String title, int size, String shape) {
         CustomInventoryHolder holder = new CustomInventoryHolder(this);
         bukkitInventory = Bukkit.createInventory(holder, size, title);
         holder.setInventory(bukkitInventory);
         buttons = new HashMap<>(size);
+        this.shape = shape;
     }
 
     public void setPaginatedHolder(PaginatedInventory paginatedHolder) {
@@ -46,6 +48,10 @@ public class CustomInventory {
 
     public boolean hasButton(int slot) {
         return buttons.containsKey(slot);
+    }
+
+    public int indexOf(char c) {
+        return shape.indexOf(c);
     }
 
     @Nullable

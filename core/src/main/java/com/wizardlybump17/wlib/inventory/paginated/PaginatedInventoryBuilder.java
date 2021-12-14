@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.inventory.paginated;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -15,6 +16,8 @@ public class PaginatedInventoryBuilder {
     private List<ItemButton> content = new ArrayList<>();
     private InventoryNavigator nextPage;
     private InventoryNavigator previousPage;
+    private final List<InventoryListener<?>> listeners = new ArrayList<>();
+    private Map<String, Object> initialData;
 
     private PaginatedInventoryBuilder() {
     }
@@ -66,6 +69,23 @@ public class PaginatedInventoryBuilder {
         return this;
     }
 
+    public PaginatedInventoryBuilder listener(InventoryListener<?> listener) {
+        listeners.add(listener);
+        return this;
+    }
+
+    public PaginatedInventoryBuilder initialData(Map<String, Object> initialData) {
+        this.initialData = initialData;
+        return this;
+    }
+
+    public PaginatedInventoryBuilder data(String key, Object value) {
+        if (initialData == null)
+            initialData = new HashMap<>();
+        initialData.put(key, value);
+        return this;
+    }
+
     public PaginatedInventory build() {
         if (title == null)
             throw new IllegalArgumentException("Title cannot be null");
@@ -74,13 +94,13 @@ public class PaginatedInventoryBuilder {
 
         int pages = getPages();
         ArrayList<CustomInventory> inventories = new ArrayList<>(pages);
-        PaginatedInventory paginatedInventory = new PaginatedInventory(inventories);
+        PaginatedInventory paginatedInventory = new PaginatedInventory(inventories, listeners, initialData == null ? new HashMap<>() : initialData);
 
         char[] shapeChars = shape.toCharArray();
 
         int currentItem = 0;
         for (int page = 0; page < pages; page++) {
-            CustomInventory inventory = new CustomInventory(title, shape.length());
+            CustomInventory inventory = new CustomInventory(title, shape.length(), shape);
             inventory.setPaginatedHolder(paginatedInventory);
             inventories.add(inventory);
 

@@ -14,8 +14,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,24 +44,19 @@ public class EntityListener implements Listener {
             item.getClickAction().onClick(event, customInventory);
     }
 
-//    @EventHandler
-//    public void onClose(InventoryCloseEvent event) {
-//        Inventory inventory = event.getInventory();
-//        final InventoryHolder holder = inventory.getHolder();
-//        if (!(holder instanceof CustomInventoryHolder))
-//            return;
-//
-//        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getOriginalInventory().getPaginatedHolder();
-//        if (paginatedInventory == null || paginatedInventory.isChangingPages())
-//            return;
-//
-//        final CustomInventory current = paginatedInventory.current();
-//        final CustomInventoryHolder owner = current.getOwner();
-//
-//        if (owner instanceof UpdatableHolder)
-//            ((UpdatableHolder) owner).stop();
-//        paginatedInventory.stopListeners();
-//    }
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        Inventory inventory = event.getInventory();
+        final InventoryHolder holder = inventory.getHolder();
+        if (!(holder instanceof CustomInventoryHolder))
+            return;
+
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getCustomInventory().getPaginatedHolder();
+        if (paginatedInventory == null || !paginatedInventory.isUnregisterListeners())
+            return;
+
+        paginatedInventory.stopListeners();
+    }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
