@@ -41,7 +41,7 @@ public class EntityListener implements Listener {
 
         ItemButton item = customInventory.getButton(event.getRawSlot());
         if (item != null && item.getClickAction() != null)
-            item.getClickAction().onClick(event, customInventory);
+            item.getClickAction().onClick(event, paginatedInventory);
     }
 
     @EventHandler
