@@ -31,9 +31,7 @@ public class EntityListener implements Listener {
         if (!(inventory.getHolder() instanceof CustomInventoryHolder))
             return;
 
-        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) inventory.getHolder()).getCustomInventory().getPaginatedHolder();
-        if (paginatedInventory == null)
-            return;
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) inventory.getHolder()).getHolder();
 
         event.setCancelled(true);
 
@@ -51,7 +49,7 @@ public class EntityListener implements Listener {
         if (!(holder instanceof CustomInventoryHolder))
             return;
 
-        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getCustomInventory().getPaginatedHolder();
+        final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getHolder();
         if (paginatedInventory == null || !paginatedInventory.isUnregisterListeners())
             return;
 

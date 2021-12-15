@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
+import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,21 +30,41 @@ public class PaginatedInventory {
     private final Map<String, Object> data;
 
     public void show(@NotNull HumanEntity player, int page) {
-        if (this.player == null)
+        if (page < 0 || page >= inventories.size())
+            return;
+
+        if (this.player == null) {
             this.player = player;
+            if (updatePlayerInventory(page))
+                return;
+        }
 
         if (this.player != player) {
             weakCopy().show(player, page);
             return;
         }
 
-        if (page < 0 || page >= inventories.size())
+        currentPage = page;
+        if (updatePlayerInventory(page))
             return;
 
-        currentPage = page;
         player.openInventory(inventories.get(page).getBukkitInventory());
+        inventories.get(page).setButtons();
 
         startListeners();
+    }
+
+    private boolean updatePlayerInventory(int page) {
+        Inventory inventory = player.getOpenInventory().getTopInventory();
+        if (inventory != null && inventory.getHolder() instanceof CustomInventoryHolder && inventory.getSize() == inventories.get(page).getSize()) {
+            inventories.get(page).setButtons(inventory);
+            ((CustomInventoryHolder) inventory.getHolder()).setHolder(this);
+            ((CustomInventoryHolder) inventory.getHolder()).setInventory(inventory);
+            currentPage = page;
+            startListeners();
+            return true;
+        }
+        return false;
     }
 
     public void show(@NotNull HumanEntity player) {

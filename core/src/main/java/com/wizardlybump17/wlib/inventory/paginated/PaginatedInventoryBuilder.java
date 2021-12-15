@@ -1,9 +1,12 @@
 package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
+import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -110,9 +113,12 @@ public class PaginatedInventoryBuilder {
 
         char[] shapeChars = shape.toCharArray();
 
+        CustomInventoryHolder holder = new CustomInventoryHolder(paginatedInventory);
+        Inventory bukkitInventory = Bukkit.createInventory(holder, shape.length(), title);
+
         int currentItem = 0;
         for (int page = 0; page < pages; page++) {
-            CustomInventory inventory = new CustomInventory(title, shape.length(), shape);
+            CustomInventory inventory = new CustomInventory(shape, bukkitInventory);
             inventory.setPaginatedHolder(paginatedInventory);
             inventories.add(inventory);
 

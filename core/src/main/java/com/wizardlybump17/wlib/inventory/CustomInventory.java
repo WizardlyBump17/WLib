@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.inventory;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,16 +14,25 @@ import java.util.Map;
 public class CustomInventory {
 
     private final Map<Integer, ItemButton> buttons;
-    private final Inventory bukkitInventory;
+    private Inventory bukkitInventory;
     private PaginatedInventory paginatedHolder;
     private final String shape;
 
-    public CustomInventory(String title, int size, String shape) {
-        CustomInventoryHolder holder = new CustomInventoryHolder(this);
-        bukkitInventory = Bukkit.createInventory(holder, size, title);
-        holder.setInventory(bukkitInventory);
-        buttons = new HashMap<>(size);
+    public CustomInventory(String shape, Inventory bukkitInventory) {
+        this.bukkitInventory = bukkitInventory;
+        buttons = new HashMap<>(shape.length());
         this.shape = shape;
+    }
+
+    public void setButtons() {
+        setButtons(bukkitInventory);
+    }
+
+    public void setButtons(Inventory inventory) {
+        inventory.clear();
+        for (Map.Entry<Integer, ItemButton> entry : buttons.entrySet())
+            inventory.setItem(entry.getKey(), entry.getValue().getItem().get());
+        bukkitInventory = inventory;
     }
 
     public void setPaginatedHolder(PaginatedInventory paginatedHolder) {
@@ -52,6 +60,10 @@ public class CustomInventory {
 
     public int indexOf(char c) {
         return shape.indexOf(c);
+    }
+
+    public int getSize() {
+        return bukkitInventory.getSize();
     }
 
     @Nullable
