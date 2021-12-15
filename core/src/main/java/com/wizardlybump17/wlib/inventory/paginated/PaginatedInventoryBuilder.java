@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 public class PaginatedInventoryBuilder {
 
@@ -16,7 +17,7 @@ public class PaginatedInventoryBuilder {
     private List<ItemButton> content = new ArrayList<>();
     private InventoryNavigator nextPage;
     private InventoryNavigator previousPage;
-    private final List<InventoryListener<?>> listeners = new ArrayList<>();
+    private List<InventoryListener<?>> listeners = new ArrayList<>();
     private Map<String, Object> initialData;
 
     private PaginatedInventoryBuilder() {
@@ -24,6 +25,17 @@ public class PaginatedInventoryBuilder {
 
     public static PaginatedInventoryBuilder create() {
         return new PaginatedInventoryBuilder();
+    }
+
+    public PaginatedInventoryBuilder mapContent(UnaryOperator<ItemButton> function) {
+        for (int i = 0; i < content.size(); i++)
+            content.set(i, function.apply(content.get(i)));
+        return this;
+    }
+
+    public PaginatedInventoryBuilder listeners(List<InventoryListener<?>> listeners) {
+        this.listeners = listeners == null ? new ArrayList<>() : listeners;
+        return this;
     }
 
     public PaginatedInventoryBuilder title(String title) {

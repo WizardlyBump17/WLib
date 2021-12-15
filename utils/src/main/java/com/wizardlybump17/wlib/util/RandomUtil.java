@@ -54,6 +54,86 @@ public class RandomUtil {
     }
 
     /**
+     * @param array the array
+     * @return a random byte from the array
+     */
+    public static byte randomElement(byte[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random short from the array
+     */
+    public static short randomElement(short[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random int from the array
+     */
+    public static int randomElement(int[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random long from the array
+     */
+    public static long randomElement(long[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random float from the array
+     */
+    public static float randomElement(float[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random double from the array
+     */
+    public static double randomElement(double[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random char from the array
+     */
+    public static char randomElement(char[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
+     * @param array the array
+     * @return a random boolean from the array
+     */
+    public static boolean randomElement(boolean[] array) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        return array[RANDOM.nextInt(array.length)];
+    }
+
+    /**
      * @param collection the collection
      * @param <T> the collection type
      * @return a random element from the collection
@@ -63,5 +143,19 @@ public class RandomUtil {
         if (collection.isEmpty())
             throw new ArrayIndexOutOfBoundsException("Collection is empty");
         return (T) randomElement(collection.toArray());
+    }
+
+    /**
+     * Returns a random int with the given digits size.
+     * If {@code zeroAtStart}, the first digit may be 0, which will makes the final result not the same size as the given length
+     * @param length the digits size
+     * @param zeroAtStart if the int should start with 0
+     * @return the random int
+     */
+    public static int randomInt(int length, boolean zeroAtStart) {
+        StringBuilder result = new StringBuilder(randomNString(length));
+        while (result.charAt(0) == '0' && !zeroAtStart)
+            result.setCharAt(0, randomElement(NUMERIC_CHARS));
+        return Integer.parseInt(result.toString());
     }
 }
