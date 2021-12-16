@@ -20,11 +20,11 @@ public @interface Command {
      * In the example above, the sender must type /command hello world, so it can be triggered.
      * To add parameters that depends on the sender input, just put the parameter between <> or [] (not implemented yet).
      * The <> is for required parameters while [] is for the optional ones.
-     * Example: <pre>command <hello> [world]</pre>
+     * Example: <pre>command &lt;hello&gt; [world]</pre>
      * The type of each parameter is defined in the method that have this annotation.
      * An example for the command above:
      * <pre>
-     *  &#64;Command(execution = "command <hello> [world]")
+     *  &#64;Command(execution = "command &lt;hello&gt; [world]")
      *  public void commandHelloWorld(GenericSender sender, String hello, int world) {
      *      System.out.println(sender.getName() + " executed the hello world command with the args " + hello + " and " + world);
      *  }
@@ -38,4 +38,11 @@ public @interface Command {
      * @return which permission the sender must have to trigger this command
      */
     String permission() default "";
+
+    /**
+     * Sets the priority of this command. If the priority is -1, then the priority check is the same as
+     * <pre>{@code this.execution().split(" ").length}</pre>
+     * @return the priority of this command
+     */
+    int priority() default -1;
 }

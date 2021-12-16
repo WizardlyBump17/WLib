@@ -54,7 +54,10 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
     @Override
     public int compareTo(@NotNull RegisteredCommand o) {
-        return Integer.compare(o.command.execution().split(" ").length, command.execution().split(" ").length);
+        return Integer.compare(
+                o.command.priority() == -1 ? o.command.execution().split(" ").length : o.command.priority(),
+                command.priority() == -1 ? command.execution().split(" ").length : command.priority()
+        );
     }
 
     public Optional<Object[]> parse(String string) throws ArgsReaderException {
