@@ -34,7 +34,7 @@ allprojects {
 subprojects {
     apply plugin: 'maven-publish'
 
-    if (project.name == "versions" || project.name.matches('v\\d_\\d+_R\\d+'))
+    if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+'))
         return
 
     publishing {

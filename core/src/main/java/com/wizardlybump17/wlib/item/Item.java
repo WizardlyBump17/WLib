@@ -419,7 +419,7 @@ public class Item {
         public boolean hasNbtTag(String key) {
             if (nbtTags == null)
                 return false;
-            return nbtTags.containsKey(key);
+            return nbtTags.containsKey(key) || nbtTags.containsKey(key.toLowerCase()) || nbtTags.containsKey("wlib:" + key.toLowerCase());
         }
 
         public boolean hasFlag(ItemFlag flag) {
@@ -431,7 +431,7 @@ public class Item {
         public Object getNbtTag(String key) {
             if (nbtTags == null)
                 return null;
-            return ADAPTER.nbtToJava(nbtTags.get(key));
+            return ADAPTER.nbtToJava(nbtTags.getOrDefault(key, nbtTags.get(key.toLowerCase())));
         }
 
         @SuppressWarnings("unchecked")

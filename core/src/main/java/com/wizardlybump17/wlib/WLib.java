@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
+import com.wizardlybump17.wlib.command.reader.EntityTypeArgsReader;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
 import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
@@ -45,6 +46,7 @@ public class WLib extends JavaPlugin {
     private void initCommandSystem() {
         ArgsReaderRegistry.INSTANCE.add(new PlayerReader());
         ArgsReaderRegistry.INSTANCE.add(new OfflinePlayerReader());
+        ArgsReaderRegistry.INSTANCE.add(new EntityTypeArgsReader());
     }
 
     private void initSerializables() {

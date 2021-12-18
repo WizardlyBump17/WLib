@@ -34,8 +34,30 @@ public abstract class ItemAdapter {
     }
     public abstract void setNbtTags(Map<String, Object> tags, boolean clearOld);
     public abstract void removeNbtTag(String key);
+
     public abstract boolean hasNbtTag(String key);
+    /**
+     * Checks if this item has a tag with the specified key and type
+     * @param key the key of the tag
+     * @param type the type of the tag
+     * @return true if the tag exists, false otherwise
+     */
+    public boolean hasNbtTag(String key, Object type) {
+        return hasNbtTag(key);
+    }
+
     public abstract Object getNbtTag(String key);
+
+    /**
+     * Gets the specified tag and type
+     * @param key the key of the tag
+     * @param type the type of the tag
+     * @return the tag, or null if it doesn't exist
+     */
+    public Object getNbtTag(String key, Object type) {
+        return getNbtTag(key);
+    }
+
     public abstract Map<String, Object> getNbtTags();
 
     /**

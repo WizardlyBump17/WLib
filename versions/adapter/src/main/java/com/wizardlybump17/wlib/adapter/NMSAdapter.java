@@ -16,6 +16,14 @@ public abstract class NMSAdapter {
     public abstract Object javaToNbt(Object java);
     public abstract String getTargetVersion();
 
+    public Object getType(Object java) {
+        return null;
+    }
+
+    public boolean usePDC() {
+        return false;
+    }
+
     public abstract ItemAdapter getItemAdapter(ItemStack item);
 
     public EntityAdapter getEntityAdapter(Entity entity) {

@@ -1,14 +1,23 @@
 package com.wizardlybump17.wlib.adapter.v1_18_R1;
 
 import net.minecraft.nbt.NBTTagCompound;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.persistence.CraftPersistentDataContainer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.wizardlybump17.wlib.adapter.NMSAdapter.GLOW_TAG;
 
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
+
+    private static final PersistentDataType<String, String> DEFAULT_TYPE = PersistentDataType.STRING;
+    public static final Plugin PLUGIN = Bukkit.getPluginManager().getPlugin("WLib");
 
     protected ItemAdapter(ItemStack target, NMSAdapter mainAdapter) {
         super(target, CraftItemStack.asNMSCopy(target), mainAdapter);
@@ -16,61 +25,69 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @Override
     public void setNbtTag(String key, Object value) {
-        NBTTagCompound compound = getMainTag();
-        compound.a(key, getMainAdapter().javaToNbt(value));
-        setMainTag(compound);
+        meta.getPersistentDataContainer().set(new NamespacedKey(PLUGIN, key), (PersistentDataType<? extends Object, ? super Object>) mainAdapter.getType(value), value);
+        target.setItemMeta(meta);
+        meta = target.getItemMeta();
     }
 
     @Override
     public void setNbtTags(Map<String, Object> tags, boolean clearOld) {
-        NBTTagCompound compound = getMainTag();
-        if (clearOld)
-            compound = new NBTTagCompound();
-        for (Map.Entry<String, Object> entry : tags.entrySet())
-            compound.a(entry.getKey(), getMainAdapter().javaToNbt(entry.getValue()));
-        setMainTag(compound);
+        tags.forEach((key, value) ->
+            meta.getPersistentDataContainer().set(new NamespacedKey(PLUGIN, key), (PersistentDataType<? extends Object, ? super Object>) mainAdapter.getType(value), value)
+        );
+        target.setItemMeta(meta);
+        meta = target.getItemMeta();
+    }
+
+    @Override
+    public Map<String, Object> getNbtTags() {
+        Map<String, Object> map = (Map<String, Object>) mainAdapter.nbtToJava(((CraftPersistentDataContainer) meta.getPersistentDataContainer()).getRaw());
+        return fixMap(map);
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public Map<String, Object> getNbtTags() {
-        Map<String, Object> tags = (Map<String, Object>) getMainAdapter().nbtToJava(getMainTag());
-        for (String tag : IGNORED_TAGS)
-            tags.remove(tag);
-        return tags;
+    private Map<String, Object> fixMap(Map<String, Object> map) {
+        Map<String, Object> result = new HashMap<>(map.size());
+        map.forEach((key, value) -> {
+            Object fixedValue = mainAdapter.nbtToJava(value);
+            result.put(key.substring(5), fixedValue instanceof Map ? fixMap((Map<String, Object>) fixedValue) : fixedValue);
+        });
+        return result;
     }
 
     @Override
     public void removeNbtTag(String key) {
-        NBTTagCompound compound = getMainTag();
-        compound.r(key);
-        setMainTag(compound);
+        meta.getPersistentDataContainer().remove(new NamespacedKey(PLUGIN, key));
     }
 
     @Override
     public boolean hasNbtTag(String key) {
-        return getMainTag().e(key);
+        return meta.getPersistentDataContainer().has(new NamespacedKey(PLUGIN, key), DEFAULT_TYPE);
+    }
+
+    @Override
+    public boolean hasNbtTag(String key, Object type) {
+        return meta.getPersistentDataContainer().has(new NamespacedKey(PLUGIN, key), (PersistentDataType<?, ?>) type);
     }
 
     @Override
     public Object getNbtTag(String key) {
-        return mainAdapter.nbtToJava(getMainTag().c(key));
+        return getNbtTag(key, DEFAULT_TYPE);
+    }
+
+    @Override
+    public Object getNbtTag(String key, Object type) {
+        return meta.getPersistentDataContainer().get(new NamespacedKey(PLUGIN, key), (PersistentDataType<?, ?>) type);
     }
 
     @Override
     public NBTTagCompound getMainTag() {
-        net.minecraft.world.item.ItemStack nmsStack = (net.minecraft.world.item.ItemStack) this.nmsStack;
-        if (!nmsStack.r())
-            setMainTag(new NBTTagCompound());
-        return nmsStack.s();
+        throw new UnsupportedOperationException("Action not supported in 1.18");
     }
 
     @Override
     public void setMainTag(Object tag) {
-        net.minecraft.world.item.ItemStack nmsStack = (net.minecraft.world.item.ItemStack) this.nmsStack;
-        nmsStack.c((NBTTagCompound) tag);
-        target = CraftItemStack.asBukkitCopy(nmsStack);
-        meta = target.getItemMeta();
+        throw new UnsupportedOperationException("Action not supported in 1.18");
     }
 
     @Override
