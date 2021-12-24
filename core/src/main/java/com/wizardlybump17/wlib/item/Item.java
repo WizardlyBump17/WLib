@@ -340,7 +340,7 @@ public class Item {
     }
 
     @SerializableAs("item-builder")
-    public static class ItemBuilder implements ConfigurationSerializable {
+    public static class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         private WMaterial wmaterial;
 
@@ -600,6 +600,25 @@ public class Item {
                 return stack;
             }
             return null;
+        }
+
+        @Override
+        public ItemBuilder clone() {
+            try {
+                ItemBuilder builder = ((ItemBuilder) super.clone());
+                if (nbtTags != null)
+                    builder.nbtTags = new HashMap<>(nbtTags);
+                if (enchantments != null)
+                    builder.enchantments = new HashMap<>(enchantments);
+                if (lore != null)
+                    builder.lore = new ArrayList<>(lore);
+                if (flags != null)
+                    builder.flags = new HashSet<>(flags);
+                return builder;
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+                return this;
+            }
         }
     }
 }

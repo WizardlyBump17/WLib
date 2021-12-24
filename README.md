@@ -1,4 +1,6 @@
 # WLib
+[![wakatime](https://wakatime.com/badge/user/6e86b908-7bfd-4cb9-9128-8fa18c67e54a/project/6cd04190-9757-4fc7-be89-b5dfd1ae912f.svg)](https://wakatime.com/badge/user/6e86b908-7bfd-4cb9-9128-8fa18c67e54a/project/6cd04190-9757-4fc7-be89-b5dfd1ae912f)
+
 <br>
 
 ### Build yourself

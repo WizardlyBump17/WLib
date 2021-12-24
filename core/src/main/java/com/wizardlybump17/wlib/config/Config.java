@@ -157,7 +157,10 @@ public class Config extends YamlConfiguration {
 
     public Map<String, Object> getMap(String path, Map<String, Object> def) {
         Object object = get(path);
-        if (!(object instanceof ConfigurationSection)) return def;
+        if (object instanceof ConfigurationSerializable)
+            return ((ConfigurationSerializable) object).serialize();
+        if (!(object instanceof ConfigurationSection))
+            return def;
         return convertToMap((ConfigurationSection) object);
     }
 
@@ -251,8 +254,11 @@ public class Config extends YamlConfiguration {
 
     public Item.ItemBuilder getItemBuilder(String path, Item.ItemBuilder def) {
         Object object = get(path);
-        if (!(object instanceof ConfigurationSection)) return def;
-        return Item.deserialize(convertToMap((ConfigurationSection) object));
+        if (object instanceof ConfigurationSection)
+            return Item.deserialize(convertToMap((ConfigurationSection) object));
+        if (object instanceof Item.ItemBuilder)
+            return (Item.ItemBuilder) object;
+        return def;
     }
 
     public Item.ItemBuilder getItemBuilder(String path) {
