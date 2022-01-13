@@ -149,9 +149,9 @@ public class DateUtil {
         if (diffMinutes > 0)
             sb.append(diffMinutes).append(fullName ? " minutes" : "m").append(" ");
         if (diffSeconds > 0)
-            sb.append(diffSeconds).append(fullName ? " seconds" : "s").append(" ");
+            sb.append(diffSeconds).append(fullName ? " seconds" : "s");
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     /**

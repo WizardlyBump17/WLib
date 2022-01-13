@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.util;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -13,14 +12,13 @@ public class CollectionUtil<E> {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[]{};
 
-    @Getter
     private final Collection<E> collection;
 
     public CollectionUtil<String> replace(String old, String replacement) {
         List<String> result = new ArrayList<>(collection.size());
         for (E e : collection)
             result.add(e.toString().replace(old, replacement));
-        return new CollectionUtil<String>(result);
+        return new CollectionUtil<>(result);
     }
 
     public CollectionUtil<String> replace(char old, char replacement) {
@@ -28,6 +26,11 @@ public class CollectionUtil<E> {
         for (E e : collection)
             result.add(e.toString().replace(old, replacement));
         return new CollectionUtil<>(result);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <C extends Collection<E>> C getCollection() {
+        return (C) collection;
     }
 
     public E getIf(Predicate<E> predicate) {
@@ -139,5 +142,24 @@ public class CollectionUtil<E> {
         if (collection1.size() != collection2.size())
             return false;
         return collection1.containsAll(collection2);
+    }
+
+    /**
+     * Joins all collections into one {@link List}
+     * @param collections the collections
+     * @param <T> the type of the collection
+     * @return the joined {@link List}
+     */
+    @SafeVarargs
+    public static <T> List<T> join(Collection<T>... collections) {
+        int size = 0;
+        for (Collection<T> collection : collections)
+            size += collection.size();
+
+        List<T> list = new ArrayList<>(size);
+        for (Collection<T> collection : collections)
+            list.addAll(collection);
+
+        return list;
     }
 }
