@@ -28,6 +28,23 @@ public abstract class ItemAdapter {
         this.mainAdapter = mainAdapter;
     }
 
+    /**
+     * Sets the nbt tag as a Minecraft NBT
+     * @param key the key of the tag
+     * @param value the value of the tag
+     */
+    public void setMinecraftNbtTag(String key, Object value) {
+        setNbtTag(key, value);
+    }
+
+    /**
+     * @param key the key of the tag
+     * @return the stored Minecraft nbt tag
+     */
+    public Object getMinecraftNbtTag(String key) {
+        return getNbtTag(key);
+    }
+
     public abstract void setNbtTag(String key, Object value);
     public void setNbtTags(Map<String, Object> tags) {
         setNbtTags(tags, true);

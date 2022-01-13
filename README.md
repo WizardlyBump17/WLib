@@ -10,7 +10,7 @@
 1. Git installed
 2. Gradle installed
 3. Java 8+ installed
-4. [BuildTools](https://www.spigotmc.org/wiki/buildtools/) run for the versions: 1.8.8, 1.12.2, 1.13.2, 1.15.2, 1.16.5, 1.17.1
+4. [BuildTools](https://www.spigotmc.org/wiki/buildtools/) run for the versions: 1.8.8, 1.12.2, 1.13.2, 1.15.2, 1.16.5, 1.17.1 and 1.18
 
 #### Building
 

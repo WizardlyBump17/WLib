@@ -9,6 +9,7 @@ import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.util.StringUtil;
 import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Bukkit;
@@ -44,11 +45,13 @@ public class Item {
     private short durability;
     private String displayName;
     private List<String> lore;
-    private boolean glow, unbreakable;
+    private boolean glow;
+    private boolean unbreakable;
     private Map<Enchantment, Integer> enchantments;
     private Set<ItemFlag> flags;
     private Map<String, Object> nbtTags;
     private Integer customModelData;
+    private Integer potionColor;
 
     public static ItemBuilder getHead(String base64) {
         final UUID uuid = UUID.nameUUIDFromBytes(base64.getBytes());
@@ -126,6 +129,9 @@ public class Item {
                     .flags(itemMeta.getItemFlags().isEmpty() ? null : itemMeta.getItemFlags())
                     .customModelData(itemAdapter.getCustomModelData())
                     .unbreakable(itemAdapter.isUnbreakable());
+
+        if (item.getType() == Material.POTION)
+            builder.potionColor((Integer) itemAdapter.getMinecraftNbtTag("CustomPotionColor"));
 
         return builder;
     }
@@ -288,7 +294,7 @@ public class Item {
                 }
             }
             default:
-                return fixName(item.getType());
+                return StringUtil.getName(item.getType());
         }
     }
 
@@ -329,14 +335,6 @@ public class Item {
             default:
                 return "Unknown";
         }
-    }
-
-    private static String fixName(Material material) {
-        final String[] split = material.name().split("_");
-        StringBuilder result = new StringBuilder();
-        for (String s : split)
-            result.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1).toLowerCase()).append(" ");
-        return result.toString().trim();
     }
 
     @SerializableAs("item-builder")
@@ -453,7 +451,8 @@ public class Item {
                     .flags(builder.flags)
                     .glow(builder.glow)
                     .unbreakable(builder.unbreakable)
-                    .customModelData(builder.customModelData);
+                    .customModelData(builder.customModelData)
+                    .potionColor(builder.potionColor);
         }
 
         public ItemStack build() {
@@ -494,6 +493,11 @@ public class Item {
             if (customModelData != null) {
                 itemAdapter.setCustomModelData(customModelData);
                 itemStack = itemAdapter.getTarget();
+            }
+            if (potionColor != null && itemStack.getType() == Material.POTION) {
+                itemAdapter.setMinecraftNbtTag("CustomPotionColor", potionColor);
+                itemStack = itemAdapter.getTarget();
+                itemAdapter = ADAPTER.getItemAdapter(itemStack);
             }
 
             return itemStack;
@@ -537,6 +541,8 @@ public class Item {
                 map.put("enchantments", MapUtils.mapKeys(enchantments, Enchantment::getName));
             if (customModelData != null)
                 map.put("custom-model-data", customModelData);
+            if (potionColor != null)
+                map.put("custom-potion-color", potionColor);
 
             return map;
         }
@@ -545,7 +551,7 @@ public class Item {
         public ItemBuilder setData(Map<String, Object> args) {
             List<String> lore = new ArrayList<>();
             if (args.get("lore") != null)
-                lore = (List<String>) new CollectionUtil<>((List<String>) args.get("lore")).replace('&', '§').getCollection();
+                lore = new CollectionUtil<>((List<String>) args.get("lore")).replace('&', '§').getCollection();
 
             Set<ItemFlag> flags = new HashSet<>();
             if (args.get("flags") != null) {
@@ -583,6 +589,9 @@ public class Item {
                 nbtTags((Map<String, Object>) args.get("nbt-tags"));
             if (args.containsKey("custom-model-data"))
                 customModelData((int) args.get("custom-model-data"));
+            if (args.containsKey("custom-potion-color"))
+                potionColor((Integer) args.get("custom-potion-color"));
+
             return this;
         }
 

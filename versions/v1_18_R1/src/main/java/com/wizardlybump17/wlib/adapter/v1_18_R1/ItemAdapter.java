@@ -24,6 +24,25 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     }
 
     @Override
+    public void setMinecraftNbtTag(String key, Object value) {
+        net.minecraft.world.item.ItemStack itemStack = CraftItemStack.asNMSCopy(target);
+        NBTTagCompound tag = itemStack.t();
+        tag.a(key, getMainAdapter().javaToNbt(value));
+        itemStack.c(tag);
+        target = CraftItemStack.asBukkitCopy(itemStack);
+        meta = target.getItemMeta();
+    }
+
+    @Override
+    public Object getMinecraftNbtTag(String key) {
+        net.minecraft.world.item.ItemStack itemStack = CraftItemStack.asNMSCopy(target);
+        NBTTagCompound tag = itemStack.s();
+        if (tag == null)
+            return null;
+        return getMainAdapter().nbtToJava(tag.c(key));
+    }
+
+    @Override
     public void setNbtTag(String key, Object value) {
         meta.getPersistentDataContainer().set(new NamespacedKey(PLUGIN, key), (PersistentDataType<? extends Object, ? super Object>) mainAdapter.getType(value), value);
         target.setItemMeta(meta);
