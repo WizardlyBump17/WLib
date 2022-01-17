@@ -41,26 +41,6 @@ public class CollectionUtil<E> {
     }
 
     /**
-     * "clones" the specified collection in the target by reflectively creating a new collection of the instance
-     * (an exception can be thrown) and adding all elements into it
-     * @param collection the original collection
-     * @param <E> the element type
-     * @param <T> the original collection type
-     * @return the cloned collection
-     */
-    @SuppressWarnings("unchecked")
-    public static <E, T extends Collection<E>> T clone(T collection) {
-        try {
-            final Collection<E> result = collection.getClass().newInstance();
-            result.addAll(collection);
-            return (T) result;
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * Will breaks the string into a list. The list will have strings with the specified length
      * @param string the string to be broke
      * @param length the length that the parts will have
@@ -161,5 +141,16 @@ public class CollectionUtil<E> {
             list.addAll(collection);
 
         return list;
+    }
+
+    /**
+     * Joins all collections into one {@link List}
+     * @param collections the collections
+     * @param <T> the type of the collection
+     * @return the joined {@link List}
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> join(Collection<Collection<T>> collections) {
+        return join(collections.toArray(new Collection[0]));
     }
 }
