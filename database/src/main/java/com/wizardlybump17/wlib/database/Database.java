@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.*;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Data
@@ -100,4 +100,132 @@ public abstract class Database {
     }
 
     public abstract String getJdbcUrl();
+
+    /**
+     * Saves the given object to the database.
+     * If the object is null, nothing happens.
+     * If the object is deleted, it will delete the object.
+     * If the object is in the database, it will try to update the object.
+     * If the object is not in the database, it will insert the object to the database.
+     * Note that it will update the {@link DatabaseStorable#isDirty()} and {@link DatabaseStorable#isInDatabase()} flags if needed.
+     * It won't check if the table is valid
+     * @param object the object to be saved
+     * @param table the table to be saved to
+     */
+    public void save(DatabaseStorable object, String table) {
+        if (object == null)
+            return;
+
+        if (object.isDeleted()) {
+            delete(object, table);
+            return;
+        }
+
+        if (object.isInDatabase()) {
+            if (object.isDirty())
+                update(object, table);
+            return;
+        }
+
+        insert(object, table);
+    }
+
+    /**
+     * Called when the object is requested to be updated
+     * @param object the object to be updated
+     * @param table the table to be updated
+     */
+    protected void update(DatabaseStorable object, String table) {
+        if (object == null)
+            return;
+
+        StringBuilder builder = new StringBuilder("UPDATE " + table + " SET ");
+        Map<String, Object> where = new LinkedHashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
+        object.updateToDatabase(where, data);
+
+        if (data.isEmpty())
+            return;
+
+        for (Map.Entry<String, Object> entry : data.entrySet())
+            builder.append(entry.getKey()).append(" = ?, ");
+        builder.delete(builder.length() - 2, builder.length());
+
+        if (!where.isEmpty()) {
+            builder.append(" WHERE ");
+            for (Map.Entry<String, Object> entry : where.entrySet())
+                builder.append(entry.getKey()).append(" = ? AND ");
+            builder.delete(builder.length() - 5, builder.length());
+        }
+
+        builder.append(";");
+
+        object.setDirty(false);
+
+        List<Object> list = new ArrayList<>(data.values());
+        list.addAll(where.values());
+
+        update(builder.toString(), list.toArray());
+    }
+
+    /**
+     * Called when the object is requested to be deleted
+     * @param object the object to be deleted
+     * @param table the table to be deleted from
+     */
+    protected void delete(DatabaseStorable object, String table) {
+        if (object == null)
+            return;
+
+        if (!object.isInDatabase())
+            return;
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        object.deleteFromDatabase(data);
+
+        if (data.isEmpty())
+            return;
+
+        StringBuilder builder = new StringBuilder("DELETE FROM " + table + " WHERE ");
+        for (Map.Entry<String, Object> entry : data.entrySet())
+            builder.append(entry.getKey()).append(" = ? AND ");
+        builder.delete(builder.length() - 5, builder.length());
+
+        builder.append(";");
+
+        update(builder.toString(), data.values().toArray());
+    }
+
+    /**
+     * Called when the object is requested to be inserted
+     * @param object the object to be inserted
+     * @param table the table to be inserted to
+     */
+    protected void insert(DatabaseStorable object, String table) {
+        if (object == null)
+            return;
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        object.saveToDatabase(data);
+
+        if (data.isEmpty())
+            return;
+
+        StringBuilder builder = new StringBuilder("INSERT INTO " + table + " (");
+        for (String s : data.keySet())
+            builder.append(s).append(", ");
+        builder.delete(builder.length() - 2, builder.length());
+
+        builder.append(") VALUES (");
+        for (int i = 0; i < data.size(); i++)
+            builder.append("?, ");
+        builder.delete(builder.length() - 2, builder.length());
+
+        builder.append(");");
+
+        object.setInDatabase(true);
+        object.setDirty(false);
+
+        update(builder.toString(), data.values().toArray());
+    }
 }
