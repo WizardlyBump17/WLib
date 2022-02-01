@@ -131,7 +131,7 @@ public class Item {
                     .unbreakable(itemAdapter.isUnbreakable());
 
         if (item.getType() == Material.POTION)
-            builder.potionColor((Integer) itemAdapter.getMinecraftNbtTag("CustomPotionColor"));
+            builder.potionColor((Integer) itemAdapter.getNbtTag("CustomPotionColor"));
 
         return builder;
     }
@@ -485,17 +485,20 @@ public class Item {
                 itemStack = itemAdapter.getTarget();
                 itemAdapter = ADAPTER.getItemAdapter(itemStack);
             }
+
             if (nbtTags != null) {
                 itemAdapter.setNbtTags(nbtTags, false);
                 itemStack = itemAdapter.getTarget();
                 itemAdapter = ADAPTER.getItemAdapter(itemStack);
             }
+
             if (customModelData != null) {
                 itemAdapter.setCustomModelData(customModelData);
                 itemStack = itemAdapter.getTarget();
             }
+
             if (potionColor != null && itemStack.getType() == Material.POTION) {
-                itemAdapter.setMinecraftNbtTag("CustomPotionColor", potionColor);
+                itemAdapter.setNbtTag("CustomPotionColor", potionColor);
                 itemStack = itemAdapter.getTarget();
                 itemAdapter = ADAPTER.getItemAdapter(itemStack);
             }

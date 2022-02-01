@@ -35,8 +35,14 @@ public abstract class Cache<K, V, T> {
         cache.putAll(map);
     }
 
-    public void remove(@NotNull K key) {
-        cache.remove(key);
+    /**
+     * Removes the given key from the cache.
+     * If the operation is successful, the returned value will be the VALUE that was removed
+     * @param key the key to remove
+     * @return the value that was removed
+     */
+    public Optional<V> remove(@NotNull K key) {
+        return Optional.ofNullable(cache.remove(key));
     }
 
     public boolean has(@NotNull K key) {

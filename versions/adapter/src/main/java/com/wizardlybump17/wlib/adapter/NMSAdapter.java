@@ -13,16 +13,10 @@ public abstract class NMSAdapter {
     public static final String GLOW_TAG = "WLib-glowing";
 
     public abstract Object nbtToJava(Object nbt);
+
     public abstract Object javaToNbt(Object java);
+
     public abstract String getTargetVersion();
-
-    public Object getType(Object java) {
-        return null;
-    }
-
-    public boolean usePDC() {
-        return false;
-    }
 
     public abstract ItemAdapter getItemAdapter(ItemStack item);
 

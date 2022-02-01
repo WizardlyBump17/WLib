@@ -2,11 +2,9 @@ package com.wizardlybump17.wlib.adapter.v1_18_R1;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.wizardlybump17.wlib.adapter.WMaterial;
-import com.wizardlybump17.wlib.adapter.v1_18_R1.pdc.MapDataType;
 import net.minecraft.nbt.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,37 +15,6 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
 
     static {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener());
-    }
-
-    @Override
-    public boolean usePDC() {
-        return true;
-    }
-
-    public Object getType(Object object) {
-        if (object instanceof Byte)
-            return PersistentDataType.BYTE;
-        if (object instanceof Short)
-            return PersistentDataType.SHORT;
-        if (object instanceof Integer)
-            return PersistentDataType.INTEGER;
-        if (object instanceof Long)
-            return PersistentDataType.LONG;
-        if (object instanceof Float)
-            return PersistentDataType.FLOAT;
-        if (object instanceof Double)
-            return PersistentDataType.DOUBLE;
-        if (object instanceof String)
-            return PersistentDataType.STRING;
-        if (object instanceof byte[])
-            return PersistentDataType.BYTE_ARRAY;
-        if (object instanceof int[])
-            return PersistentDataType.INTEGER_ARRAY;
-        if (object instanceof Map)
-            return new MapDataType(this);
-        if (object instanceof List)
-            return PersistentDataType.TAG_CONTAINER_ARRAY;
-        return null;
     }
 
     @Override

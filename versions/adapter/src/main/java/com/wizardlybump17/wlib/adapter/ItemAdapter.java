@@ -21,41 +21,29 @@ public abstract class ItemAdapter {
     @NotNull
     protected final NMSAdapter mainAdapter;
 
-    public ItemAdapter(ItemStack itemStack, @NotNull Object nmsStack, @NotNull NMSAdapter mainAdapter) {
+    protected ItemAdapter(ItemStack itemStack, @NotNull Object nmsStack, @NotNull NMSAdapter mainAdapter) {
         target = itemStack;
         meta = itemStack.getItemMeta();
         this.nmsStack = nmsStack;
         this.mainAdapter = mainAdapter;
     }
 
-    /**
-     * Sets the nbt tag as a Minecraft NBT
-     * @param key the key of the tag
-     * @param value the value of the tag
-     */
-    public void setMinecraftNbtTag(String key, Object value) {
-        setNbtTag(key, value);
-    }
-
-    /**
-     * @param key the key of the tag
-     * @return the stored Minecraft nbt tag
-     */
-    public Object getMinecraftNbtTag(String key) {
-        return getNbtTag(key);
-    }
-
     public abstract void setNbtTag(String key, Object value);
+
     public void setNbtTags(Map<String, Object> tags) {
         setNbtTags(tags, true);
     }
+
     public abstract void setNbtTags(Map<String, Object> tags, boolean clearOld);
+
     public abstract void removeNbtTag(String key);
 
     public abstract boolean hasNbtTag(String key);
+
     /**
      * Checks if this item has a tag with the specified key and type
-     * @param key the key of the tag
+     *
+     * @param key  the key of the tag
      * @param type the type of the tag
      * @return true if the tag exists, false otherwise
      */
@@ -67,7 +55,8 @@ public abstract class ItemAdapter {
 
     /**
      * Gets the specified tag and type
-     * @param key the key of the tag
+     *
+     * @param key  the key of the tag
      * @param type the type of the tag
      * @return the tag, or null if it doesn't exist
      */
@@ -80,18 +69,23 @@ public abstract class ItemAdapter {
     /**
      * Sets the custom model data. If in older versions,
      * it will simply add the CustomModelData tag and won't have results in client-side
-     * @param data
+     * @param data the custom model data
      */
     public abstract void setCustomModelData(Integer data);
+
     public abstract boolean hasCustomModelData();
+
     public abstract Integer getCustomModelData();
 
     public abstract Object getMainTag();
+
     public abstract void setMainTag(Object tag);
 
     public abstract boolean isUnbreakable();
+
     public abstract void setUnbreakable(boolean unbreakable);
 
     public abstract boolean hasGlow();
+
     public abstract void setGlow(boolean glow);
 }
