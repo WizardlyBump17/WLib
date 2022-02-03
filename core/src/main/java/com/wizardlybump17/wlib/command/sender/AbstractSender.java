@@ -16,7 +16,7 @@ public abstract class AbstractSender<S extends org.bukkit.command.CommandSender>
     }
 
     @Override
-    public void sendMessage(String[] message) {
+    public void sendMessage(String... message) {
         handle.sendMessage(String.join("\n", message));
     }
 

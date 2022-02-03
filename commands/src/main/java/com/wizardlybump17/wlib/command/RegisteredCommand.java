@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
-import com.wizardlybump17.wlib.object.Pair;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,6 +51,10 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         }
     }
 
+    public String getName() {
+        return command.execution().split(" ")[0];
+    }
+
     @Override
     public int compareTo(@NotNull RegisteredCommand o) {
         return Integer.compare(
@@ -63,7 +66,8 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     public Optional<Object[]> parse(String string) throws ArgsReaderException {
         String[] stringSplit = string.split(" ");
 
-        arrayCheck: { //check for array nodes
+        arrayCheck:
+        { //check for array nodes
             for (ArgsNode node : nodes)
                 if (node.getReader() != null && node.getReader().getType().isArray())
                     break arrayCheck;
@@ -72,7 +76,8 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
                 return Optional.empty();
         }
 
-        userInputCheck: { //check for nodes that requires the user input
+        userInputCheck:
+        { //check for nodes that requires the user input
             for (ArgsNode node : nodes)
                 if (node.isUserInput())
                     break userInputCheck;
@@ -142,34 +147,33 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         return Optional.of(resultList.toArray());
     }
 
-    public Pair<Boolean, ArgsReaderException> execute(CommandSender<?> sender, String string) {
+    public CommandResult execute(CommandSender<?> sender, String string) {
         try {
             Optional<Object[]> parse = parse(string);
             if (!parse.isPresent())
-                throw new ArgsReaderException(null, "invalid args for command " + command.execution());
+                return CommandResult.ARGS_FAIL;
 
             Object[] objects = parse.get();
             return executeInternal(sender, objects);
         } catch (ArgsReaderException e) {
-            return new Pair<>(false, e);
+            return CommandResult.ARGS_FAIL;
         }
     }
 
-    private Pair<Boolean, ArgsReaderException> executeInternal(CommandSender<?> sender, Object[] objects) {
+    private CommandResult executeInternal(CommandSender<?> sender, Object[] objects) {
         try {
             if (!command.permission().isEmpty() && !sender.hasPermission(command.permission()))
-                return new Pair<>(true, null);
+                return CommandResult.PERMISSION_FAIL;
 
             final ArrayList<Object> list = new ArrayList<>(Arrays.asList(objects));
             list.add(0, sender);
             if (isSenderGeneric())
                 list.set(0, sender.toGeneric());
             method.invoke(object, list.toArray());
-            return new Pair<>(true, null);
-        } catch (InvocationTargetException e) {
-            return new Pair<>(true, new ArgsReaderException(e.getTargetException(), e.getTargetException().getMessage()));
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            return new Pair<>(true, new ArgsReaderException(e.getCause(), e.getMessage()));
+            return CommandResult.SUCCESS;
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            return CommandResult.METHOD_FAIL;
         }
     }
 

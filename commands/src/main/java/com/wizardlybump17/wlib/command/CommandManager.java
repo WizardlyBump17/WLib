@@ -1,8 +1,6 @@
 package com.wizardlybump17.wlib.command;
 
-import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
-import com.wizardlybump17.wlib.object.Pair;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +29,8 @@ public class CommandManager {
                         method
                 );
                 commands.add(command);
-                holder.onCommandCreate(this, command);
+
+                holder.getCommand(command.getName()).setDefaultExecutor(this);
             }
         }
 
@@ -39,21 +38,21 @@ public class CommandManager {
     }
 
     public void unregisterCommands() {
-        for (RegisteredCommand command : commands)
-            holder.onCommandDelete(this, command);
         commands.clear();
     }
 
-    public void execute(CommandSender<?> sender, String string) throws Throwable {
+    public void execute(CommandSender<?> sender, String string) {
         if (commands.isEmpty())
             return;
 
         for (RegisteredCommand command : commands) {
-            Pair<Boolean, ArgsReaderException> result = command.execute(sender, string);
-            if (result.getFirst() && result.getSecond() != null)
-                throw result.getSecond().getCause();
-            if (result.getFirst())
-                return;
+            switch (command.execute(sender, string)) {
+                case SUCCESS:
+                case PERMISSION_FAIL:
+                    return;
+                default:
+                    continue;
+            }
         }
     }
 }

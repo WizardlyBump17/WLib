@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.command.holder;
 
+import com.wizardlybump17.wlib.command.BukkitCommandExecutor;
+import com.wizardlybump17.wlib.command.CommandManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.PluginCommand;
@@ -16,5 +18,10 @@ public class BukkitCommand implements Command {
         if (executor instanceof org.bukkit.command.CommandExecutor)
             command.setExecutor((org.bukkit.command.CommandExecutor) executor);
         this.executor = executor;
+    }
+
+    @Override
+    public void setDefaultExecutor(CommandManager manager) {
+        setExecutor(new BukkitCommandExecutor(manager));
     }
 }
