@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @Getter
@@ -168,7 +167,41 @@ public enum WMaterial {
     NETHERITE_SHOVEL("DIAMOND_SPADE"),
     NETHERITE_PICKAXE("DIAMOND_PICKAXE"),
     NETHERITE_HOE("DIAMOND_HOE"),
-    NETHERITE_AXE("DIAMOND_AXE");
+    NETHERITE_AXE("DIAMOND_AXE"),
+
+    WHITE_CONCRETE,
+    ORANGE_CONCRETE,
+    MAGENTA_CONCRETE,
+    LIGHT_BLUE_CONCRETE,
+    YELLOW_CONCRETE,
+    LIME_CONCRETE,
+    PINK_CONCRETE,
+    GRAY_CONCRETE,
+    LIGHT_GRAY_CONCRETE,
+    CYAN_CONCRETE,
+    PURPLE_CONCRETE,
+    BLUE_CONCRETE,
+    BROWN_CONCRETE,
+    GREEN_CONCRETE,
+    RED_CONCRETE,
+    BLACK_CONCRETE,
+
+    WHITE_CONCRETE_POWDER,
+    ORANGE_CONCRETE_POWDER,
+    MAGENTA_CONCRETE_POWDER,
+    LIGHT_BLUE_CONCRETE_POWDER,
+    YELLOW_CONCRETE_POWDER,
+    LIME_CONCRETE_POWDER,
+    PINK_CONCRETE_POWDER,
+    GRAY_CONCRETE_POWDER,
+    LIGHT_GRAY_CONCRETE_POWDER,
+    CYAN_CONCRETE_POWDER,
+    PURPLE_CONCRETE_POWDER,
+    BLUE_CONCRETE_POWDER,
+    BROWN_CONCRETE_POWDER,
+    GREEN_CONCRETE_POWDER,
+    RED_CONCRETE_POWDER,
+    BLACK_CONCRETE_POWDER;
 
     private final ItemStack itemStack;
     private final int data;
@@ -202,10 +235,6 @@ public enum WMaterial {
 
     WMaterial(Map<String, Object> itemData, String related) {
         this(-1, itemData, related);
-    }
-
-    WMaterial(int[] acceptedData) {
-        this(acceptedData, null);
     }
 
     WMaterial(int[] acceptedData, String related) {
@@ -243,11 +272,5 @@ public enum WMaterial {
 
     public boolean dataDependent() {
         return acceptedData != null;
-    }
-
-    public Integer[] getAcceptedData() {
-        if (acceptedData == null)
-            return null;
-        return Arrays.stream(acceptedData).boxed().toArray(Integer[]::new);
     }
 }

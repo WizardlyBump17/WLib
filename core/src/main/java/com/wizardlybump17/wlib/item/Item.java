@@ -32,9 +32,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO refactor. Move the builder to a proper class
+/**
+ * @deprecated Use {@link com.wizardlybump17.wlib.item.ItemBuilder} instead.
+ */
 @Data
 @Builder
+@Deprecated
 public class Item {
 
     private static final Map<UUID, ItemStack> HEADS = new HashMap<>();

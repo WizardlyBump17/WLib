@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -186,23 +185,14 @@ public class MapUtils {
     }
 
     /**
-     * "clones" the specified map. It tries to create a new instance of the map reflectively, exceptions may be thrown
-     * @param map the original map
-     * @param <K> the key type
-     * @param <V> the value type
-     * @param <T> the type of the map
-     * @return the result map
+     * Removes all null values from the given map
+     * @param map the map
+     * @param <K> the map key type
+     * @param <V> the map value type
+     * @return the map without null values
      */
-    @SuppressWarnings("unchecked")
-    @NotNull
-    public static <K, V, T> T clone(Map<K, V> map) {
-        try {
-            final Map<K, V> result = map.getClass().newInstance();
-            result.putAll(map);
-            return (T) result;
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return (T) new HashMap<K, V>();
-        }
+    public static <K, V> Map<K, V> removeNullValues(Map<K, V> map) {
+        map.entrySet().removeIf(entry -> entry.getValue() == null);
+        return map;
     }
 }
