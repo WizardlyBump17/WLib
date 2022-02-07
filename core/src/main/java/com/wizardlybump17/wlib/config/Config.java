@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.config;
 
-import com.wizardlybump17.wlib.item.Item;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
@@ -252,16 +252,16 @@ public class Config extends YamlConfiguration {
         return getFancyString(path, null);
     }
 
-    public Item.ItemBuilder getItemBuilder(String path, Item.ItemBuilder def) {
+    public ItemBuilder getItemBuilder(String path, ItemBuilder def) {
         Object object = get(path);
         if (object instanceof ConfigurationSection)
-            return Item.deserialize(convertToMap((ConfigurationSection) object));
-        if (object instanceof Item.ItemBuilder)
-            return (Item.ItemBuilder) object;
+            return ItemBuilder.deserialize(convertToMap((ConfigurationSection) object));
+        if (object instanceof ItemBuilder)
+            return (ItemBuilder) object;
         return def;
     }
 
-    public Item.ItemBuilder getItemBuilder(String path) {
+    public ItemBuilder getItemBuilder(String path) {
         return getItemBuilder(path, null);
     }
 
