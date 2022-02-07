@@ -1,8 +1,12 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Collection;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+@UtilityClass
 public class RandomUtil {
 
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
@@ -16,6 +20,16 @@ public class RandomUtil {
      */
     public static boolean checkPercentage(double percentage) {
         return RANDOM.nextDouble(101) <= percentage;
+    }
+
+    /**
+     * Returns if the {@link Random#nextDouble()} * 100 is smaller than the given percentage
+     * @param random the random to be used
+     * @param percentage the percentage to be checked
+     * @return if the percentage was successfully checked
+     */
+    public static boolean checkPercentage(Random random, double percentage) {
+        return random.nextDouble() * 100 <= percentage;
     }
 
     /**
