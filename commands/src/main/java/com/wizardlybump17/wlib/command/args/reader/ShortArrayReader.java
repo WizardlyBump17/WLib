@@ -19,7 +19,7 @@ public class ShortArrayReader extends ArrayReader<Short[]> {
                 result[i] = Short.parseShort(strings[i]);
             return result;
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException(e, "expected a short array in string form but got " + string);
+            throw new ArgsReaderException("expected a short array in string form but got " + string);
         }
     }
 }

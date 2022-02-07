@@ -12,7 +12,7 @@ public class DoubleReader extends ArgsReader<Double> {
         try {
             return Double.parseDouble(string);
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException(e, "expected a double but got " + string);
+            throw new ArgsReaderException("expected a double but got " + string);
         }
     }
 }

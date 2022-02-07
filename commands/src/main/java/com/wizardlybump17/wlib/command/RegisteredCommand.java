@@ -57,10 +57,24 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
     @Override
     public int compareTo(@NotNull RegisteredCommand o) {
-        return Integer.compare(
-                o.command.priority() == -1 ? o.command.execution().split(" ").length : o.command.priority(),
-                command.priority() == -1 ? command.execution().split(" ").length : command.priority()
-        );
+        if (o.command.priority() == -1 && command.priority() == -1) {
+            int args = compareArgs(o);
+
+            if (args == 0)
+                return compareSize(o);
+
+            return args;
+        }
+
+        return Integer.compare(o.command.priority(), command.priority());
+    }
+
+    private int compareArgs(RegisteredCommand other) {
+        return Integer.compare(other.command.execution().split(" ").length, command.execution().split(" ").length);
+    }
+
+    private int compareSize(RegisteredCommand other) {
+        return Integer.compare(other.command.execution().length(), command.execution().length());
     }
 
     public Optional<Object[]> parse(String string) throws ArgsReaderException {
@@ -142,7 +156,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         }
 
         if (inArray)
-            throw new ArgsReaderException(null, "last array never finished");
+            throw new ArgsReaderException("last array never finished");
 
         return Optional.of(resultList.toArray());
     }

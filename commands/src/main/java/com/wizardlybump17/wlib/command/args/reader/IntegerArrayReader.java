@@ -19,7 +19,7 @@ public class IntegerArrayReader extends ArrayReader<Integer[]> {
                 result[i] = Integer.parseInt(strings[i]);
             return result;
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException(e, "expected a int array in string form but got " + string);
+            throw new ArgsReaderException("expected a int array in string form but got " + string);
         }
     }
 }

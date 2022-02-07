@@ -13,6 +13,6 @@ public class BooleanReader extends ArgsReader<Boolean> {
             return true;
         if (string.equalsIgnoreCase("false"))
             return false;
-        throw new ArgsReaderException(new IllegalArgumentException(), "expected a boolean but got " + string);
+        throw new ArgsReaderException("expected a boolean but got " + string);
     }
 }

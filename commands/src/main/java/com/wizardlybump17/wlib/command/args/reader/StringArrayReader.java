@@ -11,7 +11,7 @@ public class StringArrayReader extends ArrayReader<String[]> {
     public String[] read(String string) throws ArgsReaderException {
         String[] split = split(string);
         if (split == null)
-            throw new ArgsReaderException(new IllegalArgumentException("expected a string array"), "expected a string array but got " + string);
+            throw new ArgsReaderException("expected a string array but got " + string);
         return split;
     }
 }

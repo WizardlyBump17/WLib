@@ -20,7 +20,7 @@ public class ByteArrayReader extends ArrayReader<Byte[]> {
                 result[i] = Byte.parseByte(strings[i]);
             return result;
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException(e, "expected a byte array in string form but got " + string);
+            throw new ArgsReaderException("expected a byte array in string form but got " + string);
         }
     }
 }
