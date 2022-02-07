@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.adapter.v1_17_R1;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.wizardlybump17.wlib.adapter.WMaterial;
+import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import net.minecraft.nbt.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -121,5 +122,10 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     @Override
     public ItemStack getFixedMaterial(WMaterial material) {
         return material.getItemStack();
+    }
+
+    @Override
+    public StringUtil getStringUtil() {
+        return new com.wizardlybump17.wlib.adapter.v1_17_R1.util.StringUtil();
     }
 }

@@ -166,6 +166,18 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public ItemStack build() {
         ItemStack result = new ItemStack(type, amount == null ? 1 : amount, durability);
+
+        ItemAdapter adapter = ADAPTER.getItemAdapter(result);
+        if (unbreakable() != null) {
+            adapter.setUnbreakable(unbreakable());
+            result = adapter.getTarget();
+        }
+
+        if (nbtTags != null) {
+            adapter.setNbtTags(nbtTags);
+            result = adapter.getTarget();
+        }
+
         ItemMeta itemMeta = result.getItemMeta();
 
         if (displayName != null)
@@ -178,17 +190,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.addUnsafeEnchantments(enchantments);
 
         result.setItemMeta(itemMeta);
-
-        ItemAdapter adapter = ADAPTER.getItemAdapter(result);
-        if (unbreakable() != null) {
-            adapter.setUnbreakable(unbreakable());
-            result = adapter.getTarget();
-        }
-
-        if (nbtTags != null) {
-            adapter.setNbtTags(nbtTags);
-            result = adapter.getTarget();
-        }
 
         return result;
     }

@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.adapter;
 
+import com.wizardlybump17.wlib.adapter.util.LegacyStringUtil;
+import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,13 @@ public abstract class NMSAdapter {
     public abstract EntityAdapter newEntityAdapter(Entity entity);
 
     public abstract ItemStack getFixedMaterial(WMaterial material);
+
+    /**
+     * @return the StringUtil instance for the current version
+     */
+    public StringUtil getStringUtil() {
+        return new LegacyStringUtil();
+    }
 
     @Deprecated
     public final String getGlowTag() {
