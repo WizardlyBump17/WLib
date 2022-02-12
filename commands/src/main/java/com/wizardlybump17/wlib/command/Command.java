@@ -45,4 +45,16 @@ public @interface Command {
      * @return the priority of this command
      */
     int priority() default -1;
+
+    /**
+     * Sets the options of this command.
+     * The Bukkit implementation does nothing with this
+     * @return the options of this command
+     */
+    String[] options() default {};
+
+    /**
+     * @return the description of this command
+     */
+    String description() default "";
 }

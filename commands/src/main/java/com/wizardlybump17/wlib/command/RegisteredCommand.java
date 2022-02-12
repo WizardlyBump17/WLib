@@ -179,10 +179,15 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             if (!command.permission().isEmpty() && !sender.hasPermission(command.permission()))
                 return CommandResult.PERMISSION_FAIL;
 
-            final ArrayList<Object> list = new ArrayList<>(Arrays.asList(objects));
+            List<Object> list = new ArrayList<>(Arrays.asList(objects));
+
             list.add(0, sender);
             if (isSenderGeneric())
                 list.set(0, sender.toGeneric());
+
+            if (list.size() != method.getParameterCount())
+                return CommandResult.ARGS_FAIL;
+
             method.invoke(object, list.toArray());
             return CommandResult.SUCCESS;
         } catch (InvocationTargetException | IllegalAccessException e) {
