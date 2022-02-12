@@ -9,7 +9,7 @@
 
 1. Git installed
 2. Gradle installed
-3. Java 8+ installed
+3. Java 8, for the 1.8.8 - 1.16.5 Minecraft versions, Java 16 for 1.17 and Java 17 for 1.18
 4. [BuildTools](https://www.spigotmc.org/wiki/buildtools/) run for the versions: 1.8.8, 1.12.2, 1.13.2, 1.15.2, 1.16.5, 1.17.1 and 1.18
 
 #### Building
@@ -21,24 +21,8 @@
 <br>
 
 ### Add as dependency
-Add the Maven repository.<br>
-Maven:
-```xml
-<repositories>
-    <repository>
-        <id>wb17</id>
-        <url>https://raw.githubusercontent.com/WizardlyBump17/WizardlyBump17/maven/</url>
-    </repository>
-</repositories>
-```
-Gradle:
-```groovy
-repositories {
-    maven {
-        url = 'https://raw.githubusercontent.com/WizardlyBump17/WizardlyBump17/maven/'
-    }
-}
-```
+Follow [the Gradle instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry) or [the Maven instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) <br>
+(Soon I will show how to do it)
 <br>
 
 Then add the dependency. Replace MODULE with a module and VERSION with a version<br>
