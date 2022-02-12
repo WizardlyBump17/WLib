@@ -5,6 +5,8 @@ import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.EntityTypeArgsReader;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
 import com.wizardlybump17.wlib.command.reader.PlayerReader;
+import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
+import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
@@ -25,6 +27,8 @@ public class WLib extends JavaPlugin {
     public void onLoad() {
         databaseRegister.registerDatabaseClass(MySQLDatabase.class);
         databaseRegister.registerDatabaseClass(SQLiteDatabase.class);
+
+        ConfigHolderFactoryRegistry.getInstance().put("bukkit", new BukkitConfigHolderFactory());
     }
 
     @Override

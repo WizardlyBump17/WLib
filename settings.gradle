@@ -30,4 +30,5 @@ include 'utils'
 include 'database'
 include 'objects'
 include 'commands'
+include 'config'
 

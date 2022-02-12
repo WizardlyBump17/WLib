@@ -22,7 +22,7 @@ import java.util.*;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class Config extends YamlConfiguration {
+public class Config extends YamlConfiguration implements Configuration {
 
     private final JavaPlugin plugin;
     private final String name;
@@ -155,6 +155,45 @@ public class Config extends YamlConfiguration {
         return getByType(path, null);
     }
 
+    @Override
+    public byte getByte(String path, byte def) {
+        Object o = get(path, def);
+        if (!(o instanceof Number))
+            return def;
+        return ((Number) o).byteValue();
+    }
+
+    @Override
+    public byte getByte(String path) {
+        return getByte(path, (byte) 0);
+    }
+
+    @Override
+    public short getShort(String path, short def) {
+        Object o = get(path, def);
+        if (!(o instanceof Number))
+            return def;
+        return ((Number) o).shortValue();
+    }
+
+    @Override
+    public short getShort(String path) {
+        return getShort(path, (short) 0);
+    }
+
+    @Override
+    public float getFloat(String path, float def) {
+        Object o = get(path, def);
+        if (!(o instanceof Number))
+            return def;
+        return ((Number) o).floatValue();
+    }
+
+    @Override
+    public float getFloat(String path) {
+        return getFloat(path, 0);
+    }
+
     public Map<String, Object> getMap(String path, Map<String, Object> def) {
         Object object = get(path);
         if (object instanceof ConfigurationSerializable)
@@ -267,8 +306,6 @@ public class Config extends YamlConfiguration {
 
     /**
      * Loads the config from the given file path.
-     * If saveDefault is true, the config will be saved using {@link JavaPlugin#saveResource(String, boolean)}.
-     * If saveDefault is false, the config will be saved using {@link YamlConfiguration#save(File)}
      *
      * @param filePath    where this configuration should be loaded from
      * @param plugin      the plugin that is using this configuration
@@ -285,7 +322,6 @@ public class Config extends YamlConfiguration {
 
     /**
      * Loads the config from the given file path.
-     * It will use the {@link Config#load(String, JavaPlugin, boolean)} method with saveDefault = true
      *
      * @param filePath where this configuration should be loaded from
      * @param plugin   the plugin that is using this configuration
@@ -297,7 +333,6 @@ public class Config extends YamlConfiguration {
 
     /**
      * Loads the config from the given file.
-     * It will use the {@link Config#load(File, JavaPlugin, boolean)} method with saveDefault = true
      *
      * @param file   the file that have the config
      * @param plugin the plugin that is using this config
@@ -309,8 +344,6 @@ public class Config extends YamlConfiguration {
 
     /**
      * Loads the config from the given file.
-     * If load is true, the config will be loaded using {@link YamlConfiguration#load(File)}.
-     * If load is false, the config will be saved using {@link YamlConfiguration#save(File)}
      *
      * @param file   the file that have the config
      * @param plugin the plugin that is using this config
