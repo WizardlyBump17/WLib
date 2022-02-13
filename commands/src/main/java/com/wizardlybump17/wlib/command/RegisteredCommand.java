@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,20 +35,25 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     private void prepareNodes() {
-        final String[] commandArgs = command.execution().split(" ");
+        String[] commandArgs = command.execution().split(" ");
 
-        final Class<?>[] types = method.getParameterTypes();
+        Class<?>[] types = method.getParameterTypes();
+        Parameter[] parameters = method.getParameters();
         int currentIndex = 1; //skipping the first type because of the CommandSender
         for (String commandArg : commandArgs) {
+            Description annotation = parameters[currentIndex].getAnnotation(Description.class);
+            String description = annotation == null ? null : annotation.value();
+
             if (requiredArgs(commandArg))
                 nodes.add(new ArgsNode(
                         trim(commandArg),
                         requiredArgs(commandArg),
                         true,
-                        ArgsReaderRegistry.INSTANCE.get(types[currentIndex++])
+                        ArgsReaderRegistry.INSTANCE.get(types[currentIndex++]),
+                        description
                 ));
             else
-                nodes.add(new ArgsNode(commandArg, true, false, null));
+                nodes.add(new ArgsNode(commandArg, true, false, null, description));
         }
     }
 
