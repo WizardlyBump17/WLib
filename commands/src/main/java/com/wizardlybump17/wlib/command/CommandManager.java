@@ -61,7 +61,7 @@ public class CommandManager {
             return;
 
         for (RegisteredCommand command : commands) {
-            if (listener != null && listener.shouldExecute(sender, command))
+            if (listener == null || listener.shouldExecute(sender, command))
                 switch (command.execute(sender, string)) {
                     case SUCCESS:
                     case PERMISSION_FAIL:
