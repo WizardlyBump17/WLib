@@ -2,7 +2,9 @@ dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.22',
             'org.jetbrains:annotations:22.0.0',
-            project(':objects')
     )
     annotationProcessor('org.projectlombok:lombok:1.18.22')
+    implementation(
+            project(':objects')
+    )
 }

@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor
@@ -25,31 +23,24 @@ public class CommandManager {
         this.listener = null;
     }
 
-    public Set<RegisteredCommand> registerCommands(Object... objects) {
-        Set<RegisteredCommand> createdCommands = new HashSet<>();
-
+    public void registerCommands(Object... objects) {
         for (Object object : objects) {
             for (Method method : object.getClass().getDeclaredMethods()) {
                 if (!method.isAnnotationPresent(Command.class) || method.getParameterCount() == 0 || !CommandSender.class.isAssignableFrom(method.getParameterTypes()[0]))
                     continue;
 
-                method.setAccessible(true);
-
-                final RegisteredCommand command = new RegisteredCommand(
+                RegisteredCommand command = new RegisteredCommand(
                         method.getAnnotation(Command.class),
                         object,
                         method
                 );
+
                 commands.add(command);
-
-                createdCommands.add(command);
-
                 holder.getCommand(command.getName()).setDefaultExecutor(this);
             }
         }
 
         commands.sort(null);
-        return createdCommands;
     }
 
     public void unregisterCommands() {
@@ -70,5 +61,13 @@ public class CommandManager {
                         continue;
                 }
         }
+    }
+
+    public List<RegisteredCommand> getCommand(String name) {
+        List<RegisteredCommand> commands = new ArrayList<>(this.commands.size());
+        for (RegisteredCommand command : this.commands)
+            if (command.getName().equalsIgnoreCase(name))
+                commands.add(command);
+        return commands;
     }
 }
