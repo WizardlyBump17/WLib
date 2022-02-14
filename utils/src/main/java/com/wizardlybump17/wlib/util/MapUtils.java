@@ -3,12 +3,15 @@ package com.wizardlybump17.wlib.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapUtils {
@@ -194,5 +197,16 @@ public class MapUtils {
     public static <K, V> Map<K, V> removeNullValues(Map<K, V> map) {
         map.entrySet().removeIf(entry -> entry.getValue() == null);
         return map;
+    }
+
+    public static <K, V> Map<K, V> sortByValues(Map<K, V> map, Comparator<V> comparator) {
+        return map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(comparator))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 }
