@@ -33,7 +33,7 @@ public class ConfigHandler {
 
         String configPath = path.value();
         String defaultValue = path.defaultValue();
-        Object object = config.get(configPath, config.get(defaultValue));
+        Object object = config.get(configPath, config.get(defaultValue), field.getType());
 
         if (object == null)
             return true;

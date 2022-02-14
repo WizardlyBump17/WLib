@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.config;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
+import com.wizardlybump17.wlib.util.NumberFormatter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
@@ -138,6 +139,17 @@ public class Config extends YamlConfiguration implements Configuration {
         return super.get(path, def);
     }
 
+    public NumberFormatter getNumberFormatter(String path, NumberFormatter def) {
+        List<String> list = getStringList(path);
+        if (list == null)
+            return def;
+        return new NumberFormatter(list);
+    }
+
+    public NumberFormatter getNumberFormatter(String path) {
+        return getNumberFormatter(path, null);
+    }
+
     public Number getNumber(String path, Number def) {
         return getByType(path, def);
     }
@@ -153,6 +165,24 @@ public class Config extends YamlConfiguration implements Configuration {
 
     public <T> T getByType(String path) {
         return getByType(path, null);
+    }
+
+    @Override
+    public Object get(String path, Class<?> type) {
+        return get(path, null, type);
+    }
+
+    @Override
+    public Object get(String path, Object def, Class<?> type) {
+        if (type == NumberFormatter.class) {
+            List<String> list = getStringList(path);
+            if (list == null)
+                return def;
+
+            return new NumberFormatter(list);
+        }
+
+        return get(path, def);
     }
 
     @Override

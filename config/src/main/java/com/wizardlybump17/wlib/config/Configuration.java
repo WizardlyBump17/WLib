@@ -42,6 +42,10 @@ public interface Configuration {
 
     String getString(String path);
 
+    Object get(String path, Object def, Class<?> type);
+
+    Object get(String path, Class<?> type);
+
     void set(String path, Object value);
 
     void saveConfig();

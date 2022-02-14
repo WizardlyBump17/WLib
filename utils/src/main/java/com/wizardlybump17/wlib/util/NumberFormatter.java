@@ -25,6 +25,9 @@ public class NumberFormatter {
     }
 
     public String formatNumber(double value) {
+        if (suffixes.isEmpty())
+            return DECIMAL_FORMAT.format(value);
+
         boolean negative = value < 0;
         int index = 0;
         value = Math.abs(value);
