@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,7 @@ public class PaginatedInventoryBuilder {
 
     private String title;
     private String shape;
+    @Getter
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private List<ItemButton> content = new ArrayList<>();
     private InventoryNavigator nextPage;
@@ -76,12 +78,20 @@ public class PaginatedInventoryBuilder {
 
     public PaginatedInventoryBuilder content(List<ItemButton> content) {
         this.content = content == null ? new ArrayList<>() : content;
+        checkNullContent();
         return this;
     }
 
     public PaginatedInventoryBuilder content(ItemButton... content) {
         this.content = new ArrayList<>(Arrays.asList(content));
+        checkNullContent();
         return this;
+    }
+
+    private void checkNullContent() {
+        for (ItemButton button : content)
+            if (button == null)
+                throw new NullPointerException("Content cannot contain null values.");
     }
 
     public PaginatedInventoryBuilder listener(InventoryListener<?> listener) {

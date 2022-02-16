@@ -73,6 +73,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    public List<String> lore() {
+        return lore;
+    }
+
     public ItemBuilder lore(List<String> lore) {
         this.lore = lore;
         return this;

@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -40,7 +39,10 @@ public class CustomInventory {
             this.paginatedHolder = paginatedHolder;
     }
 
-    public void addButton(int slot, @NotNull ItemButton button) {
+    public void addButton(int slot, ItemButton button) {
+        if (button == null)
+            return;
+
         buttons.put(slot, button);
         bukkitInventory.setItem(slot, button.getItem().get());
     }
