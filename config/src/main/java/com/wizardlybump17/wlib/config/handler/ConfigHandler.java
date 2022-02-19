@@ -17,10 +17,8 @@ public class ConfigHandler {
     public void reload() {
         config.reloadConfig();
 
-        for (Field field : clazz.getDeclaredFields()) {
+        for (Field field : clazz.getDeclaredFields())
             reloadStaticField(field);
-            //TODO reload non-static fields
-        }
     }
 
     private void reloadStaticField(Field field) {
@@ -33,7 +31,7 @@ public class ConfigHandler {
 
         String configPath = path.value();
         String defaultValue = path.defaultValue();
-        Object object = config.get(configPath, config.get(defaultValue), field.getType());
+        Object object = config.get(configPath, config.get(defaultValue), field.getType(), path);
 
         if (object == null)
             return;

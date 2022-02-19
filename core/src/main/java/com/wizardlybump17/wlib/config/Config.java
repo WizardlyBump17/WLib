@@ -1,10 +1,12 @@
 package com.wizardlybump17.wlib.config;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
+import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.NumberFormatter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -185,7 +187,6 @@ public class Config extends YamlConfiguration implements Configuration {
         return get(path, def);
     }
 
-    @Override
     public byte getByte(String path, byte def) {
         Object o = get(path, def);
         if (!(o instanceof Number))
@@ -193,12 +194,10 @@ public class Config extends YamlConfiguration implements Configuration {
         return ((Number) o).byteValue();
     }
 
-    @Override
     public byte getByte(String path) {
         return getByte(path, (byte) 0);
     }
 
-    @Override
     public short getShort(String path, short def) {
         Object o = get(path, def);
         if (!(o instanceof Number))
@@ -206,12 +205,10 @@ public class Config extends YamlConfiguration implements Configuration {
         return ((Number) o).shortValue();
     }
 
-    @Override
     public short getShort(String path) {
         return getShort(path, (short) 0);
     }
 
-    @Override
     public float getFloat(String path, float def) {
         Object o = get(path, def);
         if (!(o instanceof Number))
@@ -219,7 +216,6 @@ public class Config extends YamlConfiguration implements Configuration {
         return ((Number) o).floatValue();
     }
 
-    @Override
     public float getFloat(String path) {
         return getFloat(path, 0);
     }
@@ -269,28 +265,6 @@ public class Config extends YamlConfiguration implements Configuration {
         return getEnumMap(path, classType, null);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> convertToMap(ConfigurationSection section) {
-        Map<String, Object> map = new LinkedHashMap<>();
-        for (String key : section.getKeys(false)) {
-            Object object = section.get(key);
-            if (object instanceof ConfigurationSection)
-                object = convertToMap((ConfigurationSection) object);
-            if (object instanceof List) {
-                try {
-                    final List<ConfigurationSection> list = (List<ConfigurationSection>) object;
-                    List<Map<String, Object>> fixedList = new ArrayList<>(list.size());
-                    for (ConfigurationSection configurationSection : list)
-                        fixedList.add(convertToMap(configurationSection));
-                    object = fixedList;
-                } catch (ClassCastException ignored) { //never
-                }
-            }
-            map.put(key, object);
-        }
-        return map;
-    }
-
     /**
      * Returns the backing map of this configuration.
      * The map is unmodifiable
@@ -328,6 +302,26 @@ public class Config extends YamlConfiguration implements Configuration {
         if (object instanceof ItemBuilder)
             return (ItemBuilder) object;
         return def;
+    }
+
+    @Override
+    public Object get(String path, Object def, Class<?> type, Path requester) {
+        Object o = get(path, def, type);
+        if (o == null)
+            o = def;
+
+        if (type != String.class)
+            return o;
+
+        if (ArrayUtils.contains(requester.options(), "fancy") && o != null)
+            return ChatColor.translateAlternateColorCodes('&', o.toString().replace("\\n", "\n"));
+
+        return o;
+    }
+
+    @Override
+    public Object get(String path, Class<?> type, Path requester) {
+        return get(path, null, type, requester);
     }
 
     public ItemBuilder getItemBuilder(String path) {
@@ -391,5 +385,28 @@ public class Config extends YamlConfiguration implements Configuration {
             config.reloadConfig();
 
         return config;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> convertToMap(ConfigurationSection section) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (String key : section.getKeys(false)) {
+            Object object = section.get(key);
+            if (object instanceof ConfigurationSection)
+                object = convertToMap((ConfigurationSection) object);
+            if (object instanceof List) {
+                try {
+                    final List<ConfigurationSection> list = (List<ConfigurationSection>) object;
+                    List<Map<String, Object>> fixedList = new ArrayList<>(list.size());
+                    for (ConfigurationSection configurationSection : list)
+                        fixedList.add(convertToMap(configurationSection));
+                    object = fixedList;
+                } catch (ClassCastException ignored) { //never
+                }
+            }
+            map.put(key, object);
+        }
+        return map;
     }
 }

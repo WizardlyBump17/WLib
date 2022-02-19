@@ -24,4 +24,6 @@ public @interface Path {
     boolean immutable() default false;
 
     String defaultValue() default "";
+
+    String[] options() default {};
 }
