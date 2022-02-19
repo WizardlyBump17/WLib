@@ -23,26 +23,25 @@ public class ConfigHandler {
         }
     }
 
-    private boolean reloadStaticField(Field field) {
+    private void reloadStaticField(Field field) {
         if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
-            return false;
+            return;
 
         Path path = field.getAnnotation(Path.class);
         if (path.immutable())
-            return true;
+            return;
 
         String configPath = path.value();
         String defaultValue = path.defaultValue();
         Object object = config.get(configPath, config.get(defaultValue), field.getType());
 
         if (object == null)
-            return true;
+            return;
 
         if (!ReflectionUtil.isAssignableFrom(field.getType(), object.getClass()))
-            return true;
+            return;
 
         ReflectionUtil.set(field, object);
-        return true;
     }
 
     public void save() {

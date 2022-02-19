@@ -1,17 +1,16 @@
 package com.wizardlybump17.wlib.config.holder;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitConfigHolderFactory extends ConfigHolderFactory {
 
+    @SuppressWarnings("unchecked")
     @Override
-    public String getType() {
-        return "bukkit";
-    }
+    public ConfigHolder create(Class<?> type) {
+        if (!JavaPlugin.class.isAssignableFrom(type))
+            throw new IllegalArgumentException("Class " + type.getName() + " is not a JavaPlugin");
 
-    @Override
-    public ConfigHolder create(String name) {
-        return new BukkitConfigHolder((JavaPlugin) Bukkit.getPluginManager().getPlugin(name));
+        JavaPlugin plugin = JavaPlugin.getPlugin((Class<? extends JavaPlugin>) type);
+        return new BukkitConfigHolder(plugin);
     }
 }

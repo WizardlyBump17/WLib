@@ -19,7 +19,5 @@ public @interface ConfigInfo {
      */
     String name();
 
-    String holderType();
-
-    String holderName();
+    Class<?> holderType();
 }

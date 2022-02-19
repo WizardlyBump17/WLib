@@ -22,13 +22,14 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
             return null;
 
         ConfigInfo info = clazz.getAnnotation(ConfigInfo.class);
-        ConfigHolderFactory factory = ConfigHolderFactoryRegistry.getInstance().get(info.holderType().toLowerCase());
+        ConfigHolderFactory factory = ConfigHolderFactoryRegistry.getInstance().get(info.holderType());
         if (factory == null)
             throw new NullPointerException("ConfigHolderFactory not found for " + info.holderType());
 
-        ConfigHolder holder = factory.create(info.holderName());
+        ConfigHolder holder = factory.create(info.holderType());
 
         ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()));
+        handler.reload();
         put(clazz, handler);
         return handler;
     }
