@@ -25,9 +25,9 @@ public final class DatabaseRegister {
     }
 
     public Database createDatabase(String propertiesFile, DatabaseHolder holder) {
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(new File(holder.getDataFolder(), propertiesFile)));
+        Properties properties = new Properties();
+        try (FileInputStream stream = new FileInputStream(new File(holder.getDataFolder(), propertiesFile))) {
+            properties.load(stream);
             return createDatabase(properties, holder);
         } catch (Exception e) {
             e.printStackTrace();

@@ -33,7 +33,7 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
     }
 
     @Override
-    public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) throws Throwable {
+    public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) {
         String commandExecution = commandName + " " + String.join(" ", args);
         manager.execute(sender, commandExecution);
     }
