@@ -16,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -340,7 +339,6 @@ public class Item {
         }
     }
 
-    @SerializableAs("item-builder")
     public static class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         private WMaterial wmaterial;
