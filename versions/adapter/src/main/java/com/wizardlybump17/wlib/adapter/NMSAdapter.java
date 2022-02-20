@@ -40,9 +40,4 @@ public abstract class NMSAdapter {
     public StringUtil getStringUtil() {
         return new LegacyStringUtil();
     }
-
-    @Deprecated
-    public final String getGlowTag() {
-        return GLOW_TAG;
-    }
 }

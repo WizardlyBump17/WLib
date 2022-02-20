@@ -22,38 +22,36 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     public Object nbtToJava(Object nbt) {
         if (!(nbt instanceof NBTBase))
             return nbt;
-        NBTBase base = (NBTBase) nbt;
 
-        if (base instanceof NBTTagByte)
-            return ((NBTTagByte) base).asByte();
-        if (base instanceof NBTTagByteArray)
-            return ((NBTTagByteArray) base).getBytes();
-        if (base instanceof NBTTagShort)
-            return ((NBTTagShort) base).asShort();
-        if (base instanceof NBTTagInt)
-            return ((NBTTagInt) base).asInt();
-        if (base instanceof NBTTagIntArray)
-            return ((NBTTagIntArray) base).getInts();
-        if (base instanceof NBTTagLong)
-            return ((NBTTagLong) base).asLong();
-        if (base instanceof NBTTagFloat)
-            return ((NBTTagFloat) base).asFloat();
-        if (base instanceof NBTTagDouble)
-            return ((NBTTagDouble) base).asDouble();
+        if (nbt instanceof NBTTagByte)
+            return ((NBTTagByte) nbt).asByte();
+        if (nbt instanceof NBTTagByteArray)
+            return ((NBTTagByteArray) nbt).getBytes();
+        if (nbt instanceof NBTTagShort)
+            return ((NBTTagShort) nbt).asShort();
+        if (nbt instanceof NBTTagInt)
+            return ((NBTTagInt) nbt).asInt();
+        if (nbt instanceof NBTTagIntArray)
+            return ((NBTTagIntArray) nbt).getInts();
+        if (nbt instanceof NBTTagLong)
+            return ((NBTTagLong) nbt).asLong();
+        if (nbt instanceof NBTTagFloat)
+            return ((NBTTagFloat) nbt).asFloat();
+        if (nbt instanceof NBTTagDouble)
+            return ((NBTTagDouble) nbt).asDouble();
+        if (nbt instanceof NBTTagString)
+            return ((NBTTagString) nbt).asString();
 
-        if (base instanceof NBTTagString)
-            return base.asString();
-
-        if (base instanceof NBTTagList) {
-            NBTTagList list = (NBTTagList) base;
+        if (nbt instanceof NBTTagList) {
+            NBTTagList list = (NBTTagList) nbt;
             List<Object> javaList = new ArrayList<>();
             for (NBTBase nbtBase : list)
                 javaList.add(nbtToJava(nbtBase));
             return javaList;
         }
 
-        if (base instanceof NBTTagCompound) {
-            NBTTagCompound compound = (NBTTagCompound) base;
+        if (nbt instanceof NBTTagCompound) {
+            NBTTagCompound compound = (NBTTagCompound) nbt;
             Map<String, Object> map = new LinkedHashMap<>();
             for (String key : compound.getKeys())
                 map.put(key, nbtToJava(compound.get(key)));
@@ -84,6 +82,8 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
             return NBTTagFloat.a((float) java);
         if (java instanceof Double)
             return NBTTagDouble.a((double) java);
+        if (java instanceof Boolean)
+            return NBTTagByte.a((byte) ((boolean) java ? 1 : 0));
 
         if (java instanceof List) {
             List<?> list = (List<?>) java;

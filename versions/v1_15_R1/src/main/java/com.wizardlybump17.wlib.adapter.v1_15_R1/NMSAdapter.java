@@ -82,6 +82,8 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
             return NBTTagFloat.a((float) java);
         if (java instanceof Double)
             return NBTTagDouble.a((double) java);
+        if (java instanceof Boolean)
+            return NBTTagByte.a((byte) ((boolean) java ? 1 : 0));
 
         if (java instanceof List) {
             List<?> list = (List<?>) java;
