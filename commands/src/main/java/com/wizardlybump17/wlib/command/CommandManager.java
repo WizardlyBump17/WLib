@@ -36,7 +36,9 @@ public class CommandManager {
                 );
 
                 commands.add(command);
-                holder.getCommand(command.getName()).setDefaultExecutor(this);
+                com.wizardlybump17.wlib.command.holder.Command holderCommand = holder.getCommand(command.getName());
+                if (holderCommand != null)
+                    holderCommand.setDefaultExecutor(this);
             }
         }
 
@@ -58,7 +60,6 @@ public class CommandManager {
                     case PERMISSION_FAIL:
                         return;
                     default:
-                        continue;
                 }
         }
     }
