@@ -23,7 +23,17 @@ public @interface Path {
      */
     boolean immutable() default false;
 
+    /**
+     * If the {@link #value()} cannot be found in the config, this path will be used instead
+     * @return the path to the default value
+     */
     String defaultValue() default "";
 
+    /**
+     * This stores some options for this path.<br>
+     * It can be useful to do things like formatting the string etc.<br>
+     * This is implementation dependent
+     * @return the options for this path
+     */
     String[] options() default {};
 }

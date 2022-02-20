@@ -1,5 +1,8 @@
 package com.wizardlybump17.wlib.config;
 
+/**
+ * Common interface for the configuration classes
+ */
 public interface Configuration {
 
     Object get(String path, Object def);

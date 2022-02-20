@@ -19,5 +19,8 @@ public @interface ConfigInfo {
      */
     String name();
 
+    /**
+     * @return the class of the holder of the config
+     */
     Class<?> holderType();
 }
