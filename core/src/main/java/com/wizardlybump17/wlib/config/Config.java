@@ -338,8 +338,13 @@ public class Config extends YamlConfiguration implements Configuration {
      */
     public static Config load(String filePath, JavaPlugin plugin, boolean saveDefault) {
         Config config = new Config(plugin, filePath, new File(plugin.getDataFolder(), filePath));
-        if (saveDefault)
-            config.saveDefaultConfig();
+
+        if (saveDefault) {
+            if (config.getFile().exists())
+                config.reloadConfig();
+            else
+                config.saveDefaultConfig();
+        }
 
         return config;
     }
