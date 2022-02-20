@@ -13,12 +13,18 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +50,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     @Nullable
     private Map<Enchantment, Integer> enchantments;
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder type(Material type) {
         this.type = type;
         return this;
@@ -56,6 +63,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @return this
      * @throws IllegalArgumentException if the provided type is not supported in the current server version
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder type(WMaterial type) {
         ItemStack item = type.getItemStack();
 
@@ -68,6 +76,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder lore(String... lore) {
         this.lore = new ArrayList<>(Arrays.asList(lore));
         return this;
@@ -77,16 +86,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return lore;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder lore(List<String> lore) {
         this.lore = lore;
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder itemFlags(ItemFlag... itemFlags) {
         this.itemFlags = new HashSet<>(Arrays.asList(itemFlags));
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder itemFlags(Set<ItemFlag> itemFlags) {
         this.itemFlags = itemFlags;
         return this;
@@ -99,6 +111,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @param value the value of the nbt tag
      * @return this
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder nbtTag(String key, Object value) {
         if (nbtTags == null)
             nbtTags = new LinkedHashMap<>();
@@ -117,6 +130,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @param nbtTags the nbt tags
      * @return this
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder nbtTags(Map<String, Object> nbtTags) {
         if (nbtTags != null)
             for (Map.Entry<String, Object> entry : nbtTags.entrySet())
@@ -130,6 +144,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @param customModelData the CustomModelData
      * @return this
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder customModelData(Integer customModelData) {
         return nbtTag("CustomModelData", customModelData);
     }
@@ -139,6 +154,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @param unbreakable if the item is unbreakable
      * @return this
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder unbreakable(Boolean unbreakable) {
         return nbtTag("Unbreakable", unbreakable);
     }
@@ -148,10 +164,12 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @param glow if the item is glowing
      * @return this
      */
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder glow(Boolean glow) {
         return nbtTag(NMSAdapter.GLOW_TAG, glow);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
         if (enchantments == null)
             enchantments = new HashMap<>();
@@ -293,5 +311,102 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.nbtTags((Map<String, Object>) map.get("nbt-tags"));
 
         return result;
+    }
+
+    public static String toBase64(ItemStack item) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeObject(item);
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ItemStack fromBase64(String base64) {
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            ItemStack item = (ItemStack) dataInput.readObject();
+            dataInput.close();
+            return item;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String toBase64(Collection<ItemStack> items) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            for (ItemStack item : items)
+                dataOutput.writeObject(item);
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<ItemStack> fromBase64List(String base64) {
+        List<ItemStack> items = new ArrayList<>();
+
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            int available = dataInput.available();
+            for (int i = 0; i < available; i++)
+                items.add((ItemStack) dataInput.readObject());
+            dataInput.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
+    public static String toBase64(Inventory inventory) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+
+            ItemStack[] contents = inventory.getContents();
+            for (int i = 0; i < contents.length; i++) {
+                ItemStack item = contents[i];
+                dataOutput.writeInt(i);
+                dataOutput.writeObject(item);
+            }
+
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<ItemStack> fromBase64Inventory(String base64) {
+        List<ItemStack> items = new ArrayList<>();
+
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            int available = dataInput.available();
+            for (int i = 0; i < available; i++) {
+                int slot = dataInput.readInt();
+                ItemStack item = (ItemStack) dataInput.readObject();
+                items.add(slot, item);
+            }
+            dataInput.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return items;
     }
 }
