@@ -13,6 +13,7 @@ public class ConfigHandler {
 
     private final Class<?> clazz;
     private final Configuration config;
+    private final Class<?> holder;
 
     public void reload() {
         config.reloadConfig();

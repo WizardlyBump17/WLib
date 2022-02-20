@@ -28,10 +28,20 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
         ConfigHolder holder = factory.create(info.holderType());
 
-        ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()));
+        ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()), info.holderType());
         handler.reload();
         put(clazz, handler);
         return handler;
+    }
+
+    /**
+     * This will reload all configs from that holder
+     * @param holder the holder who is holding the configs
+     */
+    public void reloadAll(Class<?> holder) {
+        for (ConfigHandler config : getMap().values())
+            if (holder == config.getHolder())
+                config.reload();
     }
 
     public static ConfigHandlerRegistry getInstance() {
