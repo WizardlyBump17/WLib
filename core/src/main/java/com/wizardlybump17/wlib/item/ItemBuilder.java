@@ -25,6 +25,8 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -359,9 +361,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            int available = dataInput.available();
-            for (int i = 0; i < available; i++)
-                items.add((ItemStack) dataInput.readObject());
+
+            while (readListItem(dataInput, items));
+
             dataInput.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -396,17 +398,42 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            int available = dataInput.available();
-            for (int i = 0; i < available; i++) {
-                int slot = dataInput.readInt();
-                ItemStack item = (ItemStack) dataInput.readObject();
-                items.add(slot, item);
-            }
+
+            while (readInventoryItem(dataInput, items));
+
             dataInput.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         return items;
+    }
+
+    private static boolean readInventoryItem(BukkitObjectInputStream stream, List<ItemStack> target) {
+        try {
+            @SuppressWarnings("unused")
+            int slot = stream.readInt();
+            ItemStack item = (ItemStack) stream.readObject();
+            target.add(item);
+            return true;
+        } catch (EOFException e) {
+            return false;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean readListItem(BukkitObjectInputStream stream, List<ItemStack> target) {
+        try {
+            ItemStack item = (ItemStack) stream.readObject();
+            target.add(item);
+            return true;
+        } catch (EOFException e) {
+            return false;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
