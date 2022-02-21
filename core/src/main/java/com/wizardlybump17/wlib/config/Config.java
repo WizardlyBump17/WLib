@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -310,11 +311,11 @@ public class Config extends YamlConfiguration implements Configuration {
         if (o == null)
             o = def;
 
-        if (type != String.class)
-            return o;
-
-        if (ArrayUtils.contains(requester.options(), "fancy") && o != null)
+        if (ArrayUtils.contains(requester.options(), "fancy") && o instanceof String)
             return ChatColor.translateAlternateColorCodes('&', o.toString().replace("\\n", "\n"));
+
+        if (o instanceof ConfigurationSection)
+            return convertToMap((MemorySection) o);
 
         return o;
     }

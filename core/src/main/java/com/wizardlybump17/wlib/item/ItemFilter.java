@@ -188,11 +188,10 @@ public class ItemFilter implements ConfigurationSerializable {
         return MapUtils.mapOf("filters", MapUtils.mapKeys(filters, type -> type.name().toLowerCase()));
     }
 
-    @SuppressWarnings("unchecked")
     public static ItemFilter deserialize(Map<String, Object> args) {
         Map<FilterType, Object> filters = new EnumMap<>(FilterType.class);
 
-        for (Map.Entry<String, Object> entry : ((Map<String, Object>) args.get("filters")).entrySet()) {
+        for (Map.Entry<String, Object> entry : args.entrySet()) {
             final Object value = entry.getValue();
             switch (entry.getKey().toLowerCase()) {
                 case "material":
