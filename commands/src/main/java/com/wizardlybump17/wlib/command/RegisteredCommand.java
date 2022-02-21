@@ -99,7 +99,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     private boolean parseRequiredOly(List<Object> target, List<String> strings) throws ArgsReaderException {
-        if (strings.size() != nodes.size())
+        if (nodes.size() > strings.size())
             return false;
 
         for (int i = 0; i < nodes.size(); i++) {
