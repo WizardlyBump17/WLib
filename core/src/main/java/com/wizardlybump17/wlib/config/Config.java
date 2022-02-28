@@ -314,10 +314,29 @@ public class Config extends YamlConfiguration implements Configuration {
         if (ArrayUtils.contains(requester.options(), "fancy") && o instanceof String)
             return ChatColor.translateAlternateColorCodes('&', o.toString().replace("\\n", "\n"));
 
+        if (o instanceof Number)
+            return fixNumber(o, type);
+
         if (o instanceof ConfigurationSection)
             return convertToMap((MemorySection) o);
 
         return o;
+    }
+
+    private Number fixNumber(Object object, Class<?> type) {
+        if (type == byte.class || type == Byte.class)
+            return ((Number) object).byteValue();
+        if (type == short.class || type == Short.class)
+            return ((Number) object).shortValue();
+        if (type == int.class || type == Integer.class)
+            return ((Number) object).intValue();
+        if (type == long.class || type == Long.class)
+            return ((Number) object).longValue();
+        if (type == float.class || type == Float.class)
+            return ((Number) object).floatValue();
+        if (type == double.class || type == Double.class)
+            return ((Number) object).doubleValue();
+        return 0;
     }
 
     @Override
