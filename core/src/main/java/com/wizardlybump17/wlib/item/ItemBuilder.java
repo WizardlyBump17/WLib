@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.WMaterial;
+import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -285,6 +286,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @SuppressWarnings("unchecked")
     public static ItemBuilder deserialize(Map<String, Object> map) {
+        StringUtil stringUtil = NMSAdapterRegister.getInstance().current().getStringUtil();
+
         ItemBuilder result = new ItemBuilder();
 
         try {
@@ -298,9 +301,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (map.containsKey("durability"))
             result.durability(Short.parseShort(map.get("durability").toString()));
         if (map.containsKey("display-name"))
-            result.displayName(map.get("display-name").toString());
+            result.displayName(stringUtil.colorize(map.get("display-name").toString()));
         if (map.containsKey("lore"))
-            result.lore((List<String>) map.get("lore"));
+            result.lore(stringUtil.colorize((List<String>) map.get("lore")));
         if (map.containsKey("item-flags"))
             result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
 
