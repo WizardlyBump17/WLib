@@ -3,10 +3,7 @@ package com.wizardlybump17.wlib.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -199,6 +196,15 @@ public class MapUtils {
         return map;
     }
 
+    /**
+     * Sorts the given map by the given comparator based on the values.<br>
+     * The returned value is a NEW {@link LinkedHashMap}
+     * @param map the map to be sorted
+     * @param comparator the comparator
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return the sorted map
+     */
     public static <K, V> Map<K, V> sortByValues(Map<K, V> map, Comparator<V> comparator) {
         return map.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(comparator))
@@ -208,5 +214,22 @@ public class MapUtils {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
+
+    /**
+     * Returns a new reversed map based on the given map.<br>
+     * This will only fully work if the map is a {@link SortedMap}
+     * @param map the map to be reversed
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return the reversed map
+     */
+    public static <K, V> Map<K, V> reversed(Map<K, V> map) {
+        List<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
+        Collections.reverse(entries);
+        Map<K, V> reversed = new LinkedHashMap<>(entries.size());
+        for (Map.Entry<K, V> entry : entries)
+            reversed.put(entry.getKey(), entry.getValue());
+        return reversed;
     }
 }
