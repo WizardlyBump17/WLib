@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 
 allprojects {
     group = 'com.wizardlybump17.wlib'
-    version = '1.3.1_1'
+    version = '1.3.1_2'
 
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
