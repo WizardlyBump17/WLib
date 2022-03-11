@@ -56,5 +56,7 @@ public class ConfigHandler {
                 e.printStackTrace();
             }
         }
+
+        config.saveConfig();
     }
 }
