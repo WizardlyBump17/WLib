@@ -130,6 +130,12 @@ public class Config extends YamlConfiguration implements Configuration {
             super.set(path, createSection(path, (Map<?, ?>) value));
             return;
         }
+
+        if (value instanceof NumberFormatter) {
+            super.set(path, ((NumberFormatter) value).getSuffixes());
+            return;
+        }
+
         super.set(path, value);
     }
 
