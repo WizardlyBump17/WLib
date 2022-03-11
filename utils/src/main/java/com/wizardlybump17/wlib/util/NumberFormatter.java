@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.Getter;
+
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //https://gist.github.com/arantesxyz/8788c1a7ac73bb2610426456cf8cdee6
+@Getter
 public class NumberFormatter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");

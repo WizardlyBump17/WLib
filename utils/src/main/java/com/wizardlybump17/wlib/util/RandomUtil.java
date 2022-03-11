@@ -1,10 +1,12 @@
 package com.wizardlybump17.wlib.util;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 @UtilityClass
 public class RandomUtil {
@@ -62,9 +64,13 @@ public class RandomUtil {
      * @return a random element from the array
      */
     public static <T> T randomElement(T[] array) {
+        return randomElement(array, RANDOM);
+    }
+
+    public static <T> T randomElement(T[] array, Random random) {
         if (array.length == 0)
             throw new ArrayIndexOutOfBoundsException("Array is empty");
-        return array[RANDOM.nextInt(array.length)];
+        return array[random.nextInt(array.length)];
     }
 
     /**
@@ -152,11 +158,35 @@ public class RandomUtil {
      * @param <T> the collection type
      * @return a random element from the collection
      */
-    @SuppressWarnings("unchecked")
     public static <T> T randomElement(Collection<T> collection) {
+        return randomElement(collection, RANDOM);
+    }
+
+    /**
+     * @param collection the collection
+     * @param random the random to use
+     * @param <T> the collection type
+     * @return a random element from the collection
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T randomElement(Collection<T> collection, Random random) {
         if (collection.isEmpty())
             throw new ArrayIndexOutOfBoundsException("Collection is empty");
-        return (T) randomElement(collection.toArray());
+        return (T) randomElement(collection.toArray(), random);
+    }
+
+    public static <T> T randomElement(T[] array, @NotNull Function<T, Number> percentageSupplier) {
+        if (array.length == 0)
+            throw new ArrayIndexOutOfBoundsException("Array is empty");
+        if (array.length == 1)
+            return array[0];
+
+        for (T t : array) {
+            Number percentage = percentageSupplier.apply(t);
+            if (checkPercentage(percentage.doubleValue()))
+                return t;
+        }
+        return randomElement(array, percentageSupplier);
     }
 
     /**

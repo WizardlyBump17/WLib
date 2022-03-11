@@ -264,7 +264,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @return a new builder with the data from the given item
      */
     public static ItemBuilder fromItemStack(ItemStack item) {
-        if (item == null || item.getType() == Material.AIR || !item.hasItemMeta())
+        if (item == null || item.getType() == Material.AIR)
             return new ItemBuilder();
 
         ItemBuilder result = new ItemBuilder();
