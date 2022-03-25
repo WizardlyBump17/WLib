@@ -1,12 +1,12 @@
 package com.wizardlybump17.wlib.config;
 
+import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.NumberFormatter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -318,7 +318,7 @@ public class Config extends YamlConfiguration implements Configuration {
             o = def;
 
         if (ArrayUtils.contains(requester.options(), "fancy") && o instanceof String)
-            return ChatColor.translateAlternateColorCodes('&', o.toString().replace("\\n", "\n"));
+            return NMSAdapterRegister.getInstance().current().getStringUtil().colorize(o.toString().replace("\\n", "\n"));
 
         if (o instanceof Number)
             return fixNumber(o, type);

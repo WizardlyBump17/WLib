@@ -9,7 +9,6 @@ import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -52,6 +51,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     private Map<String, Object> nbtTags;
     @Nullable
     private Map<Enchantment, Integer> enchantments;
+    private boolean applyColor = true;
 
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder type(Material type) {
@@ -85,8 +85,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    @NotNull
+    public String displayName() {
+        return displayName == null ? "" : displayName;
+    }
+
+    @NotNull
+    public Map<String, Object> nbtTags() {
+        return nbtTags == null ? new HashMap<>() : nbtTags;
+    }
+
+    @NotNull
     public List<String> lore() {
-        return lore;
+        return lore == null ? new ArrayList<>() : lore;
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -104,6 +115,11 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder itemFlags(Set<ItemFlag> itemFlags) {
         this.itemFlags = itemFlags;
+        return this;
+    }
+
+    public ItemBuilder applyColor(boolean applyColor) {
+        this.applyColor = applyColor;
         return this;
     }
 
@@ -189,8 +205,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return nbtTags == null ? null : (Boolean) nbtTags.get(NMSAdapter.GLOW_TAG);
     }
 
+    public Short damage() {
+        return nbtTags == null  || !nbtTags.containsKey("Damage") ? null : ((Number) nbtTags.get("Damage")).shortValue();
+    }
+
     public ItemStack build() {
-        ItemStack result = new ItemStack(type, amount == null ? 1 : amount, durability);
+        int amount = this.amount == null ? 1 : this.amount;
+        ItemStack result = damage() == null ? new ItemStack(type, amount, durability) : new ItemStack(type, amount);
 
         ItemAdapter adapter = ADAPTER.getItemAdapter(result);
         if (unbreakable() != null) {
@@ -206,9 +227,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         ItemMeta itemMeta = result.getItemMeta();
 
         if (displayName != null)
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+            itemMeta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
         if (lore != null)
-            itemMeta.setLore(lore);
+            itemMeta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
         if (itemFlags != null)
             itemMeta.addItemFlags(itemFlags.toArray(new ItemFlag[]{}));
         if (enchantments != null)
@@ -225,16 +246,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         result.put("type", type.name()); //implicit null check
         result.put("amount", amount);
-        result.put("durability", durability);
+        if (nbtTags != null && !nbtTags.containsKey("Damage"))
+            result.put("durability", durability);
         result.put("display-name", displayName);
         result.put("lore", lore);
-        result.put("item-flags", itemFlags);
-        result.put("enchantments", enchantments);
+        result.put("item-flags", itemFlags == null ? null : itemFlags.stream().map(Enum::name).collect(Collectors.toList()));
+        result.put("enchantments", enchantments == null ? null : MapUtils.mapKeys(enchantments, Enchantment::getName));
         result.put("nbt-tags", nbtTags);
 
-        MapUtils.removeNullValues(result);
-
-        return result;
+        return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
     }
 
     @Override
@@ -270,7 +290,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         ItemBuilder result = new ItemBuilder();
 
         result.type = item.getType();
-        result.amount = item.getAmount();
+        result.amount = item.getAmount() == 1 ? null : item.getAmount();
         result.durability = item.getDurability();
         result.enchantments = item.getEnchantments();
 
@@ -297,7 +317,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         }
 
         if (map.containsKey("amount"))
-            result.amount(Integer.parseInt(map.get("amount").toString()));
+            result.amount((Integer) map.get("amount"));
         if (map.containsKey("durability"))
             result.durability(Short.parseShort(map.get("durability").toString()));
         if (map.containsKey("display-name"))
