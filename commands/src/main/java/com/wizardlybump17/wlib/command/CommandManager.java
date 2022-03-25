@@ -58,6 +58,7 @@ public class CommandManager {
                 switch (command.execute(sender, string)) {
                     case SUCCESS:
                     case PERMISSION_FAIL:
+                    case INVALID_SENDER:
                         return;
                     default:
                 }

@@ -5,5 +5,6 @@ public enum CommandResult {
     SUCCESS,
     ARGS_FAIL,
     PERMISSION_FAIL,
-    METHOD_FAIL
+    METHOD_FAIL,
+    INVALID_SENDER
 }

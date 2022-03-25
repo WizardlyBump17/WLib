@@ -149,6 +149,9 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
+        if (!getSenderType().isInstance(sender))
+            return CommandResult.INVALID_SENDER;
+
         try {
             Optional<Object[]> parse = parse(string);
             if (!parse.isPresent())
