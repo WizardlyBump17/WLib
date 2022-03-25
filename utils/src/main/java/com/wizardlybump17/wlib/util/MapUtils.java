@@ -197,6 +197,23 @@ public class MapUtils {
     }
 
     /**
+     * Removes all empty values from the given map.<br>
+     * It will check for {@link Map#isEmpty()} and {@link Collection#isEmpty()}
+     * @param map the map
+     * @param <K> the map key type
+     * @param <V> the map value type
+     * @return the map without empty values
+     */
+    public static <K, V> Map<K, V> removeEmptyValues(Map<K, V> map) {
+        map.entrySet().removeIf(entry -> {
+            if (entry.getValue() instanceof Map && ((Map<?, ?>) entry.getValue()).isEmpty())
+                return true;
+            return entry.getValue() instanceof Collection && ((Collection<?>) entry.getValue()).isEmpty();
+        });
+        return map;
+    }
+
+    /**
      * Sorts the given map by the given comparator based on the values.<br>
      * The returned value is a NEW {@link LinkedHashMap}
      * @param map the map to be sorted
