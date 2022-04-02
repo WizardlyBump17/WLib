@@ -39,7 +39,7 @@ public class CustomInventory {
             this.paginatedHolder = paginatedHolder;
     }
 
-    public void addButton(int slot, ItemButton button) {
+    public void addButton(int slot, @Nullable ItemButton button) {
         if (button == null)
             return;
 

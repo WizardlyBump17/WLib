@@ -25,7 +25,7 @@ public class PaginatedInventory {
     @Setter
     private boolean unregisterListeners = true;
     private boolean listenersRegistered;
-    private final Map<String, Object> data;
+    private final Map<Object, Object> data;
 
     public void show(@NotNull HumanEntity player, int page) {
         if (page < 0 || page >= inventories.size())
@@ -84,20 +84,28 @@ public class PaginatedInventory {
         listenersRegistered = true;
     }
 
-    public void setData(String key, Object data) {
+    public void setData(Object key, Object data) {
         this.data.put(key, data);
     }
 
-    public boolean hasData(String key) {
+    public boolean hasData(Object key) {
         return data.containsKey(key);
     }
 
+    /**
+     * Gets the data with the provided key.<br>
+     * It will try to cast the data to the provided type
+     * @param key the key
+     * @param <T> the type of the data
+     * @return the data
+     */
     @Nullable
-    public Object getData(String key) {
-        return data.get(key);
+    @SuppressWarnings("unchecked")
+    public <T> T getData(Object key) {
+        return (T) data.get(key);
     }
 
-    public void removeData(String key) {
+    public void removeData(Object key) {
         data.remove(key);
     }
 

@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.UnaryOperator;
@@ -18,12 +19,15 @@ public class PaginatedInventoryBuilder {
     private String title;
     private String shape;
     @Getter
+    @NotNull
     private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private List<ItemButton> content = new ArrayList<>();
     private InventoryNavigator nextPage;
     private InventoryNavigator previousPage;
+    @NotNull
     private List<InventoryListener<?>> listeners = new ArrayList<>();
-    private Map<String, Object> initialData;
+    @NotNull
+    private Map<Object, Object> initialData = new HashMap<>();
 
     private PaginatedInventoryBuilder() {
     }
@@ -99,14 +103,12 @@ public class PaginatedInventoryBuilder {
         return this;
     }
 
-    public PaginatedInventoryBuilder initialData(Map<String, Object> initialData) {
-        this.initialData = initialData;
+    public PaginatedInventoryBuilder initialData(Map<Object, Object> initialData) {
+        this.initialData = initialData == null ? new HashMap<>() : initialData;
         return this;
     }
 
-    public PaginatedInventoryBuilder data(String key, Object value) {
-        if (initialData == null)
-            initialData = new HashMap<>();
+    public PaginatedInventoryBuilder data(Object key, Object value) {
         initialData.put(key, value);
         return this;
     }
@@ -119,7 +121,7 @@ public class PaginatedInventoryBuilder {
 
         int pages = getPages();
         ArrayList<CustomInventory> inventories = new ArrayList<>(pages);
-        PaginatedInventory paginatedInventory = new PaginatedInventory(inventories, listeners, initialData == null ? new HashMap<>() : initialData);
+        PaginatedInventory paginatedInventory = new PaginatedInventory(inventories, listeners, initialData);
 
         char[] shapeChars = shape.toCharArray();
 
@@ -132,32 +134,28 @@ public class PaginatedInventoryBuilder {
             inventory.setPaginatedHolder(paginatedInventory);
             inventories.add(inventory);
 
-            for (int slot = 0; slot < shape.length(); slot++) {
-                char c = shapeChars[slot];
-
+            int slot = 0;
+            for (char c : shapeChars) {
                 switch (c) {
                     case 'x': {
-                        if (content.isEmpty() || currentItem >= content.size())
+                        if (content.isEmpty() || currentItem >= content.size()) {
+                            slot++;
                             continue;
+                        }
 
-                        ItemButton item = content.get(currentItem++);
-                        if (item != null)
-                            inventory.addButton(slot, item);
+                        inventory.addButton(slot++, content.get(currentItem++));
                         continue;
                     }
 
                     case '>':
-                        setNavigator(slot, inventory, true, page, pages);
+                        setNavigator(slot++, inventory, true, page, pages);
                         continue;
 
                     case '<':
-                        setNavigator(slot, inventory, false, page, pages);
+                        setNavigator(slot++, inventory, false, page, pages);
                         continue;
 
-                    default: {
-                        if (shapeReplacements.containsKey(c))
-                            inventory.addButton(slot, shapeReplacements.get(c));
-                    }
+                    default: inventory.addButton(slot++, shapeReplacements.get(c));
                 }
             }
         }
