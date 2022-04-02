@@ -149,7 +149,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
-        if (!getSenderType().isInstance(sender))
+        if (!getSenderType().isInstance(sender) && !isSenderGeneric())
             return CommandResult.INVALID_SENDER;
 
         try {
@@ -171,9 +171,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
             List<Object> list = new ArrayList<>(Arrays.asList(objects));
 
-            list.add(0, sender);
-            if (isSenderGeneric())
-                list.set(0, sender.toGeneric());
+            list.add(0, isSenderGeneric() ? sender.toGeneric() : sender);
 
             if (list.size() != method.getParameterCount())
                 return CommandResult.ARGS_FAIL;

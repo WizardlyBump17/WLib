@@ -28,7 +28,7 @@ public interface CommandSender<S> {
      * @return the generic sender
      */
     @Nullable
-    default CommandSender<?> toGeneric() {
+    default <T> T toGeneric() {
         return null;
     }
 }
