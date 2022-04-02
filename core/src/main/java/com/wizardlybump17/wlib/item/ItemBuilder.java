@@ -37,24 +37,26 @@ import java.util.stream.Collectors;
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private static final NMSAdapter ADAPTER = NMSAdapterRegister.getInstance().current();
+    private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
 
     @NotNull
     private Material type;
     private Integer amount;
     private short durability;
-    private String displayName;
-    @Nullable
-    private List<String> lore;
-    @Nullable
-    private Set<ItemFlag> itemFlags;
-    @Nullable
-    private Map<String, Object> nbtTags;
-    @Nullable
-    private Map<Enchantment, Integer> enchantments;
+    @NotNull
+    private String displayName = "";
+    @NotNull
+    private List<String> lore = new ArrayList<>();
+    @NotNull
+    private Set<ItemFlag> itemFlags = new HashSet<>();
+    @NotNull
+    private Map<String, Object> nbtTags = new LinkedHashMap<>();
+    @NotNull
+    private Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
     private boolean applyColor = true;
 
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder type(Material type) {
+    public ItemBuilder type(@NotNull Material type) {
         this.type = type;
         return this;
     }
@@ -62,12 +64,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     /**
      * Sets the type of this builder to the given {@link WMaterial}.
      * The durability and nbt tags may be set to this item
+     *
      * @param type the type
      * @return this
      * @throws IllegalArgumentException if the provided type is not supported in the current server version
      */
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder type(WMaterial type) {
+    public ItemBuilder type(@NotNull WMaterial type) {
         ItemStack item = type.getItemStack();
 
         if (item == null)
@@ -80,40 +83,25 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder lore(String... lore) {
+    public ItemBuilder lore(@NotNull String... lore) {
         this.lore = new ArrayList<>(Arrays.asList(lore));
         return this;
     }
 
-    @NotNull
-    public String displayName() {
-        return displayName == null ? "" : displayName;
-    }
-
-    @NotNull
-    public Map<String, Object> nbtTags() {
-        return nbtTags == null ? new HashMap<>() : nbtTags;
-    }
-
-    @NotNull
-    public List<String> lore() {
-        return lore == null ? new ArrayList<>() : lore;
-    }
-
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder lore(List<String> lore) {
-        this.lore = lore;
+    public ItemBuilder lore(@NotNull List<String> lore) {
+        this.lore = new ArrayList<>(lore);
         return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder itemFlags(ItemFlag... itemFlags) {
+    public ItemBuilder itemFlags(@NotNull ItemFlag... itemFlags) {
         this.itemFlags = new HashSet<>(Arrays.asList(itemFlags));
         return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder itemFlags(Set<ItemFlag> itemFlags) {
+    public ItemBuilder itemFlags(@NotNull Set<ItemFlag> itemFlags) {
         this.itemFlags = itemFlags;
         return this;
     }
@@ -126,40 +114,46 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     /**
      * Sets or removes the nbt tag.
      * The value will be converted to a common Java object
-     * @param key the key of the nbt tag
+     *
+     * @param key   the key of the nbt tag
      * @param value the value of the nbt tag
      * @return this
      */
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder nbtTag(String key, Object value) {
-        if (nbtTags == null)
-            nbtTags = new LinkedHashMap<>();
+    public ItemBuilder nbtTag(@NotNull String key, @NotNull Object value) {
+        nbtTags.put(key, ADAPTER.nbtToJava(value));
+        return this;
+    }
 
-        if (value == null)
-            nbtTags.remove(key);
-        else
-            nbtTags.put(key, ADAPTER.nbtToJava(value));
-
+    /**
+     * Removes the nbt tag with the given key
+     *
+     * @param key the key of the nbt tag
+     * @return this
+     */
+    public ItemBuilder removeNbtTag(@NotNull String key) {
+        nbtTags.remove(key);
         return this;
     }
 
     /**
      * Sets all nbt tags to this item.
      * If the map is not null or empty, the values will be converted to a common Java object
+     *
      * @param nbtTags the nbt tags
      * @return this
      */
     @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder nbtTags(Map<String, Object> nbtTags) {
-        if (nbtTags != null)
-            for (Map.Entry<String, Object> entry : nbtTags.entrySet())
-                entry.setValue(ADAPTER.nbtToJava(entry.getValue()));
+    public ItemBuilder nbtTags(@NotNull Map<String, Object> nbtTags) {
+        for (Map.Entry<String, Object> entry : nbtTags.entrySet())
+            entry.setValue(ADAPTER.nbtToJava(entry.getValue()));
         this.nbtTags = nbtTags;
         return this;
     }
 
     /**
      * Sets the CustomModelData to the nbt tags
+     *
      * @param customModelData the CustomModelData
      * @return this
      */
@@ -170,6 +164,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     /**
      * Sets the Unbreakable to the nbt tags
+     *
      * @param unbreakable if the item is unbreakable
      * @return this
      */
@@ -180,6 +175,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     /**
      * Sets the {@link NMSAdapter#GLOW_TAG} to the nbt tags
+     *
      * @param glow if the item is glowing
      * @return this
      */
@@ -190,23 +186,38 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
-        if (enchantments == null)
-            enchantments = new HashMap<>();
-
         enchantments.put(enchantment, level);
         return this;
     }
 
+    @Nullable
     public Boolean unbreakable() {
-        return nbtTags == null ? null : (Boolean) nbtTags.get("Unbreakable");
+        return (Boolean) nbtTags.get("Unbreakable");
     }
 
+    @Nullable
     public Boolean glow() {
-        return nbtTags == null ? null : (Boolean) nbtTags.get(NMSAdapter.GLOW_TAG);
+        return (Boolean) nbtTags.get(NMSAdapter.GLOW_TAG);
     }
 
+    @Nullable
     public Short damage() {
-        return nbtTags == null  || !nbtTags.containsKey("Damage") ? null : ((Number) nbtTags.get("Damage")).shortValue();
+        return !nbtTags.containsKey("Damage") ? null : ((Number) nbtTags.get("Damage")).shortValue();
+    }
+
+    @NotNull
+    public String displayName() {
+        return displayName;
+    }
+
+    @NotNull
+    public List<String> lore() {
+        return lore;
+    }
+
+    @NotNull
+    public Set<ItemFlag> itemFlags() {
+        return itemFlags;
     }
 
     public ItemStack build() {
@@ -214,26 +225,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         ItemStack result = damage() == null ? new ItemStack(type, amount, durability) : new ItemStack(type, amount);
 
         ItemAdapter adapter = ADAPTER.getItemAdapter(result);
-        if (unbreakable() != null) {
-            adapter.setUnbreakable(unbreakable());
-            result = adapter.getTarget();
-        }
+        Boolean unbreakable = unbreakable();
+        if (unbreakable != null)
+            adapter.setUnbreakable(unbreakable);
 
-        if (nbtTags != null) {
-            adapter.setNbtTags(nbtTags);
-            result = adapter.getTarget();
-        }
+        adapter.setNbtTags(nbtTags);
+        result = adapter.getTarget();
 
         ItemMeta itemMeta = result.getItemMeta();
 
-        if (displayName != null)
-            itemMeta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
-        if (lore != null)
-            itemMeta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
-        if (itemFlags != null)
-            itemMeta.addItemFlags(itemFlags.toArray(new ItemFlag[]{}));
-        if (enchantments != null)
-            result.addUnsafeEnchantments(enchantments);
+        itemMeta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
+        itemMeta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
+        itemMeta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
+        result.addUnsafeEnchantments(enchantments);
 
         result.setItemMeta(itemMeta);
 
@@ -246,12 +250,12 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         result.put("type", type.name()); //implicit null check
         result.put("amount", amount);
-        if (nbtTags != null && !nbtTags.containsKey("Damage"))
+        if (!nbtTags.containsKey("Damage"))
             result.put("durability", durability);
         result.put("display-name", displayName);
         result.put("lore", lore);
-        result.put("item-flags", itemFlags == null ? null : itemFlags.stream().map(Enum::name).collect(Collectors.toList()));
-        result.put("enchantments", enchantments == null ? null : MapUtils.mapKeys(enchantments, Enchantment::getName));
+        result.put("item-flags", itemFlags.stream().map(Enum::name).collect(Collectors.toList()));
+        result.put("enchantments", MapUtils.mapKeys(enchantments, Enchantment::getName));
         result.put("nbt-tags", nbtTags);
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
@@ -262,14 +266,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         try {
             ItemBuilder builder = (ItemBuilder) super.clone();
 
-            if (lore != null)
-                builder.lore = new ArrayList<>(lore);
-            if (itemFlags != null)
-                builder.itemFlags = new HashSet<>(itemFlags);
-            if (nbtTags != null)
-                builder.nbtTags = new LinkedHashMap<>(nbtTags);
-            if (enchantments != null)
-                builder.enchantments = new HashMap<>(enchantments);
+            builder.lore = new ArrayList<>(lore);
+            builder.itemFlags = new HashSet<>(itemFlags);
+            builder.nbtTags = new LinkedHashMap<>(nbtTags);
+            builder.enchantments = new HashMap<>(enchantments);
 
             return builder;
         } catch (CloneNotSupportedException e) {
@@ -280,6 +280,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     /**
      * Copies the data from the given ItemStack into a new builder.
      * If the item is null, air or not have an ItemMeta, the builder will be empty
+     *
      * @param item the item to copy from
      * @return a new builder with the data from the given item
      */
@@ -295,8 +296,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.enchantments = item.getEnchantments();
 
         ItemMeta meta = item.getItemMeta();
-        result.displayName = meta.hasDisplayName() ? meta.getDisplayName() : null;
-        result.lore = meta.hasLore() ? meta.getLore() : null;
+        result.displayName = meta.hasDisplayName() ? meta.getDisplayName() : "";
+        result.lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         result.itemFlags = meta.getItemFlags();
 
         result.nbtTags = ADAPTER.getItemAdapter(item).getNbtTags();
@@ -385,7 +386,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
-            while (readListItem(dataInput, items));
+            while (readListItem(dataInput, items)) ;
 
             dataInput.close();
         } catch (Exception e) {
@@ -422,7 +423,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
-            while (readInventoryItem(dataInput, items));
+            while (readInventoryItem(dataInput, items)) ;
 
             dataInput.close();
         } catch (IOException e) {
