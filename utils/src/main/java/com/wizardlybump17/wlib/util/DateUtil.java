@@ -188,8 +188,9 @@ public class DateUtil {
     public static Long toMillis(String string) {
         try {
             return Long.parseLong(string) * 1000L;
-        } catch (NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) { //we need to convert it
         }
+
         long result = 0;
 
         for (Map.Entry<Pattern, Long> entry : TIME_UNITS.entrySet()) {

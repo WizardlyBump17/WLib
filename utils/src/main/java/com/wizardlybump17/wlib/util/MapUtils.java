@@ -118,8 +118,8 @@ public class MapUtils {
     }
 
     /**
-     * Creates a map using the given data. The data array must be a multiple of 2.
-     * The map type will be HashMap
+     * Creates a map using the given data. The data array must be a multiple of 2.<br>
+     * The map type will be HashMap.<br>
      * If the key or value is null, then it won't be stored
      * @param data the array
      * @param <K> the key type
@@ -133,8 +133,8 @@ public class MapUtils {
     }
 
     /**
-     * Creates a map using the given data. The data array must be a multiple of 2.
-     * The map type is provided by the supplier
+     * Creates a map using the given data. The data array must be a multiple of 2.<br>
+     * The map type is provided by the supplier.<br>
      * If the key or value is null, then it won't be stored
      * @param supplier which map it should use
      * @param data the array
@@ -234,8 +234,7 @@ public class MapUtils {
     }
 
     /**
-     * Returns a new reversed map based on the given map.<br>
-     * This will only fully work if the map is a {@link SortedMap}
+     * Returns a new reversed map based on the given map
      * @param map the map to be reversed
      * @param <K> the key type
      * @param <V> the value type
