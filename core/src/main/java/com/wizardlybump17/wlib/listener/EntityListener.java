@@ -50,7 +50,7 @@ public class EntityListener implements Listener {
             return;
 
         final PaginatedInventory paginatedInventory = ((CustomInventoryHolder) holder).getHolder();
-        if (paginatedInventory == null || !paginatedInventory.isUnregisterListeners())
+        if (!paginatedInventory.isUnregisterListeners())
             return;
 
         paginatedInventory.stopListeners();
