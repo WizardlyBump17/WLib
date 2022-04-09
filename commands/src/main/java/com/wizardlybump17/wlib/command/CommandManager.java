@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.command;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,13 +14,6 @@ public class CommandManager {
 
     private final List<RegisteredCommand> commands = new ArrayList<>();
     protected final CommandHolder<?> holder;
-    @Nullable
-    private final CommandExecutorListener listener;
-
-    public CommandManager(CommandHolder<?> holder) {
-        this.holder = holder;
-        this.listener = null;
-    }
 
     public void registerCommands(Object... objects) {
         for (Object object : objects) {
@@ -54,14 +46,14 @@ public class CommandManager {
             return;
 
         for (RegisteredCommand command : commands) {
-            if (listener == null || listener.shouldExecute(sender, command))
-                switch (command.execute(sender, string)) {
-                    case SUCCESS:
-                    case PERMISSION_FAIL:
-                    case INVALID_SENDER:
-                        return;
-                    default:
-                }
+            CommandResult result = command.execute(sender, string);
+            switch (result) {
+                case SUCCESS:
+                case PERMISSION_FAIL:
+                case INVALID_SENDER:
+                    return;
+                default:
+            }
         }
     }
 

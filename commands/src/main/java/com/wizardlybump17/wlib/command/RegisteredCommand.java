@@ -21,7 +21,6 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     private final Object object;
     private final Method method;
     private final List<ArgsNode> nodes = new ArrayList<>();
-    private Boolean senderGeneric;
 
     public RegisteredCommand(Command command, Object object, Method method) {
         this.command = command;
@@ -48,8 +47,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
                         ArgsReaderRegistry.INSTANCE.get(types[currentIndex++]),
                         description
                 ));
-            }
-            else
+            } else
                 nodes.add(new ArgsNode(
                         commandArg,
                         true,
@@ -92,13 +90,13 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
         List<Object> result = new ArrayList<>(nodes.size());
 
-        if (parseRequiredOly(result, toParse))
+        if (parseRequiredOnly(result, toParse))
             return Optional.of(result.toArray());
 
         return Optional.empty();
     }
 
-    private boolean parseRequiredOly(List<Object> target, List<String> strings) throws ArgsReaderException {
+    private boolean parseRequiredOnly(List<Object> target, List<String> strings) throws ArgsReaderException {
         if (nodes.size() > strings.size())
             return false;
 
@@ -149,13 +147,13 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
-        if (!getSenderType().isInstance(sender) && !isSenderGeneric())
-            return CommandResult.INVALID_SENDER;
-
         try {
             Optional<Object[]> parse = parse(string);
             if (!parse.isPresent())
                 return CommandResult.ARGS_FAIL;
+
+            if (!getSenderType().isInstance(sender) && !isSenderGeneric())
+                return CommandResult.INVALID_SENDER;
 
             Object[] objects = parse.get();
             return executeInternal(sender, objects);
@@ -195,17 +193,14 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public boolean isSenderGeneric() {
-        if (senderGeneric == null) {
-            try {
-                senderGeneric = (Boolean) getSenderType().getDeclaredMethod("isGeneric").invoke(null);
-            } catch (NoSuchMethodException e) {
-                senderGeneric = false;
-            } catch (Exception e) {
-                senderGeneric = false;
-                e.printStackTrace();
-            }
+        boolean result = false;
+        try {
+            result = (Boolean) getSenderType().getDeclaredMethod("isGeneric").invoke(null);
+        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return senderGeneric;
+        return result;
     }
 
     private static String trim(String string) {
