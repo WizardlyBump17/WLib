@@ -339,32 +339,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return result;
     }
 
-    public static String toBase64(ItemStack item) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
-            dataOutput.writeObject(item);
-            dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ItemStack fromBase64(String base64) {
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack item = (ItemStack) dataInput.readObject();
-            dataInput.close();
-            return item;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
+    /**
+     * @deprecated Use {@link com.wizardlybump17.wlib.util.ItemUtil#toBase64(ItemStack)}
+     */
+    @Deprecated
     public static String toBase64(Collection<ItemStack> items) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -379,6 +357,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         }
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public static List<ItemStack> fromBase64List(String base64) {
         List<ItemStack> items = new ArrayList<>();
 
@@ -396,6 +378,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return items;
     }
 
+    /**
+     * @deprecated Use {@link com.wizardlybump17.wlib.util.ItemUtil#toBase64(Inventory)}
+     */
+    @Deprecated
     public static String toBase64(Inventory inventory) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -416,6 +402,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         }
     }
 
+    /**
+     * @deprecated Use {@link com.wizardlybump17.wlib.util.ItemUtil#fromBase64Inventory(String)}
+     */
+    @Deprecated
     public static List<ItemStack> fromBase64Inventory(String base64) {
         List<ItemStack> items = new ArrayList<>();
 
