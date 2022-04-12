@@ -150,6 +150,8 @@ public class DateUtil {
             sb.append(diffMinutes).append(fullName ? " minutes" : "m").append(" ");
         if (diffSeconds > 0)
             sb.append(diffSeconds).append(fullName ? " seconds" : "s");
+        if (sb.length() == 0)
+            return fullName ? diff + " milliseconds" : diff + "ms";
 
         return sb.toString().trim();
     }

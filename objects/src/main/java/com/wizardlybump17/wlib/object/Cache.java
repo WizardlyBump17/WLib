@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.object;
 
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,5 +109,13 @@ public abstract class Cache<K, V, T> {
     @NotNull
     protected Map<K, V> getInitialMap() {
         return new HashMap<>();
+    }
+
+    @NotNull
+    public List<V> get(@NonNull Iterable<K> keys) {
+        List<V> result = new ArrayList<>(size());
+        for (K key : keys)
+            get(key).ifPresent(result::add);
+        return result;
     }
 }
