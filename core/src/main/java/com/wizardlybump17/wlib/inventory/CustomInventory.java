@@ -72,4 +72,17 @@ public class CustomInventory {
     public ItemButton getButton(int slot) {
         return buttons.get(slot);
     }
+
+    public void updateButton(char button) {
+        updateButton(indexOf(button));
+    }
+
+    public void updateButton(char button, ItemButton item) {
+        int key = indexOf(button);
+        if (key == -1)
+            return;
+
+        buttons.put(key, item);
+        addButton(key, item);
+    }
 }
