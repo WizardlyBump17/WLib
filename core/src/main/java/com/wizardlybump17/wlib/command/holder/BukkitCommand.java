@@ -21,7 +21,7 @@ public class BukkitCommand implements Command {
     }
 
     @Override
-    public void setDefaultExecutor(CommandManager manager) {
+    public void setDefaultExecutor(CommandManager manager, String name) {
         setExecutor(new BukkitCommandExecutor(manager));
     }
 }

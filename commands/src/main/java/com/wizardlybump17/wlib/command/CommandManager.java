@@ -30,7 +30,7 @@ public class CommandManager {
                 commands.add(command);
                 com.wizardlybump17.wlib.command.holder.Command holderCommand = holder.getCommand(command.getName());
                 if (holderCommand != null)
-                    holderCommand.setDefaultExecutor(this);
+                    holderCommand.setDefaultExecutor(this, command.getName());
             }
         }
 
@@ -61,6 +61,14 @@ public class CommandManager {
         List<RegisteredCommand> commands = new ArrayList<>(this.commands.size());
         for (RegisteredCommand command : this.commands)
             if (command.getName().equalsIgnoreCase(name))
+                commands.add(command);
+        return commands;
+    }
+
+    public List<RegisteredCommand> getCommands(Object object) {
+        List<RegisteredCommand> commands = new ArrayList<>(this.commands.size());
+        for (RegisteredCommand command : this.commands)
+            if (command.getObject() == object)
                 commands.add(command);
         return commands;
     }

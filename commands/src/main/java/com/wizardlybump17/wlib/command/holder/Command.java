@@ -12,8 +12,9 @@ public interface Command {
      * Used by the {@link com.wizardlybump17.wlib.command.CommandManager} when creating a new command.
      * This is used to set the default command executor.
      * The {@link #getExecutor()} should return the default command executor if the executor has not been set
-     * @param manager The {@link com.wizardlybump17.wlib.command.CommandManager} that is creating the command
+     * @param manager the {@link com.wizardlybump17.wlib.command.CommandManager} that is creating the command
+     * @param name the command name
      */
-    default void setDefaultExecutor(CommandManager manager) {
+    default void setDefaultExecutor(CommandManager manager, String name) {
     }
 }
