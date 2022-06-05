@@ -1,0 +1,31 @@
+repositories {
+    maven {
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+dependencies {
+    compileOnly(
+            'org.projectlombok:lombok:1.18.24',
+            'org.jetbrains:annotations:23.0.0',
+            'net.md-5:bungeecord-api:1.18-R0.1-SNAPSHOT',
+    )
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
+    implementation(
+            project(':commands'),
+            project(':config'),
+            project(':database'),
+            project(':objects'),
+            project(':utils'),
+    )
+}
+
+shadowJar {
+    archiveFileName = 'WLib-BungeeCord-' + project.version + '.jar'
+}
+
+processResources {
+    filesMatching('bungee.yml') {
+        expand 'version': project.version
+    }
+}

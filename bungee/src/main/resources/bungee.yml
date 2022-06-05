@@ -1,0 +1,4 @@
+name: WLib
+main: com.wizardlybump17.wlib.bungee.WLib
+version: '${version}'
+author: WizardlyBump17
