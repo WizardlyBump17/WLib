@@ -4,3 +4,4 @@ version: '${version}'
 author: WizardlyBump17
 api-version: '1.13'
 softdepend: [ProtocolLib] #ironic
+load: STARTUP
