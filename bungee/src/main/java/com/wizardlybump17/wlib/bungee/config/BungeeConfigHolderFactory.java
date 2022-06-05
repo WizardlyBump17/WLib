@@ -29,6 +29,6 @@ public class BungeeConfigHolderFactory extends ConfigHolderFactory {
             if (plugin.getClass() == clazz)
                 return new BungeeConfigHolder(plugin);
 
-        return null;
+        throw new IllegalArgumentException(clazz.getName() + " is not loaded");
     }
 }

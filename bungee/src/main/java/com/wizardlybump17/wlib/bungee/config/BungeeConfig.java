@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @RequiredArgsConstructor
 public class BungeeConfig implements Configuration {
@@ -71,6 +73,12 @@ public class BungeeConfig implements Configuration {
         return o;
     }
 
+    /**
+     * For {@link Path}. If the path is a number, it will be converted to the correct type.
+     * @param object the original object
+     * @param type the type to convert to
+     * @return the converted object
+     */
     private Number fixNumber(Object object, Class<?> type) {
         if (type == byte.class || type == Byte.class)
             return ((Number) object).byteValue();
@@ -84,6 +92,10 @@ public class BungeeConfig implements Configuration {
             return ((Number) object).floatValue();
         if (type == double.class || type == Double.class)
             return ((Number) object).doubleValue();
+        if (type == BigInteger.class)
+            return new BigInteger(object.toString());
+        if (type == BigDecimal.class)
+            return new BigDecimal(object.toString());
         return 0;
     }
 
@@ -123,7 +135,15 @@ public class BungeeConfig implements Configuration {
         }
     }
 
-    public static BungeeConfig load(String name, Plugin plugin) {
+    /**
+     * Loads a config based on the name of the file.<br>
+     * It will load the file from {@link Plugin#getDataFolder()}
+     * @param name the file name
+     * @param plugin the plugin
+     * @param saveDefault if it should generate the default config
+     * @return the loaded config
+     */
+    public static BungeeConfig load(String name, Plugin plugin, boolean saveDefault) {
         File file = new File(plugin.getDataFolder(), name);
         net.md_5.bungee.config.Configuration handle;
         if (file.exists())
@@ -138,7 +158,38 @@ public class BungeeConfig implements Configuration {
             handle = new net.md_5.bungee.config.Configuration();
 
         BungeeConfig config = new BungeeConfig(handle, name, file, plugin);
-        config.saveDefaultConfig();
+        if (saveDefault)
+            config.saveDefaultConfig();
         return config;
+    }
+
+    /**
+     * Loads a config based on the name of the file.<br>
+     * It will load the file from {@link Plugin#getDataFolder()}
+     * @param name the file name
+     * @param plugin the plugin
+     * @return the loaded config
+     */
+    public static BungeeConfig load(String name, Plugin plugin) {
+        return load(name, plugin, true);
+    }
+
+    /**
+     * Loads a config based on the given file
+     * @param file the file
+     * @param plugin the plugin
+     * @return the loaded config
+     */
+    public static BungeeConfig load(File file, Plugin plugin) {
+        net.md_5.bungee.config.Configuration handle;
+        try {
+            handle = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not load config from " + file);
+            e.printStackTrace();
+            return null;
+        }
+
+        return new BungeeConfig(handle, file.getName(), file, plugin);
     }
 }
