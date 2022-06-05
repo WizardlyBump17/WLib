@@ -14,7 +14,7 @@ public abstract class Database {
 
     private final DatabaseHolder holder;
     protected final Properties properties;
-    private Connection connection;
+    protected Connection connection;
 
     public boolean isClosed() {
         return connection == null;

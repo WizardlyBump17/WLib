@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -42,7 +43,9 @@ public final class DatabaseRegister {
             String type = properties.getProperty("type").toLowerCase();
             if (!databaseTypes.containsKey(type))
                 throw new IllegalArgumentException("invalid database type \"" + type + "\"");
-            return databaseTypes.get(type).getDeclaredConstructor(Properties.class, DatabaseHolder.class).newInstance(properties, holder);
+            Constructor<? extends Database> constructor = databaseTypes.get(type).getDeclaredConstructor(Properties.class, DatabaseHolder.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance(properties, holder);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
