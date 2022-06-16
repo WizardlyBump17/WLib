@@ -42,16 +42,22 @@ public abstract class Cache<K, V, T> {
      * @param key the key to remove
      * @return the value that was removed
      */
-    public Optional<V> remove(@NotNull K key) {
+    public Optional<V> remove(@Nullable K key) {
+        if (key == null)
+            return Optional.empty();
         return Optional.ofNullable(cache.remove(key));
     }
 
-    public boolean has(@NotNull K key) {
+    public boolean has(@Nullable K key) {
+        if (key == null)
+            return false;
         return cache.containsKey(key);
     }
 
     @NotNull
-    public Optional<V> get(@NotNull K key) {
+    public Optional<V> get(@Nullable K key) {
+        if (key == null)
+            return Optional.empty();
         return Optional.ofNullable(cache.get(key));
     }
 
