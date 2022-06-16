@@ -122,24 +122,32 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     private void checkArrays(String input, List<String> target) throws ArgsReaderException {
         List<String> currentArray = new ArrayList<>();
         for (String s : input.split(" ")) {
-            if (s.startsWith("\"") && s.endsWith("\"") && currentArray.isEmpty()) {
+            if (s.startsWith("\"") && s.endsWith("\"") && !s.endsWith("\\\"") && currentArray.isEmpty()) { //"string"
                 target.add(s);
                 continue;
             }
 
-            if (s.startsWith("\"") && currentArray.isEmpty()) {
+            if (!s.startsWith("\"") && currentArray.isEmpty()) { //string
+                target.add(s);
+                continue;
+            }
+
+            if (s.startsWith("\"") && currentArray.isEmpty()) { //"string
                 currentArray.add(s);
                 continue;
             }
 
-            if (s.endsWith("\"") && !s.endsWith("\\\"") && !currentArray.isEmpty()) {
+            if (s.endsWith("\"") && !s.endsWith("\\\"") && !currentArray.isEmpty()) { //string"
                 currentArray.add(s);
                 target.add(String.join(" ", currentArray));
                 currentArray.clear();
                 continue;
             }
 
-            target.add(s);
+            if (!currentArray.isEmpty())
+                currentArray.add(s);
+            else
+                target.add(s);
         }
 
         if (!currentArray.isEmpty())
