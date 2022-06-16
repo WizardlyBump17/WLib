@@ -2,8 +2,9 @@ package com.wizardlybump17.wlib.config;
 
 /**
  * Common interface for the configuration classes
+ * @param <H> the type of the handle
  */
-public interface Configuration {
+public interface Configuration<H> {
 
     Object get(String path, Object def);
 
@@ -28,4 +29,6 @@ public interface Configuration {
     void saveDefaultConfig();
 
     void reloadConfig();
+
+    H getHandle();
 }

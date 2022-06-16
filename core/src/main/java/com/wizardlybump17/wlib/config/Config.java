@@ -26,7 +26,7 @@ import java.util.*;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class Config extends YamlConfiguration implements Configuration {
+public class Config extends YamlConfiguration implements Configuration<YamlConfiguration> {
 
     private final JavaPlugin plugin;
     private final String name;
@@ -352,6 +352,11 @@ public class Config extends YamlConfiguration implements Configuration {
 
     public ItemBuilder getItemBuilder(String path) {
         return getItemBuilder(path, null);
+    }
+
+    @Override
+    public YamlConfiguration getHandle() {
+        return this;
     }
 
     /**
