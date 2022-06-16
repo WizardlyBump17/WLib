@@ -15,9 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
-public class BungeeConfig implements Configuration {
+public class BungeeConfig implements Configuration<net.md_5.bungee.config.Configuration> {
 
     @NotNull
     private net.md_5.bungee.config.Configuration handle;
@@ -30,6 +32,8 @@ public class BungeeConfig implements Configuration {
         Object o = handle.get(path, def);
         if (o instanceof String)
             return ColorUtil.format(o.toString().replace("\\n", "\n"));
+        if (o instanceof net.md_5.bungee.config.Configuration)
+            return toMap((net.md_5.bungee.config.Configuration) o);
         return o;
     }
 
@@ -39,8 +43,9 @@ public class BungeeConfig implements Configuration {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getByType(String path, T def) {
-        return handle.get(path, def);
+        return (T) get(path, def);
     }
 
     @Override
@@ -133,6 +138,27 @@ public class BungeeConfig implements Configuration {
             plugin.getLogger().severe("Could not load config from " + file);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @NotNull
+    public net.md_5.bungee.config.Configuration getHandle() {
+        return handle;
+    }
+
+    public Map<String, Object> asMap() {
+        return toMap(handle);
+    }
+
+    public static Map<String, Object> toMap(net.md_5.bungee.config.Configuration configuration) {
+        Map<String, Object> map = new HashMap<>();
+        for (String key : configuration.getKeys()) {
+            Object value = configuration.get(key);
+            if (value instanceof net.md_5.bungee.config.Configuration)
+                value = toMap((net.md_5.bungee.config.Configuration) value);
+            map.put(key, value);
+        }
+        return map;
     }
 
     /**
