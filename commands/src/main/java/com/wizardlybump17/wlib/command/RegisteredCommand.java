@@ -120,38 +120,56 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     private void checkArrays(String input, List<String> target) throws ArgsReaderException {
-        List<String> currentArray = new ArrayList<>();
-        for (String s : input.split(" ")) {
-            if (s.startsWith("\"") && s.endsWith("\"") && !s.endsWith("\\\"") && currentArray.isEmpty()) { //"string"
-                target.add(s);
-                continue;
-            }
-
-            if (!s.startsWith("\"") && currentArray.isEmpty()) { //string
-                target.add(s);
-                continue;
-            }
-
-            if (s.startsWith("\"") && currentArray.isEmpty()) { //"string
-                currentArray.add(s);
-                continue;
-            }
-
-            if (s.endsWith("\"") && !s.endsWith("\\\"") && !currentArray.isEmpty()) { //string"
-                currentArray.add(s);
-                target.add(String.join(" ", currentArray));
-                currentArray.clear();
-                continue;
-            }
-
-            if (!currentArray.isEmpty())
-                currentArray.add(s);
-            else
-                target.add(s);
+        if (input.indexOf('"') == -1) {
+            target.addAll(Arrays.asList(input.split(" ")));
+            return;
         }
 
-        if (!currentArray.isEmpty())
-            throw new ArgsReaderException("last array never finished");
+        int old = 0;
+        while (true) {
+            int start = indexOf(input, '"', old);
+            if (start++ == -1) {
+                target.addAll(Arrays.asList(input.substring(old).split(" ")));
+                return;
+            }
+
+            int end = indexOf(input, '"', start);
+            if (end == -1)
+                throw new ArgsReaderException("invalid string");
+
+            if (end - 1 >= 0 && input.charAt(end - 1) == '\\')
+                continue;
+
+            String substring = input.substring(old, start - 1);
+            if (!substring.isEmpty())
+                target.addAll(Arrays.asList(substring.split(" ")));
+
+            target.add(input.substring(start, end));
+            if (indexOf(input, '"', old = end + 1) != -1)
+                continue;
+
+            String s = input.substring(old);
+            if (!s.isEmpty())
+                target.addAll(Arrays.asList(s.split(" ")));
+            return;
+        }
+    }
+
+    private static int indexOf(String string, char c, int start) {
+        if (start >= string.length())
+            return -1;
+
+        int i = string.indexOf(c, start);
+        if (i == -1)
+            return -1;
+
+        if (i - 1 < 0)
+            return i;
+
+        if (string.charAt(i - 1) == '\\')
+            return indexOf(string, c, start + 1);
+
+        return i;
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
