@@ -285,6 +285,18 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @return a new builder with the data from the given item
      */
     public static ItemBuilder fromItemStack(ItemStack item) {
+        return fromItemStack(item, true);
+    }
+
+    /**
+     * Copies the data from the given ItemStack into a new builder.
+     * If the item is null, air or not have an ItemMeta, the builder will be empty
+     *
+     * @param item the item to copy from
+     * @param ignoreDefaultTags if the default nbt tags should be ignored
+     * @return a new builder with the data from the given item
+     */
+    public static ItemBuilder fromItemStack(ItemStack item, boolean ignoreDefaultTags) {
         if (item == null || item.getType() == Material.AIR)
             return new ItemBuilder();
 
@@ -300,7 +312,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         result.itemFlags = meta.getItemFlags();
 
-        result.nbtTags = ADAPTER.getItemAdapter(item).getNbtTags();
+        result.nbtTags = ADAPTER.getItemAdapter(item).getNbtTags(ignoreDefaultTags);
 
         return result;
     }

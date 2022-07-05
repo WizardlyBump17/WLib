@@ -40,31 +40,13 @@ public abstract class ItemAdapter {
 
     public abstract boolean hasNbtTag(String key);
 
-    /**
-     * Checks if this item has a tag with the specified key and type
-     *
-     * @param key  the key of the tag
-     * @param type the type of the tag
-     * @return true if the tag exists, false otherwise
-     */
-    public boolean hasNbtTag(String key, Object type) {
-        return hasNbtTag(key);
-    }
-
     public abstract Object getNbtTag(String key);
 
-    /**
-     * Gets the specified tag and type
-     *
-     * @param key  the key of the tag
-     * @param type the type of the tag
-     * @return the tag, or null if it doesn't exist
-     */
-    public Object getNbtTag(String key, Object type) {
-        return getNbtTag(key);
+    public Map<String, Object> getNbtTags() {
+        return getNbtTags(true);
     }
 
-    public abstract Map<String, Object> getNbtTags();
+    public abstract Map<String, Object> getNbtTags(boolean ignore);
 
     /**
      * Sets the custom model data. If in older versions,

@@ -33,10 +33,11 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> getNbtTags() {
+    public Map<String, Object> getNbtTags(boolean ignore) {
         Map<String, Object> tags = (Map<String, Object>) getMainAdapter().nbtToJava(getMainTag());
-        for (String tag : IGNORED_TAGS)
-            tags.remove(tag);
+        if (ignore)
+            for (String tag : IGNORED_TAGS)
+                tags.remove(tag);
         return tags;
     }
 
