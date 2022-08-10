@@ -1,17 +1,10 @@
-repositories {
-    maven {
-        url('https://repo.dmulloy2.net/repository/public/')
-    }
-}
-
 dependencies {
     compileOnly(
             'org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT',
-            'org.projectlombok:lombok:1.18.22',
-            'org.jetbrains:annotations:22.0.0',
-            'com.comphenix.protocol:ProtocolLib:4.7.0',
+            'org.projectlombok:lombok:1.18.24',
+            'org.jetbrains:annotations:23.0.0',
             project(':versions:adapter'),
             project(':utils')
     )
-    annotationProcessor('org.projectlombok:lombok:1.18.22')
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
 }
