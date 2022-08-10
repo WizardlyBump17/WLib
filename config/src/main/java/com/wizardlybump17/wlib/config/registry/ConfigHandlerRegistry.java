@@ -28,7 +28,7 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
         ConfigHolder holder = factory.create(info.holderType());
 
-        ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()), info.holderType());
+        ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()), info.holderType(), info.saveDefault());
         handler.reload();
         put(clazz, handler);
         return handler;

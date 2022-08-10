@@ -3,23 +3,29 @@ package com.wizardlybump17.wlib.config.handler;
 import com.wizardlybump17.wlib.config.Configuration;
 import com.wizardlybump17.wlib.config.Path;
 import com.wizardlybump17.wlib.util.ReflectionUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 @Data
+@AllArgsConstructor
 public class ConfigHandler {
 
     private final Class<?> clazz;
-    private final Configuration config;
+    private final Configuration<?> config;
     private final Class<?> holder;
+    private boolean saveDefault;
 
     public void reload() {
         config.reloadConfig();
 
         for (Field field : clazz.getDeclaredFields())
             reloadStaticField(field);
+
+        if (saveDefault)
+            save();
     }
 
     private void reloadStaticField(Field field) {
@@ -41,6 +47,9 @@ public class ConfigHandler {
             return;
 
         ReflectionUtil.set(field, object);
+
+        if (saveDefault)
+            config.set(configPath, object);
     }
 
     public void save() {

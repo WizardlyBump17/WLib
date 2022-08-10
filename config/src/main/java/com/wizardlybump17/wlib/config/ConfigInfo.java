@@ -23,4 +23,9 @@ public @interface ConfigInfo {
      * @return the class of the holder of the config
      */
     Class<?> holderType();
+
+    /**
+     * @return if it should save the default config based on the variables in the class. Defaults to false
+     */
+    boolean saveDefault() default false;
 }
