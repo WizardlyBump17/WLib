@@ -5,10 +5,9 @@ import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.bukkit.command.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
@@ -24,10 +23,10 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
             commandSender = new PlayerSender(((Player) sender));
         else if (sender instanceof ConsoleCommandSender)
             commandSender = new ConsoleSender(((ConsoleCommandSender) sender));
-        else {
+        else if (sender instanceof BlockCommandSender)
+            commandSender = new com.wizardlybump17.wlib.command.sender.BlockCommandSender((BlockCommandSender) sender);
+        else
             commandSender = new GenericSender(sender);
-            System.out.println("Could not determine the sender type of " + sender.getClass().getName() + ". Using GenericSender");
-        }
         execute(commandSender, command.getName(), args);
         return false;
     }
