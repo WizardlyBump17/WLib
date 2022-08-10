@@ -4,21 +4,16 @@ repositories {
 
 dependencies {
     compileOnly(
-            'org.projectlombok:lombok:1.18.22',
-            'org.jetbrains:annotations:22.0.0',
+            'org.projectlombok:lombok:1.18.24',
+            'org.jetbrains:annotations:23.0.0',
             'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
     )
-    annotationProcessor('org.projectlombok:lombok:1.18.22')
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
 
     implementation(
             project(':utils'),
             project(':versions:adapter'),
 
-            project(':versions:v1_8_R3'),
-            project(':versions:v1_12_R1'),
-            project(':versions:v1_13_R2'),
-            project(':versions:v1_15_R1'),
-            project(':versions:v1_16_R3'),
             project(':versions:v1_17_R1'),
             project(':versions:v1_18_R1'),
             project(':versions:v1_18_R2'),
