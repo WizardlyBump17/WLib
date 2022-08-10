@@ -2,17 +2,16 @@ package com.wizardlybump17.wlib.inventory.listener;
 
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-@EqualsAndHashCode
 @Builder
-@Getter
+@Data
 public class InventoryListener<T extends Event> implements Listener {
 
     @NotNull
@@ -28,6 +27,10 @@ public class InventoryListener<T extends Event> implements Listener {
     public void fire(Event event, PaginatedInventory inventory) {
         if (eventClass.isInstance(event))
             consumer.fire((T) event, inventory);
+    }
+
+    public void unregister() {
+        HandlerList.unregisterAll(this);
     }
 
     public static class InventoryListenerBuilder<T extends Event> {

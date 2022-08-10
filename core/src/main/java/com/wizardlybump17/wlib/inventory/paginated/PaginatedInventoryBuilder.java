@@ -6,10 +6,12 @@ import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.UnaryOperator;
@@ -37,8 +39,7 @@ public class PaginatedInventoryBuilder {
     }
 
     public PaginatedInventoryBuilder mapContent(UnaryOperator<ItemButton> function) {
-        for (int i = 0; i < content.size(); i++)
-            content.set(i, function.apply(content.get(i)));
+        content.replaceAll(function);
         return this;
     }
 
@@ -103,12 +104,12 @@ public class PaginatedInventoryBuilder {
         return this;
     }
 
-    public PaginatedInventoryBuilder initialData(Map<Object, Object> initialData) {
+    public PaginatedInventoryBuilder initialData(@Nullable Map<Object, Object> initialData) {
         this.initialData = initialData == null ? new HashMap<>() : initialData;
         return this;
     }
 
-    public PaginatedInventoryBuilder data(Object key, Object value) {
+    public PaginatedInventoryBuilder data(@NonNull Object key, @Nullable Object value) {
         initialData.put(key, value);
         return this;
     }
@@ -199,5 +200,10 @@ public class PaginatedInventoryBuilder {
                 presetItems++;
 
         return content.isEmpty() ? 1 : (int) Math.ceil((double) content.size() / (shape.length() - presetItems));
+    }
+
+    @Nullable
+    public Object getData(@NonNull String key) {
+        return initialData.get(key);
     }
 }

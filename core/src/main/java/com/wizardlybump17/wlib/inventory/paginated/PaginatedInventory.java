@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,6 +94,7 @@ public class PaginatedInventory {
     /**
      * Gets the data with the provided key.<br>
      * It will try to cast the data to the provided type
+     *
      * @param key the key
      * @param <T> the type of the data
      * @return the data
@@ -114,7 +114,7 @@ public class PaginatedInventory {
             return;
 
         for (InventoryListener<?> listener : listeners)
-            HandlerList.unregisterAll(listener);
+            listener.unregister();
 
         listenersRegistered = false;
     }
