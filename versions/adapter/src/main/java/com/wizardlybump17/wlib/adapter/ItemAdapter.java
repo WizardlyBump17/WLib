@@ -10,7 +10,7 @@ import java.util.Map;
 @Data
 public abstract class ItemAdapter {
 
-    protected static final String[] IGNORED_TAGS = {"display", "ench", "Enchantments", "HideFlags"};
+    protected static final String[] IGNORED_TAGS = {"display", "Enchantments", "HideFlags"};
 
     @NotNull
     protected ItemStack target;
