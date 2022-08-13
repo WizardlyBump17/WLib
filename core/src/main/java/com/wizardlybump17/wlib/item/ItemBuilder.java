@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -220,8 +221,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("durability", durability);
         result.put("display-name", displayName);
         result.put("lore", lore);
-        result.put("item-flags", itemFlags.stream().map(Enum::name).collect(Collectors.toList()));
-        result.put("enchantments", MapUtils.mapKeys(enchantments, Enchantment::getName));
+        result.put("item-flags", itemFlags.stream().map(Enum::name).toList());
+        result.put("enchantments", MapUtils.mapKeys(enchantments, enchantment -> enchantment.getKey().toString()));
         result.put("nbt-tags", nbtTags);
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
@@ -258,7 +259,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * Copies the data from the given ItemStack into a new builder.
      * If the item is null, air or not have an ItemMeta, the builder will be empty
      *
-     * @param item the item to copy from
+     * @param item              the item to copy from
      * @param ignoreDefaultTags if the default nbt tags should be ignored
      * @return a new builder with the data from the given item
      */
@@ -293,25 +294,18 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         ItemBuilder result = new ItemBuilder();
 
-        result.type = Material.valueOf(map.get("type").toString().toUpperCase());
-
-        if (map.containsKey("amount"))
-            result.amount((Integer) map.get("amount"));
-        if (map.containsKey("durability"))
-            result.durability(Integer.parseInt(map.get("durability").toString()));
-        if (map.containsKey("display-name"))
+        result.type = Material.valueOf((String) map.get("type"));
+        result.amount = (Integer) map.get("amount");
+        result.durability = (Integer) map.get("durability");
+        if (map.get("display-name") != null)
             result.displayName(stringUtil.colorize(map.get("display-name").toString()));
-        if (map.containsKey("lore"))
+        if (map.get("lore") != null)
             result.lore(stringUtil.colorize((List<String>) map.get("lore")));
-        if (map.containsKey("item-flags"))
+        if (map.get("item-flags") != null)
             result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
-
-        if (map.containsKey("enchantments")) {
-            Map<String, Integer> enchantments = (Map<String, Integer>) map.get("enchantments");
-            enchantments.forEach((key, value) -> result.enchantment(Enchantment.getByName(key), value));
-        }
-
-        if (map.containsKey("nbt-tags"))
+        if (map.get("enchantments") != null)
+            ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key)), value));
+        if (map.get("nbt-tags") != null)
             result.nbtTags((Map<String, Object>) map.get("nbt-tags"));
 
         return result;

@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.inventory.item;
 
-import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ public class ItemButton {
 
     public static final ItemButton BLACK_STAINED_GLASS_PANE = new ItemButton(
             new ItemBuilder()
-                    .type(WMaterial.BLACK_STAINED_GLASS_PANE)
+                    .type(Material.BLACK_STAINED_GLASS_PANE)
                     .displayName(" ")
                     .build()
     );

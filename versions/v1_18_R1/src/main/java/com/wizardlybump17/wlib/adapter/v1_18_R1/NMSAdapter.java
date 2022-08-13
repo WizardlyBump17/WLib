@@ -1,10 +1,7 @@
 package com.wizardlybump17.wlib.adapter.v1_18_R1;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.wizardlybump17.wlib.adapter.WMaterial;
 import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import net.minecraft.nbt.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -13,10 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
-
-    static {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener());
-    }
 
     @Override
     public Object nbtToJava(Object nbt) {
@@ -114,16 +107,6 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     @Override
     public ItemAdapter getItemAdapter(ItemStack item) {
         return new ItemAdapter(item, this);
-    }
-
-    @Override
-    public EntityAdapter newEntityAdapter(Entity entity) {
-        return new EntityAdapter(entity);
-    }
-
-    @Override
-    public ItemStack getFixedMaterial(WMaterial material) {
-        return material.getItemStack();
     }
 
     @Override
