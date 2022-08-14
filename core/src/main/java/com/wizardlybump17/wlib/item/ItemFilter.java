@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,7 +45,7 @@ public class ItemFilter implements ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     public boolean accept(ItemStack item) {
-        final Item.ItemBuilder builder = Item.fromItemStack(item);
+        final ItemBuilder builder = ItemBuilder.fromItemStack(item);
 
         for (Map.Entry<FilterType, Object> entry : filters.entrySet()) {
             final FilterType type = entry.getKey();
@@ -55,31 +54,31 @@ public class ItemFilter implements ConfigurationSerializable {
             switch (type) {
                 case GLOW: {
                     final boolean glow = (boolean) filter;
-                    if ((glow && builder.hasGlow()) || (!glow && !builder.hasGlow()))
+                    if ((glow && builder.glow()) || (!glow && !builder.glow()))
                         continue;
                     return false;
                 }
 
                 case UNBREAKABLE: {
                     final boolean unbreakable = (boolean) filter;
-                    if ((unbreakable && builder.isUnbreakable()) || (!unbreakable && !builder.isUnbreakable()))
+                    if ((unbreakable && builder.unbreakable()) || (!unbreakable && !builder.unbreakable()))
                         continue;
                     return false;
                 }
 
                 case MATERIAL: {
                     final String material = filter.toString();
-                    if (!test(material.toLowerCase(), builder.getType().name().toLowerCase()))
+                    if (!test(material.toLowerCase(), builder.type().name().toLowerCase()))
                         return false;
                     continue;
                 }
 
                 case LORE: {
                     final List<String> lore = (List<String>) filter;
-                    if (lore == null && builder.getLore().isEmpty())
+                    if (lore == null && builder.lore().isEmpty())
                         continue;
-                    if (lore != null && !builder.getLore().isEmpty()) {
-                        if (!builder.getLore().containsAll(lore))
+                    if (lore != null && !builder.lore().isEmpty()) {
+                        if (!builder.lore().containsAll(lore))
                             return false;
                         continue;
                     }
@@ -88,10 +87,10 @@ public class ItemFilter implements ConfigurationSerializable {
 
                 case DISPLAY_NAME: {
                     final String displayName = (String) filter;
-                    if (builder.getDisplayName() == null && displayName == null)
+                    if (builder.displayName().isEmpty() && displayName == null)
                         continue;
-                    if (builder.getDisplayName() != null && displayName != null) {
-                        if (!test(displayName.toLowerCase(), builder.getDisplayName()))
+                    if (!builder.displayName().isEmpty() && displayName != null) {
+                        if (!test(displayName.toLowerCase(), builder.displayName()))
                             return false;
                         continue;
                     }
@@ -100,10 +99,10 @@ public class ItemFilter implements ConfigurationSerializable {
 
                 case FLAGS: {
                     final Collection<String> flags = (Collection<String>) filter;
-                    if (flags == null && builder.getFlags().isEmpty())
+                    if (flags == null && builder.itemFlags().isEmpty())
                         continue;
-                    if (flags != null && !builder.getFlags().isEmpty()) {
-                        if (!builder.getFlags().stream().map(ItemFlag::name).collect(Collectors.toList()).containsAll(flags))
+                    if (flags != null && !builder.itemFlags().isEmpty()) {
+                        if (!builder.itemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()).containsAll(flags))
                             return false;
                         continue;
                     }
@@ -112,10 +111,10 @@ public class ItemFilter implements ConfigurationSerializable {
 
                 case ENCHANTMENTS: {
                     final Map<String, Integer> enchantments = (Map<String, Integer>) filter;
-                    if (enchantments == null && builder.getEnchantments().isEmpty())
+                    if (enchantments == null && builder.enchantments().isEmpty())
                         continue;
-                    if (enchantments != null && !builder.getEnchantments().isEmpty()) {
-                        if (!MapUtils.contains(MapUtils.mapKeys(builder.getEnchantments(), Enchantment::getName), enchantments))
+                    if (enchantments != null && !builder.enchantments().isEmpty()) {
+                        if (!MapUtils.contains(MapUtils.mapKeys(builder.enchantments(), enchantment -> enchantment.getKey().toString()), enchantments))
                             return false;
                         continue;
                     }
@@ -124,10 +123,10 @@ public class ItemFilter implements ConfigurationSerializable {
 
                 case NBT_TAGS: {
                     final Map<String, Object> nbtTags = (Map<String, Object>) filter;
-                    if (nbtTags == null && builder.getNbtTags().isEmpty())
+                    if (nbtTags == null && builder.nbtTags().isEmpty())
                         continue;
-                    if (nbtTags != null && !builder.getNbtTags().isEmpty()) {
-                        if (!MapUtils.contains(builder.getNbtTags(), nbtTags))
+                    if (nbtTags != null && !builder.nbtTags().isEmpty()) {
+                        if (!MapUtils.contains(builder.nbtTags(), nbtTags))
                             return false;
                         continue;
                     }

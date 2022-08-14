@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.inventory.item;
 
-import com.wizardlybump17.wlib.item.Item;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,14 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryNavigator {
 
     public static final InventoryNavigator NEXT_PAGE = new InventoryNavigator(
-            Item.builder()
+            new ItemBuilder()
                     .type(Material.ARROW)
                     .displayName("§aNext Page")
                     .build(),
             '#'
     );
     public static final InventoryNavigator PREVIOUS_PAGE = new InventoryNavigator(
-            Item.builder()
+            new ItemBuilder()
                     .type(Material.ARROW)
                     .displayName("§aPrevious Page")
                     .build(),
