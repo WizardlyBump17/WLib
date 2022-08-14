@@ -1,54 +1,29 @@
 package com.wizardlybump17.wlib.adapter;
 
-import lombok.Data;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.Map;
 
-@Data
 public abstract class ItemAdapter {
 
-    protected static final String[] IGNORED_TAGS = {"display", "Enchantments", "HideFlags"};
+    public static final PersistentDataAdapterContext PERSISTENT_DATA_ADAPTER_CONTEXT = new ItemStack(Material.BOW).getItemMeta().getPersistentDataContainer().getAdapterContext();;
+    private static ItemAdapter instance;
 
-    @NotNull
-    protected ItemStack target;
-    @NotNull
-    protected ItemMeta meta;
-    @NotNull
-    protected Object nmsStack;
-    @NotNull
-    protected final NMSAdapter mainAdapter;
-
-    protected ItemAdapter(ItemStack itemStack, @NotNull Object nmsStack, @NotNull NMSAdapter mainAdapter) {
-        target = itemStack;
-        meta = itemStack.getItemMeta();
-        this.nmsStack = nmsStack;
-        this.mainAdapter = mainAdapter;
+    public static ItemAdapter getInstance() {
+        return instance;
     }
 
-    public abstract void setNbtTag(String key, Object value);
-
-    public void setNbtTags(Map<String, Object> tags) {
-        setNbtTags(tags, true);
+    public static void setInstance(ItemAdapter instance) {
+        if (ItemAdapter.instance == null)
+            ItemAdapter.instance = instance;
     }
 
-    public abstract void setNbtTags(Map<String, Object> tags, boolean clearOld);
+    public abstract Map<Object, Object> serializeContainer(PersistentDataContainer container);
 
-    public abstract void removeNbtTag(String key);
+    public abstract PersistentDataContainer deserializeContainer(Map<Object, Object> map);
 
-    public abstract boolean hasNbtTag(String key);
-
-    public abstract Object getNbtTag(String key);
-
-    public Map<String, Object> getNbtTags() {
-        return getNbtTags(true);
-    }
-
-    public abstract Map<String, Object> getNbtTags(boolean ignore);
-
-    public abstract Object getMainTag();
-
-    public abstract void setMainTag(Object tag);
+    public abstract void transferPersistentData(PersistentDataContainer from, PersistentDataContainer to);
 }

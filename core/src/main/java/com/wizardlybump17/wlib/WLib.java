@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib;
 
-import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
+import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.EntityTypeArgsReader;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
@@ -19,11 +19,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WLib extends JavaPlugin {
 
-    private static final NMSAdapterRegister ADAPTER_REGISTER = NMSAdapterRegister.getInstance();
     private final DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
 
     @Override
     public void onLoad() {
+        initAdapters();
+        initSerializables();
+        initCommandSystem();
+
         GlowEnchantment.register();
 
         databaseRegister.registerDatabaseClass(MySQLDatabase.class);
@@ -32,10 +35,6 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        initAdapters();
-        initSerializables();
-        initCommandSystem();
-
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
 
         getLogger().info("WLib enabled.");
@@ -58,20 +57,33 @@ public class WLib extends JavaPlugin {
     }
 
     private void initAdapters() {
-        selectAdapter();
-        if (ADAPTER_REGISTER.current() == null)
-            getLogger().severe("No NMS adapter found for the current version (" + Bukkit.getServer().getClass().getName() + ")!!!");
-        else
-            getLogger().info("Loaded NMS adapter for version " + ADAPTER_REGISTER.current().getTargetVersion());
+        printVersion(selectItemAdapter(), "item");
     }
 
-    private void selectAdapter() {
+    private void printVersion(String version, String what) {
+        if (version == null)
+            getLogger().severe("Could not find " + what + " adapter.");
+        else
+            getLogger().info(what + " adapter found: " + version);
+    }
+
+    private String selectItemAdapter() {
         String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
-        switch (version) {
-            case "v1_17_R1" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
-            case "v1_18_R1" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R1.NMSAdapter());
-            case "v1_18_R2" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R2.NMSAdapter());
-        }
+        return switch (version) {
+            case "v1_17_R1" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.ItemAdapter());
+                yield "v1_17_R1";
+            }
+            case "v1_18_R1" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.ItemAdapter());
+                yield "v1_18_R1";
+            }
+            case "v1_18_R2" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.ItemAdapter());
+                yield "v1_18_R2";
+            }
+            default -> null;
+        };
     }
 
     public static WLib getInstance() {

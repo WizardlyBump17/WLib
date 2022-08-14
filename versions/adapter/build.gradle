@@ -1,7 +1,7 @@
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.24',
-            'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT',
+            'org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT',
             'org.jetbrains:annotations:23.0.0',
             project(':utils')
     )
