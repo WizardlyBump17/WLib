@@ -296,7 +296,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         result.type = Material.valueOf((String) map.get("type"));
         result.amount = (Integer) map.get("amount");
-        result.durability = (Integer) map.get("durability");
+        result.durability = (int) map.getOrDefault("durability", 0);
         if (map.get("display-name") != null)
             result.displayName(stringUtil.colorize(map.get("display-name").toString()));
         if (map.get("lore") != null)
