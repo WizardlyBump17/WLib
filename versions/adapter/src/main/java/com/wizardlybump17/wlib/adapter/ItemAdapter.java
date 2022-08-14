@@ -48,26 +48,7 @@ public abstract class ItemAdapter {
 
     public abstract Map<String, Object> getNbtTags(boolean ignore);
 
-    /**
-     * Sets the custom model data. If in older versions,
-     * it will simply add the CustomModelData tag and won't have results in client-side
-     * @param data the custom model data
-     */
-    public abstract void setCustomModelData(Integer data);
-
-    public abstract boolean hasCustomModelData();
-
-    public abstract Integer getCustomModelData();
-
     public abstract Object getMainTag();
 
     public abstract void setMainTag(Object tag);
-
-    public abstract boolean isUnbreakable();
-
-    public abstract void setUnbreakable(boolean unbreakable);
-
-    public abstract boolean hasGlow();
-
-    public abstract void setGlow(boolean glow);
 }

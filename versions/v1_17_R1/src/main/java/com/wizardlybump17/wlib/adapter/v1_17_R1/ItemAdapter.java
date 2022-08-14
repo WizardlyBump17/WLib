@@ -6,8 +6,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-import static com.wizardlybump17.wlib.adapter.NMSAdapter.GLOW_TAG;
-
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     protected ItemAdapter(ItemStack target, NMSAdapter mainAdapter) {
@@ -74,47 +72,7 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     }
 
     @Override
-    public boolean isUnbreakable() {
-        return meta.isUnbreakable();
-    }
-
-    @Override
     public NMSAdapter getMainAdapter() {
         return (NMSAdapter) mainAdapter;
-    }
-
-    @Override
-    public void setUnbreakable(boolean unbreakable) {
-        meta.setUnbreakable(unbreakable);
-        target.setItemMeta(meta);
-    }
-
-    @Override
-    public boolean hasGlow() {
-        return hasNbtTag(GLOW_TAG);
-    }
-
-    @Override
-    public void setGlow(boolean glow) {
-        if (glow)
-            setNbtTag(GLOW_TAG, "glow");
-        else
-            removeNbtTag(GLOW_TAG);
-    }
-
-    @Override
-    public void setCustomModelData(Integer data) {
-        meta.setCustomModelData(data);
-        target.setItemMeta(meta);
-    }
-
-    @Override
-    public Integer getCustomModelData() {
-        return hasCustomModelData() ? meta.getCustomModelData() : null;
-    }
-
-    @Override
-    public boolean hasCustomModelData() {
-        return meta.hasCustomModelData();
     }
 }

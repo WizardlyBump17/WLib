@@ -10,6 +10,7 @@ import com.wizardlybump17.wlib.database.MySQLDatabase;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
+import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -23,6 +24,8 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        GlowEnchantment.register();
+
         databaseRegister.registerDatabaseClass(MySQLDatabase.class);
         databaseRegister.registerDatabaseClass(SQLiteDatabase.class);
     }
@@ -54,7 +57,7 @@ public class WLib extends JavaPlugin {
         ConfigurationSerialization.registerClass(ItemFilter.class, "item-filter");
     }
 
-    private void initAdapters() { //with my language it would be easier :sunglasses:
+    private void initAdapters() {
         selectAdapter();
         if (ADAPTER_REGISTER.current() == null)
             getLogger().severe("No NMS adapter found for the current version (" + Bukkit.getServer().getClass().getName() + ")!!!");
