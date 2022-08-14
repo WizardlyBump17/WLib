@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -41,12 +42,13 @@ public class ItemUtil {
         }
     }
 
-    public static String toBase64(Inventory inventory) {
+    public static String toBase64(InventoryView view) {
+        Inventory inventory = view.getTopInventory();
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
-            dataOutput.writeUTF(inventory.getTitle());
+            dataOutput.writeUTF(view.getTitle());
             dataOutput.writeByte(inventory.getSize());
             dataOutput.writeUTF(inventory.getType().name());
 
