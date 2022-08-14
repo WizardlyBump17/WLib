@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.adapter.util.StringUtil;
+import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,6 +47,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     @NotNull
     private Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
     private boolean applyColor = true;
+    private boolean unbreakable;
+    private Integer customModelData;
 
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder type(@NotNull Material type) {
@@ -123,53 +125,22 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
-    /**
-     * Sets the CustomModelData to the nbt tags
-     *
-     * @param customModelData the CustomModelData
-     * @return this
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder customModelData(Integer customModelData) {
-        return nbtTag("CustomModelData", customModelData);
-    }
-
-    /**
-     * Sets the Unbreakable to the nbt tags
-     *
-     * @param unbreakable if the item is unbreakable
-     * @return this
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder unbreakable(Boolean unbreakable) {
-        return nbtTag("Unbreakable", unbreakable);
-    }
-
-    /**
-     * Sets the {@link NMSAdapter#GLOW_TAG} to the nbt tags
-     *
-     * @param glow if the item is glowing
-     * @return this
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder glow(Boolean glow) {
-        return nbtTag(NMSAdapter.GLOW_TAG, glow);
-    }
-
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
         enchantments.put(enchantment, level);
         return this;
     }
 
-    @Nullable
-    public Boolean unbreakable() {
-        return (Boolean) nbtTags.get("Unbreakable");
+    public ItemBuilder glow(boolean glow) {
+        if (glow)
+            enchantments.put(GlowEnchantment.INSTANCE, 0);
+        else
+            enchantments.remove(GlowEnchantment.INSTANCE);
+        return this;
     }
 
-    @Nullable
-    public Boolean glow() {
-        return (Boolean) nbtTags.get(NMSAdapter.GLOW_TAG);
+    public boolean glow() {
+        return enchantments.containsKey(GlowEnchantment.INSTANCE);
     }
 
     @NotNull
@@ -188,25 +159,25 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemStack build() {
-        int amount = this.amount == null ? 1 : this.amount;
-        ItemStack result = new ItemStack(type, amount);
+        ItemStack result = new ItemStack(type, amount == null ? 1 : amount);
+        ItemMeta meta = result.getItemMeta();
+        if (meta == null)
+            return result;
+
+        meta.setUnbreakable(unbreakable);
+        meta.setCustomModelData(customModelData);
 
         ItemAdapter adapter = ADAPTER.getItemAdapter(result);
-        Boolean unbreakable = unbreakable();
-        if (unbreakable != null)
-            adapter.setUnbreakable(unbreakable);
 
         adapter.setNbtTags(nbtTags);
         result = adapter.getTarget();
 
-        ItemMeta itemMeta = result.getItemMeta();
-
-        itemMeta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
-        itemMeta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
-        itemMeta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
+        meta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
+        meta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
+        meta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
         result.addUnsafeEnchantments(enchantments);
 
-        result.setItemMeta(itemMeta);
+        result.setItemMeta(meta);
 
         return result;
     }
@@ -224,6 +195,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.put("item-flags", itemFlags.stream().map(Enum::name).toList());
         result.put("enchantments", MapUtils.mapKeys(enchantments, enchantment -> enchantment.getKey().toString()));
         result.put("nbt-tags", nbtTags);
+        result.put("unbreakable", unbreakable);
+        result.put("custom-model-data", customModelData);
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
     }
@@ -307,6 +280,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key)), value));
         if (map.get("nbt-tags") != null)
             result.nbtTags((Map<String, Object>) map.get("nbt-tags"));
+        result.unbreakable((boolean) map.getOrDefault("unbreakable", false));
+        result.customModelData((Integer) map.get("custom-model-data"));
 
         return result;
     }

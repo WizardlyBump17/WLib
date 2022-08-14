@@ -11,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class NMSAdapter {
 
-    public static final String GLOW_TAG = "WLib-glowing";
-
     public abstract Object nbtToJava(Object nbt);
 
     public abstract Object javaToNbt(Object java);
