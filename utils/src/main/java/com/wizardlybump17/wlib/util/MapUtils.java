@@ -16,7 +16,7 @@ public class MapUtils {
     /**
      * Utility to check if the map contains another map
      * @param original the original map
-     * @param toCheck the other map that contains the values to be checked
+     * @param toCheck the other map that contains the keys to be checked
      * @param <K> the map key type
      * @param <V> the value type
      * @return if the original map contains the other map
