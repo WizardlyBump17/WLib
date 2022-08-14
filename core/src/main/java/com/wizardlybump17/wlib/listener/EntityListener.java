@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.listener;
 
-import com.wizardlybump17.wlib.adapter.EntityAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
@@ -65,16 +64,6 @@ public class EntityListener implements Listener {
             return;
 
         paginatedInventory.stopListeners();
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        EntityAdapter.deleteFromCache(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        EntityAdapter.deleteFromCache(event.getEntity());
     }
 
     @EventHandler
