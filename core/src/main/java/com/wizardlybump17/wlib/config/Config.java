@@ -1,9 +1,9 @@
 package com.wizardlybump17.wlib.config;
 
-import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.NumberFormatter;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
@@ -318,7 +318,7 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
             o = def;
 
         if (ArrayUtils.contains(requester.options(), "fancy") && o instanceof String)
-            return NMSAdapterRegister.getInstance().current().getStringUtil().colorize(o.toString().replace("\\n", "\n"));
+            return StringUtil.colorize(o.toString().replace("\\n", "\n"));
 
         if (o instanceof Number)
             return fixNumber(o, type);

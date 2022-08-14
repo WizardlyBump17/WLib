@@ -3,9 +3,9 @@ package com.wizardlybump17.wlib.item;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapter;
 import com.wizardlybump17.wlib.adapter.NMSAdapterRegister;
-import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -46,7 +46,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     private Map<String, Object> nbtTags = new LinkedHashMap<>();
     @NotNull
     private Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
-    private boolean applyColor = true;
     private boolean unbreakable;
     private Integer customModelData;
 
@@ -77,11 +76,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder itemFlags(@NotNull Set<ItemFlag> itemFlags) {
         this.itemFlags = itemFlags;
-        return this;
-    }
-
-    public ItemBuilder applyColor(boolean applyColor) {
-        this.applyColor = applyColor;
         return this;
     }
 
@@ -172,8 +166,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         adapter.setNbtTags(nbtTags);
         result = adapter.getTarget();
 
-        meta.setDisplayName(applyColor ? ADAPTER.getStringUtil().colorize(displayName) : displayName);
-        meta.setLore(applyColor ? ADAPTER.getStringUtil().colorize(lore) : lore);
+        meta.setDisplayName(StringUtil.colorize(displayName));
+        meta.setLore(StringUtil.colorize(lore));
         meta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
         result.addUnsafeEnchantments(enchantments);
 
@@ -263,17 +257,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @SuppressWarnings("unchecked")
     public static ItemBuilder deserialize(Map<String, Object> map) {
-        StringUtil stringUtil = NMSAdapterRegister.getInstance().current().getStringUtil();
-
         ItemBuilder result = new ItemBuilder();
 
         result.type = Material.valueOf((String) map.get("type"));
         result.amount = (Integer) map.get("amount");
         result.durability = (int) map.getOrDefault("durability", 0);
         if (map.get("display-name") != null)
-            result.displayName(stringUtil.colorize(map.get("display-name").toString()));
+            result.displayName(StringUtil.colorize(map.get("display-name").toString()));
         if (map.get("lore") != null)
-            result.lore(stringUtil.colorize((List<String>) map.get("lore")));
+            result.lore(StringUtil.colorize((List<String>) map.get("lore")));
         if (map.get("item-flags") != null)
             result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
         if (map.get("enchantments") != null)

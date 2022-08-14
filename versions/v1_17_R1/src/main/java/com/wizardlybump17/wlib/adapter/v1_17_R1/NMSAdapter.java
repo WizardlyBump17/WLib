@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.adapter.v1_17_R1;
 
-import com.wizardlybump17.wlib.adapter.util.StringUtil;
 import net.minecraft.nbt.*;
 import org.bukkit.inventory.ItemStack;
 
@@ -105,10 +104,5 @@ public class NMSAdapter extends com.wizardlybump17.wlib.adapter.NMSAdapter {
     @Override
     public ItemAdapter getItemAdapter(ItemStack item) {
         return new ItemAdapter(item, this);
-    }
-
-    @Override
-    public StringUtil getStringUtil() {
-        return new com.wizardlybump17.wlib.adapter.v1_17_R1.util.StringUtil();
     }
 }
