@@ -63,52 +63,11 @@ public class WLib extends JavaPlugin {
     }
 
     private void selectAdapter() {
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_8_R3.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_12_R1.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_13_R2.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_15_R1.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_16_R3.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R1.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
-        }
-
-        try {
-            ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R2.NMSAdapter());
-            return;
-        } catch (NoClassDefFoundError ignored) {
+        String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
+        switch (version) {
+            case "v1_17_R1" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_17_R1.NMSAdapter());
+            case "v1_18_R1" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R1.NMSAdapter());
+            case "v1_18_R2" -> ADAPTER_REGISTER.registerAdapter(new com.wizardlybump17.wlib.adapter.v1_18_R2.NMSAdapter());
         }
     }
 
