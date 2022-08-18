@@ -7,13 +7,9 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @SerializableAs("item-filter")
 @RequiredArgsConstructor
@@ -52,64 +48,44 @@ public class ItemFilter implements ConfigurationSerializable {
             final Object filter = entry.getValue();
 
             switch (type) {
-                case GLOW: {
-                    final boolean glow = (boolean) filter;
-                    if ((glow && builder.glow()) || (!glow && !builder.glow()))
-                        continue;
-                    return false;
-                }
-
-                case UNBREAKABLE: {
-                    final boolean unbreakable = (boolean) filter;
-                    if ((unbreakable && builder.unbreakable()) || (!unbreakable && !builder.unbreakable()))
-                        continue;
-                    return false;
-                }
-
-                case MATERIAL: {
-                    final String material = filter.toString();
-                    if (!test(material.toLowerCase(), builder.type().name().toLowerCase()))
+                case GLOW -> {
+                    if (!testGlow(builder, (boolean) filter))
                         return false;
-                    continue;
                 }
 
-                case LORE: {
-                    final List<String> lore = (List<String>) filter;
-                    if (lore == null && builder.lore().isEmpty())
-                        continue;
-                    if (lore != null && !builder.lore().isEmpty()) {
-                        if (!builder.lore().containsAll(lore))
-                            return false;
-                        continue;
-                    }
-                    return false;
+                case UNBREAKABLE -> {
+                    if (!testUnbreakable(builder, (boolean) filter))
+                        return false;
                 }
 
-                case DISPLAY_NAME: {
-                    final String displayName = (String) filter;
-                    if (builder.displayName().isEmpty() && displayName == null)
-                        continue;
-                    if (!builder.displayName().isEmpty() && displayName != null) {
-                        if (!test(displayName.toLowerCase(), builder.displayName()))
-                            return false;
-                        continue;
-                    }
-                    return false;
+                case MATERIAL -> {
+                    if (!testMaterial(builder, (String) filter))
+                        return false;
                 }
 
-                case FLAGS: {
+                case LORE -> {
+                    if (!testLore(builder, (List<String>) filter))
+                        return false;
+                }
+
+                case DISPLAY_NAME -> {
+                    if (!testDisplayName(builder, (String) filter))
+                        return false;
+                }
+
+                case FLAGS -> {
                     final Collection<String> flags = (Collection<String>) filter;
                     if (flags == null && builder.itemFlags().isEmpty())
                         continue;
                     if (flags != null && !builder.itemFlags().isEmpty()) {
-                        if (!builder.itemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()).containsAll(flags))
+                        if (!builder.itemFlags().stream().map(ItemFlag::name).toList().containsAll(flags))
                             return false;
                         continue;
                     }
                     return false;
                 }
 
-                case ENCHANTMENTS: {
+                case ENCHANTMENTS -> {
                     final Map<String, Integer> enchantments = (Map<String, Integer>) filter;
                     if (enchantments == null && builder.enchantments().isEmpty())
                         continue;
@@ -121,19 +97,7 @@ public class ItemFilter implements ConfigurationSerializable {
                     return false;
                 }
 
-                case NBT_TAGS: {
-                    final Map<String, Object> nbtTags = (Map<String, Object>) filter;
-                    if (nbtTags == null && builder.nbtTags().isEmpty())
-                        continue;
-                    if (nbtTags != null && !builder.nbtTags().isEmpty()) {
-                        if (!MapUtils.contains(builder.nbtTags(), nbtTags))
-                            return false;
-                        continue;
-                    }
-                    return false;
-                }
-
-                case AMOUNT: {
+                case AMOUNT -> {
                     if (filter instanceof Integer) {
                         if (item.getAmount() != (int) filter)
                             return false;
@@ -141,7 +105,8 @@ public class ItemFilter implements ConfigurationSerializable {
                     }
 
                     String amount = filter.toString();
-                    lessCheck: {
+                    lessCheck:
+                    {
                         Matcher matcher = STARTS_WITH.matcher(amount);
                         if (!matcher.matches())
                             break lessCheck;
@@ -152,7 +117,8 @@ public class ItemFilter implements ConfigurationSerializable {
                         continue;
                     }
 
-                    equalsCheck: {
+                    equalsCheck:
+                    {
                         Matcher matcher = CONTAINS.matcher(amount);
                         if (!matcher.matches())
                             break equalsCheck;
@@ -163,7 +129,8 @@ public class ItemFilter implements ConfigurationSerializable {
                         continue;
                     }
 
-                    greaterCheck: {
+                    greaterCheck:
+                    {
                         Matcher matcher = ENDS_WITH.matcher(amount);
                         if (!matcher.matches())
                             break greaterCheck;
@@ -182,6 +149,34 @@ public class ItemFilter implements ConfigurationSerializable {
         return true;
     }
 
+    public static boolean testGlow(ItemBuilder item, boolean shouldGlow) {
+        return (shouldGlow && item.glow()) || (!shouldGlow && !item.glow());
+    }
+
+    public static boolean testUnbreakable(ItemBuilder item, boolean shouldUnbreakable) {
+        return (shouldUnbreakable && item.unbreakable()) || (!shouldUnbreakable && !item.unbreakable());
+    }
+
+    public static boolean testMaterial(ItemBuilder builder, String material) {
+        return test(material.toLowerCase(), builder.type().name().toLowerCase());
+    }
+
+    public static boolean testLore(ItemBuilder builder, List<String> lore) {
+        if (lore == null && builder.lore().isEmpty())
+            return true;
+        if (lore != null && !builder.lore().isEmpty())
+            return new HashSet<>(builder.lore()).containsAll(lore);
+        return false;
+    }
+
+    public static boolean testDisplayName(ItemBuilder builder, String displayName) {
+        if (builder.displayName().isEmpty() && displayName == null)
+            return true;
+        if (!builder.displayName().isEmpty() && displayName != null)
+            return test(displayName.toLowerCase(), builder.displayName());
+        return false;
+    }
+
     @Override
     public Map<String, Object> serialize() {
         return MapUtils.mapOf("filters", MapUtils.mapKeys(filters, type -> type.name().toLowerCase()));
@@ -191,74 +186,47 @@ public class ItemFilter implements ConfigurationSerializable {
         Map<FilterType, Object> filters = new EnumMap<>(FilterType.class);
 
         for (Map.Entry<String, Object> entry : args.entrySet()) {
-            final Object value = entry.getValue();
+            Object value = entry.getValue();
             switch (entry.getKey().toLowerCase()) {
-                case "material":
-                case "type": {
+                case "material", "type" -> {
                     if (value != null && !(value instanceof String))
                         notValid("type/material", String.class, value.getClass());
                     filters.put(FilterType.MATERIAL, value);
-                    continue;
                 }
-
-                case "name":
-                case "display-name": {
+                case "name", "display-name" -> {
                     if (value != null && !(value instanceof String))
                         notValid("display-name/name", String.class, value.getClass());
                     filters.put(FilterType.DISPLAY_NAME, value);
-                    continue;
                 }
-
-                case "lore": {
+                case "lore" -> {
                     if (value != null && !(value instanceof List))
                         notValid("lore", List.class, value.getClass());
                     filters.put(FilterType.LORE, value);
-                    continue;
                 }
-
-                case "item-flags":
-                case "flags": {
+                case "item-flags", "flags" -> {
                     if (value != null && !(value instanceof List))
                         notValid("flags/item-flags", List.class, value.getClass());
                     filters.put(FilterType.FLAGS, value);
-                    continue;
                 }
-
-                case "unbreakable": {
+                case "unbreakable" -> {
                     if (value != null && !(value instanceof Boolean))
                         notValid("unbreakable", boolean.class, value.getClass());
                     filters.put(FilterType.UNBREAKABLE, value);
-                    continue;
                 }
-
-                case "glow": {
+                case "glow" -> {
                     if (value != null && !(value instanceof Boolean))
                         notValid("glow", boolean.class, value.getClass());
                     filters.put(FilterType.GLOW, value);
-                    continue;
                 }
-
-                case "enchantment":
-                case "enchantments": {
+                case "enchantment", "enchantments" -> {
                     if (value != null && !(value instanceof Map))
                         notValid("enchantments/enchantment", Map.class, value.getClass());
                     filters.put(FilterType.ENCHANTMENTS, value);
-                    continue;
                 }
-
-                case "tags":
-                case "nbt-tags": {
-                    if (value != null && !(value instanceof Map))
-                        notValid("nbt-tags/tags", Map.class, value.getClass());
-                    filters.put(FilterType.NBT_TAGS, value);
-                    continue;
-                }
-
-                case "amount": {
+                case "amount" -> {
                     if (value != null && !(value instanceof String || value instanceof Integer))
                         notValid("amount", String.class, value.getClass());
                     filters.put(FilterType.AMOUNT, value);
-                    continue;
                 }
             }
         }

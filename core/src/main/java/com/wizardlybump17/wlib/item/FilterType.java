@@ -23,10 +23,6 @@ public enum FilterType {
      */
     FLAGS,
     /**
-     * Checks the nbt tags. Don't accept regex
-     */
-    NBT_TAGS,
-    /**
      * Checks if the item is or not glowing. You want regex for a boolean?
      */
     GLOW,
