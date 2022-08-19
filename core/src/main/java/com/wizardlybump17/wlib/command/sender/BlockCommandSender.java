@@ -5,4 +5,9 @@ public class BlockCommandSender extends AbstractSender<org.bukkit.command.BlockC
     public BlockCommandSender(org.bukkit.command.BlockCommandSender handle) {
         super(handle);
     }
+
+    @Override
+    public GenericSender toGeneric() {
+        return new GenericSender(getHandle());
+    }
 }
