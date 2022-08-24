@@ -150,6 +150,11 @@ public class BungeeConfig implements Configuration<net.md_5.bungee.config.Config
         return toMap(handle);
     }
 
+    @Override
+    public boolean isSet(String path) {
+        return get(path) != null;
+    }
+
     public static Map<String, Object> toMap(net.md_5.bungee.config.Configuration configuration) {
         Map<String, Object> map = new HashMap<>();
         for (String key : configuration.getKeys()) {

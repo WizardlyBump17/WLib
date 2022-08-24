@@ -29,7 +29,8 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
         ConfigHolder holder = factory.create(info.holderType());
 
         ConfigHandler handler = new ConfigHandler(clazz, holder.getConfig(info.name()), info.holderType(), info.saveDefault());
-        handler.reload();
+        handler.save();
+        handler.loadFields();
         put(clazz, handler);
         return handler;
     }
@@ -42,6 +43,16 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
         for (ConfigHandler config : getMap().values())
             if (holder == config.getHolder())
                 config.reload();
+    }
+
+    /**
+     * Saves all configs from that holder
+     * @param holder the holder who is holding the configs
+     */
+    public void saveAll(Class<?> holder) {
+        for (ConfigHandler config : getMap().values())
+            if (holder == config.getHolder())
+                config.save();
     }
 
     public static ConfigHandlerRegistry getInstance() {

@@ -31,4 +31,6 @@ public interface Configuration<H> {
     void reloadConfig();
 
     H getHandle();
+
+    boolean isSet(String path);
 }

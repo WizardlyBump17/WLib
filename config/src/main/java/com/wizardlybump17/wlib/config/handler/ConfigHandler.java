@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.config.handler;
 
 import com.wizardlybump17.wlib.config.Configuration;
 import com.wizardlybump17.wlib.config.Path;
-import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,36 +19,7 @@ public class ConfigHandler {
 
     public void reload() {
         config.reloadConfig();
-
-        for (Field field : clazz.getDeclaredFields())
-            reloadStaticField(field);
-
-        if (saveDefault)
-            save();
-    }
-
-    private void reloadStaticField(Field field) {
-        if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
-            return;
-
-        Path path = field.getAnnotation(Path.class);
-        if (path.immutable())
-            return;
-
-        String configPath = path.value();
-        String defaultValue = path.defaultValue();
-        Object object = config.get(configPath, config.get(defaultValue), field.getType(), path);
-
-        if (object == null)
-            return;
-
-        if (!ReflectionUtil.isAssignableFrom(field.getType(), object.getClass()))
-            return;
-
-        ReflectionUtil.set(field, object);
-
-        if (saveDefault)
-            config.set(configPath, object);
+        loadFields();
     }
 
     public void save() {
@@ -60,12 +30,28 @@ public class ConfigHandler {
             Path path = field.getAnnotation(Path.class);
             String configPath = path.value();
             try {
-                config.set(configPath, field.get(null));
+                if (!config.isSet(configPath))
+                    config.set(configPath, field.get(null));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
 
         config.saveConfig();
+    }
+
+    public void loadFields() {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
+                continue;
+
+            Path path = field.getAnnotation(Path.class);
+            String configPath = path.value();
+            try {
+                field.set(null, config.get(configPath, field.getType(), path));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
