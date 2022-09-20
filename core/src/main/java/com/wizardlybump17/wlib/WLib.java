@@ -12,7 +12,6 @@ import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.listener.EntityListener;
-import com.wizardlybump17.wlib.persistence.block.CustomBlockData;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -55,7 +54,6 @@ public class WLib extends JavaPlugin {
     private void initSerializables() {
         ConfigurationSerialization.registerClass(ItemBuilder.class, "item-builder");
         ConfigurationSerialization.registerClass(ItemFilter.class, "item-filter");
-        ConfigurationSerialization.registerClass(CustomBlockData.class, "custom-block-data");
     }
 
     private void initAdapters() {
