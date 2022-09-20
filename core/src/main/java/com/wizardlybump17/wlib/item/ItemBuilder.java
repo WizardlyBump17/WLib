@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.Getter;
@@ -125,6 +126,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return itemFlags;
     }
 
+    public ItemBuilder replaceDisplayNameLore(Map<String, Object> replacements) {
+        for (Map.Entry<String, Object> entry : replacements.entrySet()) {
+            displayName = displayName.replace(entry.getKey(), entry.getValue().toString());
+            lore = new CollectionUtil<>(lore).replace(entry.getKey(), entry.getValue().toString()).getCollection();
+        }
+        return this;
+    }
+
     public ItemStack build() {
         ItemStack result = new ItemStack(type, amount == null ? 1 : amount);
         ItemMeta meta = result.getItemMeta();
@@ -174,6 +183,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             builder.lore = new ArrayList<>(lore);
             builder.itemFlags = new HashSet<>(itemFlags);
             builder.enchantments = new HashMap<>(enchantments);
+            ItemAdapter.getInstance().transferPersistentData(ItemAdapter.getInstance().deserializeContainer(ItemAdapter.getInstance().serializeContainer(container)), container);
 
             return builder;
         } catch (CloneNotSupportedException e) {
