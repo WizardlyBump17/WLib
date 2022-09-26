@@ -7,6 +7,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class CustomInventoryHolder implements InventoryHolder {
@@ -18,5 +20,18 @@ public class CustomInventoryHolder implements InventoryHolder {
 
     public CustomInventoryHolder(@NotNull PaginatedInventory holder) {
         this.holder = holder;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CustomInventoryHolder other))
+            return false;
+
+        return other.getHolder().getId() == holder.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(holder.getId());
     }
 }

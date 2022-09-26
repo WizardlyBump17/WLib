@@ -12,11 +12,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @RequiredArgsConstructor
 public class PaginatedInventory {
 
+    private final int id = ThreadLocalRandom.current().nextInt();
     private final List<CustomInventory> inventories;
     private int currentPage;
     private HumanEntity player;
@@ -124,5 +127,18 @@ public class PaginatedInventory {
         inventory.currentPage = currentPage;
         inventory.unregisterListeners = unregisterListeners;
         return inventory;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PaginatedInventory other))
+            return false;
+
+        return other.id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
