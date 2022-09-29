@@ -169,7 +169,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.put("item-flags", itemFlags.stream().map(Enum::name).toList());
         result.put("enchantments", MapUtils.mapKeys(enchantments, enchantment -> enchantment.getKey().toString()));
         result.put("nbt-tags", ItemAdapter.getInstance().serializeContainer(container));
-        result.put("unbreakable", unbreakable);
+        if (unbreakable)
+            result.put("unbreakable", true);
         result.put("custom-model-data", customModelData);
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
@@ -218,6 +219,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (meta instanceof Damageable damageable)
             result.durability = damageable.getDamage();
         ItemAdapter.getInstance().transferPersistentData(meta.getPersistentDataContainer(), result.container);
+        result.unbreakable = meta.isUnbreakable();
 
         return result;
     }
