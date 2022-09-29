@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
-public class BukkitDatabaseHolder implements DatabaseHolder {
+public class BukkitDatabaseHolder implements DatabaseHolder<JavaPlugin> {
 
     private final JavaPlugin plugin;
 
@@ -18,5 +19,15 @@ public class BukkitDatabaseHolder implements DatabaseHolder {
     @Override
     public File getDataFolder() {
         return plugin.getDataFolder();
+    }
+
+    @Override
+    public Logger getLogger() {
+        return plugin.getLogger();
+    }
+
+    @Override
+    public JavaPlugin getHandle() {
+        return plugin;
     }
 }
