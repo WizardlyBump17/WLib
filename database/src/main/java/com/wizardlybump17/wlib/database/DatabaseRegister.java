@@ -4,28 +4,22 @@ import lombok.Getter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Getter
 public final class DatabaseRegister {
 
     private static DatabaseRegister instance;
 
-    private final Map<String, Class<? extends Database>> databaseTypes = new HashMap<>();
-    private final List<Database> databases = new ArrayList<>();
+    private final Map<String, DatabaseModel<?>> databaseTypes = new HashMap<>();
 
-    public void registerDatabaseClass(Class<? extends Database> clazz) {
-        try {
-            Method method = clazz.getDeclaredMethod("getType");
-            databaseTypes.put(method.invoke(null).toString().toLowerCase(), clazz);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void registerDatabaseModel(DatabaseModel<?> model) {
+        databaseTypes.put(model.getType().toLowerCase(), model);
     }
 
-    public Database createDatabase(String propertiesFile, DatabaseHolder holder) {
+    public Database<?> createDatabase(String propertiesFile, DatabaseHolder holder) {
         Properties properties = new Properties();
         try (FileInputStream stream = new FileInputStream(new File(holder.getDataFolder(), propertiesFile))) {
             properties.load(stream);
@@ -36,16 +30,16 @@ public final class DatabaseRegister {
         }
     }
 
-    public Database createDatabase(Properties properties, DatabaseHolder holder) {
+    public Database<?> createDatabase(Properties properties, DatabaseHolder holder) {
         try {
             if (!properties.containsKey("type"))
                 throw new NullPointerException("property \"type\" not found");
+
             String type = properties.getProperty("type").toLowerCase();
             if (!databaseTypes.containsKey(type))
                 throw new IllegalArgumentException("invalid database type \"" + type + "\"");
-            Constructor<? extends Database> constructor = databaseTypes.get(type).getDeclaredConstructor(Properties.class, DatabaseHolder.class);
-            constructor.setAccessible(true);
-            return constructor.newInstance(properties, holder);
+
+            return databaseTypes.get(type).createDatabase(holder, properties);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -10,8 +10,9 @@ import java.util.function.Consumer;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Database {
+public abstract class Database<M extends DatabaseModel<?>> {
 
+    private final M model;
     private final DatabaseHolder holder;
     protected final Properties properties;
     protected Connection connection;
@@ -20,7 +21,7 @@ public abstract class Database {
         return connection == null;
     }
 
-    public void open(Consumer<Database> callback) {
+    public void open(Consumer<Database<M>> callback) {
         try {
             if (!isClosed()) return;
             connection = DriverManager.getConnection(getJdbcUrl(), properties);
@@ -39,7 +40,7 @@ public abstract class Database {
         close(null);
     }
 
-    public void close(Consumer<Database> callback) {
+    public void close(Consumer<Database<M>> callback) {
         try {
             if (isClosed()) return;
             connection.close();
@@ -51,7 +52,7 @@ public abstract class Database {
         }
     }
 
-    public Database update(String command, Object... replacements) {
+    public Database<M> update(String command, Object... replacements) {
         try {
             returnUpdate(command, replacements).close();
         } catch (SQLException e) {
@@ -217,8 +218,7 @@ public abstract class Database {
         builder.delete(builder.length() - 2, builder.length());
 
         builder.append(") VALUES (");
-        for (int i = 0; i < data.size(); i++)
-            builder.append("?, ");
+        builder.append("?, ".repeat(data.size()));
         builder.delete(builder.length() - 2, builder.length());
 
         builder.append(");");

@@ -1,28 +1,29 @@
 package com.wizardlybump17.wlib.database;
 
-import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.database.model.MySQLDatabaseModel;
 
 import java.sql.PreparedStatement;
-import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
-public class MySQLDatabase extends Database {
+public class MySQLDatabase extends Database<MySQLDatabaseModel> {
 
-    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.mapOf("AUTOINCREMENT", "AUTO_INCREMENT");
+    public static final Pattern AUTOINCREMENT_PATTERN = Pattern.compile("AUTOINCREMENT", Pattern.CASE_INSENSITIVE);
 
-    protected MySQLDatabase(Properties properties, DatabaseHolder holder) {
-        super(holder, properties);
+    public MySQLDatabase(MySQLDatabaseModel model, Properties properties, DatabaseHolder<?> holder) {
+        super(model, holder, properties);
     }
 
     @Override
     public final String getJdbcUrl() {
-        return "jdbc:mysql://" + properties.getProperty("host", "localhost") + ':' +
-                properties.getProperty("port", "3306") + '/' +
-                properties.getProperty("database", getHolder().getName().toLowerCase());
+        return getModel().getBaseUrl()
+                .replace("{host}", getProperties().getProperty("host", "localhost"))
+                .replace("{port}", getProperties().getProperty("port", "3306"))
+                .replace("{database}", getProperties().getProperty("database", getHolder().getName()));
     }
 
     @Override
-    public Database update(String command, Object... replacements) {
+    public Database<MySQLDatabaseModel> update(String command, Object... replacements) {
         return super.update(replaceCommand(command), replacements);
     }
 
@@ -32,13 +33,6 @@ public class MySQLDatabase extends Database {
     }
 
     private static String replaceCommand(String command) {
-        command = command.toLowerCase();
-        for (Map.Entry<String, String> entry : COMMAND_REPLACEMENTS.entrySet())
-            command = command.replace(entry.getKey().toLowerCase(), entry.getValue().toLowerCase());
-        return command;
-    }
-
-    public static String getType() {
-        return "mysql";
+        return AUTOINCREMENT_PATTERN.matcher(command).replaceAll("AUTO_INCREMENT");
     }
 }

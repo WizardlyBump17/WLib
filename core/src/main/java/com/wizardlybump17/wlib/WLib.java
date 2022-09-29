@@ -6,8 +6,8 @@ import com.wizardlybump17.wlib.command.reader.EntityTypeArgsReader;
 import com.wizardlybump17.wlib.command.reader.OfflinePlayerReader;
 import com.wizardlybump17.wlib.command.reader.PlayerReader;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
-import com.wizardlybump17.wlib.database.MySQLDatabase;
-import com.wizardlybump17.wlib.database.SQLiteDatabase;
+import com.wizardlybump17.wlib.database.model.MySQLDatabaseModel;
+import com.wizardlybump17.wlib.database.model.SQLiteDatabaseModel;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
@@ -19,8 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WLib extends JavaPlugin {
 
-    private final DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
-
     @Override
     public void onLoad() {
         initAdapters();
@@ -29,8 +27,9 @@ public class WLib extends JavaPlugin {
 
         GlowEnchantment.register();
 
-        databaseRegister.registerDatabaseClass(MySQLDatabase.class);
-        databaseRegister.registerDatabaseClass(SQLiteDatabase.class);
+        DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
+        databaseRegister.registerDatabaseModel(new MySQLDatabaseModel());
+        databaseRegister.registerDatabaseModel(new SQLiteDatabaseModel());
     }
 
     @Override
