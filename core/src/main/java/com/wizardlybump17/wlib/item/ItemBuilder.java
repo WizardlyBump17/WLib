@@ -145,7 +145,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         meta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
         meta.setUnbreakable(unbreakable);
         meta.setCustomModelData(customModelData);
-        result.addUnsafeEnchantments(enchantments);
+        enchantments.forEach((enchantment, level) -> meta.addEnchant(enchantment, level, true));
         if (meta instanceof Damageable damageable)
             damageable.setDamage(durability);
         ItemAdapter.getInstance().transferPersistentData(container, meta.getPersistentDataContainer());
@@ -238,7 +238,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (map.get("item-flags") != null)
             result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
         if (map.get("enchantments") != null)
-            ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key)), value));
+            ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key.toLowerCase())), value));
         if (map.get("nbt-tags") != null)
             result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<Object, Object>) map.get("nbt-tags")));
         result.unbreakable((boolean) map.getOrDefault("unbreakable", false));
