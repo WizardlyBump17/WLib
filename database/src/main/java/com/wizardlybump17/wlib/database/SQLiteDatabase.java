@@ -1,13 +1,11 @@
 package com.wizardlybump17.wlib.database;
 
 import com.wizardlybump17.wlib.database.model.SQLiteDatabaseModel;
-import com.wizardlybump17.wlib.util.MapUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.File;
 import java.sql.PreparedStatement;
-import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -17,8 +15,6 @@ import java.util.regex.Pattern;
 public class SQLiteDatabase extends Database<SQLiteDatabaseModel> {
 
     public static final Pattern AUTOINCREMENT_PATTERN = Pattern.compile("AUTO_INCREMENT", Pattern.CASE_INSENSITIVE);
-
-    private static final Map<String, String> COMMAND_REPLACEMENTS = MapUtils.mapOf("AUTO_INCREMENT", "AUTOINCREMENT");
 
     private final File file;
 
@@ -31,10 +27,8 @@ public class SQLiteDatabase extends Database<SQLiteDatabaseModel> {
     public void open(Consumer<Database<SQLiteDatabaseModel>> callback) {
         try {
             if (!file.exists()) {
-                if (!file.getParentFile().mkdirs())
-                    throw new IllegalStateException("cannot create parent directories");
-                if (!file.createNewFile())
-                    throw new IllegalStateException("cannot create database file");
+                file.getParentFile().mkdirs();
+                file.createNewFile();
             }
 
             Class.forName("org.sqlite.JDBC");
