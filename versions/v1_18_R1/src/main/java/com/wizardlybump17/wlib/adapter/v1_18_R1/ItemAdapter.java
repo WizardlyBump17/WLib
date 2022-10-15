@@ -20,12 +20,12 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<Object, Object> serializeContainer(PersistentDataContainer container) {
-        return (Map<Object, Object>) CraftNBTTagConfigSerializer.serialize(((CraftPersistentDataContainer) container).toTagCompound());
+    public Map<String, Object> serializeContainer(PersistentDataContainer container) {
+        return (Map<String, Object>) CraftNBTTagConfigSerializer.serialize(((CraftPersistentDataContainer) container).toTagCompound());
     }
 
     @Override
-    public PersistentDataContainer deserializeContainer(Map<Object, Object> map) {
+    public PersistentDataContainer deserializeContainer(Map<String, Object> map) {
         CraftPersistentDataContainer container = (CraftPersistentDataContainer) PERSISTENT_DATA_ADAPTER_CONTEXT.newPersistentDataContainer();
         container.putAll((NBTTagCompound) CraftNBTTagConfigSerializer.deserialize(map));
         return container;

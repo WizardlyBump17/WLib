@@ -23,9 +23,9 @@ public abstract class ItemAdapter {
             ItemAdapter.instance = instance;
     }
 
-    public abstract Map<Object, Object> serializeContainer(PersistentDataContainer container);
+    public abstract Map<String, Object> serializeContainer(PersistentDataContainer container);
 
-    public abstract PersistentDataContainer deserializeContainer(Map<Object, Object> map);
+    public abstract PersistentDataContainer deserializeContainer(Map<String, Object> map);
 
     public abstract void transferPersistentData(PersistentDataContainer from, PersistentDataContainer to);
 
