@@ -148,6 +148,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
+    public Map<String, Object> nbtTags() {
+        return ItemAdapter.getInstance().serializeContainer(container());
+    }
+
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
         return consumeMeta(meta -> meta.addEnchant(enchantment, level, true));
     }
@@ -342,7 +346,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (map.get("enchantments") != null)
             ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key.toLowerCase())), value));
         if (map.get("nbt-tags") != null)
-            result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<Object, Object>) map.get("nbt-tags")));
+            result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<String, Object>) map.get("nbt-tags")));
 
         if (map.get("skull") != null) {
             String skull = map.get("skull").toString();
