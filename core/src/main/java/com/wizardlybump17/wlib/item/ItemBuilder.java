@@ -35,13 +35,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
 
     private final ItemStack item;
+    private final Map<Object, Object> customData;
 
-    public ItemBuilder(ItemStack item) {
+    public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
         this.item = item == null ? new ItemStack(Material.AIR) : item;
+        this.customData = customData;
     }
 
     public ItemBuilder() {
-        this(new ItemStack(Material.AIR));
+        this(new ItemStack(Material.AIR), new HashMap<>());
     }
 
     public ItemBuilder consumeMeta(Consumer<ItemMeta> consumer) {
@@ -252,6 +254,21 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
+    public ItemBuilder customData(Object key, Object value) {
+        this.customData.put(key, value);
+        return this;
+    }
+
+    public ItemBuilder customData(Map<Object, Object> customData) {
+        this.customData.clear();
+        this.customData.putAll(customData);
+        return this;
+    }
+
+    public Map<Object, Object> customData() {
+        return this.customData;
+    }
+
     public ItemStack build() {
         return item;
     }
@@ -284,13 +301,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("skull", skullUrl());
         if (skullOwner() != null)
             result.put("skull", skullOwner().getUniqueId().toString());
+        if (!customData().isEmpty())
+            result.put("custom-data", customData());
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
     }
 
     @Override
     public ItemBuilder clone() {
-        return new ItemBuilder(item.clone());
+        return new ItemBuilder(item.clone(), new HashMap<>(customData));
     }
 
     /**
@@ -301,7 +320,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @return a new builder with the data from the given item
      */
     public static ItemBuilder fromItemStack(@Nullable ItemStack item) {
-        return new ItemBuilder(item);
+        return new ItemBuilder(item, new HashMap<>());
     }
 
     @SuppressWarnings("unchecked")
@@ -336,7 +355,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         result
                 .unbreakable((boolean) map.getOrDefault("unbreakable", false))
-                .customModelData((Integer) map.get("custom-model-data"));
+                .customModelData((Integer) map.get("custom-model-data"))
+                .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()));
 
         return result;
     }
