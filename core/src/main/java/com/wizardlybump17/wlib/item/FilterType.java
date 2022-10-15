@@ -11,23 +11,23 @@ public enum FilterType {
      */
     DISPLAY_NAME,
     /**
-     * Checks the lore. Don't accept regex yet
+     * Checks the lore. Accepts regex
      */
     LORE,
     /**
-     * Checks the enchantments. Don't accept regex
+     * Checks the enchantments. Accepts regex
      */
     ENCHANTMENTS,
     /**
-     * Checks the item flags. Don't accept regex
+     * Checks the item flags. Accepts regex
      */
     FLAGS,
     /**
-     * Checks if the item is or not glowing. You want regex for a boolean?
+     * Checks if the item is or not glowing
      */
     GLOW,
     /**
-     * Checks if the item is or not unbreakable. *true* :sunglasses:
+     * Checks if the item is or not unbreakable
      */
     UNBREAKABLE,
     /**
