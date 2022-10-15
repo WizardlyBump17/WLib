@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class PaginatedInventoryBuilder {
@@ -38,57 +39,67 @@ public class PaginatedInventoryBuilder {
         return new PaginatedInventoryBuilder();
     }
 
-    public PaginatedInventoryBuilder mapContent(UnaryOperator<ItemButton> function) {
+    public PaginatedInventoryBuilder mapContent(@NonNull UnaryOperator<ItemButton> function) {
         content.replaceAll(function);
         return this;
     }
 
-    public PaginatedInventoryBuilder listeners(List<InventoryListener<?>> listeners) {
+    public PaginatedInventoryBuilder listeners(@Nullable List<InventoryListener<?>> listeners) {
         this.listeners = listeners == null ? new ArrayList<>() : listeners;
         return this;
     }
 
-    public PaginatedInventoryBuilder title(String title) {
+    public PaginatedInventoryBuilder title(@NonNull String title) {
         this.title = title;
         return this;
     }
 
-    public PaginatedInventoryBuilder shape(String shape) {
+    public PaginatedInventoryBuilder shape(@NonNull String shape) {
         this.shape = shape;
         return this;
     }
 
-    public PaginatedInventoryBuilder nextPage(ItemStack item) {
+    public PaginatedInventoryBuilder nextPage(@NonNull ItemStack item) {
         return nextPage(new InventoryNavigator(item));
     }
 
-    public PaginatedInventoryBuilder previousPage(ItemStack item) {
+    public PaginatedInventoryBuilder previousPage(@NonNull ItemStack item) {
         return previousPage(new InventoryNavigator(item));
     }
 
-    public PaginatedInventoryBuilder nextPage(InventoryNavigator nextPage) {
+    public PaginatedInventoryBuilder nextPage(@Nullable InventoryNavigator nextPage) {
         this.nextPage = nextPage;
         return this;
     }
 
-    public PaginatedInventoryBuilder previousPage(InventoryNavigator previousPage) {
+    public PaginatedInventoryBuilder previousPage(@Nullable InventoryNavigator previousPage) {
         this.previousPage = previousPage;
         return this;
     }
 
-    public PaginatedInventoryBuilder shapeReplacement(char character, ItemButton itemButton) {
+    public PaginatedInventoryBuilder shapeReplacement(char character, @NonNull ItemButton itemButton) {
         shapeReplacements.put(character, itemButton);
         return this;
     }
 
-    public PaginatedInventoryBuilder content(List<ItemButton> content) {
+    public PaginatedInventoryBuilder shapeReplacement(char character, @NonNull Supplier<ItemButton> supplier) {
+        return shapeReplacement(character, supplier.get());
+    }
+
+    public PaginatedInventoryBuilder shapeReplacements(@NonNull Map<Character, ItemButton> shapeReplacements) {
+        this.shapeReplacements.clear();
+        this.shapeReplacements.putAll(shapeReplacements);
+        return this;
+    }
+
+    public PaginatedInventoryBuilder content(@Nullable List<ItemButton> content) {
         this.content = content == null ? new ArrayList<>() : content;
         checkNullContent();
         return this;
     }
 
-    public PaginatedInventoryBuilder content(ItemButton... content) {
-        this.content = new ArrayList<>(Arrays.asList(content));
+    public PaginatedInventoryBuilder content(@NonNull ItemButton... content) {
+        this.content = Arrays.asList(content);
         checkNullContent();
         return this;
     }
@@ -99,7 +110,7 @@ public class PaginatedInventoryBuilder {
                 throw new NullPointerException("Content cannot contain null values.");
     }
 
-    public PaginatedInventoryBuilder listener(InventoryListener<?> listener) {
+    public PaginatedInventoryBuilder listener(@NonNull InventoryListener<?> listener) {
         listeners.add(listener);
         return this;
     }
@@ -115,10 +126,8 @@ public class PaginatedInventoryBuilder {
     }
 
     public PaginatedInventory build() {
-        if (title == null)
-            throw new IllegalArgumentException("Title cannot be null");
-        if (shape == null)
-            throw new IllegalArgumentException("Shape cannot be null");
+        Objects.requireNonNull(title, "Title cannot be null.");
+        Objects.requireNonNull(shape, "Shape cannot be null.");
 
         int pages = getPages();
         ArrayList<CustomInventory> inventories = new ArrayList<>(pages);
@@ -138,25 +147,17 @@ public class PaginatedInventoryBuilder {
             int slot = 0;
             for (char c : shapeChars) {
                 switch (c) {
-                    case 'x': {
+                    case 'x' -> {
                         if (content.isEmpty() || currentItem >= content.size()) {
                             slot++;
                             continue;
                         }
 
                         inventory.addButton(slot++, content.get(currentItem++));
-                        continue;
                     }
-
-                    case '>':
-                        setNavigator(slot++, inventory, true, page, pages);
-                        continue;
-
-                    case '<':
-                        setNavigator(slot++, inventory, false, page, pages);
-                        continue;
-
-                    default: inventory.addButton(slot++, shapeReplacements.get(c));
+                    case '>' -> setNavigator(slot++, inventory, true, page, pages);
+                    case '<' -> setNavigator(slot++, inventory, false, page, pages);
+                    default -> inventory.addButton(slot++, shapeReplacements.get(c));
                 }
             }
         }
@@ -165,20 +166,33 @@ public class PaginatedInventoryBuilder {
     }
 
     private void setNavigator(int slot, CustomInventory inventory, boolean next, int page, int maxPages) {
-        if (!next) {
-            if (page == 0) {
-                if (previousPage.getReplacementChar() != null) {
-                    inventory.addButton(slot, shapeReplacements.get(previousPage.getReplacementChar()));
-                    return;
-                }
+        if (next)
+            setNextPage(slot, inventory, page, maxPages);
+        else
+            setPreviousPage(slot, inventory, page);
+    }
 
-                if (previousPage.getReplacementButton() != null)
-                    inventory.addButton(slot, previousPage.getReplacementButton());
+    private void setPreviousPage(int slot, CustomInventory inventory, int page) {
+        if (previousPage == null)
+            return;
+
+        if (page == 0) {
+            if (previousPage.getReplacementChar() != null) {
+                inventory.addButton(slot, shapeReplacements.get(previousPage.getReplacementChar()));
                 return;
             }
-            inventory.addButton(slot, new ItemButton(previousPage.getItem(), (event, inventory1) -> inventory.getPaginatedHolder().showPreviousPage(event.getWhoClicked())));
+
+            if (previousPage.getReplacementButton() != null)
+                inventory.addButton(slot, previousPage.getReplacementButton());
             return;
         }
+
+        inventory.addButton(slot, new ItemButton(previousPage.getItem(), (event, inventory1) -> inventory.getPaginatedHolder().showPreviousPage(event.getWhoClicked())));
+    }
+
+    private void setNextPage(int slot, CustomInventory inventory, int page, int maxPages) {
+        if (nextPage == null)
+            return;
 
         if (page == maxPages - 1) {
             if (nextPage.getReplacementChar() != null) {
@@ -203,7 +217,7 @@ public class PaginatedInventoryBuilder {
     }
 
     @Nullable
-    public Object getData(@NonNull String key) {
+    public Object getData(@NonNull Object key) {
         return initialData.get(key);
     }
 }
