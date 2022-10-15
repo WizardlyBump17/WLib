@@ -1,20 +1,18 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
-public class FloatArrayReader extends ArrayReader<Float[]> {
+public class FloatArrayReader extends ArgsReader<float[]> {
 
     @Override
-    public Class<Float[]> getType() {
-        return Float[].class;
+    public Class<float[]> getType() {
+        return float[].class;
     }
 
     @Override
-    public Float[] read(String string) throws ArgsReaderException {
+    public float[] read(String string) throws ArgsReaderException {
         try {
-            final String[] strings = split(string);
-            if (strings == null)
-                throw new NumberFormatException();
+            final String[] strings = string.split(" ");
 
-            Float[] result = new Float[strings.length];
+            float[] result = new float[strings.length];
             for (int i = 0; i < result.length; i++)
                 result[i] = Float.parseFloat(strings[i]);
             return result;

@@ -1,20 +1,18 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
-public class ShortArrayReader extends ArrayReader<Short[]> {
+public class ShortArrayReader extends ArgsReader<short[]> {
 
     @Override
-    public Class<Short[]> getType() {
-        return Short[].class;
+    public Class<short[]> getType() {
+        return short[].class;
     }
 
     @Override
-    public Short[] read(String string) throws ArgsReaderException {
+    public short[] read(String string) throws ArgsReaderException {
         try {
-            final String[] strings = split(string);
-            if (strings == null)
-                throw new NumberFormatException();
+            final String[] strings = string.split(" ");
 
-            Short[] result = new Short[strings.length];
+            short[] result = new short[strings.length];
             for (int i = 0; i < result.length; i++)
                 result[i] = Short.parseShort(strings[i]);
             return result;

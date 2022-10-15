@@ -1,20 +1,18 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
-public class DoubleArrayReader extends ArrayReader<Double[]> {
+public class DoubleArrayReader extends ArgsReader<double[]> {
 
     @Override
-    public Class<Double[]> getType() {
-        return Double[].class;
+    public Class<double[]> getType() {
+        return double[].class;
     }
 
     @Override
-    public Double[] read(String string) throws ArgsReaderException {
+    public double[] read(String string) throws ArgsReaderException {
         try {
-            final String[] strings = split(string);
-            if (strings == null)
-                throw new NumberFormatException();
+            final String[] strings = string.split(" ");
 
-            Double[] result = new Double[strings.length];
+            double[] result = new double[strings.length];
             for (int i = 0; i < result.length; i++)
                 result[i] = Double.parseDouble(strings[i]);
             return result;

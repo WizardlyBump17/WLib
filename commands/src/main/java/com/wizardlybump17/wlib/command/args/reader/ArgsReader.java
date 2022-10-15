@@ -8,8 +8,4 @@ public abstract class ArgsReader<T> {
 
     public abstract Class<T> getType();
     public abstract T read(String string) throws ArgsReaderException;
-
-    public boolean isArray() {
-        return getType().isArray();
-    }
 }

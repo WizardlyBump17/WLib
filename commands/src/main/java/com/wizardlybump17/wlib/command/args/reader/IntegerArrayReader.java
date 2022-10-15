@@ -1,20 +1,18 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
-public class IntegerArrayReader extends ArrayReader<Integer[]> {
+public class IntegerArrayReader extends ArgsReader<int[]> {
 
     @Override
-    public Class<Integer[]> getType() {
-        return Integer[].class;
+    public Class<int[]> getType() {
+        return int[].class;
     }
 
     @Override
-    public Integer[] read(String string) throws ArgsReaderException {
+    public int[] read(String string) throws ArgsReaderException {
         try {
-            final String[] strings = split(string);
-            if (strings == null)
-                throw new NumberFormatException();
+            final String[] strings = string.split(" ");
 
-            Integer[] result = new Integer[strings.length];
+            int[] result = new int[strings.length];
             for (int i = 0; i < result.length; i++)
                 result[i] = Integer.parseInt(strings[i]);
             return result;

@@ -9,7 +9,6 @@ public class ArgsReaderRegistry extends Registry<Class<?>, ArgsReader<?>> {
 
     static {
         INSTANCE.add(new StringReader());
-        INSTANCE.add(new StringArrayReader());
         INSTANCE.add(new ByteReader());
         INSTANCE.add(new ByteArrayReader());
         INSTANCE.add(new ShortReader());
