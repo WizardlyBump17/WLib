@@ -2,12 +2,12 @@ package com.wizardlybump17.wlib.config;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.ArrayUtils;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.NumberFormatter;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,41 +53,6 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
         }
     }
 
-    public Location getLocation(String path, Location def) {
-        Map<String, Object> map = getMap(path);
-        if (map == null)
-            return def;
-
-        World world = Bukkit.getWorld(map.get("world").toString());
-        double x = ((Number) map.get("x")).doubleValue();
-        double y = ((Number) map.get("y")).doubleValue();
-        double z = ((Number) map.get("z")).doubleValue();
-
-        return new Location(world, x, y, z);
-    }
-
-    public Location getLocation(String path) {
-        return getLocation(path, null);
-    }
-
-    @Override
-    public Vector getVector(String path, Vector def) {
-        Map<String, Object> map = getMap(path);
-        if (map == null)
-            return def;
-
-        double x = ((Number) map.get("x")).doubleValue();
-        double y = ((Number) map.get("y")).doubleValue();
-        double z = ((Number) map.get("z")).doubleValue();
-
-        return new Vector(x, y, z);
-    }
-
-    @Override
-    public Vector getVector(String path) {
-        return getVector(path, null);
-    }
-
     public World getWorld(String path, World def) {
         String name = getString(path);
         if (name == null)
@@ -99,44 +63,6 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
 
     public World getWorld(String path) {
         return getWorld(path, null);
-    }
-
-    /**
-     * Sets the value at the specified path.
-     * If the path is empty and the value is a Map or ConfigurationSerializable, the value is set at the root.
-     * @param path the path to set the value at
-     * @param value the value to set
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void set(String path, Object value) {
-        if (path.isEmpty()) {
-            if (value instanceof Map) {
-                ((Map<?, ?>) value).forEach((key, value1) -> set(key.toString(), value1));
-                return;
-            }
-
-            if (value instanceof ConfigurationSerializable) {
-                Map<String, Object> map = ((ConfigurationSerializable) value).serialize();
-                LinkedHashMap<String, Object> linkedMap = new LinkedHashMap<>();
-                linkedMap.put("==", ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) value.getClass()));
-                linkedMap.putAll(map);
-                set("", linkedMap);
-                return;
-            }
-        }
-
-        if (value instanceof Map) {
-            super.set(path, createSection(path, (Map<?, ?>) value));
-            return;
-        }
-
-        if (value instanceof NumberFormatter) {
-            super.set(path, ((NumberFormatter) value).getSuffixes());
-            return;
-        }
-
-        super.set(path, value);
     }
 
     @Override
@@ -150,7 +76,7 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
 
     public NumberFormatter getNumberFormatter(String path, NumberFormatter def) {
         List<String> list = getStringList(path);
-        if (list == null)
+        if (list.isEmpty())
             return def;
         return new NumberFormatter(list);
     }
@@ -185,7 +111,7 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
     public Object get(String path, Object def, Class<?> type) {
         if (type == NumberFormatter.class) {
             List<String> list = getStringList(path);
-            if (list == null)
+            if (list.isEmpty())
                 return def;
 
             return new NumberFormatter(list);
@@ -229,11 +155,11 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
 
     public Map<String, Object> getMap(String path, Map<String, Object> def) {
         Object object = get(path);
-        if (object instanceof ConfigurationSerializable)
-            return ((ConfigurationSerializable) object).serialize();
-        if (!(object instanceof ConfigurationSection))
+        if (object instanceof ConfigurationSerializable serializable)
+            return serializable.serialize();
+        if (!(object instanceof ConfigurationSection section))
             return def;
-        return convertToMap((ConfigurationSection) object);
+        return convertToMap(section);
     }
 
     public Map<String, Object> getMap(String path) {
@@ -304,21 +230,26 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
 
     public ItemBuilder getItemBuilder(String path, ItemBuilder def) {
         Object object = get(path);
-        if (object instanceof ConfigurationSection)
-            return ItemBuilder.deserialize(convertToMap((ConfigurationSection) object));
-        if (object instanceof ItemBuilder)
-            return (ItemBuilder) object;
+        if (object instanceof ConfigurationSection section)
+            return ItemBuilder.deserialize(convertToMap(section));
+        if (object instanceof ItemBuilder builder)
+            return builder;
         return def;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object get(String path, Object def, Class<?> type, Path requester) {
         Object o = get(path, def, type);
         if (o == null)
             o = def;
 
-        if (ArrayUtils.contains(requester.options(), "fancy") && o instanceof String)
-            return StringUtil.colorize(o.toString().replace("\\n", "\n"));
+        if (ArrayUtils.contains(requester.options(), "fancy")) {
+            if (o instanceof String string)
+                return StringUtil.colorize(string.replace("\\n", "\n"));
+            if (o instanceof List<?> list)
+                return new CollectionUtil<>(StringUtil.colorize((List<String>) list)).replace("\\n", "\n").getCollection();
+        }
 
         if (o instanceof Number)
             return fixNumber(o, type);
@@ -429,8 +360,8 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
         Map<String, Object> map = new LinkedHashMap<>();
         for (String key : section.getKeys(false)) {
             Object object = section.get(key);
-            if (object instanceof ConfigurationSection)
-                object = convertToMap((ConfigurationSection) object);
+            if (object instanceof ConfigurationSection childSection)
+                object = convertToMap(childSection);
             if (object instanceof List) {
                 try {
                     final List<ConfigurationSection> list = (List<ConfigurationSection>) object;
