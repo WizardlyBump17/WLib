@@ -23,7 +23,7 @@ public interface CommandSender<S> {
     boolean hasPermission(String permission);
 
     /**
-     * Used to convert this CommandSender to a generic sender, a sender that can be anything
+     * Used to convert this CommandSender to a generic sender, a command sender that can be anything
      *
      * @return the generic sender
      */
