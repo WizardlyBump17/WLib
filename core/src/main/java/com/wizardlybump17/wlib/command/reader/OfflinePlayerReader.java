@@ -21,14 +21,13 @@ public class OfflinePlayerReader extends ArgsReader<OfflinePlayer> {
             return player;
 
         try {
-            final UUID uuid = UUID.fromString(string);
+            UUID uuid = UUID.fromString(string);
             return Bukkit.getOfflinePlayer(uuid);
         } catch (IllegalArgumentException ignored) {
+            for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers())
+                if (string.equalsIgnoreCase(offlinePlayer.getName()))
+                    return offlinePlayer;
         }
-
-        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers())
-            if (offlinePlayer.getName().equalsIgnoreCase(string))
-                return offlinePlayer;
 
         return null;
     }
