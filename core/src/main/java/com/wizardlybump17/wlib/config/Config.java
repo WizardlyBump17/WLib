@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.config;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.CollectionUtil;
-import com.wizardlybump17.wlib.util.NumberFormatter;
+import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -65,15 +64,6 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
         return getWorld(path, null);
     }
 
-    @Override
-    public Object get(String path, Object def) {
-        if (path.isEmpty() && map.containsKey("==")) {
-            ConfigurationSerializable object = ConfigurationSerialization.deserializeObject(map);
-            return object == null ? def : object;
-        }
-        return super.get(path, def);
-    }
-
     public NumberFormatter getNumberFormatter(String path, NumberFormatter def) {
         List<String> list = getStringList(path);
         if (list.isEmpty())
@@ -109,14 +99,6 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
 
     @Override
     public Object get(String path, Object def, Class<?> type) {
-        if (type == NumberFormatter.class) {
-            List<String> list = getStringList(path);
-            if (list.isEmpty())
-                return def;
-
-            return new NumberFormatter(list);
-        }
-
         return get(path, def);
     }
 
