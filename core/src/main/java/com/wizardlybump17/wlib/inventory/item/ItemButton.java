@@ -2,19 +2,24 @@ package com.wizardlybump17.wlib.inventory.item;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.object.Pair;
+import com.wizardlybump17.wlib.util.ObjectUtil;
 import lombok.Data;
 import lombok.NonNull;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 @Data
-public class ItemButton {
+@SerializableAs("item-button")
+public class ItemButton implements ConfigurationSerializable, Cloneable {
 
     public static final ItemButton BLACK_STAINED_GLASS_PANE = new ItemButton(
             new ItemBuilder()
@@ -75,5 +80,31 @@ public class ItemButton {
 
     public ItemButton(@NonNull ItemBuilder itemBuilder, @Nullable ClickAction clickAction, @NonNull Map<Object, Object> customData) {
         this(itemBuilder::build, clickAction, customData);
+    }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("item", ItemBuilder.fromItemStack(item.get()));
+        if (!customData.isEmpty())
+            map.put("custom-data", customData);
+        return map;
+    }
+
+    @Override
+    public ItemButton clone() {
+        return new ItemButton(
+                ObjectUtil.clone(item.get()),
+                clickAction,
+                ObjectUtil.clone(customData)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static ItemButton deserialize(Map<String, Object> map) {
+        ItemBuilder itemBuilder = (ItemBuilder) map.get("item");
+        Map<Object, Object> customData = (Map<Object, Object>) map.get("custom-data");
+        return new ItemButton(itemBuilder, null, customData);
     }
 }

@@ -6,6 +6,9 @@ import com.wizardlybump17.wlib.command.reader.*;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.model.MySQLDatabaseModel;
 import com.wizardlybump17.wlib.database.model.SQLiteDatabaseModel;
+import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
+import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
@@ -55,6 +58,9 @@ public class WLib extends JavaPlugin {
         ConfigurationSerialization.registerClass(ItemBuilder.class);
         ConfigurationSerialization.registerClass(ItemFilter.class);
         ConfigurationSerialization.registerClass(NumberFormatter.class);
+        ConfigurationSerialization.registerClass(PaginatedInventoryBuilder.class);
+        ConfigurationSerialization.registerClass(InventoryNavigator.class);
+        ConfigurationSerialization.registerClass(ItemButton.class);
     }
 
     private void initAdapters() {

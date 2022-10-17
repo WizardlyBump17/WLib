@@ -5,9 +5,16 @@ import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.util.ObjectUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,15 +24,20 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class PaginatedInventoryBuilder {
+@SerializableAs("paginated-inventory-builder")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@Accessors(fluent = true)
+public class PaginatedInventoryBuilder implements ConfigurationSerializable, Cloneable {
 
     private String title;
     private String shape;
-    @Getter
     @NotNull
-    private final Map<Character, ItemButton> shapeReplacements = new HashMap<>();
+    private Map<Character, ItemButton> shapeReplacements = new HashMap<>();
     private List<ItemButton> content = new ArrayList<>();
+    @Nullable
     private InventoryNavigator nextPage;
+    @Nullable
     private InventoryNavigator previousPage;
     @NotNull
     private List<InventoryListener<?>> listeners = new ArrayList<>();
@@ -219,5 +231,61 @@ public class PaginatedInventoryBuilder {
     @Nullable
     public Object getData(@NonNull Object key) {
         return initialData.get(key);
+    }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        if (title != null)
+            map.put("title", title);
+        if (shape != null)
+            map.put("shape", shape);
+        if (nextPage != null)
+            map.put("next-page", nextPage);
+        if (previousPage != null)
+            map.put("previous-page", previousPage);
+        if (!shapeReplacements.isEmpty())
+            map.put("shape-replacements", shapeReplacements);
+        if (!content.isEmpty())
+            map.put("content", content);
+        if (!initialData.isEmpty())
+            map.put("initial-data", initialData);
+
+        return map;
+    }
+
+    @Override
+    public PaginatedInventoryBuilder clone() {
+        try {
+            return new PaginatedInventoryBuilder(
+                    title,
+                    shape,
+                    ObjectUtil.clone(shapeReplacements),
+                    ObjectUtil.clone(content),
+                    nextPage == null ? null : nextPage.clone(),
+                    previousPage == null ? null : previousPage.clone(),
+                    ObjectUtil.clone(listeners),
+                    ObjectUtil.clone(initialData)
+            );
+        } catch (Exception e) {
+            return this;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static PaginatedInventoryBuilder deserialize(Map<String, Object> map) {
+        PaginatedInventoryBuilder builder = new PaginatedInventoryBuilder();
+        Map<Character, ItemButton> shapeReplacements = MapUtils.mapKeys((Map<String, ItemButton>) map.get("shape-replacements"), key -> key.charAt(0));
+        builder
+                .title((String) map.get("title"))
+                .shape((String) map.get("shape"))
+                .shapeReplacements(shapeReplacements)
+                .content((List<ItemButton>) map.get("content"))
+                .nextPage((InventoryNavigator) map.get("next-page"))
+                .previousPage((InventoryNavigator) map.get("previous-page"))
+                .initialData((Map<Object, Object>) map.get("initial-data"));
+        return builder;
     }
 }
