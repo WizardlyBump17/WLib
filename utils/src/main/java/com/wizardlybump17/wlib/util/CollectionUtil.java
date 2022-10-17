@@ -3,9 +3,11 @@ package com.wizardlybump17.wlib.util;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class CollectionUtil<E> {
@@ -152,5 +154,31 @@ public class CollectionUtil<E> {
     @SuppressWarnings("unchecked")
     public static <T> List<T> join(Collection<Collection<T>> collections) {
         return join(collections.toArray(new Collection[0]));
+    }
+
+    /**
+     * Creates a new {@link Collection} with the given elements
+     * @param supplier the collection supplier
+     * @param elements the elements
+     * @return a new {@link Collection} with the given elements
+     * @param <E> the element type
+     * @param <T> the collection type
+     */
+    public static <E, T extends Collection<E>> T listOf(Supplier<T> supplier, E... elements) {
+        T collection = supplier.get();
+        collection.addAll(Arrays.asList(elements));
+        return collection;
+    }
+
+    /**
+     * Creates a new {@link ArrayList} with the given elements.<br>
+     * It calls {@link #listOf(Supplier, Object[])} with a {@link ArrayList} supplier
+     * @param elements the elements
+     * @return a new {@link ArrayList} with the given elements
+     * @param <E> the element type
+     */
+    @SafeVarargs
+    public static <E> List<E> listOf(E... elements) {
+        return listOf((Supplier<? extends List<E>>) ArrayList::new, elements);
     }
 }
