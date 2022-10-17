@@ -7,6 +7,14 @@ public enum FilterType {
      */
     MATERIAL,
     /**
+     * Checks if the item amount is equal, greater or less than the given amount. Accepts regex
+     */
+    AMOUNT,
+    /**
+     * Checks if the item damage is equal, greater or less than the given damage. Accepts regex
+     */
+    DAMAGE,
+    /**
      * Checks the item display name. Accepts regex
      */
     DISPLAY_NAME,
@@ -21,7 +29,7 @@ public enum FilterType {
     /**
      * Checks the item flags. Accepts regex
      */
-    FLAGS,
+    ITEM_FLAGS,
     /**
      * Checks if the item is or not glowing
      */
@@ -31,7 +39,7 @@ public enum FilterType {
      */
     UNBREAKABLE,
     /**
-     * Checks if the item amount is equal to the given amount. Accepts regex
+     * Checks if the item has or not the given nbt tags. Accepts regex
      */
-    AMOUNT
+    NBT_TAGS,
 }
