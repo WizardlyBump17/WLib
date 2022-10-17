@@ -248,4 +248,35 @@ public class MapUtils {
             reversed.put(entry.getKey(), entry.getValue());
         return reversed;
     }
+
+    /**
+     * Deep clones the given map.<br>
+     * It will clone (if possible) the keys and values using {@link ObjectUtil#clone(Object)}
+     * @param supplier the initial map supplier
+     * @param map the map to be cloned
+     * @return the cloned map
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static <K, V> Map<K, V> deepClone(Supplier<Map<K, V>> supplier, Map<K, V> map) {
+        Map<K, V> newMap = supplier.get();
+
+        for (Map.Entry<K, V> entry : map.entrySet())
+            newMap.put(ObjectUtil.clone(entry.getKey()), ObjectUtil.clone(entry.getValue()));
+
+        return newMap;
+    }
+
+    /**
+     * Deep clones the given map.<br>
+     * It will clone (if possible) the keys and values.<br>
+     * It calls the {@link #deepClone(Supplier, Map)}
+     * @param map the map to be cloned
+     * @return the cloned map
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static <K, V> Map<K, V> deepClone(Map<K, V> map) {
+        return deepClone((Supplier<Map<K, V>>) HashMap::new, map);
+    }
 }

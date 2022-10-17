@@ -181,4 +181,20 @@ public class CollectionUtil<E> {
     public static <E> List<E> listOf(E... elements) {
         return listOf((Supplier<? extends List<E>>) ArrayList::new, elements);
     }
+
+    /**
+     * Deep clones the given collection<br>
+     * It will clone (if possible) all the elements of the collection using the {@link ObjectUtil#clone(Object)}
+     * @param supplier the collection supplier
+     * @param original the original collection
+     * @return the cloned collection
+     * @param <E> the element type
+     * @param <T> the collection type
+     */
+    public static <E, T extends Collection<E>> T deepClone(Supplier<T> supplier, T original) {
+        T clone = supplier.get();
+        for (E e : original)
+            clone.add(ObjectUtil.clone(e));
+        return clone;
+    }
 }
