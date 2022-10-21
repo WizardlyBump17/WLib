@@ -2,6 +2,9 @@ package com.wizardlybump17.wlib.util;
 
 import lombok.Getter;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +49,44 @@ public class NumberFormatter {
         return (negative ? "-" : "") +  DECIMAL_FORMAT.format(value) + suffixes.get(index);
     }
 
+    public String formatNumber(BigDecimal value) {
+        if (suffixes.isEmpty())
+            return DECIMAL_FORMAT.format(value);
+
+        boolean negative = value.compareTo(BigDecimal.ZERO) < 0;
+        int index = 0;
+        value = value.abs();
+
+        BigDecimal tmp;
+        while ((tmp = value.divide(BigDecimal.valueOf(1000), RoundingMode.DOWN)).compareTo(BigDecimal.ONE) > 0) {
+            if (index + 1 == suffixes.size())
+                break;
+            value = tmp;
+            ++index;
+        }
+
+        return (negative ? "-" : "") +  DECIMAL_FORMAT.format(value) + suffixes.get(index);
+    }
+
+    public String formatNumber(BigInteger value) {
+        if (suffixes.isEmpty())
+            return DECIMAL_FORMAT.format(value);
+
+        boolean negative = value.compareTo(BigInteger.ZERO) < 0;
+        int index = 0;
+        value = value.abs();
+
+        BigInteger tmp;
+        while ((tmp = value.divide(BigInteger.valueOf(1000))).compareTo(BigInteger.ONE) > 0) {
+            if (index + 1 == suffixes.size())
+                break;
+            value = tmp;
+            ++index;
+        }
+
+        return (negative ? "-" : "") +  DECIMAL_FORMAT.format(value) + suffixes.get(index);
+    }
+
     public double parseString(String value) throws NumberFormatException {
         try {
             return Double.parseDouble(value);
@@ -62,5 +103,23 @@ public class NumberFormatter {
         int index = suffixes.indexOf(suffix.toUpperCase());
 
         return amount * Math.pow(1000, index);
+    }
+
+    public BigDecimal parseBigDecimal(String value) {
+        try {
+            return new BigDecimal(value);
+        } catch (NumberFormatException ignored) {
+        }
+
+        Matcher matcher = PATTERN.matcher(value);
+        if (!matcher.find())
+            throw new NumberFormatException("Invalid format");
+
+        BigDecimal amount = new BigDecimal(matcher.group(1));
+        String suffix = matcher.group(2);
+
+        int index = suffixes.indexOf(suffix.toUpperCase());
+
+        return amount.multiply(BigDecimal.valueOf(Math.pow(1000, index)));
     }
 }
