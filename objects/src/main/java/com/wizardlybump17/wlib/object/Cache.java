@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 
 /**
@@ -61,11 +62,38 @@ public abstract class Cache<K, V, T> {
         return Optional.ofNullable(cache.get(key));
     }
 
-    @Nullable
-    public V getOrInsert(@NotNull K key, @NotNull T def) {
-        if (has(key))
-            return get(key).orElse(null);
-        final Pair<K, V> pair = apply(def);
+    /**
+     * Attempts to get the value from the cache, if it's not present, it will be inserted and returned
+     * @param key the key to get
+     * @param def the default value
+     * @return the value from the cache or the default value
+     */
+    @NotNull
+    public V getOrInsert(@NotNull K key, @NonNull T def) {
+        if (cache.containsKey(key))
+            return cache.get(key);
+
+        Pair<K, V> pair = apply(def);
+        add(def);
+        return pair.getSecond();
+    }
+
+    /**
+     * Attempts to get the value from the cache, if it's not present, it will be inserted and returned
+     * @param key the key to get
+     * @param defaultValue the supplier for the default value
+     * @return the value from the cache or from the supplier
+     */
+    @NotNull
+    public V getOrInsert(@NotNull K key, @NotNull Supplier<T> defaultValue) {
+        if (cache.containsKey(key))
+            return cache.get(key);
+
+        T def = defaultValue.get();
+        if (def == null)
+            throw new NullPointerException("The supplier returned a null value");
+
+        Pair<K, V> pair = apply(def);
         add(def);
         return pair.getSecond();
     }
