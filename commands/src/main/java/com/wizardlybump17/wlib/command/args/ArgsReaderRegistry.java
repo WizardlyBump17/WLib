@@ -19,6 +19,8 @@ public class ArgsReaderRegistry extends Registry<Class<?>, ArgsReader<?>> {
         INSTANCE.add(new FloatArrayReader());
         INSTANCE.add(new DoubleReader());
         INSTANCE.add(new DoubleArrayReader());
+        INSTANCE.add(new BigIntegerArgsReader());
+        INSTANCE.add(new BigDecimalArgsReader());
         INSTANCE.add(new UUIDReader());
         INSTANCE.add(new BooleanReader());
     }
