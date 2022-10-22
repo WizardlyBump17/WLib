@@ -56,7 +56,7 @@ public class InventoryNavigator implements ConfigurationSerializable, Cloneable 
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("item", ItemBuilder.fromItemStack(item));
+        map.put("item", ItemBuilder.fromItemStack(item).clone());
         if (replacementChar != null)
             map.put("replacement-char", replacementChar);
         if (replacementButton != null)
@@ -74,9 +74,10 @@ public class InventoryNavigator implements ConfigurationSerializable, Cloneable 
     }
 
     public static InventoryNavigator deserialize(Map<String, Object> args) {
-        ItemStack item = (ItemStack) args.get("item");
-        Character replacementChar = (Character) args.get("replacement-char");
-        ItemButton replacementButton = (ItemButton) args.get("replacement-button");
-        return new InventoryNavigator(item, replacementChar, replacementButton);
+        return new InventoryNavigator(
+                ((ItemBuilder) args.get("item")).build(),
+                (Character) args.get("replacement-char"),
+                (ItemButton) args.get("replacement-button")
+        );
     }
 }
