@@ -58,7 +58,7 @@ public class NumberFormatter {
         value = value.abs();
 
         BigDecimal tmp;
-        while ((tmp = value.divide(BigDecimal.valueOf(1000), RoundingMode.DOWN)).compareTo(BigDecimal.ONE) > 0) {
+        while ((tmp = value.divide(BigDecimal.valueOf(1000), RoundingMode.HALF_EVEN)).compareTo(BigDecimal.ONE) >= 0) {
             if (index + 1 == suffixes.size())
                 break;
             value = tmp;
@@ -77,7 +77,7 @@ public class NumberFormatter {
         value = value.abs();
 
         BigInteger tmp;
-        while ((tmp = value.divide(BigInteger.valueOf(1000))).compareTo(BigInteger.ONE) > 0) {
+        while ((tmp = value.divide(BigInteger.valueOf(1000))).compareTo(BigInteger.ONE) >= 0) {
             if (index + 1 == suffixes.size())
                 break;
             value = tmp;
