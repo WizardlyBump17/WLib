@@ -76,7 +76,7 @@ public class InventoryNavigator implements ConfigurationSerializable, Cloneable 
     public static InventoryNavigator deserialize(Map<String, Object> args) {
         return new InventoryNavigator(
                 ((ItemBuilder) args.get("item")).build(),
-                (Character) args.get("replacement-char"),
+                args.get("replacement-char") != null ? null : args.get("replacement-char").toString().charAt(0),
                 (ItemButton) args.get("replacement-button")
         );
     }
