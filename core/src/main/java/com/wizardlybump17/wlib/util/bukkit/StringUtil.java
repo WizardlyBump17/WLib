@@ -3,6 +3,8 @@ package com.wizardlybump17.wlib.util.bukkit;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -65,5 +67,21 @@ public class StringUtil {
         while (iterator.hasNext())
             iterator.set(colorize(iterator.next()));
         return strings;
+    }
+
+    /**
+     * A beautiful method to use instead of {@link Object#toString()}.<br>
+     * If the object is a {@link Vector} or a {@link Location}, it will return a string with the coordinates
+     * @param object the object to convert to string
+     * @return the string
+     */
+    public static String toString(Object object) {
+        if (object instanceof Vector vector)
+            return "X: " + vector.getX() + ", Y: " + vector.getY() + ", Z: " + vector.getZ();
+
+        if (object instanceof Location location)
+            return "X: " + location.getX() + ", Y: " + location.getY() + ", Z: " + location.getZ() + ", World: " + location.getWorld().getName();
+
+        return object.toString();
     }
 }
