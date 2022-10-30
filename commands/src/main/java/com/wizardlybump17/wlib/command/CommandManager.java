@@ -48,11 +48,9 @@ public class CommandManager {
         for (RegisteredCommand command : commands) {
             CommandResult result = command.execute(sender, string);
             switch (result) {
-                case SUCCESS:
-                case PERMISSION_FAIL:
-                case INVALID_SENDER:
+                case SUCCESS, PERMISSION_FAIL -> {
                     return;
-                default:
+                }
             }
         }
     }
