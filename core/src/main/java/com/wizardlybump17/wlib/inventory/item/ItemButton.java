@@ -105,6 +105,6 @@ public class ItemButton implements ConfigurationSerializable, Cloneable {
     public static ItemButton deserialize(Map<String, Object> map) {
         ItemBuilder itemBuilder = (ItemBuilder) map.get("item");
         Map<Object, Object> customData = (Map<Object, Object>) map.get("custom-data");
-        return new ItemButton(itemBuilder, null, customData);
+        return new ItemButton(itemBuilder, null, customData == null ? new HashMap<>() : customData);
     }
 }
