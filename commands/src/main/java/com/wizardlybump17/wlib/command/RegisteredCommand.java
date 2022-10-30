@@ -125,51 +125,38 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             return;
         }
 
-        int old = 0;
-        while (true) {
-            int start = indexOf(input, '"', old);
-            if (start++ == -1) {
-                target.addAll(Arrays.asList(input.substring(old).split(" ")));
-                return;
+        StringBuilder builder = new StringBuilder();
+        boolean inArray = false;
+        for (String s : input.split(" ")) {
+            if (s.startsWith("\"") && s.endsWith("\"") && !s.endsWith("\\\"")) { //"string" | single word
+                target.add(s.substring(1, s.length() - 1));
+                continue;
             }
 
-            int end = indexOf(input, '"', start);
-            if (end == -1)
-                throw new ArgsReaderException("invalid string");
-
-            if (end - 1 >= 0 && input.charAt(end - 1) == '\\')
+            if (s.startsWith("\"")) { //"string | it is starting the array
+                builder.append(s.substring(1).replace("\\\"", "\"")).append(" ");
+                inArray = true;
                 continue;
+            }
 
-            String substring = input.substring(old, start - 1);
-            if (!substring.isEmpty())
-                target.addAll(Arrays.asList(substring.split(" ")));
-
-            target.add(input.substring(start, end));
-            if (indexOf(input, '"', old = end + 1) != -1)
+            if (s.endsWith("\"") && !s.endsWith("\\\"")) { //string" | it is ending the array
+                builder.append(s.replace("\\\"", "\""), 0, s.length() - 1);
+                target.add(builder.toString());
+                builder = new StringBuilder();
+                inArray = false;
                 continue;
+            }
 
-            String s = input.substring(old);
-            if (!s.isEmpty())
-                target.addAll(Arrays.asList(s.split(" ")));
-            return;
+            if (!builder.isEmpty()) { //string | it is in the array
+                builder.append(s.replace("\\\"", "\"")).append(" ");
+                continue;
+            }
+
+            target.add(s.replace("\\\"", "\"")); //string | it is not in the array
         }
-    }
 
-    private static int indexOf(String string, char c, int start) {
-        if (start >= string.length())
-            return -1;
-
-        int i = string.indexOf(c, start);
-        if (i == -1)
-            return -1;
-
-        if (i - 1 < 0)
-            return i;
-
-        if (string.charAt(i - 1) == '\\')
-            return indexOf(string, c, start + 1);
-
-        return i;
+        if (inArray)
+            throw new ArgsReaderException("Invalid array");
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
