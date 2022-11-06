@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.inventory.item;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.object.Pair;
-import com.wizardlybump17.wlib.util.ObjectUtil;
 import lombok.Data;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -30,11 +29,11 @@ public class ItemButton implements ConfigurationSerializable, Cloneable {
     public static final ItemButton AIR = new ItemButton(new ItemStack(Material.AIR));
 
     @NotNull
-    private final Supplier<ItemStack> item;
+    private Supplier<ItemStack> item;
     @Nullable
-    private final ClickAction clickAction;
+    private ClickAction clickAction;
     @NonNull
-    private final Map<Object, Object> customData;
+    private Map<Object, Object> customData;
 
     public ItemButton(@NotNull ItemStack item) {
         this(item, null, new HashMap<>());
@@ -95,9 +94,9 @@ public class ItemButton implements ConfigurationSerializable, Cloneable {
     @Override
     public ItemButton clone() {
         return new ItemButton(
-                ObjectUtil.clone(item.get()),
+                item.get().clone(),
                 clickAction,
-                ObjectUtil.clone(customData)
+                new HashMap<>(customData)
         );
     }
 
