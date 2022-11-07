@@ -6,10 +6,7 @@ import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -17,6 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
@@ -273,6 +271,21 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this.customData;
     }
 
+    public ItemBuilder color(Color color) {
+        return consumeMeta(meta -> {
+            if (meta instanceof LeatherArmorMeta leatherMeta)
+                leatherMeta.setColor(color);
+        });
+    }
+
+    public Color color() {
+        return getFromMeta(meta -> {
+            if (meta instanceof LeatherArmorMeta leatherMeta)
+                return leatherMeta.getColor();
+            return null;
+        }, null);
+    }
+
     public ItemStack build() {
         return item;
     }
@@ -305,6 +318,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("skull", skullUrl());
         if (skullOwner() != null)
             result.put("skull", skullOwner().getUniqueId().toString());
+        if (color() != null)
+            result.put("color", color());
         if (!customData().isEmpty())
             result.put("custom-data", customData());
 
@@ -360,8 +375,23 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result
                 .unbreakable((boolean) map.getOrDefault("unbreakable", false))
                 .customModelData((Integer) map.get("custom-model-data"))
+                .color(getColor(map.get("color")))
                 .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()));
 
         return result;
+    }
+
+    private static Color getColor(Object object) {
+        if (object instanceof Color color)
+            return color;
+
+        if (object instanceof String string) {
+            try {
+                return Color.fromRGB(Integer.parseInt(string.substring(1), 16));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        return null;
     }
 }
