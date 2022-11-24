@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.util.MapUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @SerializableAs("item-filter")
 @RequiredArgsConstructor
+@Getter
 public class ItemFilter implements ConfigurationSerializable {
 
     private static final Pattern STARTS_WITH = Pattern.compile("(.+)\\*");
