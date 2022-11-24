@@ -6,6 +6,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Matcher;
@@ -45,6 +46,9 @@ public class StringUtil {
      * @return the colorized string
      */
     public static String colorize(String string) {
+        if (string == null)
+            return null;
+
         string = ChatColor.translateAlternateColorCodes('&', string);
 
         Matcher matcher = HEX_PATTERN.matcher(string);
@@ -63,6 +67,9 @@ public class StringUtil {
      * @return the list with each element colorized
      */
     public static List<String> colorize(List<String> strings) {
+        if (strings == null)
+            return Collections.emptyList();
+
         ListIterator<String> iterator = strings.listIterator();
         while (iterator.hasNext())
             iterator.set(colorize(iterator.next()));

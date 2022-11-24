@@ -102,11 +102,11 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder lore(@Nullable String... lore) {
-        return consumeMeta(meta -> meta.setLore(lore == null ? null : Arrays.asList(lore)));
+        return consumeMeta(meta -> meta.setLore(lore == null ? null : StringUtil.colorize(Arrays.asList(lore))));
     }
 
     public ItemBuilder lore(@Nullable List<String> lore) {
-        return consumeMeta(meta -> meta.setLore(lore));
+        return consumeMeta(meta -> meta.setLore(StringUtil.colorize(lore)));
     }
 
     public ItemBuilder itemFlags(@NotNull ItemFlag... itemFlags) {
@@ -180,8 +180,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return getFromMeta(ItemMeta::getDisplayName, "");
     }
 
-    public ItemBuilder displayName(@NotNull String displayName) {
-        return consumeMeta(meta -> meta.setDisplayName(displayName));
+    public ItemBuilder displayName(@Nullable String displayName) {
+        return consumeMeta(meta -> meta.setDisplayName(StringUtil.colorize(displayName)));
     }
 
     @NotNull
@@ -203,8 +203,17 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         List<String> lore = lore();
 
         for (Map.Entry<String, Object> entry : replacements.entrySet()) {
-            displayName = displayName.replace(entry.getKey(), entry.getValue().toString());
-            lore = new CollectionUtil<>(lore).replace(entry.getKey(), entry.getValue().toString()).getCollection();
+            Object value = entry.getValue();
+            if (value == null)
+                value = "null";
+
+            displayName = displayName.replace(entry.getKey(), value.toString());
+            if (value instanceof String string)
+                lore = new CollectionUtil<>(lore).replace(entry.getKey(), string).getCollection();
+            else if (value instanceof Iterable<?> iterable)
+                lore = new CollectionUtil<>(lore).replace(entry.getKey(), iterable).getCollection();
+            else
+                lore = new CollectionUtil<>(lore).replace(entry.getKey(), value.toString()).getCollection();
         }
 
         return displayName(displayName).lore(lore);
@@ -353,9 +362,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (map.get("damage") != null)
             result.damage((int) map.get("damage"));
         if (map.get("display-name") != null)
-            result.displayName(StringUtil.colorize(map.get("display-name").toString()));
+            result.displayName((String) map.get("display-name"));
         if (map.get("lore") != null)
-            result.lore(StringUtil.colorize((List<String>) map.get("lore")));
+            result.lore((List<String>) map.get("lore"));
         if (map.get("item-flags") != null)
             result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
         if (map.get("enchantments") != null)
