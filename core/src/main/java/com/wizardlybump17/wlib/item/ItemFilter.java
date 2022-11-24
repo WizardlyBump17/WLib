@@ -107,6 +107,20 @@ public class ItemFilter implements ConfigurationSerializable {
         return true;
     }
 
+    public int first(ItemStack[] items) {
+        for (int i = 0; i < items.length; i++)
+            if (accept(items[i]))
+                return i;
+        return -1;
+    }
+
+    public int first(List<ItemStack> items) {
+        for (int i = 0; i < items.size(); i++)
+            if (accept(items.get(i)))
+                return i;
+        return -1;
+    }
+
     public static boolean testMaterial(String material, ItemBuilder builder) {
         return testString(material.toLowerCase(), builder.type().name().toLowerCase());
     }
