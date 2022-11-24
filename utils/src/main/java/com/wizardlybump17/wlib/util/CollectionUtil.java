@@ -30,6 +30,17 @@ public class CollectionUtil<E> {
         return new CollectionUtil<>(result);
     }
 
+    public CollectionUtil<String> replace(String old, Iterable<?> replacements) {
+        List<String> result = new ArrayList<>(collection.size());
+        for (E e : collection) {
+            String string = e.toString().replace(old, "");
+            result.add(string);
+            for (Object replacement : replacements)
+                result.add(replacement == null ? "null" : replacement.toString());
+        }
+        return new CollectionUtil<>(result);
+    }
+
     @SuppressWarnings("unchecked")
     public <C extends Collection<E>> C getCollection() {
         return (C) collection;
