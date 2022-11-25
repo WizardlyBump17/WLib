@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.database.orm;
+package com.wizardlybump17.wlib.database.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,14 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Overrides the column name of the field
+ * Marks the annotated class as a table
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Column {
+public @interface Table {
 
     /**
-     * @return the column name
+     * @return the name of the table
      */
     String value();
 }

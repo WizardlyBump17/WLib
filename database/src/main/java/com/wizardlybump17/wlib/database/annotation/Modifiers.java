@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.database.orm;
+package com.wizardlybump17.wlib.database.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

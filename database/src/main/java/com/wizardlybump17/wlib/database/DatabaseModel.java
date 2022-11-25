@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.database;
 
-import com.wizardlybump17.wlib.database.orm.Modifier;
+import com.wizardlybump17.wlib.database.annotation.Modifier;
 import lombok.Data;
 
 import java.util.Properties;

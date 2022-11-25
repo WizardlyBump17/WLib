@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.database.model;
 import com.wizardlybump17.wlib.database.DatabaseHolder;
 import com.wizardlybump17.wlib.database.DatabaseModel;
 import com.wizardlybump17.wlib.database.SQLiteDatabase;
-import com.wizardlybump17.wlib.database.orm.Modifier;
+import com.wizardlybump17.wlib.database.annotation.Modifier;
 
 import java.util.Properties;
 
