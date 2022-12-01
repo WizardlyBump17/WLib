@@ -18,7 +18,6 @@ public class ArgsNode {
 
     @NotNull
     private final String name;
-    private boolean required;
     private final boolean userInput;
     @Nullable
     private final ArgsReader<?> reader;

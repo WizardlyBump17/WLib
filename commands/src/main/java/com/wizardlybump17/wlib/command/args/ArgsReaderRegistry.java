@@ -3,7 +3,11 @@ package com.wizardlybump17.wlib.command.args;
 import com.wizardlybump17.wlib.command.args.reader.*;
 import com.wizardlybump17.wlib.object.Registry;
 
-public class ArgsReaderRegistry extends Registry<Class<?>, ArgsReader<?>> {
+/**
+ * A registry for the {@link ArgsReader}.
+ * <p>The key is the {@link ArgsReader#getClass()} and the value is the {@link ArgsReader}</p>
+ */
+public class ArgsReaderRegistry extends Registry<Class<? extends ArgsReader<?>>, ArgsReader<?>> {
 
     public static final ArgsReaderRegistry INSTANCE = new ArgsReaderRegistry();
 
@@ -28,7 +32,20 @@ public class ArgsReaderRegistry extends Registry<Class<?>, ArgsReader<?>> {
     private ArgsReaderRegistry() {
     }
 
+    @SuppressWarnings("unchecked")
     public void add(ArgsReader<?> reader) {
-        put(reader.getType(), reader);
+        put((Class<? extends ArgsReader<?>>) reader.getClass(), reader);
+    }
+
+    /**
+     * Gets the first reader that can read the specified type
+     * @param type the type
+     * @return the reader
+     */
+    public ArgsReader<?> getReader(Class<?> type) {
+        for (ArgsReader<?> reader : getMap().values())
+            if (reader.getType() == type)
+                return reader;
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package com.wizardlybump17.wlib.command;
 
 import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
+import com.wizardlybump17.wlib.command.args.ArgsReaderType;
+import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -37,20 +39,28 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         int currentIndex = 1; //skipping the first type because of the CommandSender
         for (String commandArg : commandArgs) {
             if (requiredArgs(commandArg)) {
-                Description annotation = parameters[currentIndex].getAnnotation(Description.class);
-                String description = annotation == null ? null : annotation.value();
+                Description description = parameters[currentIndex].getAnnotation(Description.class);
+
+                ArgsReaderType argsReaderType = parameters[currentIndex].getAnnotation(ArgsReaderType.class);
+                ArgsReader<?> reader;
+                if (argsReaderType == null)
+                    reader = ArgsReaderRegistry.INSTANCE.getReader(types[currentIndex]);
+                else
+                    reader = ArgsReaderRegistry.INSTANCE.get(argsReaderType.value());
+                if (reader == null)
+                    throw new IllegalArgumentException("no reader found for " + types[currentIndex].getName());
 
                 nodes.add(new ArgsNode(
                         trim(commandArg),
-                        requiredArgs(commandArg),
                         true,
-                        ArgsReaderRegistry.INSTANCE.get(types[currentIndex++]),
-                        description
+                        reader,
+                        description == null ? null : description.value()
                 ));
+
+                currentIndex++;
             } else
                 nodes.add(new ArgsNode(
                         commandArg,
-                        true,
                         false,
                         null,
                         null
