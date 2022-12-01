@@ -19,7 +19,7 @@ public class BungeeCommand implements Command {
     }
 
     @Override
-    public void setDefaultExecutor(CommandManager manager, String name) {
-        setExecutor(new BungeeCommandExecutor(manager, name));
+    public CommandExecutor getDefaultExecutor(CommandManager manager, String name) {
+        return new BungeeCommandExecutor(manager, name);
     }
 }

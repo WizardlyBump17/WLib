@@ -30,7 +30,7 @@ public class CommandManager {
                 commands.add(command);
                 com.wizardlybump17.wlib.command.holder.Command holderCommand = holder.getCommand(command.getName());
                 if (holderCommand != null)
-                    holderCommand.setDefaultExecutor(this, command.getName());
+                    holderCommand.setExecutor(holderCommand.getDefaultExecutor(this, command.getName()));
             }
         }
 

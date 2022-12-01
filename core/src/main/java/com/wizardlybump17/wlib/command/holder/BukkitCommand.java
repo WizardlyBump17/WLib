@@ -15,13 +15,13 @@ public class BukkitCommand implements Command {
 
     @Override
     public void setExecutor(CommandExecutor executor) {
-        if (executor instanceof org.bukkit.command.CommandExecutor)
-            command.setExecutor((org.bukkit.command.CommandExecutor) executor);
+        if (executor instanceof org.bukkit.command.CommandExecutor bukkitExecutor)
+            command.setExecutor(bukkitExecutor);
         this.executor = executor;
     }
 
     @Override
-    public void setDefaultExecutor(CommandManager manager, String name) {
-        setExecutor(new BukkitCommandExecutor(manager));
+    public CommandExecutor getDefaultExecutor(CommandManager manager, String name) {
+         return new BukkitCommandExecutor(manager);
     }
 }
