@@ -2,8 +2,9 @@ dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.24',
             'org.jetbrains:annotations:23.0.0',
-            'org.xerial:sqlite-jdbc:3.39.3.0',
-            project(':objects')
+            'org.xerial:sqlite-jdbc:3.40.0.0',
+            project(':objects'),
+            project(':utils')
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
 }
