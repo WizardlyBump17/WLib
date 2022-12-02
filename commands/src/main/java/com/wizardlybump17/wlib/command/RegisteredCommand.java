@@ -36,35 +36,42 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
         Class<?>[] types = method.getParameterTypes();
         Parameter[] parameters = method.getParameters();
-        int currentIndex = 1; //skipping the first type because of the CommandSender
+        int index = 1; //skipping the first type because of the CommandSender
         for (String commandArg : commandArgs) {
-            if (requiredArgs(commandArg)) {
-                Description description = parameters[currentIndex].getAnnotation(Description.class);
-
-                ArgsReaderType argsReaderType = parameters[currentIndex].getAnnotation(ArgsReaderType.class);
-                ArgsReader<?> reader;
-                if (argsReaderType == null)
-                    reader = ArgsReaderRegistry.INSTANCE.getReader(types[currentIndex]);
-                else
-                    reader = ArgsReaderRegistry.INSTANCE.get(argsReaderType.value());
-                if (reader == null)
-                    throw new IllegalArgumentException("no reader found for " + types[currentIndex].getName());
-
-                nodes.add(new ArgsNode(
-                        trim(commandArg),
-                        true,
-                        reader,
-                        description == null ? null : description.value()
-                ));
-
-                currentIndex++;
-            } else
+            if (!requiredArgs(commandArg)) {
                 nodes.add(new ArgsNode(
                         commandArg,
                         false,
                         null,
-                        null
+                        null,
+                        false
                 ));
+                continue;
+            }
+
+            Description description = parameters[index].getAnnotation(Description.class);
+
+            ArgsReaderType argsReaderType = parameters[index].getAnnotation(ArgsReaderType.class);
+            if (argsReaderType == null && Argument.class.isAssignableFrom(types[index]))
+                throw new IllegalArgumentException("the \"" + commandArg + "\" argument requires the " + ArgsReaderType.class.getName() + " annotation");
+
+            ArgsReader<?> reader;
+            if (argsReaderType == null)
+                reader = ArgsReaderRegistry.INSTANCE.getReader(types[index]);
+            else
+                reader = ArgsReaderRegistry.INSTANCE.get(argsReaderType.value());
+            if (reader == null)
+                throw new IllegalArgumentException("no reader found for " + types[index].getName());
+
+            nodes.add(new ArgsNode(
+                    trim(commandArg),
+                    true,
+                    reader,
+                    description == null ? null : description.value(),
+                    Argument.class.isAssignableFrom(types[index])
+            ));
+
+            index++;
         }
     }
 
@@ -167,7 +174,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     public CommandResult execute(CommandSender<?> sender, String string) {
         try {
             Optional<Object[]> parse = parse(string);
-            if (!parse.isPresent())
+            if (parse.isEmpty())
                 return CommandResult.ARGS_FAIL;
 
             if (!getSenderType().isInstance(sender) && !isSenderGeneric())
@@ -214,7 +221,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         boolean result = false;
         try {
             result = (Boolean) getSenderType().getDeclaredMethod("isGeneric").invoke(null);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException ignored) {
         } catch (Exception e) {
             e.printStackTrace();
         }
