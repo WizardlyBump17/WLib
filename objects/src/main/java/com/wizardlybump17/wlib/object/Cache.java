@@ -104,11 +104,11 @@ public abstract class Cache<K, V, T> {
     }
 
     /**
-     * @return an immutable copy of the backing map of this cache
+     * @return the backing map of this cache
      */
     @NotNull
     public Map<K, V> getMap() {
-        return Collections.unmodifiableMap(cache);
+        return cache;
     }
 
     @NotNull
