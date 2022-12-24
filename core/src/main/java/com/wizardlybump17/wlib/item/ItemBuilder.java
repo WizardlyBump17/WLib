@@ -385,7 +385,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .unbreakable((boolean) map.getOrDefault("unbreakable", false))
                 .customModelData((Integer) map.get("custom-model-data"))
                 .color(getColor(map.get("color")))
-                .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()));
+                .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()))
+                .glow((boolean) map.getOrDefault("glow", false));
 
         return result;
     }
