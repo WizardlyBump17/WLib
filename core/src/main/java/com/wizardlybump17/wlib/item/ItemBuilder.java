@@ -8,7 +8,9 @@ import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -16,7 +18,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
@@ -252,32 +253,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         }, null);
     }
 
-    public String skullUrl() {
-        if (getItemMeta() instanceof SkullMeta meta)
-            return ItemAdapter.getInstance().getSkullUrl(meta);
-        return null;
-    }
-
-    public ItemBuilder skull(String url) {
-        return consumeMeta(meta -> {
-            if (meta instanceof SkullMeta skull)
-                ItemAdapter.getInstance().setSkull(skull, url);
-        });
-    }
-
-    public OfflinePlayer skullOwner() {
-        if (getItemMeta() instanceof SkullMeta meta)
-            return meta.getOwningPlayer();
-        return null;
-    }
-
-    public ItemBuilder skull(OfflinePlayer owner) {
-        return consumeMeta(meta -> {
-            if (meta instanceof SkullMeta skull)
-                skull.setOwningPlayer(owner);
-        });
-    }
-
     public ItemBuilder customData(Object key, Object value) {
         this.customData.put(key, value);
         return this;
@@ -330,10 +305,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("unbreakable", true);
         if (customModelData() != null)
             result.put("custom-model-data", customModelData());
-        if (skullUrl() != null)
-            result.put("skull", skullUrl());
-        if (skullOwner() != null)
-            result.put("skull", skullOwner().getUniqueId().toString());
         if (!customData().isEmpty())
             result.put("custom-data", customData());
 
@@ -381,12 +352,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<String, Object>) map.get("nbt-tags")));
 
         if (map.get("skull") != null) {
-            String skull = map.get("skull").toString();
-            try {
-                result.skull(Bukkit.getOfflinePlayer(UUID.fromString(skull)));
-            } catch (IllegalArgumentException ignored) {
-                result.skull(skull);
-            }
+
         }
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());

@@ -39,6 +39,7 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
             throw new IllegalStateException("Default models are already initialized");
 
         registerModel(new LeatherArmorMetaHandlerModel());
+        registerModel(new SkullMetaHandlerModel());
 
         modelsInitialized = true;
     }
