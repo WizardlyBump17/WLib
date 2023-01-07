@@ -12,6 +12,7 @@ import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
+import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
 import org.bukkit.Bukkit;
@@ -23,6 +24,7 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        ItemMetaHandlerModel.initModels();
         initAdapters();
         initSerializables();
         initCommandSystem();
