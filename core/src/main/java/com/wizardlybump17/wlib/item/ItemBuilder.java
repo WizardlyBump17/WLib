@@ -45,7 +45,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
         this(item, customData, null);
-        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(item.getType());
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(this.item.getType());
         if (metaHandlerModel != null)
             this.metaHandler = metaHandlerModel.createHandler(this);
     }
