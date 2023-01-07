@@ -2,6 +2,8 @@ package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
+import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
+import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
@@ -14,7 +16,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
@@ -34,18 +35,28 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private final ItemStack item;
     private final Map<Object, Object> customData;
+    private ItemMetaHandler<?> metaHandler;
 
-    public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
+    public ItemBuilder(ItemStack item, Map<Object, Object> customData, ItemMetaHandler<?> metaHandler) {
         this.item = item == null ? new ItemStack(Material.AIR) : item;
         this.customData = customData;
+        this.metaHandler = metaHandler;
+    }
+
+    public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
+        this(item, customData, null);
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(item.getType());
+        if (metaHandlerModel != null)
+            this.metaHandler = metaHandlerModel.createHandler(this);
     }
 
     public ItemBuilder() {
-        this(new ItemStack(Material.AIR), new HashMap<>());
+        this(new ItemStack(Material.AIR), new HashMap<>(), null);
     }
 
-    public ItemBuilder consumeMeta(Consumer<ItemMeta> consumer) {
-        ItemMeta meta = item.getItemMeta();
+    @SuppressWarnings("unchecked")
+    public <M extends ItemMeta> ItemBuilder consumeMeta(Consumer<M> consumer) {
+        M meta = (M) item.getItemMeta();
         if (meta == null)
             return this;
 
@@ -54,13 +65,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         return this;
     }
-    
-    public ItemMeta getItemMeta() {
-        return item.getItemMeta();
+
+    @SuppressWarnings("unchecked")
+    public <T extends ItemMeta> T getItemMeta() {
+        return (T) item.getItemMeta();
     }
 
-    private <T> T getFromMeta(Function<ItemMeta, T> supplier, T def) {
-        ItemMeta meta = item.getItemMeta();
+    @SuppressWarnings("unchecked")
+    public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, T def) {
+        M meta = (M) item.getItemMeta();
         if (meta == null)
             return def;
 
@@ -280,19 +293,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this.customData;
     }
 
-    public ItemBuilder color(Color color) {
-        return consumeMeta(meta -> {
-            if (meta instanceof LeatherArmorMeta leatherMeta)
-                leatherMeta.setColor(color);
-        });
+    public ItemMetaHandler<?> metaHandler() {
+        return metaHandler;
     }
 
-    public Color color() {
-        return getFromMeta(meta -> {
-            if (meta instanceof LeatherArmorMeta leatherMeta)
-                return leatherMeta.getColor();
-            return null;
-        }, null);
+    public ItemBuilder metaHandler(ItemMetaHandler<?> metaHandler) {
+        this.metaHandler = metaHandler;
+        return this;
     }
 
     public ItemStack build() {
@@ -327,17 +334,18 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("skull", skullUrl());
         if (skullOwner() != null)
             result.put("skull", skullOwner().getUniqueId().toString());
-        if (color() != null)
-            result.put("color", color());
         if (!customData().isEmpty())
             result.put("custom-data", customData());
+
+        if (metaHandler != null)
+            metaHandler.serialize(result);
 
         return MapUtils.removeEmptyValues(MapUtils.removeNullValues(result));
     }
 
     @Override
     public ItemBuilder clone() {
-        return new ItemBuilder(item.clone(), new HashMap<>(customData));
+        return new ItemBuilder(item.clone(), new HashMap<>(customData), metaHandler);
     }
 
     /**
@@ -381,12 +389,16 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             }
         }
 
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
         result
                 .unbreakable((boolean) map.getOrDefault("unbreakable", false))
                 .customModelData((Integer) map.get("custom-model-data"))
-                .color(getColor(map.get("color")))
                 .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()))
-                .glow((boolean) map.getOrDefault("glow", false));
+                .glow((boolean) map.getOrDefault("glow", false))
+                .metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
+
+        if (result.metaHandler != null)
+            result.metaHandler.deserialize(map);
 
         return result;
     }
