@@ -6,7 +6,7 @@ import lombok.Data;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +14,7 @@ import java.util.Set;
 public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
 
     private static boolean modelsInitialized;
-    public static final Map<Material, ItemMetaHandlerModel<?>> MODELS = new HashMap<>();
+    public static final Map<Material, ItemMetaHandlerModel<?>> MODELS = new EnumMap<>(Material.class);
 
     private final Set<Material> applicableMaterials;
 
