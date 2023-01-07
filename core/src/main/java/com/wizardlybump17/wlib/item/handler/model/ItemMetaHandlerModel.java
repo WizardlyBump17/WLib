@@ -6,15 +6,15 @@ import lombok.Data;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Data
 public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
 
     private static boolean modelsInitialized;
-    public static final List<ItemMetaHandlerModel<?>> MODELS = new ArrayList<>();
+    public static final Map<Material, ItemMetaHandlerModel<?>> MODELS = new HashMap<>();
 
     private final Set<Material> applicableMaterials;
 
@@ -26,17 +26,19 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
 
     @Nullable
     public static ItemMetaHandlerModel<?> getApplicableModel(Material material) {
-        for (ItemMetaHandlerModel<?> model : MODELS)
-            if (model.isApplicable(material))
-                return model;
-        return null;
+        return MODELS.get(material);
+    }
+
+    public static void registerModel(ItemMetaHandlerModel<?> model) {
+        for (Material material : model.getApplicableMaterials())
+            MODELS.put(material, model);
     }
 
     public static void initModels() {
         if (modelsInitialized)
             throw new IllegalStateException("Default models are already initialized");
 
-        MODELS.add(new LeatherArmorMetaHandlerModel());
+        registerModel(new LeatherArmorMetaHandlerModel());
 
         modelsInitialized = true;
     }
