@@ -40,6 +40,7 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
 
         registerModel(new LeatherArmorMetaHandlerModel());
         registerModel(new SkullMetaHandlerModel());
+        registerModel(new FireworkMetaHandlerModel());
 
         modelsInitialized = true;
     }
