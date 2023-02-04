@@ -79,6 +79,10 @@ public class WLib extends JavaPlugin {
     private String selectItemAdapter() {
         String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
         return switch (version) {
+            case "v1_16_R3" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.ItemAdapter());
+                yield "v1_16_R3";
+            }
             case "v1_17_R1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.ItemAdapter());
                 yield "v1_17_R1";
