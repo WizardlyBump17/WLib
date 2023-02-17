@@ -29,6 +29,8 @@ public abstract class ItemAdapter {
 
     public abstract void transferPersistentData(PersistentDataContainer from, PersistentDataContainer to);
 
+    public abstract void copyPersistentData(PersistentDataContainer from, PersistentDataContainer to);
+
     public abstract void setSkull(SkullMeta meta, String url);
 
     public abstract String getSkullUrl(SkullMeta meta);

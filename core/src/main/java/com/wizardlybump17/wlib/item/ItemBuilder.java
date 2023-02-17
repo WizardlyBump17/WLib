@@ -312,6 +312,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    public ItemBuilder mergeNbtTags(ItemBuilder other) {
+        if (other == this)
+            return this;
+
+        ItemAdapter.getInstance().copyPersistentData(other.container(), container());
+        return this;
+    }
+
     public ItemStack build() {
         return item;
     }

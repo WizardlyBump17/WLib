@@ -39,6 +39,11 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     }
 
     @Override
+    public void copyPersistentData(PersistentDataContainer from, PersistentDataContainer to) {
+        ((CraftPersistentDataContainer) to).putAll(((CraftPersistentDataContainer) from).toTagCompound());
+    }
+
+    @Override
     public void setSkull(SkullMeta meta, String url) {
         PlayerProfile profile = profileCache.computeIfAbsent(url, s -> {
             PlayerProfile playerProfile = Bukkit.getServer().createPlayerProfile(UUID.nameUUIDFromBytes(url.getBytes()));
