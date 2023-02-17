@@ -277,6 +277,41 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    public ItemBuilder mergeLore(ItemBuilder other) {
+        if (other == this)
+            return this;
+
+        consumeMeta(meta -> {
+            List<String> lore = meta.getLore();
+            if (lore == null)
+                lore = new ArrayList<>();
+
+            lore.addAll(other.lore());
+            meta.setLore(lore);
+        });
+        return this;
+    }
+
+    public ItemBuilder mergeItemFlags(ItemBuilder other) {
+        if (other == this)
+            return this;
+
+        consumeMeta(meta -> meta.addItemFlags(other.itemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY)));
+        return this;
+    }
+
+    public ItemBuilder mergeEnchantments(ItemBuilder other) {
+        if (other == this)
+            return this;
+
+        consumeMeta(meta -> {
+            for (Map.Entry<Enchantment, Integer> entry : other.enchantments().entrySet()) {
+                meta.addEnchant(entry.getKey(), entry.getValue(), true);
+            }
+        });
+        return this;
+    }
+
     public ItemStack build() {
         return item;
     }
