@@ -268,8 +268,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this.customData;
     }
 
-    public ItemMetaHandler<?> metaHandler() {
-        return metaHandler;
+    @SuppressWarnings("unchecked")
+    public <T extends ItemMetaHandler<?>> T metaHandler() {
+        return (T) metaHandler;
     }
 
     public ItemBuilder metaHandler(ItemMetaHandler<?> metaHandler) {
