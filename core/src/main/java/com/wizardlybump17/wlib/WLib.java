@@ -71,7 +71,7 @@ public class WLib extends JavaPlugin {
 
     private void printVersion(String version, String what) {
         if (version == null)
-            getLogger().severe("Could not find " + what + " adapter.");
+            getLogger().severe("Could not find " + what + " adapter for " + Bukkit.getServer().getClass().getName().split("\\.")[3] + ".");
         else
             getLogger().info(what + " adapter found: " + version);
     }
@@ -102,6 +102,10 @@ public class WLib extends JavaPlugin {
             case "v1_19_R2" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.ItemAdapter());
                 yield "v1_19_R2";
+            }
+            case "v1_19_R3" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.ItemAdapter());
+                yield "v1_19_R3";
             }
             default -> null;
         };
