@@ -18,6 +18,11 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
 
     private final Set<Material> applicableMaterials;
 
+    public ItemMetaHandlerModel(Set<Material> applicableMaterials) {
+        this.applicableMaterials = applicableMaterials;
+        registerModel(this);
+    }
+
     public abstract H createHandler(ItemBuilder builder);
 
     public boolean isApplicable(Material material) {
@@ -38,9 +43,9 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
         if (modelsInitialized)
             throw new IllegalStateException("Default models are already initialized");
 
-        registerModel(new LeatherArmorMetaHandlerModel());
-        registerModel(new SkullMetaHandlerModel());
-        registerModel(new FireworkMetaHandlerModel());
+        new LeatherArmorMetaHandlerModel();
+        new SkullMetaHandlerModel();
+        new FireworkMetaHandlerModel();
 
         modelsInitialized = true;
     }

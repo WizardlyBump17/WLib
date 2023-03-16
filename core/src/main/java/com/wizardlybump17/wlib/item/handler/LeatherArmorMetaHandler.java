@@ -20,7 +20,7 @@ public class LeatherArmorMetaHandler extends ItemMetaHandler<LeatherArmorMetaHan
 
     @Override
     public void deserialize(Map<String, Object> map) {
-        getBuilder().<LeatherArmorMeta>consumeMeta(meta -> meta.setColor((Color) map.get("color")));
+        getBuilder().<LeatherArmorMeta>consumeMeta(meta -> meta.setColor(getColor(map.get("color"))));
     }
 
     public LeatherArmorMetaHandler color(Color color) {
@@ -30,5 +30,22 @@ public class LeatherArmorMetaHandler extends ItemMetaHandler<LeatherArmorMetaHan
 
     public Color color() {
         return getBuilder().getFromMeta(LeatherArmorMeta::getColor, null);
+    }
+
+    private static Color getColor(Object object) {
+        if (object instanceof Color color)
+            return color;
+
+        if (object instanceof Number number)
+            return Color.fromRGB(number.intValue());
+
+        if (object instanceof String string) {
+            if (string.startsWith("#"))
+                return Color.fromRGB(Integer.parseInt(string.substring(1), 16));
+            else
+                return Color.fromRGB(Integer.parseInt(string, 16));
+        }
+
+        return null;
     }
 }
