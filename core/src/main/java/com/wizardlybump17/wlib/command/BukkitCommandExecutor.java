@@ -10,9 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequiredArgsConstructor
-public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump17.wlib.command.holder.CommandExecutor {
+public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wlib.command.holder.CommandExecutor {
 
     private final CommandManager manager;
 
@@ -37,5 +40,11 @@ public class BukkitCommandExecutor implements CommandExecutor, com.wizardlybump1
     public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) {
         String commandExecution = commandName + " " + String.join(" ", args);
         manager.execute(sender, commandExecution);
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return null;
     }
 }
