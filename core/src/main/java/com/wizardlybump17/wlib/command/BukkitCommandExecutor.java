@@ -22,17 +22,7 @@ public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wl
     @SneakyThrows
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        com.wizardlybump17.wlib.command.CommandSender<?> commandSender;
-        if (sender instanceof Player player)
-            commandSender = new PlayerSender(player);
-        else if (sender instanceof ConsoleCommandSender consoleSender)
-            commandSender = new ConsoleSender(consoleSender);
-        else if (sender instanceof BlockCommandSender blockSender)
-            commandSender = new com.wizardlybump17.wlib.command.sender.BlockCommandSender(blockSender);
-        else
-            commandSender = new GenericSender(sender);
-
-        execute(commandSender, command.getName(), args);
+        execute(getSender(sender), command.getName(), args);
         return false;
     }
 
@@ -44,7 +34,17 @@ public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wl
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return null;
+    }
+
+    private com.wizardlybump17.wlib.command.CommandSender<?> getSender(CommandSender original) {
+        if (original instanceof Player player)
+            return new PlayerSender(player);
+        if (original instanceof ConsoleCommandSender consoleSender)
+            return new ConsoleSender(consoleSender);
+        if (original instanceof BlockCommandSender blockSender)
+            return new com.wizardlybump17.wlib.command.sender.BlockCommandSender(blockSender);
+        return new GenericSender(original);
     }
 }
