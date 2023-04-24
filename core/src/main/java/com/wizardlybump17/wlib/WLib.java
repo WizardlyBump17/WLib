@@ -54,6 +54,7 @@ public class WLib extends JavaPlugin {
         ArgsReaderRegistry.INSTANCE.add(new EntityTypeArgsReader());
         ArgsReaderRegistry.INSTANCE.add(new MaterialReader());
         ArgsReaderRegistry.INSTANCE.add(new BlockDataArgsReader());
+        ArgsReaderRegistry.INSTANCE.add(new MapJsonArgsReader());
     }
 
     private void initSerializables() {
