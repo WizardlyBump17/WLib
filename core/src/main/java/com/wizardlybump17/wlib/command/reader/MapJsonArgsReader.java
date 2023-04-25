@@ -5,18 +5,18 @@ import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 
 import java.util.Map;
 
-public class MapJsonArgsReader extends ArgsReader<Map<Object, Object>> {
+public class MapJsonArgsReader extends ArgsReader<Map<String, Object>> {
 
     private final Gson gson = new Gson();
 
     @Override
-    public Class<Map<Object, Object>> getType() {
+    public Class<Map<String, Object>> getType() {
         return null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<Object, Object> read(String string) {
+    public Map<String, Object> read(String string) {
         return gson.fromJson(string, Map.class);
     }
 }
