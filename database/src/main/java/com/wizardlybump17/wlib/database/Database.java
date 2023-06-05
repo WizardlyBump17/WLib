@@ -242,7 +242,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
      * @param objects the objects to be saved
      * @param table the table to be saved to
      */
-    public void save(@NonNull Iterable<DatabaseStorable> objects, @NonNull String table) {
+    public void save(@NonNull Iterable<? extends DatabaseStorable> objects, @NonNull String table) {
         for (DatabaseStorable object : objects)
             save(object, table);
     }
