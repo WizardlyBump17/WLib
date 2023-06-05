@@ -235,4 +235,15 @@ public abstract class Database<M extends DatabaseModel<?>> {
         for (DatabaseStorable object : objects)
             save(object, table);
     }
+
+    /**
+     * <p>Saves the given objects to the database.</p>
+     * <p>The default implementation calls the {@link #save(DatabaseStorable, String)} for each object and uses the same table</p>
+     * @param objects the objects to be saved
+     * @param table the table to be saved to
+     */
+    public void save(@NonNull Iterable<DatabaseStorable> objects, @NonNull String table) {
+        for (DatabaseStorable object : objects)
+            save(object, table);
+    }
 }
