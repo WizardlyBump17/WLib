@@ -1,5 +1,8 @@
 package com.wizardlybump17.wlib.database;
 
+import lombok.NonNull;
+
+import java.util.Collections;
 import java.util.Map;
 
 public interface DatabaseStorable {
@@ -17,30 +20,42 @@ public interface DatabaseStorable {
     void setDeleted(boolean deleted);
 
     /**
-     * Called when this object is requested to be saved to the database.
-     * The Map given is the map of all the values that are to be saved.
-     * The key is the column name, and the value is the value to be saved.
-     * @param data The map of data to be saved.
+     * <p>Called when this object is requested to be saved to the database.</p>
+     * <p>The {@link Map} returned is used to get the column names and values to be saved.</p>
+     * @param database the database that is requesting the method
+     * @param table the table where the object is to be saved
+     * @return the {@link Map} of data to be saved
+     * @since 1.5.1
      */
-    default void saveToDatabase(Map<String, Object> data) {
+    @NonNull
+    default Map<String, Object> saveToDatabase(Database<?> database, String table) {
+        return Collections.emptyMap();
     }
 
     /**
-     * Called when this object is requested to be updated to the database.
-     * The "where" Map is the map of all the values used to the {@code WHERE} clause.
-     * The "data" Map is the map of all the values that are to be updated.
-     * @param where The map of data that is used to the {@code WHERE} clause.
-     * @param data The map of data to be updated.
+     * <p>Called when this object is requested to be updated to the database.</p>
+     * <p>The {@link Map} returned is used to get the column names and values to be updated.</p>
+     * @param database the database that is requesting the method
+     * @param table the table where the object is to be updated
+     * @param where the {@link Map} of data that is used to the {@code WHERE} clause. Initially an empty {@link java.util.HashMap}
+     * @return the {@link Map} of data to be updated
+     * @since 1.5.1
      */
-    default void updateToDatabase(Map<String, Object> where, Map<String, Object> data) {
+    @NonNull
+    default Map<String, Object> updateToDatabase(Database<?> database, String table, Map<String, Object> where) {
+        return Collections.emptyMap();
     }
 
     /**
-     * Called when this object is requested to be deleted from the database.
-     * The Map given is the map of all the values used to the {@code WHERE} clause.
-     * The key is the column name, and the value is the value.
-     * @param data The map of data that is used to the {@code WHERE} clause.
+     * <p>Called when this object is requested to be deleted from the database.</p>
+     * <p>The {@link Map} returned is used to get the column names and values used to the {@code WHERE} clause.</p>
+     * @param database the database that is requesting the method
+     * @param table the table where the object is to be deleted
+     * @return the {@link Map} of data that is used to the {@code WHERE} clause
+     * @since 1.5.1
      */
-    default void deleteFromDatabase(Map<String, Object> data) {
+    @NonNull
+    default Map<String, Object> deleteFromDatabase(Database<?> database, String table) {
+        return Collections.emptyMap();
     }
 }
