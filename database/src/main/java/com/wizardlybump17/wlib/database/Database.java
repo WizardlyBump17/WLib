@@ -141,9 +141,8 @@ public abstract class Database<M extends DatabaseModel<?>> {
             return;
 
         StringBuilder builder = new StringBuilder("UPDATE " + table + " SET ");
-        Map<String, Object> where = new LinkedHashMap<>();
-        Map<String, Object> data = new LinkedHashMap<>();
-        object.updateToDatabase(where, data);
+        Map<String, Object> where = new HashMap<>();
+        Map<String, Object> data = object.updateToDatabase(this, table, where);
 
         if (data.isEmpty())
             return;
@@ -181,20 +180,18 @@ public abstract class Database<M extends DatabaseModel<?>> {
         if (!object.isInDatabase())
             return;
 
-        Map<String, Object> data = new LinkedHashMap<>();
-        object.deleteFromDatabase(data);
-
-        if (data.isEmpty())
+        Map<String, Object> where = object.deleteFromDatabase(this, table);
+        if (where.isEmpty())
             return;
 
         StringBuilder builder = new StringBuilder("DELETE FROM " + table + " WHERE ");
-        for (Map.Entry<String, Object> entry : data.entrySet())
+        for (Map.Entry<String, Object> entry : where.entrySet())
             builder.append(entry.getKey()).append(" = ? AND ");
         builder.delete(builder.length() - 5, builder.length());
 
         builder.append(";");
 
-        update(builder.toString(), data.values().toArray());
+        update(builder.toString(), where.values().toArray());
     }
 
     /**
@@ -206,9 +203,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
         if (object == null)
             return;
 
-        Map<String, Object> data = new LinkedHashMap<>();
-        object.saveToDatabase(data);
-
+        Map<String, Object> data = object.saveToDatabase(this, table);
         if (data.isEmpty())
             return;
 
