@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.database;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.*;
@@ -222,5 +223,16 @@ public abstract class Database<M extends DatabaseModel<?>> {
         object.setDirty(false);
 
         update(builder.toString(), data.values().toArray());
+    }
+
+    /**
+     * <p>Saves the given objects to the database.</p>
+     * <p>The default implementation calls the {@link #save(DatabaseStorable, String)} for each object and uses the same table</p>
+     * @param table the table to be saved to
+     * @param objects the objects to be saved
+     */
+    public void save(@NonNull String table, @NonNull DatabaseStorable... objects) {
+        for (DatabaseStorable object : objects)
+            save(object, table);
     }
 }
