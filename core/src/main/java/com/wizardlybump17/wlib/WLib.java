@@ -108,6 +108,10 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.ItemAdapter());
                 yield "v1_19_R3";
             }
+            case "v1_20_R1" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.ItemAdapter());
+                yield "v1_20_R1";
+            }
             default -> null;
         };
     }
