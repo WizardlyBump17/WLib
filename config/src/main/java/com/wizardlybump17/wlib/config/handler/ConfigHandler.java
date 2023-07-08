@@ -22,7 +22,7 @@ public class ConfigHandler {
         loadFields();
     }
 
-    public void save() {
+    public void init() {
         for (Field field : clazz.getDeclaredFields()) {
             if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
                 continue;
