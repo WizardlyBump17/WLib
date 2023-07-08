@@ -46,7 +46,7 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
     }
 
     /**
-     * Intializes all configs from that holder
+     * Initializes all configs from that holder
      * @param holder the holder who is holding the configs
      */
     public void initAll(Class<?> holder) {
