@@ -54,4 +54,21 @@ public class ConfigHandler {
             }
         }
     }
+
+    public void save() {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
+                continue;
+
+            Path path = field.getAnnotation(Path.class);
+            String configPath = path.value();
+            try {
+                config.set(configPath, field.get(null));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        config.saveConfig();
+    }
 }
