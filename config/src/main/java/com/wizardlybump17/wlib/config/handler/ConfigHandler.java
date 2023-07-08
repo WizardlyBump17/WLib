@@ -55,6 +55,11 @@ public class ConfigHandler {
         }
     }
 
+    /**
+     * <p>
+     *     Saves all fields with {@link Path} annotation in the {@link Configuration}.
+     * </p>
+     */
     public void save() {
         for (Field field : clazz.getDeclaredFields()) {
             if (!field.isAnnotationPresent(Path.class) || !Modifier.isStatic(field.getModifiers()))
