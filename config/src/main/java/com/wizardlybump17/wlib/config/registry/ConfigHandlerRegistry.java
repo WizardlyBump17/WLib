@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.config.handler.ConfigHandler;
 import com.wizardlybump17.wlib.config.holder.ConfigHolder;
 import com.wizardlybump17.wlib.config.holder.ConfigHolderFactory;
 import com.wizardlybump17.wlib.object.Registry;
+import lombok.NonNull;
 
 /**
  * This class is responsible to store the {@link ConfigHandler}s
@@ -53,6 +54,18 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
         for (ConfigHandler config : getMap().values())
             if (holder == config.getHolder())
                 config.init();
+    }
+
+    /**
+     * <p>
+     *     Saves all {@link com.wizardlybump17.wlib.config.Configuration}s with the given holder class.
+     * </p>
+     * @param holder the holder with the configs
+     */
+    public void saveAll(@NonNull Class<?> holder) {
+        for (ConfigHandler config : getMap().values())
+            if (holder == config.getHolder())
+                config.save();
     }
 
     public static ConfigHandlerRegistry getInstance() {
