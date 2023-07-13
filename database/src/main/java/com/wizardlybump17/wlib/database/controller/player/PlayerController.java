@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.object.Cache;
 import lombok.NonNull;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>A {@link Controller} that uses {@link UUID} as key and it is focused on players.</p>
@@ -30,12 +31,14 @@ public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends
      *     Called when the player joins the server.
      * </p>
      * @param id the player's id
+     * @return a {@link CompletableFuture} that will be completed when the player is loaded
      */
-    public abstract void loadPlayer(@NonNull UUID id);
+    public abstract CompletableFuture<Void> loadPlayer(@NonNull UUID id);
 
     /**
      * <p>Unload the player from the {@link Cache} and save him in the {@link DAO}</p>
      * @param id the player's id
+     * @return a {@link CompletableFuture} that will be completed when the player is unloaded
      */
-    public abstract void unloadPlayer(@NonNull UUID id);
+    public abstract CompletableFuture<Void> unloadPlayer(@NonNull UUID id);
 }
