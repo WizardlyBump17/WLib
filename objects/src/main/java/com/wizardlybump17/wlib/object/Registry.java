@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.object;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,5 +31,13 @@ public abstract class Registry<K, V> {
 
     public Map<K, V> getMap() {
         return Collections.unmodifiableMap(map);
+    }
+
+    public Collection<K> getKeys() {
+        return Collections.unmodifiableSet(map.keySet());
+    }
+
+    public Collection<V> getValues() {
+        return Collections.unmodifiableCollection(map.values());
     }
 }
