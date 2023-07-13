@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.database.controller.player;
 
 import com.wizardlybump17.wlib.database.controller.Controller;
+import com.wizardlybump17.wlib.database.controller.player.reason.UnloadReason;
 import com.wizardlybump17.wlib.database.dao.DAO;
 import com.wizardlybump17.wlib.object.Cache;
 import lombok.NonNull;
@@ -36,9 +37,10 @@ public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends
     public abstract CompletableFuture<Void> loadPlayer(@NonNull UUID id);
 
     /**
-     * <p>Unload the player from the {@link Cache} and save him in the {@link DAO}</p>
+     * <p>Unloads the player.</p>
      * @param id the player's id
+     * @param reason the reason why the player is being unloaded
      * @return a {@link CompletableFuture} that will be completed when the player is unloaded
      */
-    public abstract CompletableFuture<Void> unloadPlayer(@NonNull UUID id);
+    public abstract CompletableFuture<Void> unloadPlayer(@NonNull UUID id, @NonNull UnloadReason reason);
 }
