@@ -134,8 +134,7 @@ public class MapUtils {
 
     /**
      * Creates a map using the given data. The data array must be a multiple of 2.<br>
-     * The map type is provided by the supplier.<br>
-     * If the key or value is null, then it won't be stored
+     * The map type is provided by the supplier.
      * @param supplier which map it should use
      * @param data the array
      * @param <K> the key type
@@ -154,8 +153,7 @@ public class MapUtils {
 
         Map<K, V> map = supplier.get();
         for (int i = 0; i < data.length; i += 2)
-            if (data[i] != null && data[i + 1] != null)
-                map.put((K) data[i], (V) data[i + 1]);
+            map.put((K) data[i], (V) data[i + 1]);
 
         return map;
     }
