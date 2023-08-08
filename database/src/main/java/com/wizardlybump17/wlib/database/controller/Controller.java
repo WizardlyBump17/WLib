@@ -5,7 +5,6 @@ import com.wizardlybump17.wlib.object.Cache;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -18,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
  *     <ol>
  *         <li>Get the data from the cache</li>
  *         <li>If it's not present in the cache, get it from the database</li>
- *         <li>If the data was found, then cache it using the {@link #cache(Object, Object)} method</li>
+ *         <li>If the data was found, then cache it using the {@link #cache(Object)} method</li>
  *     </ol>
  * </p>
  * @param <K> the key type
@@ -51,22 +50,22 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
                     if (value == null)
                         return;
 
-                    cache(key, value);
+                    cache(value);
                 }));
     }
 
     /**
      * <p>Caches the value in the {@link #getCache()}.</p>
-     * @param key the key
      * @param value the value
      */
-    public abstract void cache(@NonNull K key, @NonNull V value);
+    public abstract void cache(@NonNull V value);
 
     /**
-     * <p>Caches all the given keys and values in the {@link #getCache()}</p>
+     * <p>Caches all the given values in the {@link #getCache()}</p>
      * @param values the values
      */
-    public void cacheAll(@NonNull Map<K, V> values) {
-        values.forEach(this::cache);
+    public void cacheAll(@NonNull Iterable<V> values) {
+        for (V value : values)
+            cache(value);
     }
 }
