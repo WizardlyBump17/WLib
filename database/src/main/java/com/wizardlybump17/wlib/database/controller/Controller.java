@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.object.Cache;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -60,4 +61,12 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
      * @param value the value
      */
     public abstract void cache(@NonNull K key, @NonNull V value);
+
+    /**
+     * <p>Caches all the given keys and values in the {@link #getCache()}</p>
+     * @param values the values
+     */
+    public void cacheAll(@NonNull Map<K, V> values) {
+        values.forEach(this::cache);
+    }
 }
