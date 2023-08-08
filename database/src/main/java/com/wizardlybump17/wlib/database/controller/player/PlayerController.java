@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
  * @param <D> the {@link DAO} type
  * @see com.wizardlybump17.wlib.database.controller.player.PlayerControllerRegistry
  */
-public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends DAO<UUID, V>> extends Controller<UUID, V, C, D> {
+public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends DAO<UUID, V>> extends Controller<UUID, V, C, D> implements PlayerLoadable {
 
     public PlayerController(@NonNull C cache, @NonNull D dao) {
         super(cache, dao);
@@ -34,6 +34,7 @@ public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends
      * @param id the player's id
      * @return a {@link CompletableFuture} that will be completed when the player is loaded
      */
+    @Override
     public abstract CompletableFuture<Void> loadPlayer(@NonNull UUID id);
 
     /**
@@ -42,5 +43,6 @@ public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends
      * @param reason the reason why the player is being unloaded
      * @return a {@link CompletableFuture} that will be completed when the player is unloaded
      */
+    @Override
     public abstract CompletableFuture<Void> unloadPlayer(@NonNull UUID id, @NonNull UnloadReason reason);
 }
