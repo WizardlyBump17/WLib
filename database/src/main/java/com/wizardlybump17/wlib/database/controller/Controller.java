@@ -59,5 +59,5 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
      * @param key the key
      * @param value the value
      */
-    protected abstract void cache(@NonNull K key, @NonNull V value);
+    public abstract void cache(@NonNull K key, @NonNull V value);
 }
