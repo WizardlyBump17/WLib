@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.command.CommandSender;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class ProxiedPlayerSender implements CommandSender<ProxiedPlayer> {
@@ -37,8 +36,7 @@ public class ProxiedPlayerSender implements CommandSender<ProxiedPlayer> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> @Nullable T toGeneric() {
-        return (T) new GenericSender(handle);
+    public GenericSender toGeneric() {
+        return new GenericSender(handle);
     }
 }

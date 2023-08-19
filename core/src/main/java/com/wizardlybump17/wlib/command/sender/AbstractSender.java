@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.sender;
 
 import com.wizardlybump17.wlib.command.CommandSender;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,5 +29,11 @@ public abstract class AbstractSender<S extends org.bukkit.command.CommandSender>
     @Override
     public boolean hasPermission(String permission) {
         return handle.hasPermission(permission);
+    }
+
+    @Override
+    @NonNull
+    public GenericSender toGeneric() {
+        return new GenericSender(handle);
     }
 }

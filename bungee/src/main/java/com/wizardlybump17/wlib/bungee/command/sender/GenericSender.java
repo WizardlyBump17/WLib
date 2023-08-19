@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.bungee.command.sender;
 import com.wizardlybump17.wlib.command.CommandSender;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class GenericSender implements CommandSender<net.md_5.bungee.api.CommandSender> {
@@ -36,9 +35,8 @@ public class GenericSender implements CommandSender<net.md_5.bungee.api.CommandS
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> @Nullable T toGeneric() {
-        return (T) this;
+    public GenericSender toGeneric() {
+        return this;
     }
 
     public static boolean isGeneric() {

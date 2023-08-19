@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.sender;
 
+import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
 public class GenericSender extends AbstractSender<CommandSender> {
@@ -9,7 +10,8 @@ public class GenericSender extends AbstractSender<CommandSender> {
     }
 
     @Override
-    public com.wizardlybump17.wlib.command.CommandSender<?> toGeneric() {
+    @NonNull
+    public GenericSender toGeneric() {
         return this;
     }
 
