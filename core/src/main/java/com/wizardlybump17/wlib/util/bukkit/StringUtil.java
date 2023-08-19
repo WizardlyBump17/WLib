@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util.bukkit;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
@@ -90,5 +91,33 @@ public class StringUtil {
             return "X: " + location.getX() + ", Y: " + location.getY() + ", Z: " + location.getZ() + ", World: " + location.getWorld().getName();
 
         return object.toString();
+    }
+
+    public static boolean isValidNamespaceChar(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-';
+    }
+
+    public static boolean isValidKeyChar(char c) {
+        return isValidNamespaceChar(c) || c == '/';
+    }
+
+    @NonNull
+    public static String clearNamespace(@NonNull String string) {
+        char[] chars = string.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for (char c : chars)
+            if (isValidNamespaceChar(c))
+                builder.append(c);
+        return builder.toString();
+    }
+
+    @NonNull
+    public static String clearKey(@NonNull String string) {
+        char[] chars = string.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for (char c : chars)
+            if (isValidKeyChar(c))
+                builder.append(c);
+        return builder.toString();
     }
 }
