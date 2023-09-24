@@ -1,10 +1,14 @@
 package com.wizardlybump17.wlib.command.reader;
 
+import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class OfflinePlayerReader extends ArgsReader<OfflinePlayer> {
@@ -30,5 +34,14 @@ public class OfflinePlayerReader extends ArgsReader<OfflinePlayer> {
         }
 
         return null;
+    }
+
+    @Override
+    public @NonNull List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String current) {
+        OfflinePlayer[] players = Bukkit.getOfflinePlayers();
+        List<String> suggestions = new ArrayList<>(players.length);
+        for (OfflinePlayer player : players)
+            suggestions.add(player.getName());
+        return suggestions;
     }
 }
