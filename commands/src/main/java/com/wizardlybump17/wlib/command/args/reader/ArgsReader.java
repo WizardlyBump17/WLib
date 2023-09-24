@@ -1,6 +1,11 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
+import com.wizardlybump17.wlib.command.CommandSender;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Used to read and convert the args from string to the specified type
@@ -17,4 +22,15 @@ public abstract class ArgsReader<T> {
     public abstract Class<T> getType();
 
     public abstract T read(String string) throws ArgsReaderException;
+
+    /**
+     * <p>Gives the suggestions for the specified sender and current argument (optional).</p>
+     * @param sender who is executing the command
+     * @param current the current argument
+     * @return a {@link List} of suggestions
+     */
+    @NonNull
+    public List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String current) {
+        return Collections.emptyList();
+    }
 }
