@@ -1,6 +1,13 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
+import com.wizardlybump17.wlib.command.CommandSender;
+import lombok.NonNull;
+
+import java.util.List;
+
 public class FloatReader extends ArgsReader<Float> {
+
+    public static final List<String> SUGGESTIONS = List.of("1", "1.5", "10", "10.5");
 
     @Override
     public Class<Float> getType() {
@@ -14,5 +21,10 @@ public class FloatReader extends ArgsReader<Float> {
         } catch (NumberFormatException e) {
             throw new ArgsReaderException("expected a float but got " + string);
         }
+    }
+
+    @Override
+    public @NonNull List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String current) {
+        return SUGGESTIONS;
     }
 }

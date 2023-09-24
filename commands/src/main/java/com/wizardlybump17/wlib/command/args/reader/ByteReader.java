@@ -1,6 +1,13 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
+import com.wizardlybump17.wlib.command.CommandSender;
+import lombok.NonNull;
+
+import java.util.List;
+
 public class ByteReader extends ArgsReader<Byte> {
+
+    public static final List<String> SUGGESTIONS = List.of("-128", "0", "127");
 
     @Override
     public Class<Byte> getType() {
@@ -14,5 +21,10 @@ public class ByteReader extends ArgsReader<Byte> {
         } catch (NumberFormatException e) {
             throw new ArgsReaderException("expected a byte but got " + string);
         }
+    }
+
+    @Override
+    public @NonNull List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String current) {
+        return SUGGESTIONS;
     }
 }

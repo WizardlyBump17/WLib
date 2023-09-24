@@ -1,6 +1,13 @@
 package com.wizardlybump17.wlib.command.args.reader;
 
+import com.wizardlybump17.wlib.command.CommandSender;
+import lombok.NonNull;
+
+import java.util.List;
+
 public class IntegerReader extends ArgsReader<Integer> {
+
+    public static final List<String> SUGGESTIONS = List.of("1", "10", "100");
 
     @Override
     public Class<Integer> getType() {
@@ -14,5 +21,10 @@ public class IntegerReader extends ArgsReader<Integer> {
         } catch (NumberFormatException e) {
             throw new ArgsReaderException("expected an int but got " + string);
         }
+    }
+
+    @Override
+    public @NonNull List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String current) {
+        return SUGGESTIONS;
     }
 }
