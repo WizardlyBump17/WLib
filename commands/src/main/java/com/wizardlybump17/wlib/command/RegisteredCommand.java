@@ -5,16 +5,15 @@ import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.args.ArgsReaderType;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
+import com.wizardlybump17.wlib.object.Pair;
 import lombok.Getter;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 public class RegisteredCommand implements Comparable<RegisteredCommand> {
@@ -101,23 +100,23 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         return Integer.compare(other.command.execution().length(), command.execution().length());
     }
 
-    public Optional<Object[]> parse(String input) throws ArgsReaderException {
+    public Optional<List<Pair<ArgsNode, Object>>> parse(String input, boolean autoComplete) throws ArgsReaderException {
         List<String> toParse = new ArrayList<>();
-        checkArrays(input, toParse);
+        checkArrays(input, toParse, autoComplete);
 
-        List<Object> result = new ArrayList<>(nodes.size());
+        List<Pair<ArgsNode, Object>> result = new ArrayList<>(nodes.size());
 
-        if (parseRequiredOnly(result, toParse))
-            return Optional.of(result.toArray());
+        if (parseRequiredOnly(result, toParse, autoComplete))
+            return Optional.of(result);
 
         return Optional.empty();
     }
 
-    private boolean parseRequiredOnly(List<Object> target, List<String> strings) throws ArgsReaderException {
-        if (nodes.size() > strings.size())
+    private boolean parseRequiredOnly(List<Pair<ArgsNode, Object>> target, List<String> strings, boolean autoComplete) throws ArgsReaderException {
+        if (autoComplete && nodes.size() > strings.size())
             return false;
 
-        for (int i = 0; i < nodes.size(); i++) {
+        for (int i = 0; i < nodes.size() && i < strings.size(); i++) {
             ArgsNode node = nodes.get(i);
             if (!node.isUserInput()) {
                 if (!node.getName().equalsIgnoreCase(strings.get(i)))
@@ -130,17 +129,17 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             if (parse == ArgsNode.EMPTY)
                 continue;
 
-            target.add(parse);
+            target.add(new Pair<>(node, parse));
         }
 
         return true;
     }
 
-    private void checkArrays(String input, List<String> target) throws ArgsReaderException {
+    private void checkArrays(String input, List<String> target, boolean autoComplete) throws ArgsReaderException {
         StringBuilder builder = new StringBuilder();
         boolean inArray = false;
         for (String s : input.split(" ")) {
-            if (s.startsWith("\"") && s.endsWith("\"") && !s.endsWith("\\\"")) { //"string" | single word
+            if (s.startsWith("\"") && s.endsWith("\"") && !s.endsWith("\\\"") && s.length() != 1) { //"string" | single word
                 target.add(s.substring(1, s.length() - 1));
                 continue;
             }
@@ -167,20 +166,20 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             target.add(s.replace("\\\"", "\"")); //string | it is not in the array
         }
 
-        if (inArray)
+        if (inArray && !autoComplete)
             throw new ArgsReaderException("Invalid array");
     }
 
     public CommandResult execute(CommandSender<?> sender, String string) {
         try {
-            Optional<Object[]> parse = parse(string);
+            Optional<List<Pair<ArgsNode, Object>>> parse = parse(string, true);
             if (parse.isEmpty())
                 return CommandResult.ARGS_FAIL;
 
             if (!getSenderType().isInstance(sender) && !isSenderGeneric())
                 return CommandResult.INVALID_SENDER;
 
-            Object[] objects = parse.get();
+            Object[] objects = parse.get().stream().map(Pair::getSecond).toArray();
             return executeInternal(sender, objects);
         } catch (ArgsReaderException e) {
             return CommandResult.ARGS_FAIL;
@@ -204,6 +203,42 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             return CommandResult.METHOD_FAIL;
+        }
+    }
+
+    @NonNull
+    public List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String string) {
+        if (nodes.size() == 1)
+            return Collections.emptyList();
+
+        if (!getSenderType().isInstance(sender) && !isSenderGeneric())
+            return Collections.emptyList();
+
+        try {
+            Optional<List<Pair<ArgsNode, Object>>> parse = parse(string, false);
+            if (parse.isEmpty())
+                return Collections.emptyList();
+
+            String[] split = string.split(" ");
+            String lastString = split[split.length - 1];
+
+            List<Pair<ArgsNode, Object>> pairs = parse.get();
+
+            if (pairs.isEmpty()) {
+                ArgsNode secondNode = nodes.get(1);
+                ArgsReader<?> secondNodeReader = secondNode.getReader();
+                return secondNodeReader == null ? List.of(secondNode.getName()) : secondNodeReader.autoComplete(sender, lastString);
+            }
+
+            Pair<ArgsNode, Object> lastPair = pairs.get(pairs.size() - 1);
+
+            ArgsNode node = lastPair.getFirst();
+            ArgsReader<?> reader = node.getReader();
+
+            return reader == null ? List.of(node.getName()) : reader.autoComplete(sender, lastString);
+        } catch (ArgsReaderException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 

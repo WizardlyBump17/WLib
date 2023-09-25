@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command;
 
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Method;
@@ -53,6 +54,14 @@ public class CommandManager {
                 }
             }
         }
+    }
+
+    @NonNull
+    public List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String string) {
+        List<String> result = new ArrayList<>();
+        for (RegisteredCommand command : commands)
+            result.addAll(command.autoComplete(sender, string));
+        return result;
     }
 
     public List<RegisteredCommand> getCommand(String name) {
