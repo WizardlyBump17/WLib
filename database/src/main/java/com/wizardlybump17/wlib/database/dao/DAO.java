@@ -2,18 +2,34 @@ package com.wizardlybump17.wlib.database.dao;
 
 import com.wizardlybump17.wlib.database.Database;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 @Data
 public abstract class DAO<K, V> {
 
     private final Database<?> database;
     private final ExecutorService executor;
+    @NonNull
+    private final Logger logger;
+
+    public DAO(Database<?> database, ExecutorService executor) {
+        this.database = database;
+        this.executor = executor;
+        this.logger = Logger.getLogger(getClass().getName());
+    }
+
+    protected DAO(Database<?> database, ExecutorService executor, @NonNull Logger logger) {
+        this.database = database;
+        this.executor = executor;
+        this.logger = logger;
+    }
 
     public abstract CompletableFuture<V> find(K key);
 
