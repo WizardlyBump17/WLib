@@ -9,11 +9,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,10 +35,11 @@ public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wl
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        String fullCommand = command.getName() + " " + String.join(" ", args);
-        List<String> suggestions = manager.autoComplete(getSender(sender), fullCommand);
-        ArrayList<String> strings = StringUtil.copyPartialMatches(args[args.length - 1], suggestions, new ArrayList<>(suggestions.size()));
-        return strings;
+//        String fullCommand = command.getName() + " " + String.join(" ", args);
+//        List<String> suggestions = manager.autoComplete(getSender(sender), fullCommand);
+//        ArrayList<String> strings = StringUtil.copyPartialMatches(args[args.length - 1], suggestions, new ArrayList<>(suggestions.size()));
+//        return strings;
+        return null;
     }
 
     private com.wizardlybump17.wlib.command.CommandSender<?> getSender(CommandSender original) {
