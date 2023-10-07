@@ -11,6 +11,9 @@ import java.util.Set;
 public class ControllerCache {
 
     @NonNull
+    public static final ControllerCache INSTANCE = new ControllerCache();
+
+    @NonNull
     private final Set<Controller<?, ?, ?, ?>> cache = new HashSet<>();
 
     public void add(@NonNull Controller<?, ?, ?, ?> controller) {
