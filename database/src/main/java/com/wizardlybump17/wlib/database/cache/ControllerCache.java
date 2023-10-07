@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.database.controller.Controller;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,5 +31,9 @@ public class ControllerCache {
 
     public boolean contains(@NonNull Controller<?, ?, ?, ?> controller) {
         return cache.contains(controller);
+    }
+
+    public Set<Controller<?, ?, ?, ?>> getCache() {
+        return Collections.unmodifiableSet(cache);
     }
 }
