@@ -77,4 +77,14 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
      */
     public void shutdown() {
     }
+
+    /**
+     * <p>
+     *     Called when {@code this} {@link Controller} is requested to save all the data.
+     *     The Spigot implementation of WLib will call this method every 5 minutes.
+     * </p>
+     */
+    public CompletableFuture<Void> save() {
+        return CompletableFuture.allOf(cache.getAll().stream().map(dao::update).toArray(CompletableFuture[]::new));
+    }
 }
