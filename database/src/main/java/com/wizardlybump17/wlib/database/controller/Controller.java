@@ -74,6 +74,7 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
      *     Called when {@code this} {@link Controller} shutdowns.
      *     The default implementation does nothing.
      * </p>
+     * @apiNote this method is not called natively by WLib, you need to call it manually
      */
     public void shutdown() {
     }
