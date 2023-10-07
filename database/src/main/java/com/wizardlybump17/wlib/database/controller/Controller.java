@@ -68,4 +68,13 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
         for (V value : values)
             cache(value);
     }
+
+    /**
+     * <p>
+     *     Called when {@code this} {@link Controller} shutdowns.
+     *     The default implementation does nothing.
+     * </p>
+     */
+    public void shutdown() {
+    }
 }
