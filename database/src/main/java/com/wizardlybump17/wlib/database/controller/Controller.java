@@ -72,11 +72,12 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
     /**
      * <p>
      *     Called when {@code this} {@link Controller} shutdowns.
-     *     The default implementation does nothing.
+     *     The default implementation calls the {@link #save()} method and waits for the {@link CompletableFuture} to complete.
      * </p>
      * @apiNote this method is not called natively by WLib, you need to call it manually
      */
     public void shutdown() {
+        save().join();
     }
 
     /**
