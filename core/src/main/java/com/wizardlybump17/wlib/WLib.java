@@ -15,13 +15,18 @@ import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import com.wizardlybump17.wlib.listener.PlayerListener;
+import com.wizardlybump17.wlib.task.SaveControllersTask;
 import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Getter
 public class WLib extends JavaPlugin {
+
+    private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
 
     @Override
     public void onLoad() {
@@ -41,6 +46,8 @@ public class WLib extends JavaPlugin {
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
+
+        saveControllersTask.runTaskTimer(this, SaveControllersTask.DELAY, SaveControllersTask.DELAY);
 
         getLogger().info("WLib enabled.");
     }
