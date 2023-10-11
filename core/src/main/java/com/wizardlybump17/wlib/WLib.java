@@ -3,6 +3,9 @@ package com.wizardlybump17.wlib;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.*;
+import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
+import com.wizardlybump17.wlib.config.registry.ConfigHandlerRegistry;
+import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import com.wizardlybump17.wlib.database.model.MySQLDatabaseModel;
 import com.wizardlybump17.wlib.database.model.SQLiteDatabaseModel;
@@ -40,6 +43,17 @@ public class WLib extends JavaPlugin {
         DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
         databaseRegister.registerDatabaseModel(new MySQLDatabaseModel());
         databaseRegister.registerDatabaseModel(new SQLiteDatabaseModel());
+
+        initConfigs();
+    }
+
+    protected void initConfigs() {
+        getLogger().info("Initializing configs...");
+
+        ConfigHolderFactoryRegistry.getInstance().put(WLib.class, new BukkitConfigHolderFactory(this));
+        ConfigHandlerRegistry.getInstance().register(SaveControllersTask.class);
+
+        getLogger().info("All configs have been initialized!");
     }
 
     @Override
@@ -47,7 +61,7 @@ public class WLib extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
 
-        saveControllersTask.runTaskTimer(this, SaveControllersTask.DELAY, SaveControllersTask.DELAY);
+        saveControllersTask.runTaskTimer(this, SaveControllersTask.delay, SaveControllersTask.delay);
 
         getLogger().info("WLib enabled.");
     }
