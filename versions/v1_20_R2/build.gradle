@@ -1,0 +1,9 @@
+dependencies {
+    compileOnly(
+            'org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT',
+            'org.projectlombok:lombok:1.18.24',
+            'org.jetbrains:annotations:23.0.0',
+            project(':versions:adapter'),
+    )
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
+}
