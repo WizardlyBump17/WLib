@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @UtilityClass
 public class ConfigUtil {
@@ -42,5 +43,22 @@ public class ConfigUtil {
     public static <T> @Nullable T get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @Nullable T defaultValue) {
         Object object = map.get(key);
         return object == null ? defaultValue : (T) object;
+    }
+
+    /**
+     * <p>
+     *     Gets a value from the given {@link Map} by the given key.
+     *     If the value is null, it will use the {@link Supplier#get()} from the given {@link Supplier}.
+     * </p>
+     * @param key the key to get the value
+     * @param map the map to get the value from
+     * @param defaultValue the {@link Supplier} to return the default value if the value is null
+     * @return the value or the default value
+     * @param <T> the type of the value
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Supplier<T> defaultValue) {
+        Object object = map.get(key);
+        return object == null ? defaultValue.get() : (T) object;
     }
 }
