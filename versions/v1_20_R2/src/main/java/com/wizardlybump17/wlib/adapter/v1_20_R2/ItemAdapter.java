@@ -74,18 +74,18 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
             Map<String, Object> innerMap = new HashMap<>();
             for (String key : compound.e())
                 innerMap.put(key, serialize(compound.c(key)));
+
             return innerMap;
-        } else if (!(base instanceof NBTTagList list)) {
-            if (base instanceof NBTTagString) {
-                return base.r_();
-            } else {
-                return base instanceof NBTTagInt ? base + "i" : base.toString();
-            }
-        } else {
+        } else if (base instanceof NBTTagList list) {
             List<Object> baseList = new ArrayList<>();
             for (NBTBase nbtBase : list)
                 baseList.add(serialize(nbtBase));
             return baseList;
-        }
+        } else if (base instanceof NBTTagString)
+            return base.r_();
+        else if (base instanceof NBTTagInt)
+            return base + "i";
+
+        return base.toString();
     }
 }
