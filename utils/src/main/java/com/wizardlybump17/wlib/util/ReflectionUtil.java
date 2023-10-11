@@ -1,142 +1,62 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import sun.misc.Unsafe;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @UtilityClass
 public class ReflectionUtil {
 
-    private static final Map<Class<?>, Class<?>> BOXED_CLASSES = new HashMap<>();
+    public static final @NonNull Logger LOGGER = Logger.getLogger(ReflectionUtil.class.getName());
 
-    static {
-        BOXED_CLASSES.put(byte.class, Byte.class);
-        BOXED_CLASSES.put(short.class, Short.class);
-        BOXED_CLASSES.put(int.class, Integer.class);
-        BOXED_CLASSES.put(long.class, Long.class);
-        BOXED_CLASSES.put(float.class, Float.class);
-        BOXED_CLASSES.put(double.class, Double.class);
-        BOXED_CLASSES.put(boolean.class, Boolean.class);
-        BOXED_CLASSES.put(char.class, Character.class);
-    }
-
-    /**
-     * Checks if the given {@code clazz} is assignable from the {@code other} class.<br>
-     * If one class is primitive, it will be boxed and checked against the other class, which can be also boxed.
-     * @param clazz the class which will check
-     * @param other the class which will be checked against
-     * @return if the given {@code clazz} is assignable from the {@code other} class
-     */
-    public static boolean isAssignableFrom(Class<?> clazz, Class<?> other) {
-        if (clazz.isAssignableFrom(other))
-            return true;
-
-        if (clazz.isPrimitive()) {
-            Class<?> boxed = BOXED_CLASSES.get(clazz);
-            return boxed != null && boxed.isAssignableFrom(BOXED_CLASSES.getOrDefault(other, other));
+    public static Field getField(@NonNull String name, @NonNull Class<?> clazz) {
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            LOGGER.log(Level.SEVERE, "Could not find field " + name + " in class " + clazz.getName(), e);
+            return null;
         }
-
-        return false;
     }
 
-    /**
-     * @param obj the object to box
-     * @return the boxed object class
-     */
-    public static Class<?> boxed(Object obj) {
-        if (!BOXED_CLASSES.containsKey(obj.getClass()))
-            return obj.getClass();
-
-        return BOXED_CLASSES.get(obj.getClass());
-    }
-
-    /**
-     * Sets the value to the given field reflectively.<br>
-     * If it fails, it will do nothing (exceptions are just printed to the console)
-     * @param field the field to set
-     * @param value the value to set
-     */
-    public static void set(Field field, Object value) {
-        if (Modifier.isFinal(field.getModifiers())) {
-            setFinalField(field, value);
-            return;
-        }
-
+    @SuppressWarnings("unchecked")
+    public static <T> @Nullable T getFieldValue(@NonNull Field field, @Nullable Object caller) {
         try {
             field.setAccessible(true);
-            field.set(null, value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } finally {
+            T result = (T) field.get(caller);
             field.setAccessible(false);
-        }
-    }
-
-    /**
-     * Special method to update a final field
-     * @param field the field to update
-     * @param value the value to set
-     */
-    private static void setFinalField(Field field, Object value) {
-        if (setFinalFieldJDK11(field, value))
-            return;
-        setFinalFieldJDK12(field, value);
-    }
-
-    /**
-     * This will try to set the final field using the modifiers
-     * @apiNote This method will only work until JDK 11
-     * @param field the field to update
-     * @param value the value to set
-     * @return if the field was successfully updated
-     */
-    private static boolean setFinalFieldJDK11(Field field, Object value) {
-        try {
-            Field modifiersField;
-            try {
-                modifiersField = Field.class.getDeclaredField("modifiers");
-            } catch (NoSuchFieldException e) {
-                return false;
-            }
-
-            modifiersField.setAccessible(true);
-
-            int modifiers = field.getModifiers();
-            modifiersField.setInt(field, modifiers & ~Modifier.FINAL);
-
-            field.set(null, value);
-            return true;
+            return result;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return true;
+            LOGGER.log(Level.SEVERE, "Could not get value of field " + field.getName() + " in class " + field.getDeclaringClass().getName(), e);
+            field.setAccessible(false);
+            return null;
         }
     }
 
-    /**
-     * This will try to set the final field using the Unsafe API.
-     * @apiNote This method will only work above JDK 12
-     * @param field the field to update
-     * @param value the value to set
-     * @return if the field was successfully updated
-     */
-    private static boolean setFinalFieldJDK12(Field field, Object value) {
+    public static Method getMethod(@NonNull String name, @NonNull Class<?> clazz, @NonNull Class<?>... parameters) {
         try {
-            Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            Unsafe unsafe = (Unsafe) unsafeField.get(null);
+            return clazz.getDeclaredMethod(name, parameters);
+        } catch (NoSuchMethodException e) {
+            LOGGER.log(Level.SEVERE, "Could not find method " + name + " in class " + clazz.getName(), e);
+            return null;
+        }
+    }
 
-            Object base = unsafe.staticFieldBase(field);
-            long offset = unsafe.staticFieldOffset(field);
-            unsafe.putObject(base, offset, value);
-
-            return true;
+    @SuppressWarnings("unchecked")
+    public static <T> @Nullable T invokeMethod(@NonNull Method method, @Nullable Object caller, @NonNull Object @Nullable ... parameters) {
+        try {
+            method.setAccessible(true);
+            T result = (T) method.invoke(caller, parameters);
+            method.setAccessible(false);
+            return result;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Could not invoke method " + method.getName() + " in class " + method.getDeclaringClass().getName(), e);
+            method.setAccessible(false);
+            return null;
         }
     }
 }
