@@ -37,6 +37,17 @@ public class ReflectionUtil {
         }
     }
 
+    public static void setFieldValue(@NonNull Field field, @Nullable Object caller, @Nullable Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(caller, value);
+            field.setAccessible(false);
+        } catch (IllegalAccessException e) {
+            LOGGER.log(Level.SEVERE, "Could not set value of field " + field.getName() + " in class " + field.getDeclaringClass().getName(), e);
+            field.setAccessible(false);
+        }
+    }
+
     public static Method getMethod(@NonNull String name, @NonNull Class<?> clazz, @NonNull Class<?>... parameters) {
         try {
             return clazz.getDeclaredMethod(name, parameters);
