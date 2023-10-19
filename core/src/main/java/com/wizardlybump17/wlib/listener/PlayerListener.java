@@ -11,22 +11,37 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 public record PlayerListener(WLib plugin) implements Listener {
 
     @EventHandler
     public void loadPlayer(PlayerJoinEvent event) {
         UUID id = event.getPlayer().getUniqueId();
-        for (Controller<?, ?, ?, ?> controller : ControllerCache.INSTANCE.getCache())
-            if (controller instanceof PlayerController<?, ?, ?> playerController)
+        for (Controller<?, ?, ?, ?> controller : ControllerCache.INSTANCE.getCache()) {
+            if (!(controller instanceof PlayerController<?, ?, ?> playerController))
+                continue;
+
+            try {
                 playerController.loadPlayer(id);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "An error occurred while trying to load the player '" + id + "' for the " + controller.getClass().getName(), e);
+            }
+        }
     }
 
     @EventHandler
     public void unloadPlayer(PlayerQuitEvent event) {
         UUID id = event.getPlayer().getUniqueId();
-        for (Controller<?, ?, ?, ?> controller : ControllerCache.INSTANCE.getCache())
-            if (controller instanceof PlayerController<?, ?, ?> playerController)
+        for (Controller<?, ?, ?, ?> controller : ControllerCache.INSTANCE.getCache()) {
+            if (!(controller instanceof PlayerController<?, ?, ?> playerController))
+                continue;
+
+            try {
                 playerController.unloadPlayer(id, UnloadReasons.QUIT);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "An error occurred while trying to unload the player '" + id + "' for the " + controller.getClass().getName(), e);
+            }
+        }
     }
 }
