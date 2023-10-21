@@ -89,4 +89,9 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
     public CompletableFuture<Void> save() {
         return CompletableFuture.allOf(cache.getAll().stream().map(dao::update).toArray(CompletableFuture[]::new));
     }
+
+    @Override
+    public int hashCode() {
+        return Controller.class.hashCode();
+    }
 }
