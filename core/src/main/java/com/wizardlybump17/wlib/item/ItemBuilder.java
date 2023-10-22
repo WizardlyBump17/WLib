@@ -389,34 +389,26 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return new ItemBuilder(item, new HashMap<>());
     }
 
-    @SuppressWarnings("unchecked")
     public static ItemBuilder deserialize(Map<String, Object> map) {
         ItemBuilder result = new ItemBuilder();
 
-        result
-                .type(Material.valueOf((String) map.get("type")))
-                .amount((int) map.getOrDefault("amount", 1));
-
-        if (map.get("damage") != null)
-            result.damage((int) map.get("damage"));
-        if (map.get("display-name") != null)
-            result.displayName((String) map.get("display-name"));
-        if (map.get("lore") != null)
-            result.lore((List<String>) map.get("lore"));
-        if (map.get("item-flags") != null)
-            result.itemFlags(((List<String>) map.get("item-flags")).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()));
-        if (map.get("enchantments") != null)
-            ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key.toLowerCase())), value));
-        if (map.get("nbt-tags") != null)
-            result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<String, Object>) map.get("nbt-tags")));
-        result.glow(ConfigUtil.get("glow", map, false));
-
+        Material type = Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase());
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
+
         result
-                .unbreakable((boolean) map.getOrDefault("unbreakable", false))
-                .customModelData((Integer) map.get("custom-model-data"))
-                .customData((Map<Object, Object>) map.getOrDefault("custom-data", Collections.emptyMap()))
-                .glow((boolean) map.getOrDefault("glow", false))
+                .type(type)
+                .amount(ConfigUtil.get("amount", map, 1))
+                .damage(ConfigUtil.get("damage", map, 0))
+                .displayName(ConfigUtil.get("display-name", map, (String) null))
+                .lore(ConfigUtil.get("lore", map, Collections.emptyList()))
+                .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
+                .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), key -> Enchantment.getByKey(NamespacedKey.fromString(StringUtil.clearKey(key)))))
+                .nbtTags(ItemAdapter.getInstance().deserializeContainer(ConfigUtil.get("nbt-tags", map, Collections.emptyMap())))
+                .glow(ConfigUtil.get("glow", map, false))
+                .unbreakable(ConfigUtil.get("unbreakable", map, false))
+                .customModelData(ConfigUtil.get("custom-model-data", map, (Integer) null))
+                .customData(ConfigUtil.get("custom-data", map, Collections.emptyMap()))
+                .glow(ConfigUtil.get("glow", map, false))
                 .metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
 
         if (result.metaHandler != null)
