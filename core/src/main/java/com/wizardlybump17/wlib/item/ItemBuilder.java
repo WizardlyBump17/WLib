@@ -8,7 +8,6 @@ import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -411,19 +410,5 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.metaHandler.deserialize(map);
 
         return result;
-    }
-
-    private static Color getColor(Object object) {
-        if (object instanceof Color color)
-            return color;
-
-        if (object instanceof String string) {
-            try {
-                return Color.fromRGB(Integer.parseInt(string.substring(1), 16));
-            } catch (NumberFormatException ignored) {
-            }
-        }
-
-        return null;
     }
 }
