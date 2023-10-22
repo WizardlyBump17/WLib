@@ -2,12 +2,10 @@ package com.wizardlybump17.wlib.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -276,5 +274,61 @@ public class MapUtils {
      */
     public static <K, V> Map<K, V> deepClone(Map<K, V> map) {
         return deepClone((Supplier<Map<K, V>>) HashMap::new, map);
+    }
+
+    /**
+     * <p>
+     *     Creates a map using the given data. The data array must be a multiple of 3.<br>
+     *     The data MUST be given like this:
+     *     <ol>
+     *         <li>Key</li>
+     *         <li>Value</li>
+     *         <li>{@link BooleanSupplier}</li>
+     *     </ol>
+     * </p>
+     * @param supplier a {@link Supplier} with the initial {@link Map}
+     * @param objects the data
+     * @return the map
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> @NonNull Map<K, V> addIf(@NonNull Supplier<Map<K, V>> supplier, Object... objects) {
+        if (objects.length == 0)
+            return supplier.get();
+
+        if (objects.length % 3 != 0)
+            throw new IllegalArgumentException("Invalid array for the map! It needs to be multiple of 3");
+
+        Map<K, V> map = supplier.get();
+        for (int i = 0; i < objects.length; i += 3) {
+            final K key = (K) objects[i];
+            final V value = (V) objects[i + 1];
+            final BooleanSupplier booleanSupplier = (BooleanSupplier) objects[i + 2];
+
+            if (booleanSupplier.getAsBoolean())
+                map.put(key, value);
+        }
+
+        return map;
+    }
+
+    /**
+     * <p>
+     *     Creates a map using the given data. The data array must be a multiple of 3.<br>
+     *     The data MUST be given like this:
+     *     <ol>
+     *         <li>Key</li>
+     *         <li>Value</li>
+     *         <li>{@link BooleanSupplier}</li>
+     *     </ol>
+     * </p>
+     * @param objects the data
+     * @return the map
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static <K, V> @NonNull Map<K, V> addIf(@NonNull Object... objects) {
+        return addIf((Supplier<Map<K, V>>) HashMap::new, objects);
     }
 }
