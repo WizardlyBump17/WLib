@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -172,7 +173,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public Map<Enchantment, Integer> enchantments() {
-        return getFromMeta(ItemMeta::getEnchants, new HashMap<>());
+        Map<Enchantment, Integer> map = getFromMeta(ItemMeta::getEnchants, new HashMap<>());
+        map.remove(GlowEnchantment.INSTANCE);
+        return map;
     }
 
     public ItemBuilder glow(boolean glow) {
@@ -350,6 +353,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("custom-model-data", customModelData());
         if (!customData().isEmpty())
             result.put("custom-data", customData());
+        if (glow())
+            result.put("glow", true);
 
         if (metaHandler != null)
             metaHandler.serialize(result);
@@ -393,10 +398,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             ((Map<String, Integer>) map.get("enchantments")).forEach((key, value) -> result.enchantment(Enchantment.getByKey(NamespacedKey.fromString(key.toLowerCase())), value));
         if (map.get("nbt-tags") != null)
             result.nbtTags(ItemAdapter.getInstance().deserializeContainer((Map<String, Object>) map.get("nbt-tags")));
-
-        if (map.get("skull") != null) {
-
-        }
+        result.glow(ConfigUtil.get("glow", map, false));
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
         result
