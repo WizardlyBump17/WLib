@@ -47,7 +47,7 @@ public class SkullMetaHandler extends ItemMetaHandler<SkullMetaHandlerModel> {
     }
 
     public OfflinePlayer skullOwner() {
-        return getBuilder().getFromMeta(SkullMeta::getOwningPlayer, null);
+        return getBuilder().getFromMeta(SkullMeta::getOwningPlayer, (OfflinePlayer) null);
     }
 
     public SkullMetaHandler skull(OfflinePlayer owner) {

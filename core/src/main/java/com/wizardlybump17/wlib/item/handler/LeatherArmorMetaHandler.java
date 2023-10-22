@@ -15,7 +15,7 @@ public class LeatherArmorMetaHandler extends ItemMetaHandler<LeatherArmorMetaHan
 
     @Override
     public void serialize(Map<String, Object> map) {
-        map.put("color", getBuilder().getFromMeta(LeatherArmorMeta::getColor, null));
+        map.put("color", getBuilder().getFromMeta(LeatherArmorMeta::getColor, (Color) null));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class LeatherArmorMetaHandler extends ItemMetaHandler<LeatherArmorMetaHan
     }
 
     public Color color() {
-        return getBuilder().getFromMeta(LeatherArmorMeta::getColor, null);
+        return getBuilder().getFromMeta(LeatherArmorMeta::getColor, (Color) null);
     }
 
     private static Color getColor(Object object) {

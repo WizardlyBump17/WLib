@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @SerializableAs("item-builder")
@@ -80,6 +81,16 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         T t = supplier.apply(meta);
         return t == null ? def : t;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, Supplier<T> def) {
+        M meta = (M) item.getItemMeta();
+        if (meta == null)
+            return def.get();
+
+        T t = supplier.apply(meta);
+        return t == null ? def.get() : t;
     }
 
     public ItemBuilder type(@NonNull Material material) {
@@ -252,7 +263,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             if (meta.hasCustomModelData())
                 return meta.getCustomModelData();
             return null;
-        }, null);
+        }, (Integer) null);
     }
 
     public ItemBuilder customData(Object key, Object value) {
