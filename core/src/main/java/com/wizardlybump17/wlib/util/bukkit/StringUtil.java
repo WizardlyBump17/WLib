@@ -103,7 +103,7 @@ public class StringUtil {
 
     @NonNull
     public static String clearNamespace(@NonNull String string) {
-        char[] chars = string.toCharArray();
+        char[] chars = string.toLowerCase().toCharArray();
         StringBuilder builder = new StringBuilder();
         for (char c : chars)
             if (isValidNamespaceChar(c))
@@ -113,7 +113,7 @@ public class StringUtil {
 
     @NonNull
     public static String clearKey(@NonNull String string) {
-        char[] chars = string.toCharArray();
+        char[] chars = string.toLowerCase().toCharArray();
         StringBuilder builder = new StringBuilder();
         for (char c : chars)
             if (isValidKeyChar(c))
