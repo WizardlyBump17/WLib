@@ -184,7 +184,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public Map<Enchantment, Integer> enchantments() {
-        Map<Enchantment, Integer> map = getFromMeta(ItemMeta::getEnchants, new HashMap<>());
+        Map<Enchantment, Integer> map = new HashMap<>(getFromMeta(ItemMeta::getEnchants, Collections.emptyMap()));
         map.remove(GlowEnchantment.INSTANCE);
         return map;
     }
