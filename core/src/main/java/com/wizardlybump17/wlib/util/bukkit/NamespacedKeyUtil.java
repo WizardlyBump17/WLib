@@ -23,7 +23,7 @@ public class NamespacedKeyUtil {
      * @param string the string to get the {@link NamespacedKey}
      * @return the clean {@link NamespacedKey}
      */
-    public static @Nullable NamespacedKey getNamespacedKey(@NonNull String string) {
+    public static @Nullable NamespacedKey fromString(@NonNull String string) {
         if (string.indexOf(':') == -1)
             return NamespacedKey.fromString(StringUtil.clearKey(string));
 
