@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
+import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -402,7 +403,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .displayName(ConfigUtil.get("display-name", map, (String) null))
                 .lore(ConfigUtil.get("lore", map, Collections.emptyList()))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
-                .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), key -> Enchantment.getByKey(NamespacedKey.fromString(StringUtil.clearKey(key)))))
+                .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), string -> Enchantment.getByKey(NamespacedKeyUtil.fromString(string))))
                 .nbtTags(ItemAdapter.getInstance().deserializeContainer(ConfigUtil.get("nbt-tags", map, Collections.emptyMap())))
                 .glow(ConfigUtil.get("glow", map, false))
                 .unbreakable(ConfigUtil.get("unbreakable", map, false))
