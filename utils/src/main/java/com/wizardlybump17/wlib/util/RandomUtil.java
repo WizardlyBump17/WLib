@@ -182,6 +182,8 @@ public class RandomUtil {
     }
 
     public static <T> T randomElement(@NonNull List<T> list, @NonNull Random random) {
+        if (list.isEmpty())
+            throw new ArrayIndexOutOfBoundsException("List is empty");
         return list.get(random.nextInt(list.size()));
     }
 
