@@ -393,11 +393,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     public static ItemBuilder deserialize(Map<String, Object> map) {
         ItemBuilder result = new ItemBuilder();
 
-        Material type = Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase());
-        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
 
         result
-                .type(type)
+                .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
                 .amount(ConfigUtil.get("amount", map, 1))
                 .damage(ConfigUtil.get("damage", map, 0))
                 .displayName(ConfigUtil.get("display-name", map, (String) null))
@@ -409,8 +407,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .unbreakable(ConfigUtil.get("unbreakable", map, false))
                 .customModelData(ConfigUtil.get("custom-model-data", map, (Integer) null))
                 .customData(ConfigUtil.get("custom-data", map, Collections.emptyMap()))
-                .glow(ConfigUtil.get("glow", map, false))
-                .metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
+                .glow(ConfigUtil.get("glow", map, false));
+
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
+        result.metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
 
         if (result.metaHandler != null)
             result.metaHandler.deserialize(map);
