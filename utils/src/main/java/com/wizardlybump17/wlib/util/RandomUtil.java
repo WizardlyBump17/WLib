@@ -1,9 +1,11 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -162,6 +164,10 @@ public class RandomUtil {
         return randomElement(collection, RANDOM);
     }
 
+    public static <T> T randomElement(@NonNull List<T> list) {
+        return randomElement(list, RANDOM);
+    }
+
     /**
      * @param collection the collection
      * @param random the random to use
@@ -173,6 +179,10 @@ public class RandomUtil {
         if (collection.isEmpty())
             throw new ArrayIndexOutOfBoundsException("Collection is empty");
         return (T) randomElement(collection.toArray(), random);
+    }
+
+    public static <T> T randomElement(@NonNull List<T> list, @NonNull Random random) {
+        return list.get(random.nextInt(list.size()));
     }
 
     public static <T> T randomElement(T[] array, @NotNull Function<T, Number> percentageSupplier) {
