@@ -46,6 +46,7 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
         new LeatherArmorMetaHandlerModel();
         new SkullMetaHandlerModel();
         new FireworkMetaHandlerModel();
+        new PotionMetaHandlerModel();
 
         modelsInitialized = true;
     }
