@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -119,5 +120,16 @@ public class StringUtil {
             if (isValidKeyChar(c))
                 builder.append(c);
         return builder.toString();
+    }
+
+    /**
+     * <p>Colorizes and replaces the {@code \n} literal into actual new lines.</p>
+     * @param string the string to fancy
+     * @return the 🌹fancy🌹 and formatted string
+     */
+    public static @NonNull String fancy(@Nullable String string) {
+        if (string == null)
+            return "";
+        return colorize(string).replace("\\n", "\n");
     }
 }
