@@ -69,6 +69,7 @@ public class WLib extends JavaPlugin {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
+        saveControllersTask.cancel();
     }
 
     private void initCommandSystem() {
