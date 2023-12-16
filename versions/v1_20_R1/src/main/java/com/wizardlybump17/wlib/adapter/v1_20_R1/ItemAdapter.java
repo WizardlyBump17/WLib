@@ -1,9 +1,12 @@
 package com.wizardlybump17.wlib.adapter.v1_20_R1;
 
+import lombok.NonNull;
 import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R1.persistence.CraftPersistentDataContainer;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNBTTagConfigSerializer;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.profile.PlayerProfile;
@@ -69,5 +72,33 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
             return null;
 
         return url == null ? null : url.toString();
+    }
+
+
+    @Override
+    public @NonNull ItemStack setRawNBTTag(@NonNull ItemStack item, @NonNull String key, @NonNull Object value) {
+        net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
+        NBTTagCompound tag = stack.w();
+        tag.a(key, NMSConverter.toNBT(value));
+        return CraftItemStack.asBukkitCopy(stack);
+    }
+
+    @Override
+    public @NonNull ItemStack setRawNBTTags(@NonNull ItemStack item, @NonNull Map<String, Object> tags) {
+        net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
+        stack.c((NBTTagCompound) NMSConverter.toNBT(tags));
+        return CraftItemStack.asBukkitCopy(stack);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public @NonNull Map<String, Object> getRawNBTTags(@NonNull ItemStack item) {
+        net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
+
+        NBTTagCompound tag = stack.v();
+        if (tag == null)
+            return new HashMap<>();
+
+        return (Map<String, Object>) NMSConverter.fromNBT(tag);
     }
 }

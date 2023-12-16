@@ -2,9 +2,12 @@ package com.wizardlybump17.wlib.adapter.v1_16_R3;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import lombok.NonNull;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_16_R3.persistence.CraftPersistentDataContainer;
 import org.bukkit.craftbukkit.v1_16_R3.util.CraftNBTTagConfigSerializer;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
@@ -74,5 +77,32 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public @NonNull ItemStack setRawNBTTag(@NonNull ItemStack item, @NonNull String key, @NonNull Object value) {
+        net.minecraft.server.v1_16_R3.ItemStack stack = CraftItemStack.asNMSCopy(item);
+        NBTTagCompound tag = stack.getOrCreateTag();
+        tag.set(key, NMSConverter.toNBT(value));
+        return CraftItemStack.asBukkitCopy(stack);
+    }
+
+    @Override
+    public @NonNull ItemStack setRawNBTTags(@NonNull ItemStack item, @NonNull Map<String, Object> tags) {
+        net.minecraft.server.v1_16_R3.ItemStack stack = CraftItemStack.asNMSCopy(item);
+        stack.setTag((NBTTagCompound) NMSConverter.toNBT(tags));
+        return CraftItemStack.asBukkitCopy(stack);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public @NonNull Map<String, Object> getRawNBTTags(@NonNull ItemStack item) {
+        net.minecraft.server.v1_16_R3.ItemStack stack = CraftItemStack.asNMSCopy(item);
+
+        NBTTagCompound tag = stack.getTag();
+        if (tag == null)
+            return new HashMap<>();
+
+        return (Map<String, Object>) NMSConverter.fromNBT(tag);
     }
 }
