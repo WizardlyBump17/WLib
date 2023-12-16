@@ -14,7 +14,6 @@ import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.ItemFilter;
-import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.listener.EntityListener;
 import com.wizardlybump17.wlib.listener.PlayerListener;
@@ -37,8 +36,6 @@ public class WLib extends JavaPlugin {
         initAdapters();
         initSerializables();
         initCommandSystem();
-
-        GlowEnchantment.register();
 
         DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
         databaseRegister.registerDatabaseModel(new MySQLDatabaseModel());
@@ -92,6 +89,7 @@ public class WLib extends JavaPlugin {
 
     private void initAdapters() {
         printVersion(selectItemAdapter(), "item");
+        ItemAdapter.getInstance().registerGlowEnchantment();
     }
 
     private void printVersion(String version, String what) {

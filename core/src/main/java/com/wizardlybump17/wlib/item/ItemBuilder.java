@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
-import com.wizardlybump17.wlib.item.enchantment.GlowEnchantment;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
 import com.wizardlybump17.wlib.util.CollectionUtil;
@@ -36,7 +35,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
 
-    private final ItemStack item;
+    private @NonNull ItemStack item;
     private final Map<Object, Object> customData;
     private ItemMetaHandler<?> metaHandler;
 
@@ -176,6 +175,20 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return ItemAdapter.getInstance().serializeContainer(container());
     }
 
+    public ItemBuilder rawNBTTag(@NonNull String key, @NonNull Object value) {
+        item = ItemAdapter.getInstance().setRawNBTTag(item, key, value);
+        return this;
+    }
+
+    public ItemBuilder rawNBTTags(@NonNull Map<String, Object> tags) {
+        item = ItemAdapter.getInstance().setRawNBTTags(item, tags);
+        return this;
+    }
+
+    public @NonNull Map<String, Object> rawNBTTags() {
+        return ItemAdapter.getInstance().getRawNBTTags(item);
+    }
+
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
         return consumeMeta(meta -> meta.addEnchant(enchantment, level, true));
     }
@@ -186,21 +199,21 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public Map<Enchantment, Integer> enchantments() {
         Map<Enchantment, Integer> map = new HashMap<>(getFromMeta(ItemMeta::getEnchants, Collections.emptyMap()));
-        map.remove(GlowEnchantment.INSTANCE);
+        map.remove(ItemAdapter.getInstance().getGlowEnchantment());
         return map;
     }
 
     public ItemBuilder glow(boolean glow) {
         return consumeMeta(meta -> {
             if (glow)
-                meta.addEnchant(GlowEnchantment.INSTANCE, 0, true);
+                meta.addEnchant(ItemAdapter.getInstance().getGlowEnchantment(), 0, true);
             else
-                meta.removeEnchant(GlowEnchantment.INSTANCE);
+                meta.removeEnchant(ItemAdapter.getInstance().getGlowEnchantment());
         });
     }
 
     public boolean glow() {
-        return getFromMeta(meta -> meta.hasEnchant(GlowEnchantment.INSTANCE), false);
+        return getFromMeta(meta -> meta.hasEnchant(ItemAdapter.getInstance().getGlowEnchantment()), false);
     }
 
     @NotNull
@@ -393,9 +406,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     public static ItemBuilder deserialize(Map<String, Object> map) {
         ItemBuilder result = new ItemBuilder();
 
-
         result
                 .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
+                .rawNBTTags(ConfigUtil.get("raw-nbt-tags", map, Collections.emptyMap()))
                 .amount(ConfigUtil.get("amount", map, 1))
                 .damage(ConfigUtil.get("damage", map, 0))
                 .displayName(ConfigUtil.get("display-name", map, (String) null))
