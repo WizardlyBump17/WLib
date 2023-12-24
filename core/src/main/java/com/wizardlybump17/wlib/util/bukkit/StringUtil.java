@@ -127,9 +127,9 @@ public class StringUtil {
      * @param string the string to fancy
      * @return the 🌹fancy🌹 and formatted string
      */
-    public static @NonNull String fancy(@Nullable String string) {
+    public static @Nullable String fancy(@Nullable String string) {
         if (string == null)
-            return "";
+            return null;
         return colorize(string).replace("\\n", "\n");
     }
 }
