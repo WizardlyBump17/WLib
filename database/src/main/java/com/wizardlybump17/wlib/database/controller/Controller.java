@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -57,7 +58,7 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
                 .map(CompletableFuture::completedFuture)
                 .orElseGet(() -> dao.find(key).whenComplete((value, throwable) -> {
                     if (throwable != null) {
-                        throwable.printStackTrace();
+                        onGetError(key, throwable);
                         return;
                     }
 
@@ -66,6 +67,10 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
 
                     cache(value);
                 }));
+    }
+
+    protected void onGetError(@NonNull K key, @NonNull Throwable throwable) {
+        getLogger().log(Level.SEVERE, "Error while getting the value with the key " + key, throwable);
     }
 
     /**
