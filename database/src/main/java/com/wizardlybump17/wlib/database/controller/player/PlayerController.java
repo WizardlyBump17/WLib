@@ -8,6 +8,7 @@ import lombok.NonNull;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 /**
  * <p>A {@link Controller} that uses {@link UUID} as key and it is focused on players.</p>
@@ -24,6 +25,10 @@ public abstract class PlayerController<V, C extends Cache<UUID, V, ?>, D extends
 
     public PlayerController(@NonNull C cache, @NonNull D dao) {
         super(cache, dao);
+    }
+
+    public PlayerController(@NonNull C cache, @NonNull D dao, @NonNull Logger logger) {
+        super(cache, dao, logger);
     }
 
     /**

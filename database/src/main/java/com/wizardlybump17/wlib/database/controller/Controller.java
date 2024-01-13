@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -32,6 +33,19 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
     private final C cache;
     @NonNull
     private final D dao;
+    private final @NonNull Logger logger;
+
+    public Controller(@NonNull C cache, @NonNull D dao) {
+        this.cache = cache;
+        this.dao = dao;
+        this.logger = Logger.getLogger(getClass().getSimpleName());
+    }
+
+    public Controller(@NonNull C cache, @NonNull D dao, @NonNull Logger logger) {
+        this.cache = cache;
+        this.dao = dao;
+        this.logger = logger;
+    }
 
     /**
      * <p>Gets the value from the cache and if it's not present there, gets it from the database.</p>
