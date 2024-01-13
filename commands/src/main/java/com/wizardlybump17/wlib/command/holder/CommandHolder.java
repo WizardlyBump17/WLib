@@ -1,12 +1,15 @@
 package com.wizardlybump17.wlib.command.holder;
 
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Represents something that can hold commands
  * @param <H> The holder type
  */
 public interface CommandHolder<H> {
 
-    Command getCommand(String name);
+    @Nullable Command getCommand(String name);
 
-    H getHandle();
+    @NonNull H getHandle();
 }
