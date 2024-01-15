@@ -5,6 +5,7 @@ dependencies {
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
     implementation(
-            project(':objects')
+            project(':objects'),
+            project(':utils')
     )
 }

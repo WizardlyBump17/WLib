@@ -1,13 +1,17 @@
 package com.wizardlybump17.wlib.command;
 
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
+import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ public class CommandManager {
 
     private final List<RegisteredCommand> commands = new ArrayList<>();
     protected final CommandHolder<?> holder;
+    private final @NonNull Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
 
     public void registerCommands(Object... objects) {
         for (Object object : objects) {
@@ -46,14 +51,46 @@ public class CommandManager {
         if (commands.isEmpty())
             return;
 
-        for (RegisteredCommand command : commands) {
-            CommandResult result = command.execute(sender, string);
+        for (RegisteredCommand registeredCommand : commands) {
+            CommandResult result = registeredCommand.execute(sender, string);
+
             switch (result) {
-                case SUCCESS, PERMISSION_FAIL -> {
+                case PERMISSION_FAIL -> {
+                    handlePermissionFail(registeredCommand, sender);
+                    return;
+                }
+                case SUCCESS -> {
                     return;
                 }
             }
         }
+    }
+
+    protected void handlePermissionFail(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender) {
+        Command command = registeredCommand.getCommand();
+
+        if (!command.permissionMessageIsField()) {
+            if (!command.permissionMessage().isEmpty())
+                sender.sendMessage(command.permissionMessage());
+            return;
+        }
+
+        Map<String, Field> fields = fieldCache.computeIfAbsent(registeredCommand.getObject().getClass(), clazz -> {
+            Map<String, Field> map = new HashMap<>();
+            for (Field field : clazz.getDeclaredFields())
+                map.put(field.getName(), field);
+            return map;
+        });
+
+        Field field = fields.get(command.permissionMessage());
+        if (field == null)
+            return;
+
+        Object fieldValue = ReflectionUtil.getFieldValue(field, registeredCommand.getObject());
+        if (fieldValue == null)
+            return;
+
+        sender.sendMessage(fieldValue.toString());
     }
 
     @NonNull

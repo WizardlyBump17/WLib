@@ -40,6 +40,17 @@ public @interface Command {
     String permission() default "";
 
     /**
+     * <p>Used when the {@link CommandSender} does not have the required {@link #permission()}.</p>
+     * @return the message to be sent when the {@link CommandSender} does not have the required {@link #permission()}
+     */
+    String permissionMessage() default "";
+
+    /**
+     * @return if the {@link #permissionMessage()} is a field in the class that have this annotation
+     */
+    boolean permissionMessageIsField() default false;
+
+    /**
      * Sets the priority of this command. If the priority is -1, then the priority check is the same as
      * <pre>{@code this.execution().split(" ").length}</pre>
      *
