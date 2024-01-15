@@ -68,6 +68,16 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
                 config.save();
     }
 
+    /**
+     * <p>Unregisters all configurations from that holder.</p>
+     * @param holder the holder who is holding the configurations
+     */
+    public void unregisterAll(@NonNull Class<?> holder) {
+        for (ConfigHandler config : getMap().values())
+            if (holder == config.getHolder())
+                remove(config.getClazz());
+    }
+
     public static ConfigHandlerRegistry getInstance() {
         return instance == null ? instance = new ConfigHandlerRegistry() : instance;
     }
