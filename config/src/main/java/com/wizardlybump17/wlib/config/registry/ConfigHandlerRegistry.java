@@ -7,6 +7,8 @@ import com.wizardlybump17.wlib.config.holder.ConfigHolderFactory;
 import com.wizardlybump17.wlib.object.Registry;
 import lombok.NonNull;
 
+import java.util.Iterator;
+
 /**
  * This class is responsible to store the {@link ConfigHandler}s
  */
@@ -16,6 +18,7 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
     /**
      * This will register the class to the registry
+     *
      * @param clazz the class to register
      */
     public ConfigHandler register(Class<?> clazz) {
@@ -38,6 +41,7 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
     /**
      * This will reload all configs from that holder
+     *
      * @param holder the holder who is holding the configs
      */
     public void reloadAll(Class<?> holder) {
@@ -48,6 +52,7 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
     /**
      * Initializes all configs from that holder
+     *
      * @param holder the holder who is holding the configs
      */
     public void initAll(Class<?> holder) {
@@ -58,8 +63,9 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
     /**
      * <p>
-     *     Saves all {@link com.wizardlybump17.wlib.config.Configuration}s with the given holder class.
+     * Saves all {@link com.wizardlybump17.wlib.config.Configuration}s with the given holder class.
      * </p>
+     *
      * @param holder the holder with the configs
      */
     public void saveAll(@NonNull Class<?> holder) {
@@ -70,12 +76,19 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
 
     /**
      * <p>Unregisters all configurations from that holder.</p>
+     *
      * @param holder the holder who is holding the configurations
      */
     public void unregisterAll(@NonNull Class<?> holder) {
-        for (ConfigHandler config : getMap().values())
-            if (holder == config.getHolder())
-                remove(config.getClazz());
+        Iterator<ConfigHandler> iterator = map.values().iterator();
+        while (iterator.hasNext()) {
+            ConfigHandler config = iterator.next();
+            if (holder != config.getHolder())
+                continue;
+
+            config.save();
+            iterator.remove();
+        }
     }
 
     public static ConfigHandlerRegistry getInstance() {
