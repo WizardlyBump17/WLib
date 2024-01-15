@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.util.builder;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -23,6 +24,10 @@ public class MapBuilder<K, V> {
 
     public MapBuilder(@NonNull Supplier<@NonNull Map<K, V>> supplier) {
         this(supplier.get());
+    }
+
+    public MapBuilder() {
+        this(new HashMap<>());
     }
 
     public MapBuilder<K, V> put(@NonNull K key, @Nullable V value) {
