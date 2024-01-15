@@ -7,7 +7,7 @@ import java.util.Map;
 
 public abstract class Registry<K, V> {
 
-    private final Map<K, V> map = new HashMap<>();
+    protected final Map<K, V> map = new HashMap<>();
 
     public V get(K key) {
         return map.get(key);
