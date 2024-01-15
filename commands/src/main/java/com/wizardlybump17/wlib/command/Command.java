@@ -70,4 +70,15 @@ public @interface Command {
      * @return the description of this command
      */
     String description() default "";
+
+    /**
+     * <p>Used when the {@link CommandSender} is not valid for this command.</p>
+     * @return the message to be sent when the {@link CommandSender} is not valid for this command
+     */
+    String invalidSenderMessage() default "";
+
+    /**
+     * @return if the {@link #invalidSenderMessage()} is a field in the class that have this annotation
+     */
+    boolean invalidSenderMessageIsField() default false;
 }

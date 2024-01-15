@@ -60,6 +60,12 @@ public class CommandManager {
                     handlePermissionFail(registeredCommand, sender);
                     return;
                 }
+
+                case INVALID_SENDER -> {
+                    handleInvalidSender(registeredCommand, sender);
+                    return;
+                }
+
                 case SUCCESS -> {
                     return;
                 }
@@ -77,6 +83,20 @@ public class CommandManager {
         }
 
         String fieldMessage = getFieldMessage(registeredCommand, command.permissionMessage());
+        if (fieldMessage != null)
+            sender.sendMessage(fieldMessage);
+    }
+
+    protected void handleInvalidSender(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender) {
+        Command command = registeredCommand.getCommand();
+
+        if (!command.invalidSenderMessageIsField()) {
+            if (!command.invalidSenderMessage().isEmpty())
+                sender.sendMessage(command.invalidSenderMessage());
+            return;
+        }
+
+        String fieldMessage = getFieldMessage(registeredCommand, command.invalidSenderMessage());
         if (fieldMessage != null)
             sender.sendMessage(fieldMessage);
     }
