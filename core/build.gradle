@@ -27,7 +27,8 @@ dependencies {
 
             project(':commands'),
 
-            project(':config')
+            project(':config'),
+            project(':bukkit-utils'),
     )
 }
 
