@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -75,6 +76,12 @@ public class CommandManager {
             return;
         }
 
+        String fieldMessage = getFieldMessage(registeredCommand, command.permissionMessage());
+        if (fieldMessage != null)
+            sender.sendMessage(fieldMessage);
+    }
+
+    protected @Nullable String getFieldMessage(@NonNull RegisteredCommand registeredCommand, @NonNull String fieldName) {
         Map<String, Field> fields = fieldCache.computeIfAbsent(registeredCommand.getObject().getClass(), clazz -> {
             Map<String, Field> map = new HashMap<>();
             for (Field field : clazz.getDeclaredFields())
@@ -82,15 +89,12 @@ public class CommandManager {
             return map;
         });
 
-        Field field = fields.get(command.permissionMessage());
+        Field field = fields.get(fieldName);
         if (field == null)
-            return;
+            return null;
 
         Object fieldValue = ReflectionUtil.getFieldValue(field, registeredCommand.getObject());
-        if (fieldValue == null)
-            return;
-
-        sender.sendMessage(fieldValue.toString());
+        return fieldValue == null ? null : fieldValue.toString();
     }
 
     @NonNull
