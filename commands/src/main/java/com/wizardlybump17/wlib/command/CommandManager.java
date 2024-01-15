@@ -53,16 +53,17 @@ public class CommandManager {
             return;
 
         for (RegisteredCommand registeredCommand : commands) {
+            Command command = registeredCommand.getCommand();
             CommandResult result = registeredCommand.execute(sender, string);
 
             switch (result) {
                 case PERMISSION_FAIL -> {
-                    handlePermissionFail(registeredCommand, sender);
+                    handleMessage(registeredCommand, sender, command.permissionMessage(), command.permissionMessageIsField());
                     return;
                 }
 
                 case INVALID_SENDER -> {
-                    handleInvalidSender(registeredCommand, sender);
+                    handleMessage(registeredCommand, sender, command.invalidSenderMessage(), command.invalidSenderMessageIsField());
                     return;
                 }
 
@@ -73,30 +74,14 @@ public class CommandManager {
         }
     }
 
-    protected void handlePermissionFail(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender) {
-        Command command = registeredCommand.getCommand();
-
-        if (!command.permissionMessageIsField()) {
-            if (!command.permissionMessage().isEmpty())
-                sender.sendMessage(command.permissionMessage());
+    protected void handleMessage(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender, @NonNull String message, boolean isField) {
+        if (!isField) {
+            if (!message.isEmpty())
+                sender.sendMessage(message);
             return;
         }
 
-        String fieldMessage = getFieldMessage(registeredCommand, command.permissionMessage());
-        if (fieldMessage != null)
-            sender.sendMessage(fieldMessage);
-    }
-
-    protected void handleInvalidSender(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender) {
-        Command command = registeredCommand.getCommand();
-
-        if (!command.invalidSenderMessageIsField()) {
-            if (!command.invalidSenderMessage().isEmpty())
-                sender.sendMessage(command.invalidSenderMessage());
-            return;
-        }
-
-        String fieldMessage = getFieldMessage(registeredCommand, command.invalidSenderMessage());
+        String fieldMessage = getFieldMessage(registeredCommand, message);
         if (fieldMessage != null)
             sender.sendMessage(fieldMessage);
     }
