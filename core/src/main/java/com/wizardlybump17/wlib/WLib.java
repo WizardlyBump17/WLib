@@ -19,6 +19,7 @@ import com.wizardlybump17.wlib.listener.EntityListener;
 import com.wizardlybump17.wlib.listener.PlayerListener;
 import com.wizardlybump17.wlib.task.SaveControllersTask;
 import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
+import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -85,6 +86,12 @@ public class WLib extends JavaPlugin {
         ConfigurationSerialization.registerClass(PaginatedInventoryBuilder.class);
         ConfigurationSerialization.registerClass(InventoryNavigator.class);
         ConfigurationSerialization.registerClass(ItemButton.class);
+
+        ConfigurationSerialization.registerClass(ParticleSpawner.class);
+        ConfigurationSerialization.registerClass(BlockDataWrapper.class);
+        ConfigurationSerialization.registerClass(DustOptionsWrapper.class);
+        ConfigurationSerialization.registerClass(DustTransitionWrapper.class);
+        ConfigurationSerialization.registerClass(ItemStackWrapper.class);
     }
 
     private void initAdapters() {

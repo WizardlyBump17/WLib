@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.util.bukkit.particle;
 
 import com.wizardlybump17.wlib.util.builder.MapBuilder;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
+import com.wizardlybump17.wlib.util.bukkit.config.ConfigWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -63,7 +64,7 @@ public class ParticleSpawner implements ConfigurationSerializable {
         if (xAdd != 0 || yAdd != 0 || zAdd != 0)
             location = location.clone().add(xAdd, yAdd, zAdd);
 
-        world.spawnParticle(type, location, count, offsetX, offsetY, offsetZ, extra, data);
+        world.spawnParticle(type, location, count, offsetX, offsetY, offsetZ, extra, data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data);
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
