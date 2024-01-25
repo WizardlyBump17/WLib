@@ -44,7 +44,7 @@ public class ArgsReaderRegistry extends Registry<Class<? extends ArgsReader<?>>,
      */
     public ArgsReader<?> getReader(Class<?> type) {
         for (ArgsReader<?> reader : getMap().values())
-            if (reader.getType() == type)
+            if (reader.getTypes().contains(type))
                 return reader;
         return null;
     }
