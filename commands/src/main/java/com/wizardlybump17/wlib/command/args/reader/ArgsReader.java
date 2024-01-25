@@ -13,6 +13,8 @@ import java.util.List;
  */
 public abstract class ArgsReader<T> {
 
+    private List<Class<?>> typesCache;
+
     /**
      * <p>The type that the string will be converted to.</p>
      * <p>If it is {@code null} then you should use the {@link com.wizardlybump17.wlib.command.args.ArgsReaderType} annotation on your parameter</p>
@@ -27,7 +29,9 @@ public abstract class ArgsReader<T> {
      * @return the types that {@code this} {@link ArgsReader} can accept in the method parameter
      */
     public @NonNull List<Class<?>> getTypes() {
-        return Collections.singletonList(getType());
+        if (typesCache == null)
+            typesCache = Collections.singletonList(getType());
+        return typesCache;
     }
 
     public abstract T read(String string) throws ArgsReaderException;
