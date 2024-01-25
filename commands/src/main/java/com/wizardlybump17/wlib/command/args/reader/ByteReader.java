@@ -8,10 +8,16 @@ import java.util.List;
 public class ByteReader extends ArgsReader<Byte> {
 
     public static final List<String> SUGGESTIONS = List.of("-128", "0", "127");
+    public static final @NonNull List<Class<?>> TYPES = List.of(byte.class, Byte.class);
 
     @Override
     public Class<Byte> getType() {
         return byte.class;
+    }
+
+    @Override
+    public @NonNull List<Class<?>> getTypes() {
+        return TYPES;
     }
 
     @Override

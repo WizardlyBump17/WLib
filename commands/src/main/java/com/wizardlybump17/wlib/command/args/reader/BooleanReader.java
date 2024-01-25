@@ -7,11 +7,17 @@ import java.util.List;
 
 public class BooleanReader extends ArgsReader<Boolean> {
 
+    public static final @NonNull List<Class<?>> TYPES = List.of(boolean.class, Boolean.class);
     public static final List<String> SUGGESTIONS = List.of("true", "false");
 
     @Override
     public Class<Boolean> getType() {
         return boolean.class;
+    }
+
+    @Override
+    public @NonNull List<Class<?>> getTypes() {
+        return TYPES;
     }
 
     @Override

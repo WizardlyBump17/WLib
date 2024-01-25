@@ -8,10 +8,16 @@ import java.util.List;
 public class DoubleReader extends ArgsReader<Double> {
 
     public static final List<String> SUGGESTIONS = List.of("1", "1.5", "10", "10.5");
+    public static final @NonNull List<Class<?>> TYPES = List.of(double.class, Double.class);
 
     @Override
     public Class<Double> getType() {
         return double.class;
+    }
+
+    @Override
+    public @NonNull List<Class<?>> getTypes() {
+        return TYPES;
     }
 
     @Override

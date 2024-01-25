@@ -8,10 +8,16 @@ import java.util.List;
 public class FloatReader extends ArgsReader<Float> {
 
     public static final List<String> SUGGESTIONS = List.of("1", "1.5", "10", "10.5");
+    public static final @NonNull List<Class<?>> TYPES = List.of(float.class, Float.class);
 
     @Override
     public Class<Float> getType() {
         return float.class;
+    }
+
+    @Override
+    public @NonNull List<Class<?>> getTypes() {
+        return TYPES;
     }
 
     @Override
