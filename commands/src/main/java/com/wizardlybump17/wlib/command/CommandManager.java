@@ -67,7 +67,7 @@ public class CommandManager {
                     return;
                 }
 
-                case SUCCESS -> {
+                case SUCCESS, EXCEPTION -> {
                     return;
                 }
             }

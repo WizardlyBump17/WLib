@@ -182,7 +182,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
             Object[] objects = parse.get().stream().map(Pair::getSecond).toArray();
             return executeInternal(sender, objects);
         } catch (ArgsReaderException e) {
-            return CommandResult.ARGS_FAIL;
+            return CommandResult.EXCEPTION;
         }
     }
 
