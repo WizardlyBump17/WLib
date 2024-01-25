@@ -19,7 +19,7 @@ public class IntegerReader extends ArgsReader<Integer> {
         try {
             return Integer.parseInt(string);
         } catch (NumberFormatException e) {
-            throw new ArgsReaderException("expected an int but got " + string);
+            return null;
         }
     }
 

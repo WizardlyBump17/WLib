@@ -20,7 +20,7 @@ public class UUIDReader extends ArgsReader<UUID> {
         try {
             return UUID.fromString(string);
         } catch (IllegalArgumentException e) {
-            throw new ArgsReaderException("expected an uuid in string form but got " + string);
+            return null;
         }
     }
 

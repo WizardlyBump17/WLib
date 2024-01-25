@@ -21,7 +21,7 @@ public class BooleanReader extends ArgsReader<Boolean> {
         if (string.equalsIgnoreCase("false"))
             return false;
 
-        throw new ArgsReaderException("expected a boolean but got " + string);
+        return null;
     }
 
     @Override
