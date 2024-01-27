@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.util.bukkit.config;
 
-public interface ConfigWrapper<T> {
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
+public interface ConfigWrapper<T> extends ConfigurationSerializable {
 
     T unwrap();
 }
