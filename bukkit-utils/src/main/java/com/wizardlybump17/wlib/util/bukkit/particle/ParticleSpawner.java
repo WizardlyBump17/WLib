@@ -33,6 +33,7 @@ public class ParticleSpawner implements ConfigurationSerializable {
     private double zAdd;
     private double extra;
     private @Nullable Object data;
+    private int delay;
 
     @Override
     public @NonNull Map<String, Object> serialize() {
@@ -55,6 +56,7 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 )
                 .putIf("extra", extra, extra != 0)
                 .putIfNotNull("data", data)
+                .putIf("delay", delay, delay != 0)
                 .build();
     }
 
@@ -80,7 +82,8 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 ConfigUtil.<Number>get("y", add, 0.0).doubleValue(),
                 ConfigUtil.<Number>get("z", add, 0.0).doubleValue(),
                 ConfigUtil.get("extra", map, 0.0),
-                ConfigUtil.get("data", map, (Object) null)
+                ConfigUtil.get("data", map, (Object) null),
+                ConfigUtil.get("delay", map, 0)
         );
     }
 }
