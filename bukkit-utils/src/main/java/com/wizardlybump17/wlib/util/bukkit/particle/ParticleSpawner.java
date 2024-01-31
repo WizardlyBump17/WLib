@@ -62,11 +62,18 @@ public class ParticleSpawner implements ConfigurationSerializable {
 
     public void spawn(@NonNull Location location) {
         World world = Objects.requireNonNull(location.getWorld(), "The world cannot be null");
+        spawn(world, location.getX(), location.getY(), location.getZ());
+    }
 
-        if (xAdd != 0 || yAdd != 0 || zAdd != 0)
-            location = location.clone().add(xAdd, yAdd, zAdd);
-
-        world.spawnParticle(type, location, count, offsetX, offsetY, offsetZ, extra, data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data);
+    public void spawn(@NonNull World world, double x, double y, double z) {
+        world.spawnParticle(
+                type,
+                x + xAdd, y + yAdd, z + zAdd,
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
