@@ -40,7 +40,7 @@ public class ConfigUtil {
      * @param <T> the type of the value
      */
     @SuppressWarnings("unchecked")
-    public static <T, R> R get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Function<T, R> mapper) {
+    public static <T, R> R map(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Function<T, R> mapper) {
         Object object = map.get(key);
         return object == null ? null : mapper.apply((T) object);
     }
@@ -93,8 +93,10 @@ public class ConfigUtil {
      * @param <T> the type of the value
      */
     @SuppressWarnings("unchecked")
-    public static <T, R> R get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Supplier<T> supplier, @NonNull Function<T, R> mapper) {
+    public static <T, R> R map(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Supplier<T> supplier, @NonNull Function<T, R> mapper) {
         Object object = map.get(key);
-        return object == null ? mapper.apply(supplier.get()) : mapper.apply((T) object);
+        if (object == null)
+            object = supplier.get();
+        return object == null ? null: mapper.apply((T) object);
     }
 }
