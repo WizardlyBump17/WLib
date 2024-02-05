@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @UtilityClass
@@ -25,6 +26,23 @@ public class ConfigUtil {
     @SuppressWarnings("unchecked")
     public static <T> @NonNull T get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map) {
         return (T) Objects.requireNonNull(map.get(key), "The key '" + key + "' is not present in the config!");
+    }
+
+    /**
+     * <p>
+     *     Gets a value from the given {@link Map} by the given key and maps it using the given {@link Function}.
+     *     If the value is null, it will use the {@link Supplier#get()} from the given {@link Supplier}.
+     * </p>
+     * @param key the key to get the value
+     * @param map the map to get the value from
+     * @param mapper the {@link Function} to map the value
+     * @return the value or the default value
+     * @param <T> the type of the value
+     */
+    @SuppressWarnings("unchecked")
+    public static <T, R> R get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Function<T, R> mapper) {
+        Object object = map.get(key);
+        return object == null ? null : mapper.apply((T) object);
     }
 
     /**
@@ -60,5 +78,23 @@ public class ConfigUtil {
     public static <T> T get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Supplier<T> defaultValue) {
         Object object = map.get(key);
         return object == null ? defaultValue.get() : (T) object;
+    }
+
+    /**
+     * <p>
+     *     Gets a value from the given {@link Map} by the given key and maps it using the given {@link Function}.
+     *     If the value is null, it will use the {@link Supplier#get()} from the given {@link Supplier}.
+     * </p>
+     * @param key the key to get the value
+     * @param map the map to get the value from
+     * @param supplier the {@link Supplier} to return the default value if the value is null
+     * @param mapper the {@link Function} to map the value
+     * @return the value or the default value
+     * @param <T> the type of the value
+     */
+    @SuppressWarnings("unchecked")
+    public static <T, R> R get(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Supplier<T> supplier, @NonNull Function<T, R> mapper) {
+        Object object = map.get(key);
+        return object == null ? mapper.apply(supplier.get()) : mapper.apply((T) object);
     }
 }
