@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.item.handler;
 
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.model.PotionMetaHandlerModel;
+import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapper;
 import lombok.NonNull;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -22,7 +23,7 @@ public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
 
     @Override
     public void serialize(Map<String, Object> map) {
-        map.put("base-potion-data", basePotionData());
+        map.put("base-potion-data", PotionDataWrapper.fromBukkit(basePotionData()));
         map.put("custom-effects", customEffects());
         map.put("color", color());
     }
@@ -30,9 +31,9 @@ public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
     @SuppressWarnings("unchecked")
     @Override
     public void deserialize(Map<String, Object> map) {
-        PotionData basePotionData = (PotionData) map.get("base-potion-data");
+        PotionDataWrapper basePotionData = (PotionDataWrapper) map.get("base-potion-data");
         if (basePotionData != null)
-            basePotionData(basePotionData);
+            basePotionData(basePotionData.unwrap());
 
         ((List<PotionEffect>) map.getOrDefault("custom-effects", Collections.emptyList())).forEach(effect -> customEffect(effect, true));
         color((Color) map.get("color"));
