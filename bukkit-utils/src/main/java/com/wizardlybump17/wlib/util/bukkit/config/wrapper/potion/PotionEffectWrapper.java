@@ -60,4 +60,15 @@ public class PotionEffectWrapper extends PotionEffect implements ConfigWrapper<P
                 ConfigUtil.get("icon", map, true)
         );
     }
+
+    public static @NonNull PotionEffectWrapper fromBukkit(@NonNull PotionEffect bukkit) {
+        return new PotionEffectWrapper(
+                bukkit.getType(),
+                bukkit.getDuration(),
+                bukkit.getAmplifier(),
+                bukkit.isAmbient(),
+                bukkit.hasParticles(),
+                bukkit.hasIcon()
+        );
+    }
 }
