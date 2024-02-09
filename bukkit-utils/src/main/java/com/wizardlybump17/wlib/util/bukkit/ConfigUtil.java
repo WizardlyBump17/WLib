@@ -29,20 +29,17 @@ public class ConfigUtil {
     }
 
     /**
-     * <p>
-     *     Gets a value from the given {@link Map} by the given key and maps it using the given {@link Function}.
-     *     If the value is null, it will use the {@link Supplier#get()} from the given {@link Supplier}.
-     * </p>
+     * <p>Gets a value from the given {@link Map} by the given key and map it using the given {@link Function}.</p>
      * @param key the key to get the value
      * @param map the map to get the value from
      * @param mapper the {@link Function} to map the value
-     * @return the value or the default value
+     * @return the mapped value
      * @param <T> the type of the value
      */
     @SuppressWarnings("unchecked")
-    public static <T, R> R map(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Function<T, R> mapper) {
-        Object object = map.get(key);
-        return object == null ? null : mapper.apply((T) object);
+    public static <T, R> @NonNull R map(@NonNull String key, @NonNull Map<@NonNull String, @Nullable Object> map, @NonNull Function<T, R> mapper) {
+        Object object = get(key, map);
+        return Objects.requireNonNull(mapper.apply((T) object), "The value of the key '" + key + "' is null!");
     }
 
     /**
