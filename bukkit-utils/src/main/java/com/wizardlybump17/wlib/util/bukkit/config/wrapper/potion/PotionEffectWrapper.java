@@ -29,7 +29,7 @@ public class PotionEffectWrapper extends PotionEffect implements ConfigWrapper<P
         return new MapBuilder<String, Object>(new LinkedHashMap<>())
                 .putIf("type", () -> ReflectionUtil.<NamespacedKey>invokeMethod(GET_KEY, getType()).toString(), GET_KEY != null)
                 .putIf("type", getType().getId(), GET_KEY == null)
-                .put("duration", getDuration())
+                .putIf("duration", getDuration(), getDuration() != 1)
                 .putIf("amplifier", getAmplifier(), getAmplifier() != 0)
                 .putIf("ambient", isAmbient(), !isAmbient())
                 .putIf("particles", hasParticles(), !hasParticles())
@@ -53,7 +53,7 @@ public class PotionEffectWrapper extends PotionEffect implements ConfigWrapper<P
 
                     return null;
                 }),
-                ConfigUtil.get("duration", map),
+                ConfigUtil.get("duration", map, 1),
                 ConfigUtil.get("amplifier", map, 0),
                 ConfigUtil.get("ambient", map, true),
                 ConfigUtil.get("particles", map, true),
