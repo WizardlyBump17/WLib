@@ -18,7 +18,6 @@ public class ReflectionUtil {
         try {
             return clazz.getDeclaredField(name);
         } catch (NoSuchFieldException e) {
-            LOGGER.log(Level.SEVERE, "Could not find field " + name + " in class " + clazz.getName(), e);
             return null;
         }
     }
@@ -52,13 +51,15 @@ public class ReflectionUtil {
         try {
             return clazz.getDeclaredMethod(name, parameters);
         } catch (NoSuchMethodException e) {
-            LOGGER.log(Level.SEVERE, "Could not find method " + name + " in class " + clazz.getName(), e);
             return null;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> @Nullable T invokeMethod(@NonNull Method method, @Nullable Object caller, @NonNull Object @Nullable ... parameters) {
+    public static <T> @Nullable T invokeMethod(@Nullable Method method, @Nullable Object caller, @NonNull Object @Nullable ... parameters) {
+        if (method == null)
+            return null;
+
         try {
             method.setAccessible(true);
             T result = (T) method.invoke(caller, parameters);
