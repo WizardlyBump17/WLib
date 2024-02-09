@@ -21,6 +21,7 @@ import com.wizardlybump17.wlib.task.SaveControllersTask;
 import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
 import com.wizardlybump17.wlib.util.bukkit.config.ConfigSound;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapper;
+import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWrapper;
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -98,6 +99,7 @@ public class WLib extends JavaPlugin {
         ConfigurationSerialization.registerClass(ConfigSound.class);
 
         ConfigurationSerialization.registerClass(PotionDataWrapper.class);
+        ConfigurationSerialization.registerClass(PotionEffectWrapper.class);
     }
 
     private void initAdapters() {
