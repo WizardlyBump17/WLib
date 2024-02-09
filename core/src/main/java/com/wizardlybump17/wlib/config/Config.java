@@ -5,22 +5,22 @@ import com.wizardlybump17.wlib.util.ArrayUtils;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.bukkit.NumberFormatter;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
+import com.wizardlybump17.wlib.util.bukkit.config.ConfigWrapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -39,16 +39,16 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
     public void saveConfig() {
         try {
             save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Error while saving the config " + file.getAbsolutePath(), e);
         }
     }
 
     public void reloadConfig() {
         try {
             load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Error while reloading the config " + file.getAbsolutePath(), e);
         }
     }
 
@@ -168,7 +168,7 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
             try {
                 map.put((T) method.invoke(null, key.toUpperCase()), value);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Error while getting an EnumMap at " + file.getAbsolutePath() + " in the path " + path, e);
             } catch (IllegalArgumentException ignored) { //we don't want a console log for this
             }
         });
@@ -239,6 +239,9 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
         if (o instanceof ConfigurationSection)
             return convertToMap((MemorySection) o);
 
+        if (o instanceof ConfigWrapper<?> wrapper)
+            return wrapper.unwrap();
+
         return o;
     }
 
@@ -288,7 +291,8 @@ public class Config extends YamlConfiguration implements Configuration<YamlConfi
                 config.reloadConfig();
             else
                 config.saveDefaultConfig();
-        }
+        } else
+            config.reloadConfig();
 
         return config;
     }
