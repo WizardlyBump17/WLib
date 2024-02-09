@@ -66,6 +66,12 @@ public class MapBuilder<K, V> {
         return this;
     }
 
+    public MapBuilder<K, V> putIf(@NonNull K key, @NonNull Supplier<V> value, boolean condition) {
+        if (condition)
+            map.put(key, value.get());
+        return this;
+    }
+
     public MapBuilder<K, V> putIfNotEmpty(@NonNull K key, @Nullable V value) {
         return putIf(
                 key,
