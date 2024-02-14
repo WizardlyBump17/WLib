@@ -12,7 +12,7 @@ dependencies {
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
     implementation(
-            project(':commands'),
+            project(':command'),
             project(':config'),
             project(':database'),
             project(':objects'),
