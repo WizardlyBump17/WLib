@@ -12,12 +12,12 @@ dependencies {
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
     implementation(
-            project(':command'),
             project(':config'),
             project(':database'),
             project(':objects'),
             project(':utils'),
-            'org.xerial:sqlite-jdbc:3.36.0.3',
+            'org.xerial:sqlite-jdbc:3.44.1.0',
+            'com.wizardlybump17.command:command:1.0.0',
     )
 }
 

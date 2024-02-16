@@ -1,8 +1,13 @@
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.24',
             'org.jetbrains:annotations:23.1.0',
             'org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT',
+            'com.wizardlybump17.command:command:1.0.0'
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
 
@@ -24,8 +29,6 @@ dependencies {
             project(':database'),
 
             project(':objects'),
-
-            project(':command'),
 
             project(':config'),
             project(':bukkit-utils'),
