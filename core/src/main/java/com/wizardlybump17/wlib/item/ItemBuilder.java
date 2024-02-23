@@ -393,6 +393,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     /**
+     * <p>Accesses and uses the {@link ItemMetaHandler}, if it is not {@code null}, with the given {@link Consumer}.</p>
+     * @param consumer the consumer to accept the {@link ItemMetaHandler}
+     * @return this {@link ItemBuilder}
+     * @param <M> the type of the {@link ItemMetaHandler}
+     */
+    @SuppressWarnings("unchecked")
+    public <M extends ItemMetaHandler<?>> @NonNull ItemBuilder consumeMetaHandler(@NonNull Consumer<M> consumer) {
+        if (metaHandler != null)
+            consumer.accept((M) metaHandler);
+        return this;
+    }
+
+    /**
      * Copies the data from the given ItemStack into a new builder.
      * If the item is null, air or not have an ItemMeta, the builder will be empty
      *
