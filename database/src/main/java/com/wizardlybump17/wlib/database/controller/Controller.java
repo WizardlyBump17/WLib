@@ -1,10 +1,13 @@
 package com.wizardlybump17.wlib.database.controller;
 
+import com.wizardlybump17.wlib.database.controller.listener.ControllerListener;
 import com.wizardlybump17.wlib.database.dao.DAO;
 import com.wizardlybump17.wlib.object.Cache;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +38,7 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
     @NonNull
     private final D dao;
     private final @NonNull Logger logger;
+    private final @NonNull Set<ControllerListener> listeners = new HashSet<>();
 
     public Controller(@NonNull C cache, @NonNull D dao) {
         this.cache = cache;
@@ -112,5 +116,13 @@ public abstract class Controller<K, V, C extends Cache<K, V, ?>, D extends DAO<K
     @Override
     public int hashCode() {
         return Controller.class.hashCode();
+    }
+
+    public void addListener(@NonNull ControllerListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(@NonNull ControllerListener listener) {
+        listeners.remove(listener);
     }
 }
