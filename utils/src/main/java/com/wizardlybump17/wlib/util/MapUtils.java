@@ -331,4 +331,30 @@ public class MapUtils {
     public static <K, V> @NonNull Map<K, V> addIf(@NonNull Object... objects) {
         return addIf((Supplier<Map<K, V>>) HashMap::new, objects);
     }
+
+    /**
+     * <p>Iterates the given {@link Map} and creates a new {@link LinkedHashMap}, converting its keys to a dot separated path.</p>
+     * @param original the original {@link Map}
+     * @return a new {@link LinkedHashMap} with the keys converted to a dot separated path
+     */
+    public static <V> @NonNull Map<String, V> dotKeys(@NonNull Map<String, Object> original) {
+        Map<String, V> result = new LinkedHashMap<>();
+        dotKeysRecursive(original, "", result);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> void dotKeysRecursive(@NonNull Map<String, Object> original, @NonNull String path, @NonNull Map<String, V> result) {
+        for (Map.Entry<String, Object> entry : original.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            String newPath = path.isEmpty() ? key : path + "." + key;
+
+            if (entry.getValue() instanceof Map<?, ?> map)
+                dotKeysRecursive((Map<String, Object>) map, newPath, result);
+            else
+                result.put(newPath, (V) value);
+        }
+    }
 }
