@@ -109,6 +109,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public ItemBuilder type(@NonNull Material material) {
         item.setType(material);
+
+        ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(material);
+        metaHandler = model == null ? null : model.createHandler(this);
+
         return this;
     }
 
@@ -414,6 +418,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      */
     @SuppressWarnings("unchecked")
     public <M extends ItemMetaHandler<?>> @NonNull ItemBuilder consumeMetaHandler(@NonNull Consumer<M> consumer) {
+        System.out.println(ItemMetaHandlerModel.getApplicableModel(type()));
         if (metaHandler != null)
             consumer.accept((M) metaHandler);
         return this;
