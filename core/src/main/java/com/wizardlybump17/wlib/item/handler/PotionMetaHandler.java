@@ -57,11 +57,11 @@ public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
     }
 
     public boolean customEffect(@NonNull PotionEffect effect, boolean overwrite) {
-        return getBuilder().<Boolean, PotionMeta>getFromMeta(meta -> meta.addCustomEffect(effect, overwrite), false);
+        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(meta -> meta.addCustomEffect(effect, overwrite), false);
     }
 
     public boolean removeCustomEffect(@NonNull PotionEffectType type) {
-        return getBuilder().<Boolean, PotionMeta>getFromMeta(meta -> meta.removeCustomEffect(type), false);
+        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(meta -> meta.removeCustomEffect(type), false);
     }
 
     public boolean hasCustomEffect(@NonNull PotionEffectType type) {
@@ -69,7 +69,7 @@ public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
     }
 
     public boolean clearCustomEffects() {
-        return getBuilder().getFromMeta(PotionMeta::clearCustomEffects, false);
+        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(PotionMeta::clearCustomEffects, false);
     }
 
     public boolean hasColor() {
