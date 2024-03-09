@@ -220,12 +220,16 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
     }
 
     private int getPages() {
+        boolean hasContent = false;
         int presetItems = 0;
-        for (char c : shape.toCharArray())
+        for (char c : shape.toCharArray()) {
             if (c != 'x')
                 presetItems++;
+            else
+                hasContent = true;
+        }
 
-        return content.isEmpty() ? 1 : (int) Math.ceil((double) content.size() / (shape.length() - presetItems));
+        return content.isEmpty() || !hasContent ? 1 : (int) Math.ceil((double) content.size() / (shape.length() - presetItems));
     }
 
     @Nullable
