@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,6 +67,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         item.setItemMeta(meta);
 
         return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Contract("_, null -> null; _, !null -> !null")
+    public <M extends ItemMeta, T> @Nullable T consumeMetaAndReturn(Function<M, T> consumer, @Nullable T defaultValue) {
+        M meta = (M) item.getItemMeta();
+        if (meta == null)
+            return defaultValue;
+
+        T result = consumer.apply(meta);
+        item.setItemMeta(meta);
+
+        return result == null ? defaultValue : result;
     }
 
     @SuppressWarnings("unchecked")
