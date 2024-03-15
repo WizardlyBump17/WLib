@@ -4,6 +4,7 @@ dependencies {
             'org.projectlombok:lombok:1.18.24',
             'org.jetbrains:annotations:23.0.0',
             project(':versions:adapter'),
+            project(':utils'),
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
 }

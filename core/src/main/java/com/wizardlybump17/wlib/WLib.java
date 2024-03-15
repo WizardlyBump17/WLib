@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
+import com.wizardlybump17.wlib.adapter.v1_19_R2.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.*;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
@@ -24,6 +25,7 @@ import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapp
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWrapper;
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -103,58 +105,65 @@ public class WLib extends JavaPlugin {
     }
 
     private void initAdapters() {
-        printVersion(selectItemAdapter(), "item");
+        String version = setupAdapters();
+        if (version == null)
+            getLogger().severe("The version " + getServerVersion() + " is not supported yet.");
+        else
+            getLogger().info("Adapters found for the version " + version);
         ItemAdapter.getInstance().registerGlowEnchantment();
     }
 
-    private void printVersion(String version, String what) {
-        if (version == null)
-            getLogger().severe("Could not find " + what + " adapter for " + Bukkit.getServer().getClass().getName().split("\\.")[3] + ".");
-        else
-            getLogger().info(what + " adapter found: " + version);
-    }
-
-    private String selectItemAdapter() {
-        String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
+    private String setupAdapters() {
+        String version = getServerVersion();
         return switch (version) {
             case "v1_16_R3" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.player.PlayerAdapter());
                 yield "v1_16_R3";
             }
             case "v1_17_R1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.player.PlayerAdapter());
                 yield "v1_17_R1";
             }
             case "v1_18_R1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.player.PlayerAdapter());
                 yield "v1_18_R1";
             }
             case "v1_18_R2" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.player.PlayerAdapter());
                 yield "v1_18_R2";
             }
             case "v1_19_R1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.player.PlayerAdapter());
                 yield "v1_19_R1";
             }
             case "v1_19_R2" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.player.PlayerAdapter());
                 yield "v1_19_R2";
             }
             case "v1_19_R3" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.player.PlayerAdapter());
                 yield "v1_19_R3";
             }
             case "v1_20_R1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.player.PlayerAdapter());
                 yield "v1_20_R1";
             }
             case "v1_20_R2" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.player.PlayerAdapter());
                 yield "v1_20_R2";
             }
             case "v1_20_R3" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.player.PlayerAdapter());
                 yield "v1_20_R3";
             }
             default -> null;
@@ -163,5 +172,9 @@ public class WLib extends JavaPlugin {
 
     public static WLib getInstance() {
         return getPlugin(WLib.class);
+    }
+
+    public static @NonNull String getServerVersion() {
+        return Bukkit.getServer().getClass().getName().split("\\.")[3];
     }
 }
