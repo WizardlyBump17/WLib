@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.util.builder.MapBuilder;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.config.ConfigWrapper;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @SerializableAs("WLib:Particle")
+@Builder
 public class ParticleSpawner implements ConfigurationSerializable {
 
     private @NonNull Particle type;
