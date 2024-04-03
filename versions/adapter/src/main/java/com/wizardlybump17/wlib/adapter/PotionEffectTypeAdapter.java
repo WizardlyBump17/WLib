@@ -1,11 +1,13 @@
 package com.wizardlybump17.wlib.adapter;
 
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PotionEffectTypeAdapter {
 
+    @Getter
     private static PotionEffectTypeAdapter instance;
 
     public static void setInstance(@NonNull PotionEffectTypeAdapter instance) {
