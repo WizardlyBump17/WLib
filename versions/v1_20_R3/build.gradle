@@ -5,6 +5,7 @@ dependencies {
             'org.jetbrains:annotations:23.0.0',
             project(':versions:adapter'),
             project(':utils'),
+            project(':bukkit-utils'),
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
 }
