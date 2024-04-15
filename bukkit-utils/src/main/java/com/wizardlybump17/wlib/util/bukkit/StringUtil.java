@@ -88,7 +88,7 @@ public class StringUtil {
             return "X: " + vector.getX() + ", Y: " + vector.getY() + ", Z: " + vector.getZ();
 
         if (object instanceof Location location)
-            return "X: " + location.getX() + ", Y: " + location.getY() + ", Z: " + location.getZ() + ", World: " + location.getWorld().getName();
+            return "X: " + location.getX() + ", Y: " + location.getY() + ", Z: " + location.getZ() + ", World: " + (location.getWorld() == null ? "null" : location.getWorld().getName());
 
         return object.toString();
     }
