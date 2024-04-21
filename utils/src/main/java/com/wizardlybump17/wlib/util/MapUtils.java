@@ -357,4 +357,35 @@ public class MapUtils {
                 result.put(newPath, (V) value);
         }
     }
+
+    /**
+     * <p>
+     *     Creates a {@link Map} from the given {@link Collection}.
+     *     The key will be the result of the {@link Function} and the value will be the element itself.
+     * </p>
+     * @param mapSupplier the {@link Map} supplier
+     * @param collection the {@link Collection}
+     * @param keyFunction the {@link Function} to get the key
+     * @return the {@link Map} with the elements of the {@link Collection}
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static @NonNull <K, V> Map<K, V> collectionToMap(@NonNull Supplier<Map<K, V>> mapSupplier, @NonNull Collection<V> collection, @NonNull Function<V, K> keyFunction) {
+        return collection.stream().collect(Collectors.toMap(keyFunction, Function.identity(), (key1, key2) -> key1, mapSupplier));
+    }
+
+    /**
+     * <p>
+     *     Creates a {@link Map} from the given {@link Collection}.
+     *     The key will be the result of the {@link Function} and the value will be the element itself.
+     * </p>
+     * @param collection the {@link Collection}
+     * @param keyFunction the {@link Function} to get the key
+     * @return the {@link Map} with the elements of the {@link Collection}
+     * @param <K> the key type
+     * @param <V> the value type
+     */
+    public static @NonNull <K, V> Map<K, V> collectionToMap(@NonNull Collection<V> collection, @NonNull Function<V, K> keyFunction) {
+        return collectionToMap(HashMap::new, collection, keyFunction);
+    }
 }
