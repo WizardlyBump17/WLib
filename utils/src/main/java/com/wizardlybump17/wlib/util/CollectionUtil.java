@@ -1,11 +1,10 @@
 package com.wizardlybump17.wlib.util;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -207,5 +206,33 @@ public class CollectionUtil<E> {
         for (E e : original)
             clone.add(ObjectUtil.clone(e));
         return clone;
+    }
+
+    /**
+     * <p>
+     *     Returns a new {@link List} with the elements of the given {@link Collection} sorted by the given {@link Comparator}.
+     *     If the {@link Comparator} is {@code null}, it will sort the elements by their natural order.
+     * </p>
+     * @param collection the {@link Collection} to sort
+     * @param comparator the {@link Comparator} to sort the elements
+     * @return a new {@link List} with the elements of the given {@link Collection} sorted by the given {@link Comparator}
+     * @param <E> the element type
+     */
+    public static <E> @NonNull List<E> sort(@NonNull Collection<E> collection, @Nullable Comparator<E> comparator) {
+        List<E> list = new ArrayList<>(collection);
+        list.sort(comparator);
+        return list;
+    }
+
+    /**
+     * <p>
+     *     Returns a new {@link List} with the elements of the given {@link Collection} sorted by their natural order.
+     * </p>
+     * @param collection the {@link Collection} to sort
+     * @return a new {@link List} with the elements of the given {@link Collection} sorted by their natural order
+     * @param <E> the element type
+     */
+    public static <E> @NonNull List<E> sort(@NonNull Collection<E> collection) {
+        return sort(collection, null);
     }
 }
