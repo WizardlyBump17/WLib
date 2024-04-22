@@ -174,7 +174,7 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.PotionEffectTypeAdapter());
-                EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                EnchantmentAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.EnchantmentAdapter());
             }
         }
 
