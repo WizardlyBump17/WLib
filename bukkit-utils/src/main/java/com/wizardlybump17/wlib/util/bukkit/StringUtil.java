@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -98,6 +99,7 @@ public class StringUtil {
      * @param string the string to fancy
      * @return the 🌹fancy🌹 and formatted string
      */
+    @Contract("null -> null; !null -> !null")
     public static @Nullable String fancy(@Nullable String string) {
         if (string == null)
             return null;
