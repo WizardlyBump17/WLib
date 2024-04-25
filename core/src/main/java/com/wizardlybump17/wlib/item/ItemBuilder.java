@@ -217,21 +217,22 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public Map<Enchantment, Integer> enchantments() {
         Map<Enchantment, Integer> map = new HashMap<>(getFromMeta(ItemMeta::getEnchants, Collections.emptyMap()));
-        map.remove(ItemAdapter.getInstance().getGlowEnchantment());
+        ItemAdapter adapter = ItemAdapter.getInstance();
+        if (adapter.hasGlowEnchantment())
+            map.remove(adapter.getGlowEnchantment());
         return map;
     }
 
     public ItemBuilder glow(boolean glow) {
-        return consumeMeta(meta -> {
-            if (glow)
-                meta.addEnchant(ItemAdapter.getInstance().getGlowEnchantment(), 0, true);
-            else
-                meta.removeEnchant(ItemAdapter.getInstance().getGlowEnchantment());
-        });
+        if (glow)
+            ItemAdapter.getInstance().applyGlow(item);
+        else
+            ItemAdapter.getInstance().removeGlow(item);
+        return this;
     }
 
     public boolean glow() {
-        return getFromMeta(meta -> meta.hasEnchant(ItemAdapter.getInstance().getGlowEnchantment()), false);
+        return ItemAdapter.getInstance().isGlowing(item);
     }
 
     @NotNull
@@ -447,7 +448,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
                 .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), string -> Enchantment.getByKey(NamespacedKeyUtil.fromString(string))))
                 .nbtTags(ItemAdapter.getInstance().deserializeContainer(ConfigUtil.get("nbt-tags", map, Collections.emptyMap())))
-                .glow(ConfigUtil.get("glow", map, false))
                 .unbreakable(ConfigUtil.get("unbreakable", map, false))
                 .customModelData(ConfigUtil.get("custom-model-data", map, (Integer) null))
                 .customData(ConfigUtil.get("custom-data", map, Collections.emptyMap()))

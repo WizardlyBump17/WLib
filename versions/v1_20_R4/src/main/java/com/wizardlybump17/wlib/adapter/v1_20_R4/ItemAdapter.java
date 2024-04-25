@@ -1,40 +1,33 @@
-package com.wizardlybump17.wlib.adapter.v1_20_R3;
+package com.wizardlybump17.wlib.adapter.v1_20_R4;
 
-import com.wizardlybump17.wlib.util.ReflectionUtil;
-import net.minecraft.nbt.*;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.craftbukkit.v1_20_R3.CraftRegistry;
-import org.bukkit.craftbukkit.v1_20_R3.persistence.CraftPersistentDataContainer;
-import org.bukkit.craftbukkit.v1_20_R3.util.CraftNBTTagConfigSerializer;
+import org.bukkit.craftbukkit.v1_20_R4.persistence.CraftPersistentDataContainer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.profile.PlayerProfile;
 
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
 
-    public static final Field CACHE = ReflectionUtil.getField("cache", CraftRegistry.class);
-
     private final Map<String, PlayerProfile> profileCache = new HashMap<>();
 
-    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> serializeContainer(PersistentDataContainer container) {
-        return (Map<String, Object>) serialize(((CraftPersistentDataContainer) container).toTagCompound());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public PersistentDataContainer deserializeContainer(Map<String, Object> map) {
-        CraftPersistentDataContainer container = (CraftPersistentDataContainer) PERSISTENT_DATA_ADAPTER_CONTEXT.newPersistentDataContainer();
-        container.putAll((NBTTagCompound) CraftNBTTagConfigSerializer.deserialize(map));
-        return container;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -77,29 +70,42 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         return url == null ? null : url.toString();
     }
 
-    public void registerGlowEnchantment() {
-        Enchantment enchantment = getGlowEnchantment();
-        Map<NamespacedKey, Enchantment> map = ReflectionUtil.getFieldValue(CACHE, Registry.ENCHANTMENT);
-        map.put(enchantment.getKey(), enchantment);
+    @Override
+    public void applyGlow(@NonNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return;
+
+        meta.setEnchantmentGlintOverride(true);
+        item.setItemMeta(meta);
     }
 
-    public static Object serialize(NBTBase base) {
-        if (base instanceof NBTTagCompound compound) {
-            Map<String, Object> innerMap = new HashMap<>();
-            for (String key : compound.e())
-                innerMap.put(key, serialize(compound.c(key)));
+    @Override
+    public void removeGlow(@NonNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return;
 
-            return innerMap;
-        } else if (base instanceof NBTTagList list) {
-            List<Object> baseList = new ArrayList<>();
-            for (NBTBase nbtBase : list)
-                baseList.add(serialize(nbtBase));
-            return baseList;
-        } else if (base instanceof NBTTagString)
-            return base.t_();
-        else if (base instanceof NBTTagInt)
-            return base + "i";
+        meta.setEnchantmentGlintOverride(false);
+        item.setItemMeta(meta);
+    }
 
-        return base.toString();
+    @Override
+    public boolean isGlowing(@NonNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return false;
+
+        return meta.hasEnchantmentGlintOverride() && meta.getEnchantmentGlintOverride();
+    }
+
+    @Override
+    public @NonNull Enchantment getGlowEnchantment() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasGlowEnchantment() {
+        return false;
     }
 }

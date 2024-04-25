@@ -41,3 +41,5 @@ findProject(':versions:v1_20_R2')?.name = 'v1_20_R2'
 
 include 'versions:v1_20_R3'
 findProject(':versions:v1_20_R3')?.name = 'v1_20_R3'
+include 'versions:v1_20_R4'
+findProject(':versions:v1_20_R4')?.name = 'v1_20_R4'

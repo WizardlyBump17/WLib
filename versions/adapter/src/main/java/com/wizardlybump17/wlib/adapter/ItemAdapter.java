@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 
@@ -55,6 +54,18 @@ public abstract class ItemAdapter {
         return GlowEnchantment.INSTANCE;
     }
 
+    public void applyGlow(@NonNull ItemStack item) {
+        item.addUnsafeEnchantment(getGlowEnchantment(), 1);
+    }
+
+    public void removeGlow(@NonNull ItemStack item) {
+        item.removeEnchantment(getGlowEnchantment());
+    }
+
+    public boolean isGlowing(@NonNull ItemStack item) {
+        return item.getEnchantments().containsKey(getGlowEnchantment());
+    }
+
     public void registerGlowEnchantment() {
         Enchantment enchantment = getGlowEnchantment();
 
@@ -65,7 +76,7 @@ public abstract class ItemAdapter {
         Enchantment.registerEnchantment(enchantment);
     }
 
-    public static String getSkullTextureBase64(String url) {
-        return new String(Base64.getEncoder().encode(("{textures:{SKIN:{url:\"" + url + "\"}}}").getBytes()));
+    public boolean hasGlowEnchantment() {
+        return true;
     }
 }
