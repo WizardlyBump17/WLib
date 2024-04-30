@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.adapter.v1_20_R3;
 
 import com.wizardlybump17.wlib.util.ReflectionUtil;
+import lombok.NonNull;
 import net.minecraft.nbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -101,5 +102,10 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
             return base + "i";
 
         return base.toString();
+    }
+
+    @Override
+    public @NonNull Enchantment getGlowEnchantment() {
+        return GlowEnchantment.INSTANCE;
     }
 }
