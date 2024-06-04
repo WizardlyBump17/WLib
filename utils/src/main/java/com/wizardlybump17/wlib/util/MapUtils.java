@@ -388,4 +388,45 @@ public class MapUtils {
     public static @NonNull <K, V> Map<K, V> collectionToMap(@NonNull Collection<V> collection, @NonNull Function<V, K> keyFunction) {
         return collectionToMap(HashMap::new, collection, keyFunction);
     }
+
+    /**
+     * <p>
+     *     Converts the given {@link Map} with dot separated keys to a new {@link Map} with the keys separated by the dots.
+     *     <br>
+     *     Example input | Output
+     *     <ul>
+     *         <li>{test.test1=1, test.test2=2, test.test3=3, test.test4.test=4} | {test={test1=1, test2=2, test3=3, test4={test=4}}}</li>
+     *         <li>{test.test1=1, test.test2=2, test2=3, test3.test1=4} | {test={test1=t, test2=2}, test2=3, test3{test1=4}}</li>
+     *     </ul>
+     * </p>
+     * @param mapSupplier the {@link Map} supplier that will be used to create all inner {@link Map}s
+     * @param map the {@link Map} with the dot separated keys
+     * @return the converted {@link Map}
+     */
+    @SuppressWarnings("unchecked")
+    public static @NonNull Map<String, Object> dotToMap(@NonNull Supplier<Map<String, Object>> mapSupplier, @NonNull Map<String, String> map) {
+        Map<String, Object> result = mapSupplier.get();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            String[] keys = key.split("\\.");
+            Map<String, Object> currentMap = result;
+
+            for (String stringKey : keys)
+                currentMap = (Map<String, Object>) currentMap.computeIfAbsent(stringKey, $ -> mapSupplier.get());
+            currentMap.put(keys[keys.length - 1], value);
+        }
+        return result;
+    }
+
+    /**
+     * <p>
+     *     Calls the {@link #dotToMap(Supplier, Map)} with a {@link HashMap} supplier.
+     * </p>
+     * @param map the {@link Map} with the dot separated keys
+     * @return the converted {@link Map}
+     */
+    public static @NonNull Map<String, Object> dotToMap(@NonNull Map<String, String> map) {
+        return dotToMap(HashMap::new, map);
+    }
 }
