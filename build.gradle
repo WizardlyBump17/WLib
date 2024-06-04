@@ -34,8 +34,12 @@ allprojects {
 subprojects {
     apply plugin: 'maven-publish'
 
-    if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+'))
+    if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
+        tasks.withType(PublishToMavenRepository).configureEach {
+            it.enabled = false
+        }
         return
+    }
 
     publishing {
         repositories {
@@ -52,6 +56,12 @@ subprojects {
         publications {
             gpr(MavenPublication) {
                 from(components.java)
+                pom.withXml {
+                    asNode().dependencies.dependency.each { dep ->
+                        if (dep.artifactId.last().value().last().matches('v\\d_\\d+_R\\d+'))
+                            dep.parent().remove(dep)
+                    }
+                }
             }
         }
     }
