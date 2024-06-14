@@ -1,8 +1,10 @@
 package com.wizardlybump17.wlib.util.bukkit;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,10 +20,15 @@ public class InventoryUtil {
      * @param items the items to check
      * @return if the items can fit in the inventory
      */
-    public static boolean canFit(Inventory inventory, ItemStack... items) {
-        Inventory clone = Bukkit.createInventory(null, inventory.getType());
-        clone.setContents(clone(inventory.getContents()));
-        return clone.addItem(clone(items)).isEmpty();
+    public static boolean canFit(@NonNull Inventory inventory, ItemStack @NonNull ... items) {
+        Inventory inventoryCopy;
+        if (inventory.getType() == InventoryType.PLAYER)
+            inventoryCopy = Bukkit.createInventory(null, 36);
+        else
+            inventoryCopy = Bukkit.createInventory(null, inventory.getType());
+
+        inventoryCopy.setContents(clone(inventory.getStorageContents()));
+        return inventoryCopy.addItem(clone(items)).isEmpty();
     }
 
     /**
