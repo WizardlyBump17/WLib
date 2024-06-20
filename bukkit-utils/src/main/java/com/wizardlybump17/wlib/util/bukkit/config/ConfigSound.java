@@ -65,7 +65,7 @@ public class ConfigSound implements ConfigurationSerializable, Cloneable {
     public static @NonNull ConfigSound deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
         return new ConfigSound(
                 ConfigUtil.get("sound", map),
-                ConfigUtil.get("category", map, SoundCategory.MASTER),
+                ConfigUtil.map("category", map, () -> "MASTER", category -> SoundCategory.valueOf(category.toUpperCase())),
                 ConfigUtil.<Number>get("volume", map, 1f).floatValue(),
                 ConfigUtil.<Number>get("pitch", map, 1f).floatValue()
         );
