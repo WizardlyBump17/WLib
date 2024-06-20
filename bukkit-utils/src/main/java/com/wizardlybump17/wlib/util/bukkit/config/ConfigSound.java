@@ -47,7 +47,7 @@ public class ConfigSound implements ConfigurationSerializable, Cloneable {
     public @NonNull Map<String, Object> serialize() {
         return new MapBuilder<String, Object>(new LinkedHashMap<>())
                 .put("sound", sound)
-                .putIf("category", category, category != SoundCategory.MASTER)
+                .putIf("category", category.name(), category != SoundCategory.MASTER)
                 .putIf("volume", volume, volume != 1)
                 .putIf("pitch", pitch, pitch != 1)
                 .build();
