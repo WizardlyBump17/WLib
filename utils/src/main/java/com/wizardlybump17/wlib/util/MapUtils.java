@@ -406,16 +406,16 @@ public class MapUtils {
     @SuppressWarnings("unchecked")
     public static @NonNull Map<String, Object> dotToMap(@NonNull Supplier<Map<String, Object>> mapSupplier, @NonNull Map<String, String> map) {
         Map<String, Object> result = mapSupplier.get();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+        map.forEach((key, value) -> {
             String[] keys = key.split("\\.");
             Map<String, Object> currentMap = result;
-
-            for (String stringKey : keys)
-                currentMap = (Map<String, Object>) currentMap.computeIfAbsent(stringKey, $ -> mapSupplier.get());
+            for (int i = 0; i < keys.length - 1; i++) {
+                String currentKey = keys[i];
+                currentMap.computeIfAbsent(currentKey, $ -> mapSupplier.get());
+                currentMap = (Map<String, Object>) currentMap.get(currentKey);
+            }
             currentMap.put(keys[keys.length - 1], value);
-        }
+        });
         return result;
     }
 
