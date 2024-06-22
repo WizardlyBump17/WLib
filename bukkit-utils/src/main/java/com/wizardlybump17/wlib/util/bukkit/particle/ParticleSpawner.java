@@ -12,6 +12,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -71,6 +72,17 @@ public class ParticleSpawner implements ConfigurationSerializable {
         world.spawnParticle(
                 type,
                 x + xAdd, y + yAdd, z + zAdd,
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
+    }
+
+    public void spawn(@NonNull Player player) {
+        player.spawnParticle(
+                type,
+                player.getLocation().getX() + xAdd, player.getLocation().getY() + yAdd, player.getLocation().getZ() + zAdd,
                 count,
                 offsetX, offsetY, offsetZ,
                 extra,
