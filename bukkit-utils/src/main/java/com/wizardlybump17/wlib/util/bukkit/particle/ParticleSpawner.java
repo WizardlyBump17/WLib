@@ -80,9 +80,10 @@ public class ParticleSpawner implements ConfigurationSerializable {
     }
 
     public void spawn(@NonNull Player player) {
+        Location location = player.getLocation();
         player.spawnParticle(
                 type,
-                player.getLocation().getX() + xAdd, player.getLocation().getY() + yAdd, player.getLocation().getZ() + zAdd,
+                location.getX() + xAdd, location.getY() + yAdd, location.getZ() + zAdd,
                 count,
                 offsetX, offsetY, offsetZ,
                 extra,
