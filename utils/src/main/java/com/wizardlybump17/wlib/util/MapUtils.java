@@ -429,4 +429,45 @@ public class MapUtils {
     public static @NonNull Map<String, Object> dotToMap(@NonNull Map<String, String> map) {
         return dotToMap(HashMap::new, map);
     }
+
+    /**
+     * <p>
+     * Converts the given {@link Map} to a converted {@link Map} applying the given functions.
+     * </p>
+     *
+     * @param mapSupplier   the {@link Map} supplier that will be used as output
+     * @param map           the {@link Map} to be converted
+     * @param keyFunction   the {@link Function} to convert the keys
+     * @param valueFunction the {@link Function} to convert the values
+     * @param <IK>          the input key type
+     * @param <IV>          the input value type
+     * @param <K>           the output key type
+     * @param <V>           the output value type
+     * @return the converted {@link Map}
+     */
+    public static <IK, IV, K, V> @NonNull Map<K, V> mapKeysAndValues(@NonNull Supplier<Map<K, V>> mapSupplier, @NonNull Map<IK, IV> map, @NonNull Function<IK, K> keyFunction, @NonNull Function<IV, V> valueFunction) {
+        Map<K, V> newMap = mapSupplier.get();
+        for (Map.Entry<IK, IV> entry : map.entrySet())
+            newMap.put(keyFunction.apply(entry.getKey()), valueFunction.apply(entry.getValue()));
+        return newMap;
+    }
+
+    /**
+     * <p>
+     * Converts the given {@link Map} to a converted {@link Map} applying the given functions.<br>
+     * This method calls the {@link MapUtils#mapKeysAndValues(Supplier, Map, Function, Function)} with a {@link Supplier} of {@link HashMap}.
+     * </p>
+     *
+     * @param map           the {@link Map} to be converted
+     * @param keyFunction   the {@link Function} to convert the keys
+     * @param valueFunction the {@link Function} to convert the values
+     * @param <IK>          the input key type
+     * @param <IV>          the input value type
+     * @param <K>           the output key type
+     * @param <V>           the output value type
+     * @return the converted {@link Map}
+     */
+    public static <IK, IV, K, V> @NonNull Map<K, V> mapKeysAndValues(@NonNull Map<IK, IV> map, @NonNull Function<IK, K> keyFunction, @NonNull Function<IV, V> valueFunction) {
+        return mapKeysAndValues(HashMap::new, map, keyFunction, valueFunction);
+    }
 }
