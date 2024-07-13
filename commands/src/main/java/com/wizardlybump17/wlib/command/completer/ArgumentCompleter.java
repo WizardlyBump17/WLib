@@ -8,5 +8,5 @@ import java.util.List;
 public interface ArgumentCompleter {
 
     @NonNull
-    List<String> complete(CommandSender<?> sender, String[] args);
+    List<String> complete(@NonNull CommandSender<?> sender, @NonNull String @NonNull [] args);
 }

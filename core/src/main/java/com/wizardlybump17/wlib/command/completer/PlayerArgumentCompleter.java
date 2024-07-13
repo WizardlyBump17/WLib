@@ -10,7 +10,7 @@ import java.util.List;
 public class PlayerArgumentCompleter implements ArgumentCompleter {
 
     @Override
-    public @NonNull List<String> complete(CommandSender<?> sender, String[] args) {
+    public @NonNull List<String> complete(@NonNull CommandSender<?> sender, @NonNull String @NonNull [] args) {
         return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
                 .toList();

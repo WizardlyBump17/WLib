@@ -14,7 +14,7 @@ public class MaterialArgumentCompleter implements ArgumentCompleter {
             .toList();
 
     @Override
-    public @NonNull List<String> complete(CommandSender<?> sender, String[] args) {
+    public @NonNull List<String> complete(@NonNull CommandSender<?> sender, @NonNull String @NonNull [] args) {
         return MATERIALS;
     }
 }
