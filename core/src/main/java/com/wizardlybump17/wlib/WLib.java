@@ -114,13 +114,9 @@ public class WLib extends JavaPlugin {
 
     private void setupAdapters() {
         switch (MinecraftVersion.getVersion()) {
-            case V1_20_6 -> {
+            case V1_20_5 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
-            }
-            case V1_21 -> {
-                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
-                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
             }
         }
     }

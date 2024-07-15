@@ -11,7 +11,6 @@ dependencies {
             project(':versions:adapter'),
 
             project(':versions:v1_20_R4'),
-            project(':versions:v1_21_R1'),
 
             project(':database'),
 
@@ -30,12 +29,6 @@ processResources {
     }
 }
 
-tasks {
-    assemble {
-        dependsOn(shadowJar)
-    }
-
-    shadowJar {
-        archiveFileName = 'WLib-' + project.version + '.jar'
-    }
+shadowJar {
+    archiveFileName = 'WLib-' + project.version + '.jar'
 }
