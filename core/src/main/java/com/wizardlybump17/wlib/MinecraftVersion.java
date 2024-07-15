@@ -5,11 +5,11 @@ import org.bukkit.Bukkit;
 
 public enum MinecraftVersion {
 
-    V1_20_5;
+    V1_20_6;
 
     public static @NonNull MinecraftVersion getVersion() {
-        return switch (Bukkit.getServer().getClass().getName().split("\\.")[3]) {
-            case "v1_20_R4" -> V1_20_5;
+        return switch (Bukkit.getMinecraftVersion()) {
+            case "1.20.6" -> V1_20_6;
             default -> throw new IllegalStateException("Unsupported server version");
         };
     }
