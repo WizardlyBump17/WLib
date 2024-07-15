@@ -11,6 +11,7 @@ import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -189,24 +190,6 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
-    public Map<String, Object> nbtTags() {
-        return ItemAdapter.getInstance().serializeContainer(container());
-    }
-
-    public ItemBuilder rawNBTTag(@NonNull String key, @NonNull Object value) {
-        item = ItemAdapter.getInstance().setRawNBTTag(item, key, value);
-        return this;
-    }
-
-    public ItemBuilder rawNBTTags(@NonNull Map<String, Object> tags) {
-        item = ItemAdapter.getInstance().setRawNBTTags(item, tags);
-        return this;
-    }
-
-    public @NonNull Map<String, Object> rawNBTTags() {
-        return ItemAdapter.getInstance().getRawNBTTags(item);
-    }
-
     public ItemBuilder enchantment(Enchantment enchantment, int level) {
         return consumeMeta(meta -> meta.addEnchant(enchantment, level, true));
     }
@@ -216,23 +199,24 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public Map<Enchantment, Integer> enchantments() {
-        Map<Enchantment, Integer> map = new HashMap<>(getFromMeta(ItemMeta::getEnchants, Collections.emptyMap()));
-        ItemAdapter adapter = ItemAdapter.getInstance();
-        if (adapter.hasGlowEnchantment())
-            map.remove(adapter.getGlowEnchantment());
-        return map;
+        return getFromMeta(ItemMeta::getEnchants, Collections.emptyMap());
+
     }
 
-    public ItemBuilder glow(boolean glow) {
-        if (glow)
-            ItemAdapter.getInstance().applyGlow(item);
-        else
-            ItemAdapter.getInstance().removeGlow(item);
-        return this;
+    public ItemBuilder glow(@Nullable Boolean glow) {
+        return consumeMeta(meta -> meta.setEnchantmentGlintOverride(glow));
     }
 
     public boolean glow() {
-        return ItemAdapter.getInstance().isGlowing(item);
+        return getFromMeta(meta -> {
+            if (meta.hasEnchantmentGlintOverride())
+                return meta.getEnchantmentGlintOverride();
+            return false;
+        }, false);
+    }
+
+    public boolean overrideGlow() {
+        return getFromMeta(ItemMeta::hasEnchantmentGlintOverride, false);
     }
 
     @NotNull
@@ -389,16 +373,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("item-flags", itemFlags().stream().map(Enum::name).toList());
         if (!enchantments().isEmpty())
             result.put("enchantments", MapUtils.mapKeys(enchantments(), enchantment -> enchantment.getKey().toString()));
-        if (!container().isEmpty())
-            result.put("nbt-tags", ItemAdapter.getInstance().serializeContainer(container()));
         if (unbreakable())
             result.put("unbreakable", true);
         if (customModelData() != null)
             result.put("custom-model-data", customModelData());
         if (!customData().isEmpty())
             result.put("custom-data", customData());
-        if (glow())
-            result.put("glow", true);
+        if (overrideGlow())
+            result.put("glow", glow());
 
         if (metaHandler != null)
             metaHandler.serialize(result);
@@ -440,18 +422,16 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         result
                 .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
-                .rawNBTTags(ConfigUtil.get("raw-nbt-tags", map, Collections.emptyMap()))
                 .amount(ConfigUtil.get("amount", map, 1))
                 .damage(ConfigUtil.get("damage", map, 0))
                 .displayName(ConfigUtil.get("display-name", map, (String) null))
                 .lore(ConfigUtil.get("lore", map, Collections.emptyList()))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
-                .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), string -> Enchantment.getByKey(NamespacedKeyUtil.fromString(string))))
-                .nbtTags(ItemAdapter.getInstance().deserializeContainer(ConfigUtil.get("nbt-tags", map, Collections.emptyMap())))
+                .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), string -> Registry.ENCHANTMENT.get(NamespacedKeyUtil.fromString(string))))
                 .unbreakable(ConfigUtil.get("unbreakable", map, false))
                 .customModelData(ConfigUtil.get("custom-model-data", map, (Integer) null))
                 .customData(ConfigUtil.get("custom-data", map, Collections.emptyMap()))
-                .glow(ConfigUtil.get("glow", map, false));
+                .glow(ConfigUtil.get("glow", map, () -> null));
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
         result.metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));

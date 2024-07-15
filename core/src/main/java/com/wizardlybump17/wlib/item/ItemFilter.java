@@ -98,10 +98,6 @@ public class ItemFilter implements ConfigurationSerializable {
                         if (!testUnbreakable((boolean) object, builder))
                             return false;
                     }
-                    case NBT_TAGS -> {
-                        if (!testNbtTags((Map<String, String>) object, builder))
-                            return false;
-                    }
                 }
             }
         }
@@ -190,22 +186,6 @@ public class ItemFilter implements ConfigurationSerializable {
 
     public static boolean testUnbreakable(boolean unbreakable, ItemBuilder item) {
         return (unbreakable && item.unbreakable()) || (!unbreakable && !item.unbreakable());
-    }
-
-    public static boolean testNbtTags(Map<String, String> tags, ItemBuilder builder) {
-        if (tags == null && builder.nbtTags().isEmpty())
-            return true;
-
-        if (tags != null && !builder.nbtTags().isEmpty()) {
-            for (Map.Entry<String, String> baseEntry : tags.entrySet())
-                for (Map.Entry<String, Object> tagEntry : builder.nbtTags().entrySet())
-                    if (!testString(baseEntry.getKey(), tagEntry.getKey()) || !testString(baseEntry.getValue(), tagEntry.getValue().toString()))
-                        return false;
-
-            return true;
-        }
-
-        return false;
     }
 
     public static boolean testString(String base, String string) {

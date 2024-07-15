@@ -1,7 +1,8 @@
 package com.wizardlybump17.wlib.command.reader;
 
-import com.wizardlybump17.wlib.adapter.PotionEffectTypeAdapter;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,7 @@ public class PotionEffectTypeReader extends ArgsReader<PotionEffectType> {
 
     @Override
     public PotionEffectType read(String string) {
-        return PotionEffectTypeAdapter.getInstance().getEffectType(string);
+        NamespacedKey key = NamespacedKey.fromString(string);
+        return key == null ? null : Registry.POTION_EFFECT_TYPE.get(key);
     }
 }

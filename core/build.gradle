@@ -1,25 +1,16 @@
 dependencies {
     compileOnly(
-            'org.projectlombok:lombok:1.18.24',
+            'org.projectlombok:lombok:1.18.32',
             'org.jetbrains:annotations:23.1.0',
-            'org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT',
+            "io.papermc.paper:paper-api:1.20.6-R0.1-20240702.153951-124",
     )
-    annotationProcessor('org.projectlombok:lombok:1.18.24')
+    annotationProcessor('org.projectlombok:lombok:1.18.32')
 
     implementation(
             project(':utils'),
             project(':versions:adapter'),
 
-            project(':versions:v1_16_R3'),
-            project(':versions:v1_17_R1'),
-            project(':versions:v1_18_R1'),
-            project(':versions:v1_18_R2'),
-            project(':versions:v1_19_R1'),
-            project(':versions:v1_19_R2'),
-            project(':versions:v1_19_R3'),
-            project(':versions:v1_20_R1'),
-            project(':versions:v1_20_R2'),
-            project(':versions:v1_20_R3'),
+            project(':versions:v1_20_R4'),
 
             project(':database'),
 
@@ -39,5 +30,5 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = 'WLib-v' + project.version + '.jar'
+    archiveFileName = 'WLib-' + project.version + '.jar'
 }

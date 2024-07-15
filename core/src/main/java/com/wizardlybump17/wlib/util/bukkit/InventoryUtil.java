@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.util.bukkit;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -67,9 +66,7 @@ public class InventoryUtil {
      * @param items the items to remove
      * @return a {@link Map} with the items that couldn't be removed
      */
-    public static Map<Integer, ItemStack> removeMaterialAmount(Inventory inventory, ItemStack... items) {
-        Validate.notNull(items, "Items cannot be null");
-
+    public static Map<Integer, ItemStack> removeMaterialAmount(Inventory inventory, ItemStack @NonNull ... items) {
         Map<Integer, ItemStack> leftover = new HashMap<>();
 
         for (int i = 0; i < items.length; ++i) {

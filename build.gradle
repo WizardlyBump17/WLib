@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 
 allprojects {
     group = 'com.wizardlybump17.wlib'
-    version = '1.6.4'
+    version = '1.6.2+1.20.6'
 
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
@@ -15,10 +15,14 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+
+        maven {
+            url("https://repo.papermc.io/repository/maven-public/")
+        }
     }
 
-    sourceCompatibility = '16'
-    targetCompatibility = '16'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 
     tasks {
         compileJava {
@@ -44,8 +48,7 @@ subprojects {
     publishing {
         repositories {
             maven {
-                name = 'GitHubPackages'
-                url = uri('https://maven.pkg.github.com/wizardlybump17/wlib')
+                url = uri('https://maven.pkg.github.com/WizardlyBump17/WLib')
                 credentials {
                     username = project.findProperty('gpr.user') ?: System.getenv('USERNAME')
                     password = project.findProperty('gpr.key') ?: System.getenv('TOKEN')
@@ -64,23 +67,5 @@ subprojects {
                 }
             }
         }
-    }
-
-    dependencies {
-        testImplementation(
-                platform('org.junit:junit-bom:5.10.2'),
-                'org.junit.jupiter:junit-jupiter:5.10.2'
-        )
-    }
-
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events "passed", "skipped", "failed", "standardOut", "standardError"
-        }
-    }
-
-    build {
-        dependsOn(test, shadowJar)
     }
 }

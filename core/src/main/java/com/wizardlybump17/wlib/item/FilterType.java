@@ -38,8 +38,4 @@ public enum FilterType {
      * Checks if the item is or not unbreakable
      */
     UNBREAKABLE,
-    /**
-     * Checks if the item has or not the given nbt tags. Accepts regex
-     */
-    NBT_TAGS,
 }
