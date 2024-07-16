@@ -10,6 +10,7 @@ public class StringUtil {
     public static final char PLACEHOLDER_BEGIN = '{';
     public static final char PLACEHOLDER_END = '}';
     public static final char ESCAPE = '\\';
+    public static final char SPACE = ' ';
 
     private StringUtil() {
         throw new IllegalStateException("Utility class");
@@ -125,6 +126,65 @@ public class StringUtil {
             throw new PlaceholderException("Invalid escape sequence");
         if (!placeholder.isEmpty())
             throw new PlaceholderException("Unclosed placeholder");
+
+        return builder.toString();
+    }
+
+    /**
+     * <p>
+     * Removes any extra space from the {@link String}.
+     * </p>
+     * <p>
+     * Examples inputs and outputs (quotes not included):
+     * <pre>
+     * "        Hello        ":         "Hello"
+     * "     Hello    World     ":      "Hello World"
+     * "Hello        ":                 "Hello"
+     * "        Hello":                 "Hello"
+     * </pre>
+     * </p>
+     *
+     * @param string    the {@link String} to trim
+     * @return the trimmed {@link String}
+     */
+    public static @NonNull String trim(@NonNull String string) {
+        return trim(string, SPACE);
+    }
+
+    /**
+     * <p>
+     * Removes any extra {@code character} from the {@link String}.
+     * </p>
+     * <p>
+     * Examples inputs and outputs with the space character (quotes not included in the inputs and outputs):
+     * <pre>
+     * "        Hello        ":         "Hello"
+     * "     Hello    World     ":      "Hello World"
+     * "Hello        ":                 "Hello"
+     * "        Hello":                 "Hello"
+     * </pre>
+     * </p>
+     *
+     * @param string    the {@link String} to trim
+     * @param character the {@code character} to remove
+     * @return the trimmed {@link String}
+     */
+    public static @NonNull String trim(@NonNull String string, char character) {
+        if (string.isEmpty())
+            return string;
+
+        StringBuilder builder = new StringBuilder(string.length());
+        char[] chars = string.toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            char current = chars[i];
+            if (current != character || (i != 0 && chars[i - 1] != character))
+                builder.append(current);
+        }
+
+        int length = builder.length();
+        if (length > 0 && builder.charAt(length - 1) == character)
+            builder.deleteCharAt(length - 1);
 
         return builder.toString();
     }
