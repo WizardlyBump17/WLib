@@ -1,8 +1,11 @@
 package com.wizardlybump17.wlib.util;
 
 import com.wizardlybump17.wlib.util.exception.PlaceholderException;
+import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class StringUtil {
@@ -11,6 +14,9 @@ public class StringUtil {
     public static final char PLACEHOLDER_END = '}';
     public static final char ESCAPE = '\\';
     public static final char SPACE = ' ';
+    public static final char QUOTE = '"';
+    public static final char QUOTE_ESCAPE = '\\';
+    public static final char QUOTE_DELIMITER = ' ';
 
     private StringUtil() {
         throw new IllegalStateException("Utility class");
@@ -128,6 +134,253 @@ public class StringUtil {
             throw new PlaceholderException("Unclosed placeholder");
 
         return builder.toString();
+    }
+
+    /**
+     * <p>
+     * Parses the quoted strings from the input {@link String}.
+     * </p>
+     * <p>
+     * This method moves through the {@link String}, {@code char} by {@code char}, until it finds a quote {@code char}.
+     * When it finds it, it will start to append the {@code char}s to the quoted {@link StringBuilder} until it finds the quote {@code char} again, then it will add the quoted {@link String} to the {@link List} of strings.
+     * <br>
+     * While it does not find the quote {@code char}, it will append the {@code char}s to the {@link StringBuilder} of the non-quoted {@link String}, and when it finds a space {@code char}, it will add the non-quoted {@link String} to the {@link List} of strings and reset the {@link StringBuilder}.
+     * Any {@code char} after the escape ({@code \}) {@code char} will be appended to the quoted, or non-quoted, {@link StringBuilder} without any processing.
+     * </p>
+     * <p>
+     * Examples:
+     *     <table>
+     *         <tr>
+     *             <th>Input</th>
+     *             <th>Output</th>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello World}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "World"}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code "Hello World"}</td>
+     *             <td>{@code [Hello World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful" World}</td>
+     *             <td>{@code [Hello, Beautiful, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful World"}</td>
+     *             <td>{@code [Hello, Beautiful World]}</td>
+     *          </tr>
+     *     </table>
+     * </p>
+     *
+     * @param input     the input {@link String}
+     * @return the {@link List} of {@link String}s
+     * @throws QuotedStringException if any of the following situations happen:
+     *                               <ul>
+     *                                   <li>A quoted string is started right after a normal (or escaped) {@code char};</li>
+     *                                   <li>A quoted string is ended right before a normal (or escaped) {@code char};</li>
+     *                                   <li>A escape {@code char} is found at the end of the input;</li>
+     *                                   <li>A quoted string is not closed.</li>
+     *                               </ul>
+     * @see #parseQuotedStrings(String, char, char, char)
+     * @see #parseQuotedStrings(String, char, char, char, boolean)
+     */
+    public static @NonNull List<String> parseQuotedStrings(@NonNull String input) {
+        return parseQuotedStrings(input, QUOTE, QUOTE_ESCAPE, QUOTE_DELIMITER, false);
+    }
+
+    /**
+     * <p>
+     * Parses the quoted strings from the input {@link String}.
+     * </p>
+     * <p>
+     * This method moves through the {@link String}, {@code char} by {@code char}, until it finds the quote {@code char}.
+     * When it finds it, it will start to append the {@code char}s to the quoted {@link StringBuilder} until it finds the quote {@code char} again, then it will add the quoted {@link String} to the {@link List} of strings.
+     * <br>
+     * While it does not find the quote {@code char}, it will append the {@code char}s to the {@link StringBuilder} of the non-quoted {@link String}, and when it finds the delimiter {@code char}, it will add the non-quoted {@link String} to the {@link List} of strings and reset the {@link StringBuilder}.
+     * Any {@code char} after the escape {@code char} will be appended to the quoted, or non-quoted, {@link StringBuilder} without any processing.
+     * </p>
+     * <p>
+     * If the {@code trim} parameter is {@code true}, it will trim the input and the outputs (e.g. remove any extra space).
+     * </p>
+     * <p>
+     * Examples:
+     *     <table>
+     *         <tr>
+     *             <th>Input</th>
+     *             <th>Output</th>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello World}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "World"}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code "Hello World"}</td>
+     *             <td>{@code [Hello World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful" World}</td>
+     *             <td>{@code [Hello, Beautiful, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful World"}</td>
+     *             <td>{@code [Hello, Beautiful World]}</td>
+     *          </tr>
+     *     </table>
+     * </p>
+     *
+     * @param input     the input {@link String}
+     * @param quote     the quote {@code char}
+     * @param escape    the escape {@code char}
+     * @param delimiter the delimiter {@code char}
+     * @param trim      if the input and outputs should be trimmed
+     * @return the {@link List} of {@link String}s
+     * @throws QuotedStringException if any of the following situations happen:
+     *                               <ul>
+     *                                   <li>A quoted string is started right after a normal (or escaped) {@code char};</li>
+     *                                   <li>A quoted string is ended right before a normal (or escaped) {@code char};</li>
+     *                                   <li>A escape {@code char} is found at the end of the input;</li>
+     *                                   <li>A quoted string is not closed.</li>
+     *                               </ul>
+     * @see #parseQuotedStrings(String, char, char, char)
+     * @see #parseQuotedStrings(String)
+     */
+    public static @NonNull List<String> parseQuotedStrings(@NonNull String input, char quote, char escape, char delimiter, boolean trim) {
+        List<String> strings = parseQuotedStrings(trim ? trim(input) : input, quote, escape, delimiter);
+        if (trim)
+            strings.replaceAll(StringUtil::trim);
+        return strings;
+    }
+
+    /**
+     * <p>
+     * Parses the quoted strings from the input {@link String}.
+     * </p>
+     * <p>
+     * This method moves through the {@link String}, {@code char} by {@code char}, until it finds the quote {@code char}.
+     * When it finds it, it will start to append the {@code char}s to the quoted {@link StringBuilder} until it finds the quote {@code char} again, then it will add the quoted {@link String} to the {@link List} of strings.
+     * <br>
+     * While it does not find the quote {@code char}, it will append the {@code char}s to the {@link StringBuilder} of the non-quoted {@link String}, and when it finds the delimiter {@code char}, it will add the non-quoted {@link String} to the {@link List} of strings and reset the {@link StringBuilder}.
+     * Any {@code char} after the escape {@code char} will be appended to the quoted, or non-quoted, {@link StringBuilder} without any processing.
+     * </p>
+     * <p>
+     * Examples:
+     *     <table>
+     *         <tr>
+     *             <th>Input</th>
+     *             <th>Output</th>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello World}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "World"}</td>
+     *             <td>{@code [Hello, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code "Hello World"}</td>
+     *             <td>{@code [Hello World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful" World}</td>
+     *             <td>{@code [Hello, Beautiful, World]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello "Beautiful World"}</td>
+     *             <td>{@code [Hello, Beautiful World]}</td>
+     *          </tr>
+     *     </table>
+     * </p>
+     *
+     * @param input     the input {@link String}
+     * @param quote     the quote {@code char}
+     * @param escape    the escape {@code char}
+     * @param delimiter the delimiter {@code char}
+     * @return the {@link List} of {@link String}s
+     * @throws QuotedStringException if any of the following situations happen:
+     *                               <ul>
+     *                                   <li>A quoted string is started right after a normal (or escaped) {@code char};</li>
+     *                                   <li>A quoted string is ended right before a normal (or escaped) {@code char};</li>
+     *                                   <li>A escape {@code char} is found at the end of the input;</li>
+     *                                   <li>A quoted string is not closed.</li>
+     *                               </ul>
+     * @see #parseQuotedStrings(String, char, char, char, boolean)
+     * @see #parseQuotedStrings(String)
+     */
+    public static @NonNull List<String> parseQuotedStrings(@NonNull String input, char quote, char escape, char delimiter) throws QuotedStringException {
+        List<String> strings = new ArrayList<>();
+
+        char[] chars = input.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        StringBuilder quoted = new StringBuilder();
+        boolean escaped = false;
+        boolean delimited = true;
+        boolean hadQuote = false;
+
+        for (char current : chars) {
+            if (current == escape && !escaped) { // start of an escaped char
+                escaped = true;
+                continue;
+            }
+
+            if (escaped) { // end of the escaped char
+                (quoted.isEmpty() ? builder : quoted).append(current);
+                escaped = false;
+                continue;
+            }
+
+            if (current == quote) {
+                if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
+                    throw new QuotedStringException("Can not have quoted strings without the delimiter");
+
+                if (quoted.isEmpty()) { // begin of quoted string
+                    quoted.append(quote);
+                    continue;
+                }
+
+                // end of quoted string
+                strings.add(quoted.substring(1));
+                delimited = false;
+                hadQuote = true;
+                quoted.setLength(0);
+                continue;
+            }
+
+            if (current == delimiter && quoted.isEmpty()) { // delimiter (space)
+                if (!builder.isEmpty()) {
+                    strings.add(builder.toString());
+                    builder.setLength(0);
+                }
+                delimited = true;
+                hadQuote = false;
+                continue;
+            }
+
+            if (hadQuote) // the previous char was a quote. Example case: "quoted"string
+                throw new QuotedStringException("Can not have non-quoted strings after quoted strings");
+
+            (quoted.isEmpty() ? builder : quoted).append(current); // any char
+            if (quoted.isEmpty())
+                delimited = false;
+        }
+
+        if (escaped)
+            throw new QuotedStringException("Invalid escape sequence");
+        if (!quoted.isEmpty())
+            throw new QuotedStringException("Unclosed quotes");
+
+        if (!builder.isEmpty())
+            strings.add(builder.toString());
+        return strings;
     }
 
     /**
