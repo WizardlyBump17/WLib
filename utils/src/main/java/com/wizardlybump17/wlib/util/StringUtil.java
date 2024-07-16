@@ -340,7 +340,7 @@ public class StringUtil {
 
             if (current == quote) {
                 if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
-                    throw new QuotedStringException("Can not have quoted strings without the delimiter");
+                    throw new QuotedStringException(QuotedStringException.QUOTED_WITHOUT_DELIMITER);
 
                 if (quoted.isEmpty()) { // begin of quoted string
                     quoted.append(quote);
@@ -366,7 +366,7 @@ public class StringUtil {
             }
 
             if (hadQuote) // the previous char was a quote. Example case: "quoted"string
-                throw new QuotedStringException("Can not have non-quoted strings after quoted strings");
+                throw new QuotedStringException(QuotedStringException.NON_QUOTED_AFTER_QUOTED);
 
             (quoted.isEmpty() ? builder : quoted).append(current); // any char
             if (quoted.isEmpty())
@@ -374,9 +374,9 @@ public class StringUtil {
         }
 
         if (escaped)
-            throw new QuotedStringException("Invalid escape sequence");
+            throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
         if (!quoted.isEmpty())
-            throw new QuotedStringException("Unclosed quotes");
+            throw new QuotedStringException(QuotedStringException.UNCLOSED_QUOTE);
 
         if (!builder.isEmpty())
             strings.add(builder.toString());

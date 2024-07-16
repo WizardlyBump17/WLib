@@ -65,4 +65,22 @@ subprojects {
             }
         }
     }
+
+    dependencies {
+        testImplementation(
+                platform('org.junit:junit-bom:5.10.2'),
+                'org.junit.jupiter:junit-jupiter:5.10.2'
+        )
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed", "standardOut", "standardError"
+        }
+    }
+
+    build {
+        dependsOn(test, shadowJar)
+    }
 }

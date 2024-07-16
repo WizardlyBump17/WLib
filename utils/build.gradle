@@ -4,5 +4,8 @@ dependencies {
             'org.jetbrains:annotations:23.0.0',
     )
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testImplementation("org.projectlombok:lombok:1.18.24")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 }
 
