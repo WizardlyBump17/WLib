@@ -29,6 +29,12 @@ processResources {
     }
 }
 
-shadowJar {
-    archiveFileName = 'WLib-' + project.version + '.jar'
+tasks {
+    assemble {
+        dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveFileName = 'WLib-' + project.version + '.jar'
+    }
 }
