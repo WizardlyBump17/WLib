@@ -91,6 +91,17 @@ public class ConfigHandlerRegistry extends Registry<Class<?>, ConfigHandler> {
         }
     }
 
+    /**
+     * <p>
+     *     Removes all configurations associated with the given holder.
+     *     It will not save the configurations.
+     * </p>
+     * @param holder the holder who is holding the configurations
+     */
+    public void removeAll(@NonNull Class<?> holder) {
+        map.values().removeIf(config -> holder == config.getHolder());
+    }
+
     public static ConfigHandlerRegistry getInstance() {
         return instance == null ? instance = new ConfigHandlerRegistry() : instance;
     }
