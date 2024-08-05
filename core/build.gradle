@@ -11,6 +11,7 @@ dependencies {
             project(':versions:adapter'),
 
             project(':versions:v1_20_R4'),
+            project(':versions:v1_21_R1'),
 
             project(':database'),
 
