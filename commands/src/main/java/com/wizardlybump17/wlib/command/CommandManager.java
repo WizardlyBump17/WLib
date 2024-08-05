@@ -7,12 +7,16 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 @Getter
 @RequiredArgsConstructor
@@ -28,10 +32,19 @@ public class CommandManager {
                 if (!method.isAnnotationPresent(Command.class) || method.getParameterCount() == 0 || !CommandSender.class.isAssignableFrom(method.getParameterTypes()[0]))
                     continue;
 
+                MethodHandle handle;
+                try {
+                    handle = MethodHandles.lookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+                } catch (NoSuchMethodException | IllegalAccessException e) {
+                    holder.getLogger().log(Level.SEVERE, "Error while trying to get the MethodHandle for " + method.getName() + " at " + object.getClass().getName(), e);
+                    continue;
+                }
+
                 RegisteredCommand command = new RegisteredCommand(
                         method.getAnnotation(Command.class),
                         object,
-                        method
+                        method,
+                        handle
                 );
 
                 commands.add(command);

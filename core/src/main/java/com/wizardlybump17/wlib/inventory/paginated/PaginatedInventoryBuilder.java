@@ -281,10 +281,14 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
     @SuppressWarnings("unchecked")
     public static PaginatedInventoryBuilder deserialize(Map<String, Object> map) {
         PaginatedInventoryBuilder builder = new PaginatedInventoryBuilder();
-        Map<Character, ItemButton> shapeReplacements = MapUtils.mapKeys((Map<String, ItemButton>) map.get("shape-replacements"), key -> key.charAt(0));
+        Map<Character, ItemButton> shapeReplacements = MapUtils.mapKeys((Map<String, ItemButton>) map.getOrDefault("shape-replacements", Collections.emptyMap()), key -> key.charAt(0));
+
+        String shape = (String) map.get("shape");
+        if (shape != null)
+            builder.shape(shape);
+
         builder
                 .title((String) map.get("title"))
-                .shape((String) map.get("shape"))
                 .shapeReplacements(shapeReplacements)
                 .content((List<ItemButton>) map.get("content"))
                 .nextPage((InventoryNavigator) map.get("next-page"))

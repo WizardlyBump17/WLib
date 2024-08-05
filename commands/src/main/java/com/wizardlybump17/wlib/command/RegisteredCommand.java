@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -22,11 +22,13 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     private final Object object;
     private final Method method;
     private final List<ArgsNode> nodes = new ArrayList<>();
+    private final @NonNull MethodHandle methodHandle;
 
-    public RegisteredCommand(Command command, Object object, Method method) {
+    public RegisteredCommand(Command command, Object object, Method method, @NonNull MethodHandle methodHandle) {
         this.command = command;
         this.object = object;
         this.method = method;
+        this.methodHandle = methodHandle;
         prepareNodes();
     }
 
@@ -192,15 +194,15 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
                 return CommandResult.PERMISSION_FAIL;
 
             List<Object> list = new ArrayList<>(Arrays.asList(objects));
-
             list.add(0, isSenderGeneric() ? sender.toGeneric() : sender);
 
             if (list.size() != method.getParameterCount())
                 return CommandResult.ARGS_FAIL;
 
-            method.invoke(object, list.toArray());
+            list.add(0, object);
+            methodHandle.invokeWithArguments(list);
             return CommandResult.SUCCESS;
-        } catch (InvocationTargetException | IllegalAccessException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             return CommandResult.METHOD_FAIL;
         }
