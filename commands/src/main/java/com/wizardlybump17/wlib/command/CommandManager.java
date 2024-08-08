@@ -34,7 +34,7 @@ public class CommandManager {
 
                 MethodHandle handle;
                 try {
-                    handle = MethodHandles.lookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+                    handle = MethodHandles.publicLookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
                 } catch (NoSuchMethodException | IllegalAccessException e) {
                     holder.getLogger().log(Level.SEVERE, "Error while trying to get the MethodHandle for " + method.getName() + " at " + object.getClass().getName(), e);
                     continue;
