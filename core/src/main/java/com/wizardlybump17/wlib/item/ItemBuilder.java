@@ -7,7 +7,6 @@ import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
-import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -145,11 +144,11 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder lore(@Nullable String... lore) {
-        return consumeMeta(meta -> meta.setLore(lore == null ? null : StringUtil.colorize(Arrays.asList(lore))));
+        return consumeMeta(meta -> meta.setLore(lore == null ? null : Arrays.asList(lore)));
     }
 
     public ItemBuilder lore(@Nullable List<String> lore) {
-        return consumeMeta(meta -> meta.setLore(StringUtil.colorize(lore)));
+        return consumeMeta(meta -> meta.setLore(lore));
     }
 
     public ItemBuilder itemFlags(@NotNull ItemFlag... itemFlags) {
@@ -241,7 +240,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder displayName(@Nullable String displayName) {
-        return consumeMeta(meta -> meta.setDisplayName(StringUtil.colorize(displayName)));
+        return consumeMeta(meta -> meta.setDisplayName(displayName));
     }
 
     @NotNull

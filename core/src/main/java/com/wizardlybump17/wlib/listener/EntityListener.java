@@ -2,9 +2,11 @@ package com.wizardlybump17.wlib.listener;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
+import com.wizardlybump17.wlib.inventory.item.ClickAction;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,8 +32,13 @@ public class EntityListener implements Listener {
         final CustomInventory customInventory = paginatedInventory.getCurrentInventory();
 
         ItemButton item = customInventory.getButton(event.getRawSlot());
-        if (item != null && item.getClickAction() != null)
-            item.getClickAction().onClick(event, paginatedInventory);
+        if (item == null)
+            return;
+
+        ClickAction clickAction = item.getClickAction();
+        if (clickAction != null)
+            clickAction.onClick(event, paginatedInventory);
+        item.getClickSounds().forEach(sound -> sound.play((Player) event.getWhoClicked()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
