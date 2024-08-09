@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 
 allprojects {
     group = 'com.wizardlybump17.wlib'
-    version = '1.6.2+1.20.6'
+    version = '1.6.4+1.20.6'
 
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
@@ -37,6 +37,19 @@ allprojects {
 
 subprojects {
     apply plugin: 'maven-publish'
+
+    dependencies {
+        testImplementation(platform("org.junit:junit-bom:5.10.3"))
+        testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+    
+    build {
+        dependsOn(test)
+    }
 
     if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
         tasks.withType(PublishToMavenRepository).configureEach {
