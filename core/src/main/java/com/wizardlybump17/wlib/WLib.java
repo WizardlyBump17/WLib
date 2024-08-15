@@ -107,21 +107,21 @@ public class WLib extends JavaPlugin {
     }
 
     private void initAdapters() {
-        MinecraftVersion version = MinecraftVersion.getVersion();
-        getLogger().info("Detected server version: " + version);
+        getLogger().info("Detected server version: " + Bukkit.getMinecraftVersion());
         setupAdapters();
     }
 
     private void setupAdapters() {
-        switch (MinecraftVersion.getVersion()) {
-            case V1_20_6 -> {
+        switch (Bukkit.getMinecraftVersion()) {
+            case "1.20.5", "1.20.6" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
             }
-            case V1_21 -> {
+            case "1.21", "1.21.1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
             }
+            default -> getLogger().severe("The server version (" + Bukkit.getMinecraftVersion() + ") is not supported by WLib yet.");
         }
     }
 
