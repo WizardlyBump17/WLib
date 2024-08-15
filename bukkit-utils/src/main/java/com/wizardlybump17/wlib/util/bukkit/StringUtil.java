@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util.bukkit;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,6 +78,20 @@ public class StringUtil {
         while (iterator.hasNext())
             iterator.set(colorize(iterator.next()));
         return strings;
+    }
+
+    public static @NonNull List<String> colorize(@NonNull List<String> strings, @Nullable Supplier<List<String>> listSupplier) {
+        if (listSupplier == null) {
+            ListIterator<String> iterator = strings.listIterator();
+            while (iterator.hasNext())
+                iterator.set(colorize(iterator.next()));
+            return strings;
+        }
+
+        List<String> list = listSupplier.get();
+        for (String string : strings)
+            list.add(colorize(string));
+        return list;
     }
 
     /**
