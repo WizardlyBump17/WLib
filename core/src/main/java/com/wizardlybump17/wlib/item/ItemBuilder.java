@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -442,8 +443,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .rawNBTTags(ConfigUtil.get("raw-nbt-tags", map, Collections.emptyMap()))
                 .amount(ConfigUtil.get("amount", map, 1))
                 .damage(ConfigUtil.get("damage", map, 0))
-                .displayName(ConfigUtil.get("display-name", map, (String) null))
-                .lore(ConfigUtil.get("lore", map, Collections.emptyList()))
+                .displayName(ConfigUtil.map("display-name", map, () -> null, StringUtil::fancy))
+                .lore(ConfigUtil.<List<String>, List<String>>map("lore", map, Collections::emptyList, lore -> StringUtil.colorize(lore, ArrayList::new)))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
                 .enchantments(MapUtils.mapKeys(ConfigUtil.<Map<String, Integer>>get("enchantments", map, Collections.emptyMap()), string -> Enchantment.getByKey(NamespacedKeyUtil.fromString(string))))
                 .nbtTags(ItemAdapter.getInstance().deserializeContainer(ConfigUtil.get("nbt-tags", map, Collections.emptyMap())))
