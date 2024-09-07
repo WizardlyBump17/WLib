@@ -8,15 +8,23 @@ import lombok.RequiredArgsConstructor;
 import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+//TODO this class should rethrow the exceptions
 public abstract class Database<M extends DatabaseModel<?>> {
 
     private final M model;
     private final DatabaseHolder holder;
     protected final Properties properties;
     protected Connection connection;
+    private final @NonNull Logger logger;
+
+    public Database(@NonNull M model, @NonNull DatabaseHolder<?> holder, @NonNull Properties properties) {
+        this(model, holder, properties, holder.getLogger());
+    }
 
     public boolean isClosed() {
         return connection == null;
@@ -29,7 +37,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
             if (callback != null)
                 callback.accept(this);
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while opening the database connection", e);
         }
     }
 
@@ -49,7 +57,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
             if (callback != null)
                 callback.accept(this);
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while closing the database connection", e);
         }
     }
 
@@ -57,7 +65,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
         try {
             returnUpdate(command, replacements).close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while executing \"" + command + "\" with the arguments " + Arrays.toString(replacements), e);
         }
         return this;
     }
@@ -77,7 +85,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
             statement.executeUpdate();
             return statement;
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while executing \"" + command + "\" with the arguments " + Arrays.toString(replacements), e);
         }
         return null;
     }
@@ -96,7 +104,7 @@ public abstract class Database<M extends DatabaseModel<?>> {
                 statement.setObject(i + 1, replacements[i]);
             return statement.executeQuery();
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while executing \"" + query + "\" with the arguments " + Arrays.toString(replacements), e);
             return null;
         }
     }

@@ -3,11 +3,14 @@ package com.wizardlybump17.wlib.database;
 import com.wizardlybump17.wlib.database.model.SQLiteDatabaseModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @Getter
@@ -23,6 +26,11 @@ public class SQLiteDatabase extends Database<SQLiteDatabaseModel> {
         file = new File(holder.getDataFolder(), properties.getProperty("database", "database.db"));
     }
 
+    public SQLiteDatabase(@NonNull SQLiteDatabaseModel model, @NonNull Properties properties, @NonNull DatabaseHolder<?> holder, @NonNull Logger logger) {
+        super(model, holder, properties, logger);
+        file = new File(holder.getDataFolder(), properties.getProperty("database", "database.db"));
+    }
+
     @Override
     public void open(Consumer<Database<SQLiteDatabaseModel>> callback) {
         try {
@@ -33,11 +41,10 @@ public class SQLiteDatabase extends Database<SQLiteDatabaseModel> {
 
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            getHolder().getLogger().severe("SQLite driver not found");
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "The SQLite driver was not found", e);
             return;
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Error while connecting to the SQLite database", e);
             return;
         }
 
