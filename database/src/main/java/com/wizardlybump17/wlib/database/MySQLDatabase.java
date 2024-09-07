@@ -1,9 +1,11 @@
 package com.wizardlybump17.wlib.database;
 
 import com.wizardlybump17.wlib.database.model.MySQLDatabaseModel;
+import lombok.NonNull;
 
 import java.sql.PreparedStatement;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class MySQLDatabase extends Database<MySQLDatabaseModel> {
@@ -12,6 +14,10 @@ public class MySQLDatabase extends Database<MySQLDatabaseModel> {
 
     public MySQLDatabase(MySQLDatabaseModel model, Properties properties, DatabaseHolder<?> holder) {
         super(model, holder, properties);
+    }
+
+    public MySQLDatabase(@NonNull MySQLDatabaseModel model, @NonNull Properties properties, @NonNull DatabaseHolder<?> holder, @NonNull Logger logger) {
+        super(model, holder, properties, logger);
     }
 
     @Override
