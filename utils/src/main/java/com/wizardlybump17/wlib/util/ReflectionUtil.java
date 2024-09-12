@@ -4,8 +4,11 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,6 +72,26 @@ public class ReflectionUtil {
             LOGGER.log(Level.SEVERE, "Could not invoke method " + method.getName() + " in class " + method.getDeclaringClass().getName(), e);
             method.setAccessible(false);
             return null;
+        }
+    }
+
+    public static <T> @Nullable Constructor<T> getConstructor(@NonNull Class<T> clazz, @NonNull Class<?>... parameters) {
+        try {
+            return clazz.getDeclaredConstructor(parameters);
+        } catch (NoSuchMethodException e) {
+            LOGGER.log(Level.SEVERE, "Error while fetching the " + Arrays.stream(parameters).map(Class::getName).toList() + " constructor in the " + clazz.getName() + " class.");
+            return null;
+        }
+    }
+
+    public static <T> @NonNull T invokeConstructor(@NonNull Constructor<T> constructor, Object... parameters) {
+        try {
+            constructor.setAccessible(true);
+            T value = constructor.newInstance(parameters);
+            constructor.setAccessible(false);
+            return value;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Error while creating a new " + constructor.getDeclaringClass().getName() + " instance with the parameters " + Arrays.toString(parameters));
         }
     }
 }
