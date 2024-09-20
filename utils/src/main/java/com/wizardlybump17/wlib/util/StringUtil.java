@@ -100,7 +100,7 @@ public class StringUtil {
         StringBuilder placeholder = new StringBuilder();
         boolean escaped = false;
         for (char current : chars) {
-            if (current == ESCAPE && !escaped) {
+            if (current == escape && !escaped) {
                 escaped = true;
                 continue;
             }
