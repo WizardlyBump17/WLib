@@ -27,6 +27,7 @@ public class ArgsReaderRegistry extends Registry<Class<? extends ArgsReader<?>>,
         INSTANCE.add(new BigDecimalArgsReader());
         INSTANCE.add(new UUIDReader());
         INSTANCE.add(new BooleanReader());
+        INSTANCE.add(new DateReader());
     }
 
     private ArgsReaderRegistry() {
