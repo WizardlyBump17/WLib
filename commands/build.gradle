@@ -10,3 +10,7 @@ dependencies {
     )
     implementation("com.github.sisyphsu:dateparser:1.0.11")
 }
+
+shadowJar {
+    relocate("com.github.sisyphsu", "com.wizardlybump17.wlib.libs.com.github.sisyphsu")
+}

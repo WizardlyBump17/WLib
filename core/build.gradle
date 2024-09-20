@@ -40,4 +40,5 @@ processResources {
 
 shadowJar {
     archiveFileName = 'WLib-v' + project.version + '.jar'
+    relocate("com.github.sisyphsu", "com.wizardlybump17.wlib.libs.com.github.sisyphsu")
 }
