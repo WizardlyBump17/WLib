@@ -4,7 +4,7 @@ plugins {
 
 apply(plugin = "io.papermc.paperweight.userdev")
 
-val paper = "1.21-R0.1-20240802.000453-126"
+val paper = "1.21.1-R0.1-20240919.144953-82"
 val lombok = "1.18.32"
 val jetbrainsAnnotations = "24.1.0"
 
