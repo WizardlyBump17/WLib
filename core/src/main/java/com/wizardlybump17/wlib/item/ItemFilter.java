@@ -1,32 +1,27 @@
 package com.wizardlybump17.wlib.item;
 
 import com.wizardlybump17.wlib.util.MapUtils;
+import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@SerializableAs("item-filter")
+@SerializableAs("WLib:ItemFilter")
 @RequiredArgsConstructor
 @Getter
 public class ItemFilter implements ConfigurationSerializable {
 
-    private static final Pattern STARTS_WITH = Pattern.compile("(.+)\\*");
-    private static final Pattern ENDS_WITH = Pattern.compile("\\*(.+)");
-    private static final Pattern CONTAINS = Pattern.compile("\\*(.+)\\*");
-
-    private final List<Map<FilterType, Object>> filters;
+    private final Map<FilterType, Object> filters;
 
     /**
      * @param items the items to test
@@ -58,46 +53,46 @@ public class ItemFilter implements ConfigurationSerializable {
     @SuppressWarnings("unchecked")
     public boolean accept(ItemStack item) {
         ItemBuilder builder = ItemBuilder.fromItemStack(item);
-        for (Map<FilterType, Object> filtersMap : filters) {
-            for (Map.Entry<FilterType, Object> entry : filtersMap.entrySet()) {
-                Object object = entry.getValue();
-                switch (entry.getKey()) {
-                    case MATERIAL -> {
-                        if (!testMaterial(object.toString(), builder))
-                            return false;
-                    }
-                    case AMOUNT -> {
-                        if (!testAmount(object.toString(), builder))
-                            return false;
-                    }
-                    case DAMAGE -> {
-                        if (!testDamage(object.toString(), builder))
-                            return false;
-                    }
-                    case DISPLAY_NAME -> {
-                        if (!testDisplayName(object.toString(), builder))
-                            return false;
-                    }
-                    case LORE -> {
-                        if (!testLore((List<String>) object, builder))
-                            return false;
-                    }
-                    case ENCHANTMENTS -> {
-                        if (!testEnchantments((Map<String, String>) object, builder))
-                            return false;
-                    }
-                    case ITEM_FLAGS -> {
-                        if (!testItemFlags((List<String>) object, builder))
-                            return false;
-                    }
-                    case GLOW -> {
-                        if (!testGlow((boolean) object, builder))
-                            return false;
-                    }
-                    case UNBREAKABLE -> {
-                        if (!testUnbreakable((boolean) object, builder))
-                            return false;
-                    }
+        for (Map.Entry<FilterType, Object> entry : filters.entrySet()) {
+            FilterType type = entry.getKey();
+            Object object = entry.getValue();
+
+            switch (type) {
+                case MATERIAL -> {
+                    if (!testMaterial(object.toString(), builder))
+                        return false;
+                }
+                case AMOUNT -> {
+                    if (!testAmount(object.toString(), builder))
+                        return false;
+                }
+                case DAMAGE -> {
+                    if (!testDamage(object.toString(), builder))
+                        return false;
+                }
+                case DISPLAY_NAME -> {
+                    if (!testDisplayName(object.toString(), builder))
+                        return false;
+                }
+                case LORE -> {
+                    if (!testLore((List<String>) object, builder))
+                        return false;
+                }
+                case ENCHANTMENTS -> {
+                    if (!testEnchantments((Map<String, String>) object, builder))
+                        return false;
+                }
+                case ITEM_FLAGS -> {
+                    if (!testItemFlags((List<String>) object, builder))
+                        return false;
+                }
+                case GLOW -> {
+                    if (!testGlow((boolean) object, builder))
+                        return false;
+                }
+                case UNBREAKABLE -> {
+                    if (!testUnbreakable((boolean) object, builder))
+                        return false;
                 }
             }
         }
@@ -141,7 +136,7 @@ public class ItemFilter implements ConfigurationSerializable {
 
         if (lore != null && !builder.lore().isEmpty()) {
             for (String line : lore)
-                if (!testString(line, builder.lore()))
+                if (!testStrings(line, builder.lore()))
                     return false;
             return true;
         }
@@ -172,7 +167,7 @@ public class ItemFilter implements ConfigurationSerializable {
 
         if (itemFlags != null && !flags.isEmpty()) {
             for (String flag : itemFlags)
-                if (!testString(flag, flags))
+                if (!testStrings(flag, flags))
                     return false;
             return true;
         }
@@ -193,17 +188,14 @@ public class ItemFilter implements ConfigurationSerializable {
             return true;
 
         if (!base.isEmpty() && string != null) {
-            Matcher containsMatcher = CONTAINS.matcher(base);
-            if (containsMatcher.matches())
-                return string.contains(containsMatcher.group(1));
+            if (base.charAt(0) == '*' && base.charAt(base.length() - 1) == '*') //contains
+                return string.contains(base.substring(1, base.length() - 2));
 
-            Matcher startMatcher = STARTS_WITH.matcher(base);
-            if (startMatcher.matches())
-                return string.startsWith(startMatcher.group(1));
+            if (base.charAt(0) == '*') //starts with
+                return string.startsWith(base.substring(1));
 
-            Matcher endMatcher = ENDS_WITH.matcher(base);
-            if (endMatcher.matches())
-                return string.endsWith(endMatcher.group(1));
+            if (base.charAt(base.length() - 1) == '*') //ends with
+                return string.endsWith(base.substring(0, base.length() - 2));
 
             return string.equals(base);
         }
@@ -211,7 +203,7 @@ public class ItemFilter implements ConfigurationSerializable {
         return false;
     }
 
-    public static boolean testString(String base, Iterable<String> strings) {
+    public static boolean testStrings(String base, Iterable<String> strings) {
         for (String string : strings)
             if (testString(base, string))
                 return true;
@@ -219,21 +211,18 @@ public class ItemFilter implements ConfigurationSerializable {
     }
 
     public static boolean testInt(String base, int i) {
-        Matcher containsMatcher = CONTAINS.matcher(base);
-        if (containsMatcher.matches()) {
-            int value = Integer.parseInt(containsMatcher.group(1));
+        if (base.charAt(0) == '=') { //equals
+            int value = Integer.parseInt(base.substring(1));
             return i == value;
         }
 
-        Matcher startsMatcher = STARTS_WITH.matcher(base);
-        if (startsMatcher.matches()) {
-            int value = Integer.parseInt(startsMatcher.group(1));
+        if (base.charAt(0) == '>') { //greater than
+            int value = Integer.parseInt(base.substring(1));
             return i >= value;
         }
 
-        Matcher endsMatcher = ENDS_WITH.matcher(base);
-        if (endsMatcher.matches()) {
-            int value = Integer.parseInt(endsMatcher.group(1));
+        if (base.charAt(base.length() - 1) == '<') { //less than
+            int value = Integer.parseInt(base.substring(0, base.length() - 2));
             return i <= value;
         }
 
@@ -241,15 +230,21 @@ public class ItemFilter implements ConfigurationSerializable {
     }
 
     @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of("filters", filters.stream().map(map -> MapUtils.mapKeys(map, Enum::name)).toList());
+    public @NonNull Map<String, Object> serialize() {
+        return Map.of("filters", MapUtils.mapKeys(filters, Enum::name));
     }
 
-    @SuppressWarnings("unchecked")
-    public static ItemFilter deserialize(Map<String, Object> args) {
-        List<Map<FilterType, Object>> filters = new ArrayList<>();
-        for (Map<String, Object> map : ((List<Map<String, Object>>) args.get("filters")))
-            filters.add(MapUtils.mapKeys(map, key -> FilterType.valueOf(key.toUpperCase())));
-        return new ItemFilter(filters);
+    public static ItemFilter deserialize(@NonNull Map<String, Object> map) {
+        return new ItemFilter(
+                ConfigUtil.<Map<String, Object>, Map<FilterType, Object>>map(
+                        "filters",
+                        map,
+                        filters -> MapUtils.mapKeys(
+                                filters,
+                                () -> new EnumMap<>(FilterType.class),
+                                filter -> FilterType.valueOf(filter.toUpperCase())
+                        )
+                )
+        );
     }
 }
