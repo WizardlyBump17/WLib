@@ -58,4 +58,9 @@ public class GlowEnchantment extends Enchantment {
     public @NonNull NamespacedKey getKey() {
         return KEY;
     }
+
+    @Override
+    public @NonNull String getTranslationKey() {
+        return "wlib.glow";
+    }
 }
