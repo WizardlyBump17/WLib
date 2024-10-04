@@ -8,7 +8,9 @@ dependencies {
             project(':objects'),
             project(':utils')
     )
-    implementation("com.github.sisyphsu:dateparser:1.0.11")
+    implementation("com.github.sisyphsu:dateparser:1.0.11") {
+        exclude(group: "org.projectlombok", module: "lombok")
+    }
 }
 
 shadowJar {
