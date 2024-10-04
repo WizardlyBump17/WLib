@@ -3,8 +3,8 @@ package com.wizardlybump17.wlib.adapter.v1_20_R4.player;
 import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.NonNull;
 import org.bukkit.conversations.Conversation;
-import org.bukkit.craftbukkit.conversations.ConversationTracker;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R4.conversations.ConversationTracker;
+import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 

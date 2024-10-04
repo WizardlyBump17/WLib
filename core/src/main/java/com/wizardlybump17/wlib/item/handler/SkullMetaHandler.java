@@ -1,12 +1,12 @@
 package com.wizardlybump17.wlib.item.handler;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.model.SkullMetaHandlerModel;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -46,7 +46,7 @@ public class SkullMetaHandler extends ItemMetaHandler<SkullMetaHandlerModel> {
 
     public String skullUrl() {
         return getBuilder().<String, SkullMeta>getFromMeta(meta -> {
-            PlayerProfile profile = meta.getPlayerProfile();
+            PlayerProfile profile = meta.getOwnerProfile();
             if (profile == null)
                 return null;
 
@@ -56,9 +56,9 @@ public class SkullMetaHandler extends ItemMetaHandler<SkullMetaHandlerModel> {
     }
 
     public SkullMetaHandler skull(String url) {
-        getBuilder().<SkullMeta>consumeMeta(meta -> meta.setPlayerProfile(profileCache.computeIfAbsent(url, $ -> {
+        getBuilder().<SkullMeta>consumeMeta(meta -> meta.setOwnerProfile(profileCache.computeIfAbsent(url, $ -> {
             try {
-                PlayerProfile profile = Bukkit.createProfile(UUID.nameUUIDFromBytes(url.getBytes()));
+                PlayerProfile profile = Bukkit.createPlayerProfile(UUID.nameUUIDFromBytes(url.getBytes()));
                 profile.getTextures().setSkin(URI.create(url).toURL());
                 return profile;
             } catch (MalformedURLException e) {

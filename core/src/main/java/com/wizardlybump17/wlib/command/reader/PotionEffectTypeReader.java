@@ -16,6 +16,6 @@ public class PotionEffectTypeReader extends ArgsReader<PotionEffectType> {
     @Override
     public PotionEffectType read(String string) {
         NamespacedKey key = NamespacedKey.fromString(string);
-        return key == null ? null : Registry.POTION_EFFECT_TYPE.get(key);
+        return key == null ? null : Registry.EFFECT.get(key);
     }
 }

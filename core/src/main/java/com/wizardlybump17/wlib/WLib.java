@@ -107,12 +107,13 @@ public class WLib extends JavaPlugin {
     }
 
     private void initAdapters() {
-        getLogger().info("Detected server version: " + Bukkit.getMinecraftVersion());
+        getLogger().info("Detected server version: " + getServerVersion());
         setupAdapters();
     }
 
     private void setupAdapters() {
-        switch (Bukkit.getMinecraftVersion()) {
+        String version = getServerVersion();
+        switch (version) {
             case "1.20.5", "1.20.6" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
@@ -121,7 +122,7 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
             }
-            default -> getLogger().severe("The server version (" + Bukkit.getMinecraftVersion() + ") is not supported by WLib yet.");
+            default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }
     }
 
@@ -130,6 +131,8 @@ public class WLib extends JavaPlugin {
     }
 
     public static @NonNull String getServerVersion() {
-        return Bukkit.getServer().getClass().getName().split("\\.")[3];
+        String version = Bukkit.getVersion();
+        String mc = "MC: ";
+        return version.substring(version.indexOf(mc) + mc.length(), version.length() - 1);
     }
 }
