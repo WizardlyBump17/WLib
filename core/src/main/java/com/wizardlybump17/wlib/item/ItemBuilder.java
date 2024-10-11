@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.item;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
@@ -11,6 +13,8 @@ import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -367,6 +371,25 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
+    public @NonNull ItemBuilder attribute(@NonNull Attribute attribute, @NonNull AttributeModifier modifier) {
+        return consumeMeta(meta -> meta.addAttributeModifier(attribute, modifier));
+    }
+
+    public @NonNull ItemBuilder attributes(@Nullable Multimap<Attribute, AttributeModifier> modifiers) {
+        return consumeMeta(meta -> meta.setAttributeModifiers(modifiers));
+    }
+
+    public @NonNull ItemBuilder attributes(@Nullable Map<Attribute, Collection<AttributeModifier>> attributes) {
+        consumeMeta(meta -> meta.setAttributeModifiers(null));
+        if (attributes == null || attributes.isEmpty())
+            return this;
+        return consumeMeta(meta -> attributes.forEach((attribute, modifiers) -> modifiers.forEach(modifier -> meta.addAttributeModifier(attribute, modifier))));
+    }
+
+    public @NonNull Multimap<Attribute, AttributeModifier> attributes() {
+        return getFromMeta(ItemMeta::getAttributeModifiers, ImmutableMultimap.of());
+    }
+
     public ItemStack build() {
         return item;
     }
@@ -399,6 +422,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("custom-data", customData());
         if (glow())
             result.put("glow", true);
+
+        Multimap<Attribute, AttributeModifier> attributes = attributes();
+        if (!attributes.isEmpty())
+            result.put("attributes", MapUtils.mapKeys(attributes.asMap(), TreeMap::new, Enum::name));
 
         if (metaHandler != null)
             metaHandler.serialize(result);
@@ -452,6 +479,19 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .customModelData(ConfigUtil.get("custom-model-data", map, (Integer) null))
                 .customData(ConfigUtil.get("custom-data", map, Collections.emptyMap()))
                 .glow(ConfigUtil.get("glow", map, false));
+
+        Optional
+                .ofNullable(ConfigUtil.<Map<String, Collection<AttributeModifier>>, Map<Attribute, Collection<AttributeModifier>>>map(
+                        "attributes",
+                        map,
+                        () -> null,
+                        attributes -> MapUtils.mapKeys(
+                                attributes,
+                                () -> new EnumMap<>(Attribute.class),
+                                type -> Attribute.valueOf(type.toUpperCase())
+                        )
+                ))
+                .ifPresent(result::attributes);
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
         result.metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
