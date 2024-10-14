@@ -118,8 +118,12 @@ public class StringUtil {
                 if (placeholder.isEmpty())
                     throw new PlaceholderException("Unexpected placeholder end");
 
-                Object value = placeholders.get(placeholder.substring(1));
-                builder.append(value);
+                String key = placeholder.substring(1);
+                Object value = placeholders.get(key);
+                if (value == null)
+                    builder.append(begin).append(key).append(end);
+                else
+                    builder.append(value);
                 placeholder.setLength(0);
                 continue;
             }
