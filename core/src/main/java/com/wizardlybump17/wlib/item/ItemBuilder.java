@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
-import com.wizardlybump17.wlib.util.CollectionUtil;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
@@ -263,24 +262,23 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder replaceDisplayNameLore(Map<String, Object> replacements) {
-        String displayName = displayName();
-        List<String> lore = lore();
+        Iterator<Map.Entry<String, Object>> iterator = replacements.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+            String key = entry.getKey();
 
-        for (Map.Entry<String, Object> entry : replacements.entrySet()) {
-            Object value = entry.getValue();
-            if (value == null)
-                value = "null";
+            if (key.charAt(0) != '{' || key.charAt(key.length() - 1) != '}')
+                continue;
 
-            displayName = displayName.replace(entry.getKey(), value.toString());
-            if (value instanceof String string)
-                lore = new CollectionUtil<>(lore).replace(entry.getKey(), string).getCollection();
-            else if (value instanceof Iterable<?> iterable)
-                lore = new CollectionUtil<>(lore).replace(entry.getKey(), iterable).getCollection();
-            else
-                lore = new CollectionUtil<>(lore).replace(entry.getKey(), value.toString()).getCollection();
+            iterator.remove();
+            replacements.put(key.substring(1, key.length() - 1), entry.getValue());
         }
 
-        return displayName(displayName).lore(lore);
+        return displayName(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(displayName(), replacements))
+                .lore(lore().stream()
+                        .map(line -> com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements))
+                        .toList()
+                );
     }
 
     public ItemBuilder unbreakable(boolean unbreakable) {
