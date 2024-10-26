@@ -274,11 +274,28 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             replacements.put(key.substring(1, key.length() - 1), entry.getValue());
         }
 
+        List<String> lore = new ArrayList<>(lore());
+        ListIterator<String> loreIterator = lore.listIterator();
+        while (loreIterator.hasNext()) {
+            String line = loreIterator.next();
+
+            if (line.length() < 2 || line.charAt(0) != com.wizardlybump17.wlib.util.StringUtil.PLACEHOLDER_BEGIN || line.charAt(line.length() - 1) != com.wizardlybump17.wlib.util.StringUtil.PLACEHOLDER_END) {
+                loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements));
+                continue;
+            }
+
+            Object object = replacements.get(line.substring(1, line.length() - 1));
+            if (object instanceof Collection<?> collection) {
+                loreIterator.remove();
+                collection.forEach(element -> loreIterator.add(String.valueOf(element)));
+                continue;
+            }
+
+            loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements));
+        }
+
         return displayName(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(displayName(), replacements))
-                .lore(lore().stream()
-                        .map(line -> com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements))
-                        .toList()
-                );
+                .lore(lore);
     }
 
     public ItemBuilder unbreakable(boolean unbreakable) {
