@@ -35,6 +35,11 @@ public class CommandManager {
         commands.sort(null);
     }
 
+    public void registerCommands(@NotNull Collection<RegisteredCommand> commands) {
+        this.commands.addAll(commands);
+        this.commands.sort(null);
+    }
+
     public void unregisterCommands() {
         commands.clear();
     }
