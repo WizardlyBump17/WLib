@@ -63,4 +63,8 @@ public interface CommandData {
     default @Nullable String getInvalidSenderMessage() {
         return null;
     }
+
+    default @NotNull String getName() {
+        return getExecution().split(" ")[0];
+    }
 }
