@@ -26,7 +26,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
         this.executor = executor;
     }
 
-    public RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes) {
+    protected RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes) {
         this.command = command;
         this.nodes = nodes;
         executor = createExecutor();
