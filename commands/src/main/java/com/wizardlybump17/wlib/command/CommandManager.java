@@ -3,24 +3,30 @@ package com.wizardlybump17.wlib.command;
 import com.wizardlybump17.wlib.command.data.CommandData;
 import com.wizardlybump17.wlib.command.exception.CommandException;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.DirectCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 @Getter
-@RequiredArgsConstructor
 public class CommandManager {
 
     private final List<RegisteredCommand> commands = new ArrayList<>();
     protected final CommandHolder<?> holder;
     private final @NonNull Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
     private final @NotNull Set<CommandExtractor> commandExtractors = new HashSet<>();
+
+    public CommandManager(@NotNull CommandHolder<?> holder) {
+        this.holder = holder;
+        commandExtractors.add(new MethodCommandExtractor());
+        commandExtractors.add(new DirectCommandExtractor());
+    }
 
     public void registerCommands(Object... objects) {
         for (Object object : objects)
