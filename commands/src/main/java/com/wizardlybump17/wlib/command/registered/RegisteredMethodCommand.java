@@ -49,7 +49,8 @@ public class RegisteredMethodCommand extends RegisteredCommand {
     protected CommandExecutor createExecutor() {
         return (sender, args) -> {
             List<Object> objects = new ArrayList<>(args.values());
-            objects.add(0, sender);
+            objects.add(0, object);
+            objects.add(1, sender);
             try {
                 methodHandle.invokeWithArguments(objects);
             } catch (Throwable e) {
