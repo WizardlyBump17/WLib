@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.registered;
 
+import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.CommandResult;
 import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.args.ArgsNode;
@@ -127,5 +128,8 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
     public boolean isOwnedBy(@NotNull Object object) {
         return false;
+    }
+
+    public void onRegister(@NotNull CommandManager manager) {
     }
 }

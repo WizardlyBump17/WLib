@@ -29,13 +29,18 @@ public class CommandManager {
     }
 
     public void registerCommands(Object... objects) {
-        for (Object object : objects)
-            for (CommandExtractor extractor : commandExtractors)
-                commands.addAll(extractor.extract(this, holder, object));
+        for (Object object : objects) {
+            for (CommandExtractor extractor : commandExtractors) {
+                List<RegisteredCommand> commands = extractor.extract(this, holder, object);
+                commands.forEach(command -> command.onRegister(this));
+                this.commands.addAll(commands);
+            }
+        }
         commands.sort(null);
     }
 
     public void registerCommands(@NotNull Collection<RegisteredCommand> commands) {
+        commands.forEach(command -> command.onRegister(this));
         this.commands.addAll(commands);
         this.commands.sort(null);
     }
