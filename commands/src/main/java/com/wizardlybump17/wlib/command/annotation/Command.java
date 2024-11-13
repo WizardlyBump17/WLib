@@ -1,4 +1,6 @@
-package com.wizardlybump17.wlib.command;
+package com.wizardlybump17.wlib.command.annotation;
+
+import com.wizardlybump17.wlib.command.CommandSender;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

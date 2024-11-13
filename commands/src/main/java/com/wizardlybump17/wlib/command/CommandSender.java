@@ -1,7 +1,5 @@
 package com.wizardlybump17.wlib.command;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Represents a command sender, someone that can trigger commands.
  *
@@ -21,14 +19,4 @@ public interface CommandSender<S> {
     String getName();
 
     boolean hasPermission(String permission);
-
-    /**
-     * Used to convert this CommandSender to a generic sender, a command sender that can be anything
-     *
-     * @return the generic sender
-     */
-    @Nullable
-    default CommandSender<?> toGeneric() {
-        return null;
-    }
 }

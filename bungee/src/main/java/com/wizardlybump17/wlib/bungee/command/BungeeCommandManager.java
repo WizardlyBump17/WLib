@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.bungee.command;
 
 import com.wizardlybump17.wlib.command.CommandManager;
-import com.wizardlybump17.wlib.command.RegisteredCommand;
+import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
