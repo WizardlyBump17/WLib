@@ -42,4 +42,8 @@ public class ArgsNode {
 
         return object;
     }
+
+    public static @NotNull ArgsNode literal(@NotNull String string) {
+        return new ArgsNode(string, false, null, null, false);
+    }
 }
