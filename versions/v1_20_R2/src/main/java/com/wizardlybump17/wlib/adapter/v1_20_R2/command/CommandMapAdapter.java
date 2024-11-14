@@ -7,27 +7,31 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 public class CommandMapAdapter extends com.wizardlybump17.wlib.adapter.command.CommandMapAdapter {
 
-    public static final @NotNull CommandMap COMMAND_MAP = ReflectionUtil.getFieldValue(ReflectionUtil.getField("commandMap", Bukkit.getServer().getClass()), Bukkit.getServer());
-    public static final @NotNull Map<String, Command> COMMANDS = ReflectionUtil.getFieldValue(ReflectionUtil.getField("knownCommands", SimpleCommandMap.class), COMMAND_MAP);
+    public static final @NotNull Field COMMAND_MAP = ReflectionUtil.getField("commandMap", Bukkit.getServer().getClass());
+    public static final @NotNull Field COMMANDS = ReflectionUtil.getField("knownCommands", SimpleCommandMap.class);
 
     @Override
     public @NotNull CommandMap getCommandMap() {
-        return COMMAND_MAP;
+        return ReflectionUtil.getFieldValue(COMMAND_MAP, Bukkit.getServer());
     }
 
     @Override
     public void unregisterCommand(@NotNull String command) {
-        Command removed = COMMANDS.remove(command);
+        Map<String, Command> commands = getCommands();
+        CommandMap commandMap = getCommandMap();
+
+        Command removed = commands.remove(command);
         if (removed != null)
-            removed.unregister(COMMAND_MAP);
+            removed.unregister(commandMap);
     }
 
     @Override
     public @NotNull Map<String, Command> getCommands() {
-        return COMMANDS;
+        return ReflectionUtil.getFieldValue(COMMANDS, getCommandMap());
     }
 }
