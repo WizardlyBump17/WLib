@@ -45,6 +45,10 @@ public class RegisteredBukkitCommand extends RegisteredCommand {
 
     @Override
     public void onUnregister(@NotNull CommandManager manager) {
-        CommandMapAdapter.getInstance().unregisterCommand(fallback + ":" + getCommand().getName());
+        CommandMapAdapter adapter = CommandMapAdapter.getInstance();
+
+        String name = getCommand().getName();
+        adapter.unregisterCommand(name);
+        adapter.unregisterCommand(fallback + ":" + name);
     }
 }
