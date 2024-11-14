@@ -10,7 +10,6 @@ import com.wizardlybump17.wlib.command.exception.CommandException;
 import com.wizardlybump17.wlib.command.executor.CommandExecutor;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,19 +20,16 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     private final @NotNull CommandData command;
     private final @NotNull List<ArgsNode> nodes;
     private final @NotNull CommandExecutor executor;
-    private final @Nullable Class<?> requiredSenderType;
 
-    public RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes, @NotNull CommandExecutor executor, @Nullable Class<?> requiredSenderType) {
+    public RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes, @NotNull CommandExecutor executor) {
         this.command = command;
         this.nodes = nodes;
         this.executor = executor;
-        this.requiredSenderType = requiredSenderType;
     }
 
-    protected RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes, @Nullable Class<?> requiredSenderType) {
+    protected RegisteredCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes) {
         this.command = command;
         this.nodes = nodes;
-        this.requiredSenderType = requiredSenderType;
         executor = createExecutor();
     }
 
@@ -110,7 +106,8 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public boolean canExecute(@NotNull CommandSender<?> sender) {
-        return requiredSenderType == null || requiredSenderType.isInstance(sender.getHandle());
+        Class<?> type = command.getSenderHandleType();
+        return type == null || type.isInstance(sender);
     }
 
     @Override

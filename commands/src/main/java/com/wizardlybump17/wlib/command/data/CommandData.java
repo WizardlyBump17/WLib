@@ -67,4 +67,11 @@ public interface CommandData {
     default @NotNull String getName() {
         return getExecution().split(" ")[0];
     }
+
+    /**
+     * @return the {@link CommandSender#getHandle()} that can execute this command
+     */
+    default @Nullable Class<?> getSenderHandleType() {
+        return null;
+    }
 }

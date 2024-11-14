@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.command.registered;
 import com.wizardlybump17.wlib.command.Argument;
 import com.wizardlybump17.wlib.command.Description;
 import com.wizardlybump17.wlib.command.annotation.Command;
-import com.wizardlybump17.wlib.command.annotation.RequiredSenderType;
 import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.args.ArgsReaderType;
@@ -13,7 +12,6 @@ import com.wizardlybump17.wlib.command.exception.CommandException;
 import com.wizardlybump17.wlib.command.executor.CommandExecutor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -38,19 +36,13 @@ public class RegisteredMethodCommand extends RegisteredCommand {
                         annotation,
                         object
                 ),
-                new ArrayList<>(),
-                getRequireSenderType(method)
+                new ArrayList<>()
         );
         this.annotation = annotation;
         this.object = object;
         this.method = method;
         methodHandle = MethodHandles.publicLookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
         prepareNodes();
-    }
-
-    protected static @Nullable Class<?> getRequireSenderType(@NotNull Method method) {
-        RequiredSenderType type = method.getAnnotation(RequiredSenderType.class);
-        return type == null ? null : type.value();
     }
 
     @Override
