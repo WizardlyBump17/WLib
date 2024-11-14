@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.command.registered;
 
 import com.wizardlybump17.wlib.command.Argument;
-import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.Description;
 import com.wizardlybump17.wlib.command.annotation.Command;
 import com.wizardlybump17.wlib.command.annotation.RequiredSenderType;
@@ -32,7 +31,6 @@ public class RegisteredMethodCommand extends RegisteredCommand {
     private final @NotNull Object object;
     private final @NotNull Method method;
     private final @NotNull MethodHandle methodHandle;
-    private final @Nullable RequiredSenderType requiredSenderType;
 
     public RegisteredMethodCommand(@NotNull Command annotation, @NotNull Object object, @NotNull Method method) throws NoSuchMethodException, IllegalAccessException {
         super(
@@ -40,14 +38,19 @@ public class RegisteredMethodCommand extends RegisteredCommand {
                         annotation,
                         object
                 ),
-                new ArrayList<>()
+                new ArrayList<>(),
+                getRequireSenderType(method)
         );
         this.annotation = annotation;
         this.object = object;
         this.method = method;
         methodHandle = MethodHandles.publicLookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
         prepareNodes();
-        requiredSenderType = method.getAnnotation(RequiredSenderType.class);
+    }
+
+    protected static @Nullable Class<?> getRequireSenderType(@NotNull Method method) {
+        RequiredSenderType type = method.getAnnotation(RequiredSenderType.class);
+        return type == null ? null : type.value();
     }
 
     @Override
@@ -124,10 +127,5 @@ public class RegisteredMethodCommand extends RegisteredCommand {
 
     private static boolean isRequiredArgs(String string) {
         return string.startsWith("<") && string.endsWith(">");
-    }
-
-    @Override
-    public boolean canExecute(@NotNull CommandSender<?> sender) {
-        return requiredSenderType == null || requiredSenderType.value().isInstance(sender);
     }
 }
