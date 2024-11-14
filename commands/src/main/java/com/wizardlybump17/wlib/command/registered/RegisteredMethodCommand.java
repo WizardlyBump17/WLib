@@ -41,7 +41,7 @@ public class RegisteredMethodCommand extends RegisteredCommand {
         this.annotation = annotation;
         this.object = object;
         this.method = method;
-        methodHandle = MethodHandles.lookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+        methodHandle = MethodHandles.publicLookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
         prepareNodes();
     }
 
