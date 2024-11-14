@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.registered;
 
+import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.data.CommandData;
@@ -28,7 +29,7 @@ public class RegisteredPluginCommand extends RegisteredCommand {
 
     @Override
     public void onRegister(@NotNull CommandManager manager) {
-        CommandMap commandMap = null;
+        CommandMap commandMap = CommandMapAdapter.getInstance().getCommandMap();
         commandMap.register(getCommand().getName(), fallback, new Command(getCommand().getName()) {
             @Override
             public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
@@ -40,5 +41,10 @@ public class RegisteredPluginCommand extends RegisteredCommand {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onUnregister(@NotNull CommandManager manager) {
+        CommandMapAdapter.getInstance().unregisterCommand(fallback + ":" + getCommand().getName());
     }
 }

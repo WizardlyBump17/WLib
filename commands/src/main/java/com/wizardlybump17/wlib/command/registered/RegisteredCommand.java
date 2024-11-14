@@ -132,4 +132,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
 
     public void onRegister(@NotNull CommandManager manager) {
     }
+
+    public void onUnregister(@NotNull CommandManager manager) {
+    }
 }
