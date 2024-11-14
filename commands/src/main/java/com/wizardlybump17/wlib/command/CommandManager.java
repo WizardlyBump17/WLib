@@ -46,6 +46,7 @@ public class CommandManager {
     }
 
     public void unregisterCommands() {
+        commands.forEach(command -> command.onUnregister(this));
         commands.clear();
     }
 
