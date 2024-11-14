@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.logging.Level;
 
-public class RegisteredPluginCommand extends RegisteredCommand {
+public class RegisteredBukkitCommand extends RegisteredCommand {
 
     private final @NotNull String fallback;
 
-    public RegisteredPluginCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes, @NotNull CommandExecutor executor, @NotNull String fallback) {
+    public RegisteredBukkitCommand(@NotNull CommandData command, @NotNull List<ArgsNode> nodes, @NotNull CommandExecutor executor, @NotNull String fallback) {
         super(command, nodes, executor);
         this.fallback = fallback;
     }
@@ -34,7 +34,7 @@ public class RegisteredPluginCommand extends RegisteredCommand {
             @Override
             public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
                 try {
-                    RegisteredPluginCommand.this.execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), String.join(" ", args));
+                    RegisteredBukkitCommand.this.execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), String.join(" ", args));
                 } catch (CommandException e) {
                     manager.getHolder().getLogger().log(Level.SEVERE, "Error while executing a command.", e);
                 }
