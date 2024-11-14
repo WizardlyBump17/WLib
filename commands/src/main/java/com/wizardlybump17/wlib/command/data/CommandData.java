@@ -71,7 +71,7 @@ public interface CommandData {
     /**
      * @return the {@link CommandSender#getHandle()} that can execute this command
      */
-    default @Nullable Class<?> getSenderHandleType() {
-        return null;
+    default @NotNull Class<?> getSenderType() {
+        return Object.class;
     }
 }

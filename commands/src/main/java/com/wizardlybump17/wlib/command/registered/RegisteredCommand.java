@@ -106,8 +106,7 @@ public class RegisteredCommand implements Comparable<RegisteredCommand> {
     }
 
     public boolean canExecute(@NotNull CommandSender<?> sender) {
-        Class<?> type = command.getSenderHandleType();
-        return type == null || type.isInstance(sender);
+        return command.getSenderType().isInstance(sender);
     }
 
     @Override

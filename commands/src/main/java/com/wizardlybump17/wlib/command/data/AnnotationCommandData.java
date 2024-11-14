@@ -71,6 +71,10 @@ public class AnnotationCommandData implements CommandData {
         return annotation;
     }
 
+    @Override
+    public @NotNull Class<?> getSenderType() {
+        return annotation.senderType();
+    }
 
     @Override
     public boolean equals(Object object1) {
