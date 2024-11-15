@@ -2,8 +2,11 @@ package com.wizardlybump17.wlib.command.sender;
 
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public class CommandSender implements com.wizardlybump17.wlib.command.CommandSender<org.bukkit.command.CommandSender> {
 
@@ -48,5 +51,10 @@ public class CommandSender implements com.wizardlybump17.wlib.command.CommandSen
 
     public @NotNull Player asPlayer() {
         return (Player) handle;
+    }
+
+    @Override
+    public boolean hasId(@NotNull UUID id) {
+        return handle instanceof Entity entity && entity.getUniqueId().equals(id);
     }
 }

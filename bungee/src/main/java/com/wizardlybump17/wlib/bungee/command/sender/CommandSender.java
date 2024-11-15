@@ -6,6 +6,8 @@ import net.md_5.bungee.api.connection.ConnectedPlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 public class CommandSender implements com.wizardlybump17.wlib.command.CommandSender<net.md_5.bungee.api.CommandSender> {
 
@@ -42,5 +44,10 @@ public class CommandSender implements com.wizardlybump17.wlib.command.CommandSen
 
     public @NotNull ConnectedPlayer asConnectedPlayer() {
         return (ConnectedPlayer) handle;
+    }
+
+    @Override
+    public boolean hasId(@NotNull UUID id) {
+        return handle instanceof ProxiedPlayer player && player.getUniqueId().equals(id);
     }
 }

@@ -1,5 +1,9 @@
 package com.wizardlybump17.wlib.command;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
 /**
  * Represents a command sender, someone that can trigger commands.
  *
@@ -19,4 +23,6 @@ public interface CommandSender<S> {
     String getName();
 
     boolean hasPermission(String permission);
+
+    boolean hasId(@NotNull UUID id);
 }
