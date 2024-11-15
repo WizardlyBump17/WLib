@@ -50,4 +50,8 @@ public class ArgsNode {
     public static @NotNull ArgsNode userInput(@NotNull String name, @NotNull ArgsReader<?> reader) {
         return new ArgsNode(name, true, reader, null, false);
     }
+
+    public static @NotNull ArgsNode userInput(@NotNull String name, @NotNull Class<?> type) {
+        return userInput(name, ArgsReaderRegistry.INSTANCE.getReader(type));
+    }
 }
