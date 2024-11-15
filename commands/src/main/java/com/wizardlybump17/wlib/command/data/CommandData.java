@@ -4,7 +4,7 @@ import com.wizardlybump17.wlib.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CommandData {
+public abstract class CommandData {
 
     /**
      * <p>How the sender must type the command in order for it to be triggered.
@@ -25,12 +25,12 @@ public interface CommandData {
      * @return how the command must be sent to be triggered
      * @see com.wizardlybump17.wlib.command.args.reader.ArgsReader
      */
-    @NotNull String getExecution();
+    public abstract @NotNull String getExecution();
 
     /**
      * @return which permission the sender must have to trigger this command
      */
-    default @Nullable String getPermission() {
+    public @Nullable String getPermission() {
         return null;
     }
 
@@ -38,21 +38,21 @@ public interface CommandData {
      * <p>Used when the {@link CommandSender} does not have the required {@link #getPermission()}.</p>
      * @return the message to be sent when the {@link CommandSender} does not have the required {@link #getPermission()}
      */
-    default @Nullable String getPermissionMessage() {
+    public @Nullable String getPermissionMessage() {
         return null;
     }
 
     /**
      * @return the priority of this command
      */
-    default int getPriority() {
+    public int getPriority() {
         return getExecution().split(" ").length;
     }
 
     /**
      * @return the description of this command
      */
-    default @Nullable String getDescription() {
+    public @Nullable String getDescription() {
         return null;
     }
 
@@ -60,18 +60,18 @@ public interface CommandData {
      * <p>Used when the {@link CommandSender} is not valid for this command.</p>
      * @return the message to be sent when the {@link CommandSender} is not valid for this command
      */
-    default @Nullable String getInvalidSenderMessage() {
+    public @Nullable String getInvalidSenderMessage() {
         return null;
     }
 
-    default @NotNull String getName() {
+    public final @NotNull String getName() {
         return getExecution().split(" ")[0];
     }
 
     /**
      * @return the {@link CommandSender#getHandle()} that can execute this command
      */
-    default @NotNull Class<?> getSenderType() {
+    public @NotNull Class<?> getSenderType() {
         return Object.class;
     }
 }

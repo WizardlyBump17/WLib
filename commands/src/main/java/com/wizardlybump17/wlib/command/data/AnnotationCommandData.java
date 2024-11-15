@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class AnnotationCommandData implements CommandData {
+public class AnnotationCommandData extends CommandData {
 
     private final @NotNull Command annotation;
     private final @NotNull Object object;
@@ -29,29 +29,29 @@ public class AnnotationCommandData implements CommandData {
     @Override
     public @Nullable String getPermission() {
         String permission = annotation.permission();
-        return permission.isBlank() ? CommandData.super.getPermission() : permission;
+        return permission.isBlank() ? super.getPermission() : permission;
     }
 
     @Override
     public @Nullable String getPermissionMessage() {
-        return getMessage(annotation.permissionMessage(), annotation.permissionMessageIsField(), CommandData.super.getPermissionMessage());
+        return getMessage(annotation.permissionMessage(), annotation.permissionMessageIsField(), super.getPermissionMessage());
     }
 
     @Override
     public int getPriority() {
         int priority = annotation.priority();
-        return priority == -1 ? CommandData.super.getPriority() : priority;
+        return priority == -1 ? super.getPriority() : priority;
     }
 
     @Override
     public @Nullable String getDescription() {
         String description = annotation.description();
-        return description.isBlank() ? CommandData.super.getDescription() : description;
+        return description.isBlank() ? super.getDescription() : description;
     }
 
     @Override
     public @Nullable String getInvalidSenderMessage() {
-        return getMessage(annotation.invalidSenderMessage(), annotation.invalidSenderMessageIsField(), CommandData.super.getInvalidSenderMessage());
+        return getMessage(annotation.invalidSenderMessage(), annotation.invalidSenderMessageIsField(), super.getInvalidSenderMessage());
     }
 
     protected @Nullable String getMessage(@NotNull String message, boolean isField, @Nullable String defaultMessage) {
