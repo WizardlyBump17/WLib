@@ -46,4 +46,8 @@ public class ArgsNode {
     public static @NotNull ArgsNode literal(@NotNull String string) {
         return new ArgsNode(string, false, null, null, false);
     }
+
+    public static @NotNull ArgsNode userInput(@NotNull String name, @NotNull ArgsReader<?> reader) {
+        return new ArgsNode(name, true, reader, null, false);
+    }
 }
