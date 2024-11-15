@@ -74,4 +74,8 @@ public abstract class CommandData {
     public @NotNull Class<?> getSenderType() {
         return Object.class;
     }
+
+    public static @NotNull SimpleCommandData.Builder builder() {
+        return new SimpleCommandData.Builder();
+    }
 }
