@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegisteredBukkitCommand extends RegisteredCommand {
 
@@ -30,13 +31,16 @@ public class RegisteredBukkitCommand extends RegisteredCommand {
     @Override
     public void onRegister(@NotNull CommandManager manager) {
         CommandMap commandMap = CommandMapAdapter.getInstance().getCommandMap();
-        commandMap.register(getCommand().getName(), fallback, new Command(getCommand().getName()) {
+        String name = getCommand().getName();
+        Logger logger = manager.getHolder().getLogger();
+
+        commandMap.register(name, fallback, new Command(name) {
             @Override
             public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
                 try {
-                    RegisteredBukkitCommand.this.execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), String.join(" ", args));
+                    manager.execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), name + " " + String.join(" ", args));
                 } catch (CommandException e) {
-                    manager.getHolder().getLogger().log(Level.SEVERE, "Error while executing a command.", e);
+                    logger.log(Level.SEVERE, "Error while executing a command.", e);
                 }
                 return false;
             }
