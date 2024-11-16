@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 @Getter
@@ -19,7 +18,6 @@ public class CommandManager {
 
     private final List<RegisteredCommand> commands = new ArrayList<>();
     protected final CommandHolder<?> holder;
-    private final @NonNull Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
     private final @NotNull Set<CommandExtractor> commandExtractors = new HashSet<>();
 
     public CommandManager(@NotNull CommandHolder<?> holder) {
