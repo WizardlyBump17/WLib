@@ -13,7 +13,7 @@ import java.util.*;
 
 public class CommandManager {
 
-    private final @NotNull Map<String, Set<RegisteredCommand>> commands = new HashMap<>();
+    private final @NotNull Map<String, List<RegisteredCommand>> commands = new HashMap<>();
     protected final @NotNull CommandHolder<?> holder;
     private final @NotNull Set<CommandExtractor> commandExtractors = new HashSet<>();
 
@@ -35,7 +35,9 @@ public class CommandManager {
 
     public void registerCommand(@NotNull RegisteredCommand command) {
         command.onRegister(this);
-        commands.computeIfAbsent(command.getName().toLowerCase(), $ -> new TreeSet<>()).add(command);
+        List<RegisteredCommand> commands = this.commands.computeIfAbsent(command.getName().toLowerCase(), $ -> new ArrayList<>());
+        commands.add(command);
+        commands.sort(null);
     }
 
     public void unregisterCommands() {
@@ -57,7 +59,7 @@ public class CommandManager {
         else
             name = string.substring(0, spaceIndex);
 
-        for (RegisteredCommand registeredCommand : commands.getOrDefault(name, Set.of())) {
+        for (RegisteredCommand registeredCommand : commands.getOrDefault(name, List.of())) {
             CommandData command = registeredCommand.getCommand();
             CommandResult result = registeredCommand.execute(sender, string);
 
@@ -88,13 +90,13 @@ public class CommandManager {
     }
 
     public @NotNull List<RegisteredCommand> getCommands(@NotNull String name) {
-        Set<RegisteredCommand> commands = this.commands.get(name);
+        List<RegisteredCommand> commands = this.commands.get(name);
         return commands == null ? List.of() : List.copyOf(commands);
     }
 
     public @NotNull List<RegisteredCommand> getCommands(@NotNull Object object) {
         List<RegisteredCommand> result = new ArrayList<>(commands.size());
-        for (Set<RegisteredCommand> commands : this.commands.values())
+        for (List<RegisteredCommand> commands : this.commands.values())
             for (RegisteredCommand command : commands)
                 if (command.isOwnedBy(object))
                     result.add(command);
@@ -105,7 +107,7 @@ public class CommandManager {
         return holder;
     }
 
-    public @NotNull Map<String, Set<RegisteredCommand>> getCommands() {
+    public @NotNull Map<String, List<RegisteredCommand>> getCommands() {
         return Map.copyOf(commands);
     }
 
