@@ -112,4 +112,16 @@ public class CommandManager {
     public @NotNull Set<CommandExtractor> getCommandExtractors() {
         return Set.copyOf(commandExtractors);
     }
+
+    public void addCommandExtractor(@NotNull CommandExtractor extractor) {
+        commandExtractors.add(extractor);
+    }
+
+    public void removeCommandExtractor(@NotNull CommandExtractor extractor) {
+        commandExtractors.remove(extractor);
+    }
+
+    public boolean hasCommandExtractor(@NotNull CommandExtractor extractor) {
+        return commandExtractors.contains(extractor);
+    }
 }
