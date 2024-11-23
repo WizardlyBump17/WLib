@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command;
+package com.wizardlybump17.wlib.command.sender;
 
 import org.jetbrains.annotations.NotNull;
 

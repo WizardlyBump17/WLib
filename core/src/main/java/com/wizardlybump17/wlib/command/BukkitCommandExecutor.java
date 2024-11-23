@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.command;
 
 import com.wizardlybump17.wlib.command.exception.CommandException;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.TabExecutor;
@@ -18,7 +20,7 @@ public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wl
     @Override
     public boolean onCommand(@NotNull org.bukkit.command.CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         try {
-            execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), command.getName(), args);
+            execute(new BukkitCommandSender(sender), command.getName(), args);
         } catch (CommandException e) {
             manager.getHolder().getLogger().log(Level.SEVERE, "Error while executing a command", e);
         }
@@ -26,7 +28,7 @@ public class BukkitCommandExecutor implements TabExecutor, com.wizardlybump17.wl
     }
 
     @Override
-    public void execute(com.wizardlybump17.wlib.command.CommandSender<?> sender, String commandName, String[] args) throws CommandException {
+    public void execute(CommandSender<?> sender, String commandName, String[] args) throws CommandException {
         String commandExecution = commandName + " " + String.join(" ", args);
         manager.execute(sender, commandExecution);
     }

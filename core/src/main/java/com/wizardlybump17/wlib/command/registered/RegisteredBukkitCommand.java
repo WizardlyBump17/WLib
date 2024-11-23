@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.data.CommandData;
 import com.wizardlybump17.wlib.command.exception.CommandException;
 import com.wizardlybump17.wlib.command.executor.CommandExecutor;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class RegisteredBukkitCommand extends RegisteredCommand {
             @Override
             public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
                 try {
-                    manager.execute(new com.wizardlybump17.wlib.command.sender.CommandSender(sender), name + " " + String.join(" ", args));
+                    manager.execute(new BukkitCommandSender(sender), name + " " + String.join(" ", args));
                 } catch (CommandException e) {
                     logger.log(Level.SEVERE, "Error while executing a command.", e);
                 }

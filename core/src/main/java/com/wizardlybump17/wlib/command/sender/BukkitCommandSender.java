@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class CommandSender implements com.wizardlybump17.wlib.command.CommandSender<org.bukkit.command.CommandSender> {
+public class BukkitCommandSender implements CommandSender<org.bukkit.command.CommandSender> {
 
     private final @NotNull org.bukkit.command.CommandSender handle;
 
-    public CommandSender(@NotNull org.bukkit.command.CommandSender handle) {
+    public BukkitCommandSender(@NotNull org.bukkit.command.CommandSender handle) {
         this.handle = handle;
     }
 

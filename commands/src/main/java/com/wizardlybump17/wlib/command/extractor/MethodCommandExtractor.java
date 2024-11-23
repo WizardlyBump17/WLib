@@ -1,11 +1,11 @@
 package com.wizardlybump17.wlib.command.extractor;
 
 import com.wizardlybump17.wlib.command.CommandManager;
-import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.annotation.Command;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
 import com.wizardlybump17.wlib.command.registered.RegisteredMethodCommand;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;

@@ -2,12 +2,12 @@ package com.wizardlybump17.wlib.command.registered;
 
 import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.CommandResult;
-import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.args.ArgsNode;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
 import com.wizardlybump17.wlib.command.data.CommandData;
 import com.wizardlybump17.wlib.command.exception.CommandException;
 import com.wizardlybump17.wlib.command.executor.CommandExecutor;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 

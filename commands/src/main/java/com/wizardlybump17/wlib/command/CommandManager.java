@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.extractor.DirectCommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
 import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

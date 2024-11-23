@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class CommandSender implements com.wizardlybump17.wlib.command.CommandSender<net.md_5.bungee.api.CommandSender> {
+public class BungeeCommandSender implements com.wizardlybump17.wlib.command.sender.CommandSender<net.md_5.bungee.api.CommandSender> {
 
     private final net.md_5.bungee.api.CommandSender handle;
 

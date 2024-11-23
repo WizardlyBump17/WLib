@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.command.data;
 
-import com.wizardlybump17.wlib.command.CommandSender;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
