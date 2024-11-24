@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.sender;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -88,5 +89,76 @@ public class BasicCommandSender<S> implements CommandSender<S> {
                 ", messageConsumer=" + messageConsumer +
                 ", permissionTest=" + permissionTest +
                 '}';
+    }
+
+    public static <S> Builder<S> builder() {
+        return new Builder<>();
+    }
+
+    public static class Builder<S> {
+
+        private @Nullable S handle;
+        private @Nullable String name;
+        private @Nullable UUID id;
+        private @Nullable Consumer<String> messageConsumer;
+        private @Nullable Predicate<String> permissionTest;
+
+        protected Builder() {
+        }
+
+        public @Nullable S handle() {
+            return handle;
+        }
+
+        public @NotNull Builder<S> handle(@Nullable S handle) {
+            this.handle = handle;
+            return this;
+        }
+
+        public @Nullable String name() {
+            return name;
+        }
+
+        public @NotNull Builder<S> name(@Nullable String name) {
+            this.name = name;
+            return this;
+        }
+
+        public @Nullable UUID id() {
+            return id;
+        }
+
+        public @NotNull Builder<S> id(@Nullable UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public @Nullable Consumer<String> messageConsumer() {
+            return messageConsumer;
+        }
+
+        public @NotNull Builder<S> messageConsumer(@Nullable Consumer<String> messageConsumer) {
+            this.messageConsumer = messageConsumer;
+            return this;
+        }
+
+        public @Nullable Predicate<String> permissionTest() {
+            return permissionTest;
+        }
+
+        public @NotNull Builder<S> permissionTest(@Nullable Predicate<String> permissionTest) {
+            this.permissionTest = permissionTest;
+            return this;
+        }
+
+        public @NotNull BasicCommandSender<S> build() {
+            return new BasicCommandSender<>(
+                    Objects.requireNonNull(handle, "the 'handler' can not be null"),
+                    Objects.requireNonNull(name, "the 'name' can not be null"),
+                    Objects.requireNonNull(id, "the 'id' can not be null"),
+                    messageConsumer == null ? System.out::println : messageConsumer,
+                    permissionTest == null ? permission -> true : permissionTest
+            );
+        }
     }
 }
