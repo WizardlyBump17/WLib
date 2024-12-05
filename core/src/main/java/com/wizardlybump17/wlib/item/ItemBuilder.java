@@ -246,6 +246,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder replaceDisplayNameLore(Map<String, Object> replacements) {
+        replacements = new HashMap<>(replacements);
         Iterator<Map.Entry<String, Object>> iterator = replacements.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Object> entry = iterator.next();
