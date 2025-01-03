@@ -246,18 +246,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder replaceDisplayNameLore(Map<String, Object> replacements) {
-        replacements = new HashMap<>(replacements);
-        Iterator<Map.Entry<String, Object>> iterator = replacements.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Object> entry = iterator.next();
-            String key = entry.getKey();
-
+        Map<String, Object> actualReplacements = new HashMap<>();
+        replacements.forEach((key, value) -> {
             if (key.charAt(0) != '{' || key.charAt(key.length() - 1) != '}')
-                continue;
-
-            iterator.remove();
-            replacements.put(key.substring(1, key.length() - 1), entry.getValue());
-        }
+                actualReplacements.put(key, value);
+            else
+                actualReplacements.put(key.substring(1, key.length() - 1), value);
+        });
 
         List<String> lore = new ArrayList<>(lore());
         ListIterator<String> loreIterator = lore.listIterator();
@@ -265,21 +260,21 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             String line = loreIterator.next();
 
             if (line.length() < 2 || line.charAt(0) != com.wizardlybump17.wlib.util.StringUtil.PLACEHOLDER_BEGIN || line.charAt(line.length() - 1) != com.wizardlybump17.wlib.util.StringUtil.PLACEHOLDER_END) {
-                loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements));
+                loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, actualReplacements));
                 continue;
             }
 
-            Object object = replacements.get(line.substring(1, line.length() - 1));
+            Object object = actualReplacements.get(line.substring(1, line.length() - 1));
             if (object instanceof Collection<?> collection) {
                 loreIterator.remove();
                 collection.forEach(element -> loreIterator.add(String.valueOf(element)));
                 continue;
             }
 
-            loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, replacements));
+            loreIterator.set(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(line, actualReplacements));
         }
 
-        return displayName(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(displayName(), replacements))
+        return displayName(com.wizardlybump17.wlib.util.StringUtil.applyPlaceholders(displayName(), actualReplacements))
                 .lore(lore);
     }
 
