@@ -28,6 +28,10 @@ allprojects {
         compileJava {
             options.encoding = 'UTF-8'
         }
+
+        assemble {
+            dependsOn(shadowJar)
+        }
     }
 
     java {
