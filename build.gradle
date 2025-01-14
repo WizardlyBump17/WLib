@@ -3,14 +3,13 @@ plugins {
     id 'maven-publish'
 }
 
-apply plugin: 'maven-publish'
-
 allprojects {
-    group = 'com.wizardlybump17.wlib'
-    version = '1.6.7-ncs'
-
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    group = 'com.wizardlybump17.wlib'
+    version = '1.6.7-ncs'
 
     repositories {
         mavenLocal()
@@ -24,6 +23,10 @@ allprojects {
         compileJava {
             options.encoding = 'UTF-8'
         }
+
+        assemble {
+            dependsOn(shadowJar)
+        }
     }
 
     java {
@@ -32,8 +35,6 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'maven-publish'
-
     if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
         tasks.withType(PublishToMavenRepository).configureEach {
             it.enabled = false
@@ -78,9 +79,5 @@ subprojects {
         testLogging {
             events "passed", "skipped", "failed", "standardOut", "standardError"
         }
-    }
-
-    build {
-        dependsOn(test, shadowJar)
     }
 }
