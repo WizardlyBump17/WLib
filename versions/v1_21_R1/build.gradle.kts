@@ -19,9 +19,3 @@ dependencies {
     implementation(project(":utils"))
     implementation(project(":bukkit-utils"))
 }
-
-tasks {
-    assemble {
-        dependsOn(reobfJar)
-    }
-}
