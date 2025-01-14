@@ -47,10 +47,6 @@ subprojects {
     test {
         useJUnitPlatform()
     }
-    
-    build {
-        dependsOn(test)
-    }
 
     if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
         tasks.withType(PublishToMavenRepository).configureEach {
