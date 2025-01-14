@@ -83,8 +83,4 @@ subprojects {
             events "passed", "skipped", "failed", "standardOut", "standardError"
         }
     }
-
-    build {
-        dependsOn(test, shadowJar)
-    }
 }
