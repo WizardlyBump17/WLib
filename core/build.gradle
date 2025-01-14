@@ -31,10 +31,6 @@ processResources {
 }
 
 tasks {
-    assemble {
-        dependsOn(shadowJar)
-    }
-
     shadowJar {
         archiveFileName = 'WLib-' + project.version + '.jar'
         relocate("com.github.sisyphsu", "com.wizardlybump17.wlib.libs.com.github.sisyphsu")
