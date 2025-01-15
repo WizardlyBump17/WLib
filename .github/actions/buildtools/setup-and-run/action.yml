@@ -1,16 +1,12 @@
 name: Setup and Run BuildTools
 
-on:
-  workflow_call:
-
-jobs:
-  execute:
-    runs-on: ubuntu-latest
-    permissions:
-      content: read
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup SDKMAN
-        run: curl -s "https://get.sdkman.io" | bash
-      - name: Run BuildTools
-        run: ./scripts/buildtools/build-spigot.sh
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    - name: Setup SDKMAN
+      shell: bash
+      run: curl -s "https://get.sdkman.io" | bash
+    - name: Run BuildTools
+      shell: bash
+      run: ./scripts/buildtools/build-spigot.sh
