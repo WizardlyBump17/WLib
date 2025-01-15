@@ -6,6 +6,8 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    permissions:
+      content: read
     steps:
       - uses: actions/checkout@v4
       - name: Setup SDKMAN
