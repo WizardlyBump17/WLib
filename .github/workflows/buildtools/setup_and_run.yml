@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  run:
+  execute:
     runs-on: ubuntu-latest
     permissions:
       content: read
