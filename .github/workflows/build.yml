@@ -15,6 +15,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - name: Download Java versions for BuildTools
+        run: curl -s "https://get.sdkman.io" | bash
+      - name: Run BuildTools
+        run: ./scripts/build-spigot.sh
       - name: Set up JDK 16
         uses: actions/setup-java@v4
         with:
