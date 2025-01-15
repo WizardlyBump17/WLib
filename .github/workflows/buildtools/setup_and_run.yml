@@ -5,6 +5,7 @@ on:
 
 jobs:
   run:
+    runs-on: ubuntu-latest
     steps:
       - name: Setup SDKMAN
         run: curl -s "https://get.sdkman.io" | bash
