@@ -15,7 +15,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Download Java versions for BuildTools
+      - name: Download SDKMAN
         run: curl -s "https://get.sdkman.io" | bash
       - name: Run BuildTools
         run: ./scripts/buildtools/build-spigot.sh
