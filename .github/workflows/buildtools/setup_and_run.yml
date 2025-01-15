@@ -1,0 +1,12 @@
+name: Setup and Run BuildTools
+
+on:
+  workflow_call:
+
+jobs:
+  run:
+    steps:
+      - name: Setup SDKMAN
+        run: curl -s "https://get.sdkman.io" | bash
+      - name: Run BuildTools
+        run: ./scripts/buildtools/build-spigot.sh
