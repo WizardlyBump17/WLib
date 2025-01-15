@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run BuildTools
-        uses: ./.github/workflows/buildtools/setup-and-run
+        uses: ./.github/actions/buildtools/setup-and-run
       - name: Set up JDK 16
         uses: actions/setup-java@v4
         with:
