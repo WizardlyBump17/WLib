@@ -1,0 +1,12 @@
+name: Setup and Run BuildTools
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    - name: Setup SDKMAN
+      shell: bash
+      run: curl -s "https://get.sdkman.io" | bash
+    - name: Run BuildTools
+      shell: bash
+      run: ./scripts/buildtools/build-spigot.sh
