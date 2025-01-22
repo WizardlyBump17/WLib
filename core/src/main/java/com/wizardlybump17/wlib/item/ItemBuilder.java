@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
+    protected static final @NotNull String ATTRIBUTE_GENERIC = "GENERIC_";
 
     private @NonNull ItemStack item;
     private final Map<Object, Object> customData;
@@ -478,8 +479,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                         () -> null,
                         attributes -> MapUtils.mapKeys(
                                 attributes,
-                                () -> new EnumMap<>(Attribute.class),
-                                type -> Attribute.valueOf(type.toUpperCase())
+                                TreeMap::new,
+                                ItemBuilder::getAttribute
                         )
                 ))
                 .ifPresent(result::attributes);
@@ -491,5 +492,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.metaHandler.deserialize(map);
 
         return result;
+    }
+
+    protected static Attribute getAttribute(@NotNull String name) {
+        if (Attribute.class.isEnum())
+            return Attribute.valueOf(name.toUpperCase());
+
+        if (name.startsWith(ATTRIBUTE_GENERIC))
+            name = name.substring(ATTRIBUTE_GENERIC.length());
+        return Registry.ATTRIBUTE.get(NamespacedKey.fromString(name.toLowerCase()));
     }
 }
