@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.util;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -92,6 +93,15 @@ public class ReflectionUtil {
             return value;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException("Error while creating a new " + constructor.getDeclaringClass().getName() + " instance with the parameters " + Arrays.toString(parameters));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getClass(@NotNull String name) {
+        try {
+            return (Class<T>) Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 }
