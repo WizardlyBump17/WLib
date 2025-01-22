@@ -1,6 +1,8 @@
-package com.wizardlybump17.wlib.command;
+package com.wizardlybump17.wlib.command.sender;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 /**
  * Represents a command sender, someone that can trigger commands.
@@ -22,13 +24,5 @@ public interface CommandSender<S> {
 
     boolean hasPermission(String permission);
 
-    /**
-     * Used to convert this CommandSender to a generic sender, a command sender that can be anything
-     *
-     * @return the generic sender
-     */
-    @Nullable
-    default CommandSender<?> toGeneric() {
-        return null;
-    }
+    boolean hasId(@NotNull UUID id);
 }
