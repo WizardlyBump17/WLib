@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import com.wizardlybump17.wlib.item.handler.model.ItemMetaHandlerModel;
@@ -480,7 +481,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                         attributes -> MapUtils.mapKeys(
                                 attributes,
                                 TreeMap::new,
-                                ItemBuilder::getAttribute
+                                name -> AttributeAdapter.getInstance().getAttribute(name)
                         )
                 ))
                 .ifPresent(result::attributes);
@@ -492,14 +493,5 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.metaHandler.deserialize(map);
 
         return result;
-    }
-
-    protected static Attribute getAttribute(@NotNull String name) {
-        if (Attribute.class.isEnum())
-            return Attribute.valueOf(name.toUpperCase());
-
-        if (name.startsWith(ATTRIBUTE_GENERIC))
-            name = name.substring(ATTRIBUTE_GENERIC.length());
-        return Registry.ATTRIBUTE.get(NamespacedKey.fromString(name.toLowerCase()));
     }
 }

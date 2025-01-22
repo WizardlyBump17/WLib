@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib;
 
+import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
@@ -112,20 +113,24 @@ public class WLib extends JavaPlugin {
     }
 
     private void setupAdapters() {
-        switch (Bukkit.getMinecraftVersion()) {
+        String version = Bukkit.getMinecraftVersion();
+        switch (version) {
             case "1.20.5", "1.20.6" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
+                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.AttributeAdapter());
             }
             case "1.21", "1.21.1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
+                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.AttributeAdapter());
             }
             case "1.21.4" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.player.PlayerAdapter());
+                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.AttributeAdapter());
             }
-            default -> getLogger().severe("The server version (" + Bukkit.getMinecraftVersion() + ") is not supported by WLib yet.");
+            default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }
     }
 
