@@ -4,7 +4,7 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 VERSIONS=(
   "1.20.6 21.0.5-tem"
-  "1.21.1 21.0.5-tem"
+  "1.21.1 21.0.5-tem" "1.21.4 21.0.5-tem"
 )
 WORK_DIR=$(mktemp -d -t "WLib-setup-spigot-versions-XXX")
 BUILD_TOOLS_URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastBuild/artifact/target/BuildTools.jar"

@@ -122,6 +122,10 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
             }
+            case "1.21.4" -> {
+                ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.ItemAdapter());
+                PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.player.PlayerAdapter());
+            }
             default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }
     }
