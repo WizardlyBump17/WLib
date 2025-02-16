@@ -29,15 +29,18 @@ import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWra
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
 import lombok.NonNull;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
+    private BukkitAudiences audiences;
 
     @Override
     public void onLoad() {
@@ -64,6 +67,8 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        audiences = BukkitAudiences.create(this);
+
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
 
@@ -76,6 +81,11 @@ public class WLib extends JavaPlugin {
     public void onDisable() {
         HandlerList.unregisterAll(this);
         saveControllersTask.cancel();
+
+        if (audiences != null) {
+            audiences.close();
+            audiences = null;
+        }
     }
 
     private void initCommandSystem() {
@@ -204,5 +214,9 @@ public class WLib extends JavaPlugin {
 
     public static @NonNull String getServerVersion() {
         return Bukkit.getServer().getClass().getName().split("\\.")[3];
+    }
+
+    public @NotNull BukkitAudiences getAudiences() {
+        return audiences;
     }
 }
