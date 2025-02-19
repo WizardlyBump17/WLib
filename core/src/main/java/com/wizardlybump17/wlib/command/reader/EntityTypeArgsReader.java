@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.command.reader;
 
-import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import lombok.NonNull;
 import org.bukkit.entity.EntityType;
 

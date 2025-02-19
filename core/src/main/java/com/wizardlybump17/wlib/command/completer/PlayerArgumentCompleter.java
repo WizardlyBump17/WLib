@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.command.completer;
 
-import com.wizardlybump17.wlib.command.CommandSender;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

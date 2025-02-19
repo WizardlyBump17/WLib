@@ -1,4 +1,7 @@
-package com.wizardlybump17.wlib.command;
+package com.wizardlybump17.wlib.command.annotation;
+
+import com.wizardlybump17.wlib.command.sender.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -81,4 +84,9 @@ public @interface Command {
      * @return if the {@link #invalidSenderMessage()} is a field in the class that have this annotation
      */
     boolean invalidSenderMessageIsField() default false;
+
+    /**
+     * @return the type of the {@link CommandSender#getHandle()} that can execute this command
+     */
+    @NotNull Class<?> senderType() default Object.class;
 }
