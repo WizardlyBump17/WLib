@@ -3,6 +3,9 @@ name: Build
 on:
   push:
   pull_request:
+    types:
+      - opened
+      - reopened
 
 env:
   USERNAME: ${{ secrets.GITHUB_TOKEN }}
