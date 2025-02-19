@@ -420,7 +420,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
         Multimap<Attribute, AttributeModifier> attributes = attributes();
         if (!attributes.isEmpty())
-            result.put("attributes", MapUtils.mapKeys(attributes.asMap(), TreeMap::new, Enum::name));
+            result.put("attributes", AttributeAdapter.getInstance().serialize(attributes));
 
         if (metaHandler != null)
             metaHandler.serialize(result);
@@ -474,15 +474,11 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .glow(ConfigUtil.get("glow", map, () -> null));
 
         Optional
-                .ofNullable(ConfigUtil.<Map<String, Collection<AttributeModifier>>, Map<Attribute, Collection<AttributeModifier>>>map(
+                .ofNullable(ConfigUtil.<Map<String, Collection<AttributeModifier>>, Multimap<Attribute, AttributeModifier>>map(
                         "attributes",
                         map,
                         () -> null,
-                        attributes -> MapUtils.mapKeys(
-                                attributes,
-                                TreeMap::new,
-                                name -> AttributeAdapter.getInstance().getAttribute(name)
-                        )
+                        attributes -> AttributeAdapter.getInstance().deserialize(attributes)
                 ))
                 .ifPresent(result::attributes);
 

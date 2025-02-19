@@ -118,12 +118,12 @@ public class WLib extends JavaPlugin {
             case "1.20.5", "1.20.6" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
-                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.AttributeAdapter());
+                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.AttributeAdapter());
             }
             case "1.21", "1.21.1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
-                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.AttributeAdapter());
+                AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.AttributeAdapter());
             }
             case "1.21.4" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.ItemAdapter());
