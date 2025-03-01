@@ -45,66 +45,98 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private @NotNull Material type;
     private int amount;
-    private final Map<Object, Object> customData;
-    private ItemMetaHandler<?> metaHandler;
-    private ItemMeta meta;
+    private final @NotNull Map<Object, Object> customData;
+    private @Nullable ItemMetaHandler<?> metaHandler;
+    private @Nullable ItemMeta itemMeta;
 
-    public ItemBuilder(ItemStack item, Map<Object, Object> customData, ItemMetaHandler<?> metaHandler) {
-        type = item == null ? Material.AIR : item.getType();
-        amount = item == null ? 1 : item.getAmount();
+    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData, @Nullable ItemMeta itemMeta) {
+        this.type = type;
+        this.amount = amount;
         this.customData = customData;
-        this.metaHandler = metaHandler;
-        meta = item == null ? null : item.getItemMeta();
-    }
 
-    public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
-        this(item, customData, null);
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(type);
         if (metaHandlerModel != null)
             this.metaHandler = metaHandlerModel.createHandler(this);
+
+        this.itemMeta = itemMeta;
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData) {
+        this(type, amount, customData, null);
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount) {
+        this(type, amount, new HashMap<>());
+    }
+
+    public ItemBuilder(@NotNull Material type) {
+        this(type, 1);
+    }
+
+    public ItemBuilder(@Nullable ItemStack item, @NotNull Map<Object, Object> customData) {
+        this(
+                item == null ? Material.AIR : item.getType(),
+                item == null ? 1 : item.getAmount(),
+                customData,
+                item == null ? null : item.getItemMeta()
+        );
+    }
+
+    public ItemBuilder(@Nullable ItemStack item) {
+        this(
+                item == null ? Material.AIR : item.getType(),
+                item == null ? 1 : item.getAmount(),
+                new HashMap<>(),
+                item == null ? null : item.getItemMeta()
+        );
     }
 
     public ItemBuilder() {
-        this(new ItemStack(Material.AIR), new HashMap<>(), null);
+        this(
+                Material.AIR,
+                1,
+                new HashMap<>(),
+                null
+        );
     }
 
     @SuppressWarnings("unchecked")
     public <M extends ItemMeta> ItemBuilder consumeMeta(Consumer<M> consumer) {
-        if (meta != null)
-            consumer.accept((M) meta);
+        if (itemMeta != null)
+            consumer.accept((M) itemMeta);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Contract("_, null -> null; _, !null -> !null")
     public <M extends ItemMeta, T> @Nullable T consumeMetaAndReturn(Function<M, T> consumer, @Nullable T defaultValue) {
-        if (meta == null)
+        if (itemMeta == null)
             return defaultValue;
 
-        T result = consumer.apply((M) meta);
+        T result = consumer.apply((M) itemMeta);
         return result == null ? defaultValue : result;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends ItemMeta> T getItemMeta() {
-        return (T) meta;
+        return (T) itemMeta;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, T def) {
-        if (meta == null)
+        if (itemMeta == null)
             return def;
 
-        T t = supplier.apply((M) meta);
+        T t = supplier.apply((M) itemMeta);
         return t == null ? def : t;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, Supplier<T> def) {
-        if (meta == null)
+        if (itemMeta == null)
             return def.get();
 
-        T t = supplier.apply((M) meta);
+        T t = supplier.apply((M) itemMeta);
         return t == null ? def.get() : t;
     }
 
@@ -112,7 +144,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         ItemFactory itemFactory = Bukkit.getItemFactory();
 
         type = material;
-        meta = meta == null ? itemFactory.getItemMeta(type) : itemFactory.asMetaFor(meta, type);
+        itemMeta = itemMeta == null ? itemFactory.getItemMeta(type) : itemFactory.asMetaFor(itemMeta, type);
 
         ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(type);
         metaHandler = model == null ? null : model.createHandler(this);
@@ -394,7 +426,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public @NotNull ItemStack build() {
         ItemStack item = new ItemStack(type);
-        item.setItemMeta(meta);
+        item.setItemMeta(itemMeta);
         return item;
     }
 
@@ -437,7 +469,12 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @Override
     public ItemBuilder clone() {
-        return new ItemBuilder(build(), new HashMap<>(customData), metaHandler);
+        return new ItemBuilder(
+                type,
+                amount,
+                new HashMap<>(customData),
+                itemMeta == null ? null : itemMeta.clone()
+        );
     }
 
     /**
