@@ -172,11 +172,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
-    public ItemBuilder damage(@Nullable Integer durability) {
-        return consumeMeta(meta -> {
-//            if (meta instanceof Damageable damageable)
-//                damageable.setDamage(durability);
-        });
+    public ItemBuilder damage(@Nullable Integer damage) {
+        return consumeMeta(meta -> ItemAdapter.getInstance().setDamage(meta, damage));
     }
 
     public int damage() {
