@@ -11,6 +11,7 @@ import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -19,6 +20,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -40,21 +42,24 @@ import java.util.stream.Collectors;
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
-    protected static final @NotNull String ATTRIBUTE_GENERIC = "GENERIC_";
 
-    private @NonNull ItemStack item;
+    private @NotNull Material type;
+    private int amount;
     private final Map<Object, Object> customData;
     private ItemMetaHandler<?> metaHandler;
+    private ItemMeta meta;
 
     public ItemBuilder(ItemStack item, Map<Object, Object> customData, ItemMetaHandler<?> metaHandler) {
-        this.item = item == null ? new ItemStack(Material.AIR) : item;
+        type = item == null ? Material.AIR : item.getType();
+        amount = item == null ? 1 : item.getAmount();
         this.customData = customData;
         this.metaHandler = metaHandler;
+        meta = item == null ? null : item.getItemMeta();
     }
 
     public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
         this(item, customData, null);
-        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(this.item.getType());
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(type);
         if (metaHandlerModel != null)
             this.metaHandler = metaHandlerModel.createHandler(this);
     }
@@ -65,74 +70,67 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @SuppressWarnings("unchecked")
     public <M extends ItemMeta> ItemBuilder consumeMeta(Consumer<M> consumer) {
-        M meta = (M) item.getItemMeta();
-        if (meta == null)
-            return this;
-
-        consumer.accept(meta);
-        item.setItemMeta(meta);
-
+        if (meta != null)
+            consumer.accept((M) meta);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Contract("_, null -> null; _, !null -> !null")
     public <M extends ItemMeta, T> @Nullable T consumeMetaAndReturn(Function<M, T> consumer, @Nullable T defaultValue) {
-        M meta = (M) item.getItemMeta();
         if (meta == null)
             return defaultValue;
 
-        T result = consumer.apply(meta);
-        item.setItemMeta(meta);
-
+        T result = consumer.apply((M) meta);
         return result == null ? defaultValue : result;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends ItemMeta> T getItemMeta() {
-        return (T) item.getItemMeta();
+        return (T) meta;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, T def) {
-        M meta = (M) item.getItemMeta();
         if (meta == null)
             return def;
 
-        T t = supplier.apply(meta);
+        T t = supplier.apply((M) meta);
         return t == null ? def : t;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, Supplier<T> def) {
-        M meta = (M) item.getItemMeta();
         if (meta == null)
             return def.get();
 
-        T t = supplier.apply(meta);
+        T t = supplier.apply((M) meta);
         return t == null ? def.get() : t;
     }
 
     public ItemBuilder type(@NonNull Material material) {
-        item.setType(material);
+        ItemFactory itemFactory = Bukkit.getItemFactory();
 
-        ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(material);
+        type = material;
+        meta = meta == null ? itemFactory.getItemMeta(type) : itemFactory.asMetaFor(meta, type);
+
+        ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(type);
         metaHandler = model == null ? null : model.createHandler(this);
 
         return this;
     }
 
     public Material type() {
-        return item.getType();
+        return type;
     }
 
     public ItemBuilder amount(int amount) {
-        item.setAmount(amount);
+        this.amount = amount;
         return this;
     }
 
     public int amount() {
-        return item.getAmount();
+        return amount;
     }
 
     public ItemBuilder damage(int durability) {
@@ -387,7 +385,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return getFromMeta(ItemMeta::getAttributeModifiers, ImmutableMultimap.of());
     }
 
-    public ItemStack build() {
+    public @NotNull ItemStack build() {
+        ItemStack item = new ItemStack(type);
+        item.setItemMeta(meta);
         return item;
     }
 
@@ -430,7 +430,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @Override
     public ItemBuilder clone() {
-        return new ItemBuilder(item.clone(), new HashMap<>(customData), metaHandler);
+        return new ItemBuilder(build(), new HashMap<>(customData), metaHandler);
     }
 
     /**
