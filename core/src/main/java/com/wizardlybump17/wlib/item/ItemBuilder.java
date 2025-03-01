@@ -140,6 +140,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
+    public ItemBuilder damage(@Nullable Integer durability) {
+        return consumeMeta(meta -> {
+//            if (meta instanceof Damageable damageable)
+//                damageable.setDamage(durability);
+        });
+    }
+
     public int damage() {
         return getFromMeta(meta -> {
             if (meta instanceof Damageable damageable)
@@ -463,7 +470,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result
                 .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
                 .amount(ConfigUtil.get("amount", map, 1))
-                .damage(ConfigUtil.get("damage", map, 0))
+                .damage(ConfigUtil.get("damage", map, () -> null))
                 .displayName(ConfigUtil.map("display-name", map, () -> null, StringUtil::fancy))
                 .lore(ConfigUtil.<List<String>, List<String>>map("lore", map, Collections::emptyList, lore -> StringUtil.colorize(lore, ArrayList::new)))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
