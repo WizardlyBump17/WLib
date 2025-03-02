@@ -171,7 +171,9 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
     }
 
     public ItemBuilder damage(@Nullable Integer damage) {
-        return consumeMeta(meta -> ItemAdapter.getInstance().setDamage(meta, damage));
+        if (itemMeta != null)
+            ItemAdapter.getInstance().setDamage(itemMeta, damage);
+        return this;
     }
 
     public int damage() {
