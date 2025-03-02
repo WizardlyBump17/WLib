@@ -41,8 +41,6 @@ import java.util.stream.Collectors;
 @SerializableAs("item-builder")
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
-    private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
-
     private @NotNull Material type;
     private int amount;
     private final @NotNull Map<Object, Object> customData;
@@ -194,15 +192,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public ItemBuilder itemFlags(@NotNull ItemFlag... itemFlags) {
         return consumeMeta(meta -> {
-            meta.removeItemFlags(meta.getItemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY));
+            meta.removeItemFlags(meta.getItemFlags().toArray(new ItemFlag[0]));
             meta.addItemFlags(itemFlags);
         });
     }
 
     public ItemBuilder itemFlags(@NotNull Set<ItemFlag> itemFlags) {
         return consumeMeta(meta -> {
-            meta.removeItemFlags(meta.getItemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY));
-            meta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
+            meta.removeItemFlags(meta.getItemFlags().toArray(new ItemFlag[0]));
+            meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
         });
     }
 
@@ -378,7 +376,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (other == this)
             return this;
 
-        consumeMeta(meta -> meta.addItemFlags(other.itemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY)));
+        consumeMeta(meta -> meta.addItemFlags(other.itemFlags().toArray(new ItemFlag[0])));
         return this;
     }
 
