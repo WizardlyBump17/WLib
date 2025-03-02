@@ -30,4 +30,9 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         if (meta instanceof Damageable damageable)
             damageable.setDamage(damage == null ? 0 : damage);
     }
+
+    @Override
+    public @Nullable Integer getDamage(@NotNull ItemMeta meta) {
+        return meta instanceof Damageable damageable && damageable.hasDamage() ? damageable.getDamage() : null;
+    }
 }

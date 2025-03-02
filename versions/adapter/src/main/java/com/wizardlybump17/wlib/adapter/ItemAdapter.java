@@ -28,4 +28,6 @@ public abstract class ItemAdapter {
     public abstract void copyPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to);
 
     public abstract void setDamage(@NotNull ItemMeta meta, @Nullable Integer damage);
+
+    public abstract @Nullable Integer getDamage(@NotNull ItemMeta meta);
 }

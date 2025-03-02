@@ -176,12 +176,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return this;
     }
 
-    public int damage() {
-        return getFromMeta(meta -> {
-            if (meta instanceof Damageable damageable)
-                return damageable.getDamage();
-            return null;
-        }, 0);
+    public @Nullable Integer damage() {
+        return itemMeta == null ? null : ItemAdapter.getInstance().getDamage(itemMeta);
     }
 
     public ItemBuilder lore(@Nullable String... lore) {
@@ -435,7 +431,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.put("type", type().name());
         if (amount() != 1)
             result.put("amount", amount());
-        if (damage() != 0)
+        if (damage() != null)
             result.put("damage", damage());
         if (!displayName().isEmpty())
             result.put("display-name", displayName());
