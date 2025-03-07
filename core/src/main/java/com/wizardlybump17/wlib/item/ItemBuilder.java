@@ -423,6 +423,18 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return item;
     }
 
+    public @Nullable Integer maxDamage() {
+        if (itemMeta instanceof Damageable damageable)
+            return damageable.hasMaxDamage() ? damageable.getMaxDamage() : null;
+        return null;
+    }
+
+    public @NotNull ItemBuilder maxDamage(@Nullable Integer maxDamage) {
+        if (itemMeta instanceof Damageable damageable)
+            damageable.setMaxDamage(maxDamage);
+        return this;
+    }
+
     @Override
     @NotNull
     public Map<String, Object> serialize() {
@@ -433,6 +445,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
             result.put("amount", amount());
         if (damage() != null)
             result.put("damage", damage());
+        if (maxDamage() != null)
+            result.put("max-damage", maxDamage());
         if (!displayName().isEmpty())
             result.put("display-name", displayName());
         if (!lore().isEmpty())
@@ -501,6 +515,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
                 .amount(ConfigUtil.get("amount", map, 1))
                 .damage(ConfigUtil.get("damage", map, () -> null))
+                .maxDamage(ConfigUtil.get("max-damage", map, () -> null))
                 .displayName(ConfigUtil.map("display-name", map, () -> null, StringUtil::fancy))
                 .lore(ConfigUtil.<List<String>, List<String>>map("lore", map, Collections::emptyList, lore -> StringUtil.colorize(lore, ArrayList::new)))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))
