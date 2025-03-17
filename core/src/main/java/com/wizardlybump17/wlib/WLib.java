@@ -86,6 +86,7 @@ public class WLib extends JavaPlugin {
         ArgsReaderRegistry.INSTANCE.add(new MapJsonArgsReader());
         ArgsReaderRegistry.INSTANCE.add(new PotionEffectTypeReader());
         ArgsReaderRegistry.INSTANCE.add(new EnchantmentReader());
+        ArgsReaderRegistry.INSTANCE.add(new NamespacedKeyReader());
     }
 
     private void initSerializables() {
