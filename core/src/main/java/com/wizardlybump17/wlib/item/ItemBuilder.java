@@ -11,6 +11,7 @@ import com.wizardlybump17.wlib.util.bukkit.ConfigUtil;
 import com.wizardlybump17.wlib.util.bukkit.NamespacedKeyUtil;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -19,6 +20,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -39,100 +41,126 @@ import java.util.stream.Collectors;
 @SerializableAs("item-builder")
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
-    private static final ItemFlag[] EMPTY_ITEM_FLAG_ARRAY = new ItemFlag[0];
-    protected static final @NotNull String ATTRIBUTE_GENERIC = "GENERIC_";
+    private @NotNull Material type;
+    private int amount;
+    private final @NotNull Map<Object, Object> customData;
+    private @Nullable ItemMetaHandler<?> metaHandler;
+    private @Nullable ItemMeta itemMeta;
 
-    private @NonNull ItemStack item;
-    private final Map<Object, Object> customData;
-    private ItemMetaHandler<?> metaHandler;
-
-    public ItemBuilder(ItemStack item, Map<Object, Object> customData, ItemMetaHandler<?> metaHandler) {
-        this.item = item == null ? new ItemStack(Material.AIR) : item;
+    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData, @Nullable ItemMeta itemMeta) {
+        this.type = type;
+        this.amount = amount;
         this.customData = customData;
-        this.metaHandler = metaHandler;
-    }
 
-    public ItemBuilder(ItemStack item, Map<Object, Object> customData) {
-        this(item, customData, null);
-        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(this.item.getType());
+        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(type);
         if (metaHandlerModel != null)
             this.metaHandler = metaHandlerModel.createHandler(this);
+
+        this.itemMeta = itemMeta;
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData) {
+        this(type, amount, customData, null);
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount) {
+        this(type, amount, new HashMap<>());
+    }
+
+    public ItemBuilder(@NotNull Material type) {
+        this(type, 1);
+    }
+
+    public ItemBuilder(@Nullable ItemStack item, @NotNull Map<Object, Object> customData) {
+        this(
+                item == null ? Material.AIR : item.getType(),
+                item == null ? 1 : item.getAmount(),
+                customData,
+                item == null ? null : item.getItemMeta()
+        );
+    }
+
+    public ItemBuilder(@Nullable ItemStack item) {
+        this(
+                item == null ? Material.AIR : item.getType(),
+                item == null ? 1 : item.getAmount(),
+                new HashMap<>(),
+                item == null ? null : item.getItemMeta()
+        );
     }
 
     public ItemBuilder() {
-        this(new ItemStack(Material.AIR), new HashMap<>(), null);
+        this(
+                Material.AIR,
+                1,
+                new HashMap<>(),
+                null
+        );
     }
 
     @SuppressWarnings("unchecked")
     public <M extends ItemMeta> ItemBuilder consumeMeta(Consumer<M> consumer) {
-        M meta = (M) item.getItemMeta();
-        if (meta == null)
-            return this;
-
-        consumer.accept(meta);
-        item.setItemMeta(meta);
-
+        if (itemMeta != null)
+            consumer.accept((M) itemMeta);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Contract("_, null -> null; _, !null -> !null")
     public <M extends ItemMeta, T> @Nullable T consumeMetaAndReturn(Function<M, T> consumer, @Nullable T defaultValue) {
-        M meta = (M) item.getItemMeta();
-        if (meta == null)
+        if (itemMeta == null)
             return defaultValue;
 
-        T result = consumer.apply(meta);
-        item.setItemMeta(meta);
-
+        T result = consumer.apply((M) itemMeta);
         return result == null ? defaultValue : result;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends ItemMeta> T getItemMeta() {
-        return (T) item.getItemMeta();
+        return (T) itemMeta;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, T def) {
-        M meta = (M) item.getItemMeta();
-        if (meta == null)
+        if (itemMeta == null)
             return def;
 
-        T t = supplier.apply(meta);
+        T t = supplier.apply((M) itemMeta);
         return t == null ? def : t;
     }
 
     @SuppressWarnings("unchecked")
     public <T, M extends ItemMeta> T getFromMeta(Function<M, T> supplier, Supplier<T> def) {
-        M meta = (M) item.getItemMeta();
-        if (meta == null)
+        if (itemMeta == null)
             return def.get();
 
-        T t = supplier.apply(meta);
+        T t = supplier.apply((M) itemMeta);
         return t == null ? def.get() : t;
     }
 
     public ItemBuilder type(@NonNull Material material) {
-        item.setType(material);
+        ItemFactory itemFactory = Bukkit.getItemFactory();
 
-        ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(material);
+        type = material;
+        itemMeta = itemMeta == null ? itemFactory.getItemMeta(type) : itemFactory.asMetaFor(itemMeta, type);
+
+        ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(type);
         metaHandler = model == null ? null : model.createHandler(this);
 
         return this;
     }
 
     public Material type() {
-        return item.getType();
+        return type;
     }
 
     public ItemBuilder amount(int amount) {
-        item.setAmount(amount);
+        this.amount = amount;
         return this;
     }
 
     public int amount() {
-        return item.getAmount();
+        return amount;
     }
 
     public ItemBuilder damage(int durability) {
@@ -142,12 +170,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         });
     }
 
-    public int damage() {
-        return getFromMeta(meta -> {
-            if (meta instanceof Damageable damageable)
-                return damageable.getDamage();
-            return null;
-        }, 0);
+    public ItemBuilder damage(@Nullable Integer damage) {
+        if (itemMeta != null)
+            ItemAdapter.getInstance().setDamage(itemMeta, damage);
+        return this;
+    }
+
+    public @Nullable Integer damage() {
+        return itemMeta == null ? null : ItemAdapter.getInstance().getDamage(itemMeta);
     }
 
     public ItemBuilder lore(@Nullable String... lore) {
@@ -160,15 +190,15 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     public ItemBuilder itemFlags(@NotNull ItemFlag... itemFlags) {
         return consumeMeta(meta -> {
-            meta.removeItemFlags(meta.getItemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY));
+            meta.removeItemFlags(meta.getItemFlags().toArray(new ItemFlag[0]));
             meta.addItemFlags(itemFlags);
         });
     }
 
     public ItemBuilder itemFlags(@NotNull Set<ItemFlag> itemFlags) {
         return consumeMeta(meta -> {
-            meta.removeItemFlags(meta.getItemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY));
-            meta.addItemFlags(itemFlags.toArray(EMPTY_ITEM_FLAG_ARRAY));
+            meta.removeItemFlags(meta.getItemFlags().toArray(new ItemFlag[0]));
+            meta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
         });
     }
 
@@ -344,7 +374,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         if (other == this)
             return this;
 
-        consumeMeta(meta -> meta.addItemFlags(other.itemFlags().toArray(EMPTY_ITEM_FLAG_ARRAY)));
+        consumeMeta(meta -> meta.addItemFlags(other.itemFlags().toArray(new ItemFlag[0])));
         return this;
     }
 
@@ -387,8 +417,22 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return getFromMeta(ItemMeta::getAttributeModifiers, ImmutableMultimap.of());
     }
 
-    public ItemStack build() {
+    public @NotNull ItemStack build() {
+        ItemStack item = new ItemStack(type);
+        item.setItemMeta(itemMeta);
         return item;
+    }
+
+    public @Nullable Integer maxDamage() {
+        if (itemMeta instanceof Damageable damageable)
+            return damageable.hasMaxDamage() ? damageable.getMaxDamage() : null;
+        return null;
+    }
+
+    public @NotNull ItemBuilder maxDamage(@Nullable Integer maxDamage) {
+        if (itemMeta instanceof Damageable damageable)
+            damageable.setMaxDamage(maxDamage);
+        return this;
     }
 
     @Override
@@ -399,8 +443,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result.put("type", type().name());
         if (amount() != 1)
             result.put("amount", amount());
-        if (damage() != 0)
+        if (damage() != null)
             result.put("damage", damage());
+        if (maxDamage() != null)
+            result.put("max-damage", maxDamage());
         if (!displayName().isEmpty())
             result.put("display-name", displayName());
         if (!lore().isEmpty())
@@ -430,7 +476,12 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
     @Override
     public ItemBuilder clone() {
-        return new ItemBuilder(item.clone(), new HashMap<>(customData), metaHandler);
+        return new ItemBuilder(
+                type,
+                amount,
+                new HashMap<>(customData),
+                itemMeta == null ? null : itemMeta.clone()
+        );
     }
 
     /**
@@ -463,7 +514,8 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         result
                 .type(Material.valueOf(ConfigUtil.<String>get("type", map).toUpperCase()))
                 .amount(ConfigUtil.get("amount", map, 1))
-                .damage(ConfigUtil.get("damage", map, 0))
+                .damage(ConfigUtil.get("damage", map, () -> null))
+                .maxDamage(ConfigUtil.get("max-damage", map, () -> null))
                 .displayName(ConfigUtil.map("display-name", map, () -> null, StringUtil::fancy))
                 .lore(ConfigUtil.<List<String>, List<String>>map("lore", map, Collections::emptyList, lore -> StringUtil.colorize(lore, ArrayList::new)))
                 .itemFlags(ConfigUtil.<List<String>>get("item-flags", map, Collections.emptyList()).stream().map(ItemFlag::valueOf).collect(Collectors.toSet()))

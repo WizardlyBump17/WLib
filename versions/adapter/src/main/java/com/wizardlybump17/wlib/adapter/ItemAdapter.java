@@ -3,8 +3,11 @@ package com.wizardlybump17.wlib.adapter;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ItemAdapter {
 
@@ -23,4 +26,8 @@ public abstract class ItemAdapter {
     public abstract void transferPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to);
 
     public abstract void copyPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to);
+
+    public abstract void setDamage(@NotNull ItemMeta meta, @Nullable Integer damage);
+
+    public abstract @Nullable Integer getDamage(@NotNull ItemMeta meta);
 }
