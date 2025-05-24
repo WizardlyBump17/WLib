@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib;
 import com.wizardlybump17.wlib.adapter.EnchantmentAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.PotionEffectTypeAdapter;
+import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.v1_19_R2.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.*;
@@ -28,15 +29,18 @@ import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWra
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
 import lombok.NonNull;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
+    private BukkitAudiences audiences;
 
     @Override
     public void onLoad() {
@@ -63,6 +67,8 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        audiences = BukkitAudiences.create(this);
+
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
 
@@ -75,6 +81,11 @@ public class WLib extends JavaPlugin {
     public void onDisable() {
         HandlerList.unregisterAll(this);
         saveControllersTask.cancel();
+
+        if (audiences != null) {
+            audiences.close();
+            audiences = null;
+        }
     }
 
     private void initCommandSystem() {
@@ -122,60 +133,70 @@ public class WLib extends JavaPlugin {
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_16_R3.command.CommandMapAdapter());
             }
             case V1_17_1 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_17_R1.command.CommandMapAdapter());
             }
             case V1_18 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R1.command.CommandMapAdapter());
             }
             case V1_18_2 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_18_R2.command.CommandMapAdapter());
             }
             case V1_19 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R1.command.CommandMapAdapter());
             }
             case V1_19_3 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R2.command.CommandMapAdapter());
             }
             case V1_19_4 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_19_R3.command.CommandMapAdapter());
             }
             case V1_20_1 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R1.command.CommandMapAdapter());
             }
             case V1_20_2 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R2.command.CommandMapAdapter());
             }
             case V1_20_4 -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.player.PlayerAdapter());
                 PotionEffectTypeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.PotionEffectTypeAdapter());
                 EnchantmentAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.EnchantmentAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R3.command.CommandMapAdapter());
             }
         }
 
@@ -194,5 +215,9 @@ public class WLib extends JavaPlugin {
 
     public static @NonNull String getServerVersion() {
         return Bukkit.getServer().getClass().getName().split("\\.")[3];
+    }
+
+    public @NotNull BukkitAudiences getAudiences() {
+        return audiences;
     }
 }

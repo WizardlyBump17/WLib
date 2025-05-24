@@ -1,82 +1,81 @@
 package com.wizardlybump17.wlib.command;
 
+import com.wizardlybump17.wlib.command.data.CommandData;
+import com.wizardlybump17.wlib.command.exception.CommandException;
+import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.DirectCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.holder.CommandHolder;
-import com.wizardlybump17.wlib.util.ReflectionUtil;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
+import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
+import java.util.*;
 
-@Getter
-@RequiredArgsConstructor
 public class CommandManager {
 
-    private final List<RegisteredCommand> commands = new ArrayList<>();
-    protected final CommandHolder<?> holder;
-    private final @NonNull Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
+    private final @NotNull Map<String, List<RegisteredCommand>> commands = new HashMap<>();
+    protected final @NotNull CommandHolder<?> holder;
+    private final @NotNull Set<CommandExtractor> commandExtractors = new HashSet<>();
 
-    public void registerCommands(Object... objects) {
-        for (Object object : objects) {
-            for (Method method : object.getClass().getDeclaredMethods()) {
-                if (!method.isAnnotationPresent(Command.class) || method.getParameterCount() == 0 || !CommandSender.class.isAssignableFrom(method.getParameterTypes()[0]))
-                    continue;
+    public CommandManager(@NotNull CommandHolder<?> holder) {
+        this.holder = holder;
+        commandExtractors.add(new MethodCommandExtractor());
+        commandExtractors.add(new DirectCommandExtractor());
+    }
 
-                MethodHandle handle;
-                try {
-                    handle = MethodHandles.publicLookup().findVirtual(object.getClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
-                } catch (NoSuchMethodException | IllegalAccessException e) {
-                    holder.getLogger().log(Level.SEVERE, "Error while trying to get the MethodHandle for " + method.getName() + " at " + object.getClass().getName(), e);
-                    continue;
-                }
+    public void registerCommands(@NotNull Object @NotNull ... objects) {
+        for (Object object : objects)
+            for (CommandExtractor extractor : commandExtractors)
+                registerCommands(extractor.extract(this, holder, object));
+    }
 
-                RegisteredCommand command = new RegisteredCommand(
-                        method.getAnnotation(Command.class),
-                        object,
-                        method,
-                        handle
-                );
+    public void registerCommands(@NotNull Collection<RegisteredCommand> commands) {
+        commands.forEach(this::registerCommand);
+    }
 
-                commands.add(command);
-                com.wizardlybump17.wlib.command.holder.Command holderCommand = holder.getCommand(command.getName());
-                if (holderCommand != null)
-                    holderCommand.setExecutor(holderCommand.getDefaultExecutor(this, command.getName()));
-            }
-        }
-
+    public void registerCommand(@NotNull RegisteredCommand command) {
+        command.onRegister(this);
+        List<RegisteredCommand> commands = this.commands.computeIfAbsent(command.getName().toLowerCase(), $ -> new ArrayList<>());
+        commands.add(command);
         commands.sort(null);
     }
 
     public void unregisterCommands() {
+        commands.forEach((name, commands) -> {
+            commands.forEach(command -> command.onUnregister(this));
+            commands.clear();
+        });
         commands.clear();
     }
 
-    public void execute(CommandSender<?> sender, String string) {
+    public void execute(@NotNull CommandSender<?> sender, @NotNull String string) throws CommandException {
         if (commands.isEmpty())
             return;
 
-        for (RegisteredCommand registeredCommand : commands) {
-            Command command = registeredCommand.getCommand();
+        int spaceIndex = string.indexOf(' ');
+        String name;
+        if (spaceIndex == -1)
+            name = string;
+        else
+            name = string.substring(0, spaceIndex);
+
+        for (RegisteredCommand registeredCommand : commands.getOrDefault(name, List.of())) {
+            CommandData command = registeredCommand.getCommand();
             CommandResult result = registeredCommand.execute(sender, string);
 
             switch (result) {
                 case PERMISSION_FAIL -> {
-                    handleMessage(registeredCommand, sender, command.permissionMessage(), command.permissionMessageIsField());
+                    String message = command.getPermissionMessage();
+                    if (message != null)
+                        sender.sendMessage(message);
                     return;
                 }
 
                 case INVALID_SENDER -> {
-                    handleMessage(registeredCommand, sender, command.invalidSenderMessage(), command.invalidSenderMessageIsField());
+                    String message = command.getInvalidSenderMessage();
+                    if (message != null)
+                        sender.sendMessage(message);
                     return;
                 }
 
@@ -87,55 +86,45 @@ public class CommandManager {
         }
     }
 
-    protected void handleMessage(@NonNull RegisteredCommand registeredCommand, @NonNull CommandSender<?> sender, @NonNull String message, boolean isField) {
-        if (!isField) {
-            if (!message.isEmpty())
-                sender.sendMessage(message);
-            return;
-        }
-
-        String fieldMessage = getFieldMessage(registeredCommand, message);
-        if (fieldMessage != null)
-            sender.sendMessage(fieldMessage);
+    public @NotNull List<@NotNull String> autoComplete(@NotNull CommandSender<?> sender, @NotNull String string) {
+        return List.of();
     }
 
-    protected @Nullable String getFieldMessage(@NonNull RegisteredCommand registeredCommand, @NonNull String fieldName) {
-        Map<String, Field> fields = fieldCache.computeIfAbsent(registeredCommand.getObject().getClass(), clazz -> {
-            Map<String, Field> map = new HashMap<>();
-            for (Field field : clazz.getDeclaredFields())
-                map.put(field.getName(), field);
-            return map;
-        });
-
-        Field field = fields.get(fieldName);
-        if (field == null)
-            return null;
-
-        Object fieldValue = ReflectionUtil.getFieldValue(field, registeredCommand.getObject());
-        return fieldValue == null ? null : fieldValue.toString();
+    public @NotNull List<RegisteredCommand> getCommands(@NotNull String name) {
+        List<RegisteredCommand> commands = this.commands.get(name);
+        return commands == null ? List.of() : List.copyOf(commands);
     }
 
-    @NonNull
-    public List<@NonNull String> autoComplete(@NonNull CommandSender<?> sender, @NonNull String string) {
-        List<String> result = new ArrayList<>();
-        for (RegisteredCommand command : commands)
-            result.addAll(command.autoComplete(sender, string));
+    public @NotNull List<RegisteredCommand> getCommands(@NotNull Object object) {
+        List<RegisteredCommand> result = new ArrayList<>(commands.size());
+        for (List<RegisteredCommand> commands : this.commands.values())
+            for (RegisteredCommand command : commands)
+                if (command.isOwnedBy(object))
+                    result.add(command);
         return result;
     }
 
-    public List<RegisteredCommand> getCommand(String name) {
-        List<RegisteredCommand> commands = new ArrayList<>(this.commands.size());
-        for (RegisteredCommand command : this.commands)
-            if (command.getName().equalsIgnoreCase(name))
-                commands.add(command);
-        return commands;
+    public @NotNull CommandHolder<?> getHolder() {
+        return holder;
     }
 
-    public List<RegisteredCommand> getCommands(Object object) {
-        List<RegisteredCommand> commands = new ArrayList<>(this.commands.size());
-        for (RegisteredCommand command : this.commands)
-            if (command.getObject() == object)
-                commands.add(command);
-        return commands;
+    public @NotNull Map<String, List<RegisteredCommand>> getCommands() {
+        return Map.copyOf(commands);
+    }
+
+    public @NotNull Set<CommandExtractor> getCommandExtractors() {
+        return Set.copyOf(commandExtractors);
+    }
+
+    public void addCommandExtractor(@NotNull CommandExtractor extractor) {
+        commandExtractors.add(extractor);
+    }
+
+    public void removeCommandExtractor(@NotNull CommandExtractor extractor) {
+        commandExtractors.remove(extractor);
+    }
+
+    public boolean hasCommandExtractor(@NotNull CommandExtractor extractor) {
+        return commandExtractors.contains(extractor);
     }
 }

@@ -1,11 +1,15 @@
 package com.wizardlybump17.wlib.bungee.command.sender;
 
-import com.wizardlybump17.wlib.command.CommandSender;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ConnectedPlayer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
-public class GenericSender implements CommandSender<net.md_5.bungee.api.CommandSender> {
+public class BungeeCommandSender implements com.wizardlybump17.wlib.command.sender.CommandSender<net.md_5.bungee.api.CommandSender> {
 
     private final net.md_5.bungee.api.CommandSender handle;
 
@@ -34,12 +38,16 @@ public class GenericSender implements CommandSender<net.md_5.bungee.api.CommandS
         return handle.hasPermission(permission);
     }
 
-    @Override
-    public GenericSender toGeneric() {
-        return this;
+    public @NotNull ProxiedPlayer asProxiedPlayer() {
+        return (ProxiedPlayer) handle;
     }
 
-    public static boolean isGeneric() {
-        return true;
+    public @NotNull ConnectedPlayer asConnectedPlayer() {
+        return (ConnectedPlayer) handle;
+    }
+
+    @Override
+    public boolean hasId(@NotNull UUID id) {
+        return handle instanceof ProxiedPlayer player && player.getUniqueId().equals(id);
     }
 }

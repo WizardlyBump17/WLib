@@ -11,6 +11,7 @@ dependencies {
     implementation("com.github.sisyphsu:dateparser:1.0.11") {
         exclude(group: "org.projectlombok", module: "lombok")
     }
+    testCompileOnly("org.jetbrains:annotations:26.0.1")
 }
 
 shadowJar {

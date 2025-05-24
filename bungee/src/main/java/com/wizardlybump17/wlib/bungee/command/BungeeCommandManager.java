@@ -1,9 +1,10 @@
 package com.wizardlybump17.wlib.bungee.command;
 
 import com.wizardlybump17.wlib.command.CommandManager;
-import com.wizardlybump17.wlib.command.RegisteredCommand;
+import com.wizardlybump17.wlib.command.registered.RegisteredCommand;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 public class BungeeCommandManager extends CommandManager {
 
@@ -12,7 +13,7 @@ public class BungeeCommandManager extends CommandManager {
     }
 
     @Override
-    public void registerCommands(Object... objects) {
+    public void registerCommands(@NotNull Object @NotNull ... objects) {
         super.registerCommands(objects);
         for (Object object : objects) {
             for (RegisteredCommand command : getCommands(object)) {

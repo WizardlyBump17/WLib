@@ -2,9 +2,9 @@ package com.wizardlybump17.wlib.command.reader;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.wizardlybump17.wlib.command.CommandSender;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReader;
 import com.wizardlybump17.wlib.command.args.reader.ArgsReaderException;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import lombok.NonNull;
 
 import java.util.List;
