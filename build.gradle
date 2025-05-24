@@ -9,7 +9,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'com.wizardlybump17.wlib'
-    version = '1.6.7-ncs-1'
+    version = '1.6.7-ncs-2'
 
     repositories {
         mavenLocal()
