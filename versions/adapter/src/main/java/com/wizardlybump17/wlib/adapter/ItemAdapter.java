@@ -9,6 +9,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public abstract class ItemAdapter {
 
     public static final PersistentDataAdapterContext PERSISTENT_DATA_ADAPTER_CONTEXT = new ItemStack(Material.BOW).getItemMeta().getPersistentDataContainer().getAdapterContext();
@@ -30,4 +32,12 @@ public abstract class ItemAdapter {
     public abstract void setDamage(@NotNull ItemMeta meta, @Nullable Integer damage);
 
     public abstract @Nullable Integer getDamage(@NotNull ItemMeta meta);
+
+    public abstract @NotNull Map<String, Object> getCustomData(@NotNull ItemMeta meta);
+
+    public abstract void setCustomData(@NotNull ItemMeta meta, @NotNull Map<String, Object> customData);
+
+    protected abstract @NotNull Object toNBT(@NotNull Object java);
+
+    protected abstract @NotNull Object fromNBT(@NotNull Object nbt);
 }
