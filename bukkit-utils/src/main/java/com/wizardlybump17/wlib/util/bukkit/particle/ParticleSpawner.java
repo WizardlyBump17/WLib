@@ -13,6 +13,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,6 +91,8 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 extra,
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
+    }
+
     /**
      * <p>
      * Spawns the particle exactly on the given {@link Location}, without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
@@ -107,6 +110,19 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
     }
+
+    /**
+     * <p>
+     * Spawns the particle on the given {@link Location}, but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param location where to spawn the particle
+     */
+    public void spawnRotating(@NotNull Location location) {
+        Location spawnLocation = location.getDirection()
+                .multiply(new Vector(xAdd, yAdd, zAdd))
+                .toLocation(location.getWorld());
+        spawnExact(spawnLocation);
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
