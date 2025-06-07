@@ -3,15 +3,30 @@ name: Publish to GitHub Packages
 on:
   release:
     types:
-      - created
       - published
-  workflow_dispatch:
+
+env:
+  USERNAME: ${{ github.actor }}
+  TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  WLIB_UPLOAD_FILES: |
+    bukkit-utils/build/libs/*.jar
+    bungee/build/libs/*.jar
+    commands/build/libs/*.jar
+    config/build/libs/*.jar
+    core/build/libs/*.jar
+    database/build/libs/*.jar
+    objects/build/libs/*.jar
+    utils/build/libs/*.jar
+    versions/adapter/build/libs/*.jar
+    versions/v1_20_R4/build/libs/*.jar
+    versions/v1_21_R1/build/libs/*.jar
+    versions/v1_21_R3/build/libs/*.jar
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - uses: actions/checkout@v4
@@ -23,9 +38,20 @@ jobs:
           java-version: 21
           distribution: temurin
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
-      - name: Build with Gradle Wrapper
-        run: ./gradlew publish
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build
+        run: ./gradlew build
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          path: ${{ env.WLIB_UPLOAD_FILES }}
+          name: WLib
+      - name: Upload to the release
         env:
-          USERNAME: ${{ github.actor }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for file in $WLIB_UPLOAD_FILES; do
+            gh release upload ${{ github.event.release.tag_name }} $file
+          done
+      - name: Publish
+        run: ./gradlew publish
