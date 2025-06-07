@@ -13,6 +13,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -63,11 +65,6 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 .build();
     }
 
-    public void spawn(@NonNull Location location) {
-        World world = Objects.requireNonNull(location.getWorld(), "The world cannot be null");
-        spawn(world, location.getX(), location.getY(), location.getZ());
-    }
-
     public void spawn(@NonNull World world, double x, double y, double z) {
         world.spawnParticle(
                 type,
@@ -77,6 +74,11 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 extra,
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
+    }
+
+    public void spawn(@NonNull Location location) {
+        World world = Objects.requireNonNull(location.getWorld(), "The world cannot be null");
+        spawn(world, location.getX(), location.getY(), location.getZ());
     }
 
     public void spawn(@NonNull Player player) {
@@ -89,6 +91,97 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 extra,
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
+    }
+
+    /**
+     * <p>
+     * Spawns the particle exactly on the given {@link Location}, without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param location where to spawn the particle
+     */
+    public void spawnExact(@NotNull Location location) {
+        location.getWorld().spawnParticle(
+                type,
+                location.getX(), location.getY(), location.getZ(),
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
+    }
+
+    /**
+     * <p>
+     * Spawns the particle on the given {@link Location} only for the given {@link Player}
+     * without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     * @param location where to spawn the particle
+     */
+    public void spawnExact(@NotNull Player player, @NotNull Location location) {
+        player.spawnParticle(
+                type,
+                location.getX(), location.getY(), location.getZ(),
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
+    }
+
+    /**
+     * <p>
+     * Spawns the particle exactly where the given {@link Player} is without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     */
+    public void spawnExact(@NotNull Player player) {
+        spawnExact(player, player.getLocation());
+    }
+
+    /**
+     * <p>
+     * Spawns the particle on the given {@link Location}, but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param location where to spawn the particle
+     */
+    public void spawnRotating(@NotNull Location location) {
+        Vector add = new Vector(xAdd, yAdd, zAdd)
+                .rotateAroundX(Math.toRadians(location.getPitch()))
+                .rotateAroundY(Math.toRadians(-location.getYaw()));
+        spawnExact(add.toLocation(location.getWorld()).add(location));
+    }
+
+    /**
+     * <p>
+     * Spawns the particle on the given {@link Location} only for the given {@link Player},
+     * but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     * @param location where to spawn the particle
+     */
+    public void spawnRotating(@NotNull Player player, @NotNull Location location) {
+        Vector add = new Vector(xAdd, yAdd, zAdd)
+                .rotateAroundX(Math.toRadians(location.getPitch()))
+                .rotateAroundY(Math.toRadians(-location.getYaw()));
+        spawnExact(player, add.toLocation(location.getWorld()).add(location));
+    }
+
+    /**
+     * <p>
+     * Spawns the particle where the given {@link Player} is,
+     * but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     */
+    public void spawnRotating(@NotNull Player player) {
+        spawnRotating(player, player.getLocation());
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
