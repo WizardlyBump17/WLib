@@ -65,11 +65,6 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 .build();
     }
 
-    public void spawn(@NonNull Location location) {
-        World world = Objects.requireNonNull(location.getWorld(), "The world cannot be null");
-        spawn(world, location.getX(), location.getY(), location.getZ());
-    }
-
     public void spawn(@NonNull World world, double x, double y, double z) {
         world.spawnParticle(
                 type,
@@ -79,6 +74,11 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 extra,
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
+    }
+
+    public void spawn(@NonNull Location location) {
+        World world = Objects.requireNonNull(location.getWorld(), "The world cannot be null");
+        spawn(world, location.getX(), location.getY(), location.getZ());
     }
 
     public void spawn(@NonNull Player player) {
@@ -113,25 +113,6 @@ public class ParticleSpawner implements ConfigurationSerializable {
 
     /**
      * <p>
-     * Spawns the particle exactly where the given {@link Player} is without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
-     * </p>
-     *
-     * @param player the {@link Player} to send the particle
-     */
-    public void spawnExact(@NotNull Player player) {
-        Location location = player.getLocation();
-        player.spawnParticle(
-                type,
-                location.getX(), location.getY(), location.getZ(),
-                count,
-                offsetX, offsetY, offsetZ,
-                extra,
-                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
-        );
-    }
-
-    /**
-     * <p>
      * Spawns the particle on the given {@link Location} only for the given {@link Player}
      * without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
      * </p>
@@ -152,6 +133,17 @@ public class ParticleSpawner implements ConfigurationSerializable {
 
     /**
      * <p>
+     * Spawns the particle exactly where the given {@link Player} is without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     */
+    public void spawnExact(@NotNull Player player) {
+        spawnExact(player, player.getLocation());
+    }
+
+    /**
+     * <p>
      * Spawns the particle on the given {@link Location}, but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
      * </p>
      *
@@ -162,22 +154,6 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 .multiply(new Vector(xAdd, yAdd, zAdd))
                 .toLocation(location.getWorld());
         spawnExact(spawnLocation);
-    }
-
-    /**
-     * <p>
-     * Spawns the particle where the given {@link Player} is,
-     * but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
-     * </p>
-     *
-     * @param player the {@link Player} to send the particle
-     */
-    public void spawnRotating(@NotNull Player player) {
-        Location location = player.getLocation();
-        Location spawnLocation = location.getDirection()
-                .multiply(new Vector(xAdd, yAdd, zAdd))
-                .toLocation(location.getWorld());
-        spawnExact(player, spawnLocation);
     }
 
     /**
@@ -194,6 +170,18 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 .multiply(new Vector(xAdd, yAdd, zAdd))
                 .toLocation(location.getWorld());
         spawnExact(player, spawnLocation);
+    }
+
+    /**
+     * <p>
+     * Spawns the particle where the given {@link Player} is,
+     * but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     */
+    public void spawnRotating(@NotNull Player player) {
+        spawnRotating(player, player.getLocation());
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
