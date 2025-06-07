@@ -13,6 +13,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -89,6 +90,23 @@ public class ParticleSpawner implements ConfigurationSerializable {
                 extra,
                 data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
         );
+    /**
+     * <p>
+     * Spawns the particle exactly on the given {@link Location}, without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param location where to spawn the particle
+     */
+    public void spawnExact(@NotNull Location location) {
+        location.getWorld().spawnParticle(
+                type,
+                location.getX(), location.getY(), location.getZ(),
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
+    }
     }
 
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
