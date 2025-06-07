@@ -152,7 +152,8 @@ public class ParticleSpawner implements ConfigurationSerializable {
     public void spawnRotating(@NotNull Location location) {
         Location spawnLocation = location.getDirection()
                 .multiply(new Vector(xAdd, yAdd, zAdd))
-                .toLocation(location.getWorld());
+                .toLocation(location.getWorld())
+                .add(location);
         spawnExact(spawnLocation);
     }
 
@@ -168,7 +169,8 @@ public class ParticleSpawner implements ConfigurationSerializable {
     public void spawnRotating(@NotNull Player player, @NotNull Location location) {
         Location spawnLocation = location.getDirection()
                 .multiply(new Vector(xAdd, yAdd, zAdd))
-                .toLocation(location.getWorld());
+                .toLocation(location.getWorld())
+                .add(location);
         spawnExact(player, spawnLocation);
     }
 
