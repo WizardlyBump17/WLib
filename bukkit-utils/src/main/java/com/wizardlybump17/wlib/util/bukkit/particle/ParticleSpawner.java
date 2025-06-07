@@ -150,11 +150,10 @@ public class ParticleSpawner implements ConfigurationSerializable {
      * @param location where to spawn the particle
      */
     public void spawnRotating(@NotNull Location location) {
-        Location spawnLocation = location.getDirection()
-                .multiply(new Vector(xAdd, yAdd, zAdd))
-                .toLocation(location.getWorld())
-                .add(location);
-        spawnExact(spawnLocation);
+        Vector add = new Vector(xAdd, yAdd, zAdd)
+                .rotateAroundX(Math.toRadians(location.getPitch()))
+                .rotateAroundY(Math.toRadians(-location.getYaw()));
+        spawnExact(add.toLocation(location.getWorld()).add(location));
     }
 
     /**
@@ -167,11 +166,10 @@ public class ParticleSpawner implements ConfigurationSerializable {
      * @param location where to spawn the particle
      */
     public void spawnRotating(@NotNull Player player, @NotNull Location location) {
-        Location spawnLocation = location.getDirection()
-                .multiply(new Vector(xAdd, yAdd, zAdd))
-                .toLocation(location.getWorld())
-                .add(location);
-        spawnExact(player, spawnLocation);
+        Vector add = new Vector(xAdd, yAdd, zAdd)
+                .rotateAroundX(Math.toRadians(location.getPitch()))
+                .rotateAroundY(Math.toRadians(-location.getYaw()));
+        spawnExact(player, add.toLocation(location.getWorld()).add(location));
     }
 
     /**
