@@ -164,6 +164,22 @@ public class ParticleSpawner implements ConfigurationSerializable {
         spawnExact(spawnLocation);
     }
 
+    /**
+     * <p>
+     * Spawns the particle where the given {@link Player} is,
+     * but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     */
+    public void spawnRotating(@NotNull Player player) {
+        Location location = player.getLocation();
+        Location spawnLocation = location.getDirection()
+                .multiply(new Vector(xAdd, yAdd, zAdd))
+                .toLocation(location.getWorld());
+        spawnExact(player, spawnLocation);
+    }
+
     public static @NonNull ParticleSpawner deserialize(@NonNull Map<@NonNull String, @Nullable Object> map) {
         Map<String, Object> offset = ConfigUtil.get("offset", map, Collections.emptyMap());
         Map<String, Object> add = ConfigUtil.get("add", map, Collections.emptyMap());
