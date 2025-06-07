@@ -132,6 +132,26 @@ public class ParticleSpawner implements ConfigurationSerializable {
 
     /**
      * <p>
+     * Spawns the particle on the given {@link Location} only for the given {@link Player}
+     * without using the {@link #getXAdd()}, or {@link #getYAdd()}, or {@link #getZAdd()}.
+     * </p>
+     *
+     * @param player the {@link Player} to send the particle
+     * @param location where to spawn the particle
+     */
+    public void spawnExact(@NotNull Player player, @NotNull Location location) {
+        player.spawnParticle(
+                type,
+                location.getX(), location.getY(), location.getZ(),
+                count,
+                offsetX, offsetY, offsetZ,
+                extra,
+                data instanceof ConfigWrapper<?> wrapper ? wrapper.unwrap() : data
+        );
+    }
+
+    /**
+     * <p>
      * Spawns the particle on the given {@link Location}, but it rotates the {@link #getXAdd()}, {@link #getYAdd()} and {@link #getZAdd()} using the {@link Location#getDirection()}.
      * </p>
      *
