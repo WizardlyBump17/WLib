@@ -42,13 +42,13 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          path: ${{ env.WLIB_UPLOAD_FILES }}
+          path: "**/build/libs/*.jar"
           name: WLib
       - name: Upload to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for file in $WLIB_UPLOAD_FILES; do
+          for file in */build/libs/*.jar; do
             gh release upload ${{ github.event.release.tag_name }} $file
           done
       - name: Publish
