@@ -18,10 +18,7 @@ jobs:
       contents: read
     steps:
       - name: Get current date
-        id: date
-        run: |
-          echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
-          echo "The build date is $WLIB_BUILD_DATE"
+        run: echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
