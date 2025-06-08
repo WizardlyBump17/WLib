@@ -4,9 +4,11 @@ import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.NonNull;
 import net.minecraft.nbt.*;
 import org.bukkit.craftbukkit.v1_20_R4.persistence.CraftPersistentDataContainer;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -26,6 +28,17 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
     @Override
     public void copyPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to) {
         ((CraftPersistentDataContainer) to).getRaw().putAll(((CraftPersistentDataContainer) from).getRaw());
+    }
+
+    @Override
+    public void setDamage(@NotNull ItemMeta meta, @Nullable Integer damage) {
+        if (meta instanceof Damageable damageable)
+            damageable.setDamage(damage == null ? 0 : damage);
+    }
+
+    @Override
+    public @Nullable Integer getDamage(@NotNull ItemMeta meta) {
+        return meta instanceof Damageable damageable && damageable.hasDamage() ? damageable.getDamage() : null;
     }
 
     @Override
