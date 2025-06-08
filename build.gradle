@@ -1,20 +1,23 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id("com.gradleup.shadow") version "8.3.2"
     id 'maven-publish'
 }
 
-apply plugin: 'maven-publish'
-
-allprojects {
-    group = 'com.wizardlybump17.wlib'
-    version = '1.6.7'
-
-    apply plugin: 'com.github.johnrengelman.shadow'
+subprojects {
+    apply plugin: "com.gradleup.shadow"
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    group = 'com.wizardlybump17.wlib'
+    version = '1.6.7+1.20.6'
 
     repositories {
         mavenLocal()
         mavenCentral()
+
+        maven {
+            url("https://repo.papermc.io/repository/maven-public/")
+        }
     }
 
     sourceCompatibility = '16'
@@ -27,6 +30,9 @@ allprojects {
 
         assemble {
             dependsOn(shadowJar)
+
+            for (def reobfJar in getTasksByName("reobfJar", false))
+                dependsOn(reobfJar)
         }
     }
 
