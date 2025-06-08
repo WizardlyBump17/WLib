@@ -19,7 +19,9 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H-%M-%S')"
+        run: |
+          echo "$(date +'%Y-%m-%d_%H-%M-%S')" >> $WLIB_BUILD_DATE
+          echo "The build date is $WLIB_BUILD_DATE"
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -34,5 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: "**/build/libs/*.jar"
-          name: WLib-${{ steps.date.outputs.date }}
+          name: WLib-${{ env.WLIB_BUILD_DATE }}
           if-no-files-found: error
