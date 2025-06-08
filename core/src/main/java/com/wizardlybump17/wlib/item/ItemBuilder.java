@@ -391,6 +391,17 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return getFromMeta(ItemMeta::getAttributeModifiers, ImmutableMultimap.of());
     }
 
+    public @NotNull Map<String, Object> itemCustomData() {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return new HashMap<>();
+        return ItemAdapter.getInstance().getCustomData(meta);
+    }
+
+    public @NotNull ItemBuilder itemCustomData(@NotNull Map<String, Object> customData) {
+        return consumeMeta(meta -> ItemAdapter.getInstance().setCustomData(meta, customData));
+    }
+
     public ItemStack build() {
         return item;
     }
@@ -425,6 +436,10 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         Multimap<Attribute, AttributeModifier> attributes = attributes();
         if (!attributes.isEmpty())
             result.put("attributes", AttributeAdapter.getInstance().serialize(attributes));
+
+        Map<String, Object> itemCustomData = itemCustomData();
+        if (!itemCustomData.isEmpty())
+            result.put("item-custom-data", itemCustomData);
 
         if (metaHandler != null)
             metaHandler.serialize(result);
@@ -485,6 +500,14 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                         attributes -> AttributeAdapter.getInstance().deserialize(attributes)
                 ))
                 .ifPresent(result::attributes);
+
+        Optional
+                .ofNullable(ConfigUtil.<Map<String, Object>>get(
+                        "item-custom-data",
+                        map,
+                        HashMap::new
+                ))
+                .ifPresent(result::itemCustomData);
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
         result.metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
