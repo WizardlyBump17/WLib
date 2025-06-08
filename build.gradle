@@ -3,8 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-
-allprojects {
+subprojects {
     apply plugin: "com.gradleup.shadow"
     apply plugin: 'java'
     apply plugin: 'maven-publish'
