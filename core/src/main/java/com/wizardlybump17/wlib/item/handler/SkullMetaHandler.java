@@ -34,14 +34,14 @@ public class SkullMetaHandler extends ItemMetaHandler<SkullMetaHandlerModel> {
     @Override
     public void deserialize(Map<String, Object> map) {
         String skull = (String) map.get("skull");
-        if (skull == null)
-            return;
-
-        try {
-            skull(Bukkit.getOfflinePlayer(UUID.fromString(skull)));
-        } catch (IllegalArgumentException ignored) {
+        if (skull != null) {
             skull(skull);
+            return;
         }
+
+        String owner = (String) map.get("owner");
+        if (owner != null)
+            skull(Bukkit.getOfflinePlayer(UUID.fromString(owner)));
     }
 
     public String skullUrl() {
