@@ -46,6 +46,8 @@ public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
         Map<String, Object> result = new HashMap<>();
 
         CompoundTag tag = ReflectionUtil.getFieldValue(CUSTOM_TAG, meta);
+        if (tag == null)
+            return result;
 
         for (String key : tag.getAllKeys()) {
             Tag data = tag.get(key);
