@@ -53,4 +53,4 @@ jobs:
             gh release upload ${{ github.event.release.tag_name }} $file
           done
       - name: Publish
-        run: ./gradlew publish
+        run: ./gradlew -DwlibSnapshot=${{ github.event_name == 'workflow_dispatch' }} publish
