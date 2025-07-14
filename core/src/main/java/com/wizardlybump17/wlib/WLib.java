@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib;
 
 import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
+import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
 import com.wizardlybump17.wlib.command.reader.*;
@@ -120,21 +121,25 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.command.CommandMapAdapter());
             }
             case "1.21", "1.21.1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.command.CommandMapAdapter());
             }
             case "1.21.4" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.command.CommandMapAdapter());
             }
             case "1.21.6", "1.21.7" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.command.CommandMapAdapter());
             }
             default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }

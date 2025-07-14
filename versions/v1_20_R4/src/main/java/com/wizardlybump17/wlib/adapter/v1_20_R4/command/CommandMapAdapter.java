@@ -1,23 +1,17 @@
-package com.wizardlybump17.wlib.adapter.v1_19_R2.command;
+package com.wizardlybump17.wlib.adapter.v1_20_R4.command;
 
-import com.wizardlybump17.wlib.util.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.SimpleCommandMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 public class CommandMapAdapter extends com.wizardlybump17.wlib.adapter.command.CommandMapAdapter {
 
-    public static final @NotNull Field COMMAND_MAP = ReflectionUtil.getField("commandMap", Bukkit.getServer().getClass());
-    public static final @NotNull Field COMMANDS = ReflectionUtil.getField("knownCommands", SimpleCommandMap.class);
-
     @Override
     public @NotNull CommandMap getCommandMap() {
-        return ReflectionUtil.getFieldValue(COMMAND_MAP, Bukkit.getServer());
+        return Bukkit.getCommandMap();
     }
 
     @Override
@@ -32,6 +26,6 @@ public class CommandMapAdapter extends com.wizardlybump17.wlib.adapter.command.C
 
     @Override
     public @NotNull Map<String, Command> getCommands() {
-        return ReflectionUtil.getFieldValue(COMMANDS, getCommandMap());
+        return getCommandMap().getKnownCommands();
     }
 }
