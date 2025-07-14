@@ -6,7 +6,7 @@ on:
       - published
   push:
     branches:
-      - 1.20.6\+
+      - new-command-system-1.20.6\+
 
 env:
   USERNAME: ${{ github.actor }}
