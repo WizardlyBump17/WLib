@@ -12,7 +12,6 @@ env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
   WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
-  WLIB_SNAPSHOT_NUMBER: ${{ github.run_number + github.run_attempt }}
 
 jobs:
   build:
@@ -22,6 +21,8 @@ jobs:
     steps:
       - name: Get current date
         run: echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
+      - name: Get snapshot number
+        run: echo "WLIB_SNAPSHOT_NUMBER=$((${{ github.run_number }}+${{ github.run_attempt }})) >> $GITHUB_ENV"
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
