@@ -11,6 +11,7 @@ on:
 env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
 
 jobs:
   build:
@@ -29,7 +30,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build
-        run: ./gradlew -DwlibSnapshot=${{ github.event_name == 'workflow_dispatch' }} build
+        run: ./gradlew build
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:

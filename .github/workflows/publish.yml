@@ -22,6 +22,7 @@ env:
     versions/v1_20_R4/build/libs/*.jar
     versions/v1_21_R1/build/libs/*.jar
     versions/v1_21_R3/build/libs/*.jar
+  WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
 
 jobs:
   build:
@@ -39,7 +40,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build
-        run: ./gradlew -DwlibSnapshot=${{ github.event_name == 'workflow_dispatch' }} build
+        run: ./gradlew build
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
@@ -53,4 +54,4 @@ jobs:
             gh release upload ${{ github.event.release.tag_name }} $file
           done
       - name: Publish
-        run: ./gradlew -DwlibSnapshot=${{ github.event_name == 'workflow_dispatch' }} publish
+        run: ./gradlew publish
