@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class AttributeAdapter extends com.wizardlybump17.wlib.adapter.AttributeAdapter {
+public class AttributeAdapter extends com.wizardlybump17.wlib.adapter.AttributeAdapter implements BaseAdapter {
 
     public static final @NotNull Map<String, Attribute> ATTRIBUTES;
 

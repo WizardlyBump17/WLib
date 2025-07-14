@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.adapter.v1_20_R4.command;
 
+import com.wizardlybump17.wlib.adapter.v1_20_R4.BaseAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -7,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class CommandMapAdapter extends com.wizardlybump17.wlib.adapter.command.CommandMapAdapter {
+public class CommandMapAdapter extends com.wizardlybump17.wlib.adapter.command.CommandMapAdapter implements BaseAdapter {
 
     @Override
     public @NotNull CommandMap getCommandMap() {

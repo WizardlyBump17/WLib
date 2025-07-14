@@ -1,12 +1,13 @@
 package com.wizardlybump17.wlib.adapter.command;
 
+import com.wizardlybump17.wlib.adapter.Adapter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public abstract class CommandMapAdapter {
+public abstract class CommandMapAdapter implements Adapter {
 
     private static CommandMapAdapter instance;
 
@@ -23,6 +24,7 @@ public abstract class CommandMapAdapter {
     public static void setInstance(@NotNull CommandMapAdapter instance) {
         if (CommandMapAdapter.instance != null)
             throw new IllegalStateException("The CommandAdapter instance is already set.");
+        instance.checkIsOnRightVersion();
         CommandMapAdapter.instance = instance;
     }
 }
