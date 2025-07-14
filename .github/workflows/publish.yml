@@ -11,7 +11,7 @@ on:
 env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WLIB_SNAPSHOT: ${{ github.event_name != "release" }}
+  WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
           path: "**/build/libs/*.jar"
           name: WLib
       - name: Upload to the release
-        if: ${{ github.event_name == "release" }}
+        if: ${{ github.event_name == 'release' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
