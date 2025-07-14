@@ -5,18 +5,20 @@
 
 ### Build yourself
 
-#### Pre-requisites
-
-1. Git installed
-2. Gradle installed
-3. Java 8, for the 1.8.8 - 1.16.5 Minecraft versions, Java 16 for 1.17 and Java 17 for 1.18
-4. [BuildTools](https://www.spigotmc.org/wiki/buildtools/) run for the versions: 1.8.8, 1.12.2, 1.13.2, 1.15.2, 1.16.5, 1.17.1 and 1.18
-
-#### Building
-
-1. Clone the repository
-2. Enter the directory
-3. Run `gradle shadowJar`
+### Linux
+### Pre-requisites
+1. Git installed;
+2. JDK 16 installed (JDK 21 for branches related to 1.20.6+);
+3. BuildTools ran for all Minecraft versions of the branch you are on;
+    1. If you are on the "1.20.6+" branch, you don't need to do that;
+    2. This can be automated by running the `scripts/buildtools/build-spigot.sh` script;
+        1. For this approach, you will need to have installed:
+           1. [SDKMAN!](https://sdkman.io/);
+           2. curl.
+### Building
+1. Run `./gradlew build`;
+2. The .jar to use on the Spigot (or Paper) server will be located at `core/build/libs/WLib-<version>.jar`;
+3. The .jar to use on BungeeCord will be located at `bungee/build/libs/WLib-BungeeCord-<version>.jar`.
 
 <br>
 

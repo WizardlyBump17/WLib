@@ -1,15 +1,14 @@
 package com.wizardlybump17.wlib.adapter;
 
-import com.wizardlybump17.wlib.util.ReflectionUtil;
 import lombok.NonNull;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.Map;
 
 public abstract class ItemAdapter {
@@ -26,57 +25,19 @@ public abstract class ItemAdapter {
             ItemAdapter.instance = instance;
     }
 
-    public abstract Map<String, Object> serializeContainer(PersistentDataContainer container);
+    public abstract void transferPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to);
 
-    public abstract PersistentDataContainer deserializeContainer(Map<String, Object> map);
+    public abstract void copyPersistentData(@NonNull PersistentDataContainer from, @NonNull PersistentDataContainer to);
 
-    public abstract void transferPersistentData(PersistentDataContainer from, PersistentDataContainer to);
+    public abstract void setDamage(@NotNull ItemMeta meta, @Nullable Integer damage);
 
-    public abstract void copyPersistentData(PersistentDataContainer from, PersistentDataContainer to);
+    public abstract @Nullable Integer getDamage(@NotNull ItemMeta meta);
 
-    public abstract void setSkull(SkullMeta meta, String url);
+    public abstract @NotNull Map<String, Object> getCustomData(@NotNull ItemMeta meta);
 
-    public abstract String getSkullUrl(SkullMeta meta);
+    public abstract void setCustomData(@NotNull ItemMeta meta, @NotNull Map<String, Object> customData);
 
-    public @NonNull ItemStack setRawNBTTag(@NonNull ItemStack item, @NonNull String key, @NonNull Object value) {
-        return item;
-    }
+    protected abstract @NotNull Object toNBT(@NotNull Object java);
 
-    public @NonNull ItemStack setRawNBTTags(@NonNull ItemStack item, @NonNull Map<String, Object> tags) {
-        return item;
-    }
-
-    public @NonNull Map<String, Object> getRawNBTTags(@NonNull ItemStack item) {
-        return Collections.emptyMap();
-    }
-
-    public @NonNull Enchantment getGlowEnchantment() {
-        return GlowEnchantment.INSTANCE;
-    }
-
-    public void applyGlow(@NonNull ItemStack item) {
-        item.addUnsafeEnchantment(getGlowEnchantment(), 1);
-    }
-
-    public void removeGlow(@NonNull ItemStack item) {
-        item.removeEnchantment(getGlowEnchantment());
-    }
-
-    public boolean isGlowing(@NonNull ItemStack item) {
-        return item.getEnchantments().containsKey(getGlowEnchantment());
-    }
-
-    public void registerGlowEnchantment() {
-        Enchantment enchantment = getGlowEnchantment();
-
-        if (Enchantment.getByKey(enchantment.getKey()) != null)
-            return;
-
-        ReflectionUtil.setFieldValue(ReflectionUtil.getField("acceptingNew", Enchantment.class), null, true);
-        Enchantment.registerEnchantment(enchantment);
-    }
-
-    public boolean hasGlowEnchantment() {
-        return true;
-    }
+    protected abstract @NotNull Object fromNBT(@NotNull Object nbt);
 }
