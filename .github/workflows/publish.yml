@@ -12,6 +12,7 @@ env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
   WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
+  WLIB_SNAPSHOT_NUMBER: ${{ github.run_number + github.run_attempt }}
 
 jobs:
   build:
