@@ -6,10 +6,12 @@ on:
     types:
       - opened
       - reopened
+  workflow_dispatch:
 
 env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
 
 jobs:
   build:
