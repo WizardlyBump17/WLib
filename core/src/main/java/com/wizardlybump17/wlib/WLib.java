@@ -26,7 +26,6 @@ import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapp
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWrapper;
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -131,7 +130,7 @@ public class WLib extends JavaPlugin {
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.AttributeAdapter());
             }
-            case "1.21.6", "1.21.7" -> {
+            case "1.21.6", "1.21.7", "1.21.8" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.AttributeAdapter());
@@ -142,9 +141,5 @@ public class WLib extends JavaPlugin {
 
     public static WLib getInstance() {
         return getPlugin(WLib.class);
-    }
-
-    public static @NonNull String getServerVersion() {
-        return Bukkit.getServer().getClass().getName().split("\\.")[3];
     }
 }
