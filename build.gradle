@@ -1,5 +1,5 @@
 plugins {
-    id("com.gradleup.shadow") version "8.3.2"
+    id("com.gradleup.shadow") version "9.2.2"
     id 'maven-publish'
 }
 
@@ -20,9 +20,6 @@ subprojects {
         }
     }
 
-    sourceCompatibility = '21'
-    targetCompatibility = '21'
-
     tasks {
         compileJava {
             options.encoding = 'UTF-8'
@@ -38,13 +35,16 @@ subprojects {
 
     java {
         withSourcesJar()
+        sourceCompatibility = 21
+        targetCompatibility = 21
     }
 }
 
 subprojects {
     dependencies {
-        testImplementation(platform("org.junit:junit-bom:5.10.3"))
-        testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+        testImplementation(platform("org.junit:junit-bom:6.0.0"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation("org.junit.platform:junit-platform-launcher")
     }
 
     test {
@@ -80,13 +80,6 @@ subprojects {
                 }
             }
         }
-    }
-
-    dependencies {
-        testImplementation(
-                platform('org.junit:junit-bom:5.10.2'),
-                'org.junit.jupiter:junit-jupiter:5.10.2'
-        )
     }
 
     test {
