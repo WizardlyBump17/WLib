@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
 import com.wizardlybump17.wlib.command.rework.node.input.LiteralAllowedInput;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class LiteralCommandNode extends CommandNode<String> {
         if (!getName().equalsIgnoreCase(input))
             return Optional.empty();
         return Optional.of(EMPTY_STRING);
+    }
+
+    @Override
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {
+        return List.of(getName());
     }
 }
