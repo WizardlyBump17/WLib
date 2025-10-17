@@ -6,7 +6,6 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
@@ -21,14 +20,11 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     }
 
     @Override
-    public @NotNull Optional<Integer> parse(@NotNull String input) {
+    public @NotNull ParseResult<Integer> parse(@NotNull String input) {
         try {
-            int integer = Integer.parseInt(input);
-            if (getAllowedInputs().isAllowed(integer))
-                return Optional.of(integer);
-            return Optional.empty();
+            return ParseResult.success(Integer.parseInt(input));
         } catch (NumberFormatException e) {
-            return Optional.empty();
+            return ParseResult.failure();
         }
     }
 

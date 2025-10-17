@@ -3,13 +3,15 @@ package com.wizardlybump17.wlib.command.rework.node;
 import com.wizardlybump17.wlib.command.rework.node.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class CommandNode<T> {
+
+    public static final @NotNull Object EMPTY_OBJECT = new Object();
 
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
@@ -33,9 +35,28 @@ public abstract class CommandNode<T> {
         return allowedInputs;
     }
 
-    public abstract @NotNull Optional<T> parse(@NotNull String input);
+    public abstract @NotNull ParseResult<T> parse(@NotNull String input);
+
+    public final boolean isValidInput(@Nullable T input) {
+        return allowedInputs.isAllowed(input);
+    }
 
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {
         return List.of();
+    }
+
+    public record ParseResult<T>(boolean success, @Nullable T value) {
+
+        public static <T> @NotNull ParseResult<T> success(@Nullable T value) {
+            return new ParseResult<>(true, value);
+        }
+
+        public static <T> @NotNull ParseResult<T> emptySuccess() {
+            return new ParseResult<>(true, null);
+        }
+
+        public static <T> @NotNull ParseResult<T> failure() {
+            return new ParseResult<>(false, null);
+        }
     }
 }

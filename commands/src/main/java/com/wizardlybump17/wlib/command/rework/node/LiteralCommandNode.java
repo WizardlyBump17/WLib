@@ -5,7 +5,6 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 public class LiteralCommandNode extends CommandNode<String> {
 
@@ -21,10 +20,8 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     @Override
-    public @NotNull Optional<String> parse(@NotNull String input) {
-        if (!getName().equalsIgnoreCase(input))
-            return Optional.empty();
-        return Optional.of(EMPTY_STRING);
+    public @NotNull ParseResult<String> parse(@NotNull String input) {
+        return ParseResult.emptySuccess();
     }
 
     @Override
