@@ -19,7 +19,7 @@ public class LiteralCommandNode extends CommandNode<String> {
 
     @Override
     public @NotNull ParseResult<String> parse(@NotNull String input) {
-        return ParseResult.emptySuccess();
+        return ParseResult.success(input);
     }
 
     @Override
