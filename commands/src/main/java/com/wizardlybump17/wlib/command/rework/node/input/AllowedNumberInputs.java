@@ -5,24 +5,21 @@ import org.jetbrains.annotations.Nullable;
 
 public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> {
 
-    @NotNull N from();
+    interface AllowedIntegerInputs extends AllowedInputs<Integer> {
 
-    @NotNull N to();
+        record Range(@NotNull Integer from, @NotNull Integer to) implements AllowedIntegerInputs, RangedAllowedInputs<Integer> {
 
-    boolean isInRange(@NotNull N number);
+            @Override
+            public boolean isInRange(@NotNull Integer number) {
+                return number.compareTo(from) >= 0 && number.compareTo(to) <= 0;
+            }
 
-    record AllowedIntegerInputs(@NotNull Integer from, @NotNull Integer to) implements AllowedNumberInputs<Integer> {
-
-        @Override
-        public boolean isInRange(@NotNull Integer number) {
-            return number.compareTo(from) >= 0 && number.compareTo(to) <= 0;
-        }
-
-        @Override
-        public boolean isAllowed(@Nullable Integer input) {
-            if (input == null)
-                return false;
-            return isInRange(input);
+            @Override
+            public boolean isAllowed(@Nullable Integer input) {
+                if (input == null)
+                    return false;
+                return isInRange(input);
+            }
         }
     }
 }

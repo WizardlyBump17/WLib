@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
 import com.wizardlybump17.wlib.command.rework.node.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.rework.node.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,12 +38,18 @@ public class IntegerCommandNode extends CommandNode<Integer> {
             return List.of();
 
         AllowedNumberInputs.AllowedIntegerInputs allowedInputs = getAllowedInputs();
-        int from = allowedInputs.from();
-        int to = allowedInputs.to();
 
-        if (to - from < 3)
-            return IntStream.rangeClosed(from, to).boxed().toList();
+        if (allowedInputs instanceof RangedAllowedInputs<?> ranged) {
+            int from = (int) ranged.from();
+            int to = (int) ranged.to();
 
-        return List.of(from, (from + to) / 2, to);
+            if (to - from < 5)
+                return IntStream.rangeClosed(from, to).boxed().toList();
+
+            int fourth = (to - from) / 4;
+            return List.of(from, from + fourth, from + fourth * 2, from + fourth * 3, to);
+        }
+
+        return List.of(-100, -10, 0, 10, 100);
     }
 }
