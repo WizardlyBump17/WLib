@@ -11,15 +11,17 @@ import java.util.List;
 
 public abstract class CommandNode<T> {
 
-    public static final @NotNull Object EMPTY_OBJECT = new Object();
-
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
+    private @NotNull CommandNode<?> parent = this;
 
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs) {
         this.name = name;
+
+        children.forEach(child -> child.setParent(this));
         this.children = Collections.unmodifiableList(children);
+
         this.allowedInputs = allowedInputs;
     }
 
@@ -43,6 +45,18 @@ public abstract class CommandNode<T> {
 
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {
         return List.of();
+    }
+
+    public @NotNull CommandNode<?> getParent() {
+        return parent;
+    }
+
+    public void setParent(@NotNull CommandNode<?> parent) {
+        this.parent = parent;
+    }
+
+    public boolean hasParent() {
+        return parent != this;
     }
 
     public record ParseResult<T>(boolean success, @Nullable T value) {
