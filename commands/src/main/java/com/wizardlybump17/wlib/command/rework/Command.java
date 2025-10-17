@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.rework;
 
 import com.wizardlybump17.wlib.command.rework.node.input.LiteralAllowedInput;
+import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.rework.result.SuccessResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -11,13 +12,13 @@ import java.util.List;
 
 public class Command {
 
-    private final @NotNull LiteralAllowedInput root;
+    private final @NotNull LiteralCommandNode root;
 
-    public Command(@NotNull LiteralAllowedInput root) {
+    public Command(@NotNull LiteralCommandNode root) {
         this.root = root;
     }
 
-    public @NotNull LiteralAllowedInput getRoot() {
+    public @NotNull LiteralCommandNode getRoot() {
         return root;
     }
 

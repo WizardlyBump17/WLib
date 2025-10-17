@@ -8,8 +8,6 @@ import java.util.List;
 
 public class LiteralCommandNode extends CommandNode<String> {
 
-    public static final @NotNull String EMPTY_STRING = "";
-
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children) {
         super(name, children, new LiteralAllowedInput(name, false));
     }
