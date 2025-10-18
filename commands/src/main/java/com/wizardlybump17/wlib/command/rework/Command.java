@@ -9,9 +9,7 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Command {
 
@@ -84,5 +82,48 @@ public class Command {
     }
 
     public record NodeResult<T>(@NotNull CommandNode<T> node, @Nullable T value) {
+    }
+
+    public static @Nullable Command createCommand(@NotNull String execution) {
+        LiteralCommandNode firstNode = null;
+        LiteralCommandNode lastNode = null;
+        List<CommandNode<?>> children = new ArrayList<>();
+        for (String string : execution.split(" ")) {
+            if (firstNode == null) {
+                firstNode = new LiteralCommandNode(string, children);
+                lastNode = firstNode;
+                continue;
+            }
+
+            List<CommandNode<?>> newChildren = new ArrayList<>();
+            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren);
+            children.add(newNode);
+            newNode.setParent(lastNode);
+
+            children = newChildren;
+            lastNode = newNode;
+        }
+
+        return firstNode == null ? null : new Command(firstNode);
+    }
+
+    @Override
+    public String toString() {
+        return "Command{" +
+                "root=" + root +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Command command = (Command) o;
+        return Objects.equals(root, command.root);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(root);
     }
 }

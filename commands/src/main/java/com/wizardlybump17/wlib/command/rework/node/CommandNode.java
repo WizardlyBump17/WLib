@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class CommandNode<T> {
 
@@ -72,5 +73,28 @@ public abstract class CommandNode<T> {
         public static <T> @NotNull ParseResult<T> failure() {
             return new ParseResult<>(false, null);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CommandNode{" +
+                "name='" + name + '\'' +
+                ", children=" + children +
+                ", allowedInputs=" + allowedInputs +
+                ", parent=" + parent.name +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return false;
+        CommandNode<?> that = (CommandNode<?>) o;
+        return Objects.equals(name, that.name) && Objects.equals(children, that.children) && Objects.equals(allowedInputs, that.allowedInputs) && Objects.equals(parent.name, that.parent.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children, allowedInputs, parent.name);
     }
 }
