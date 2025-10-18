@@ -9,7 +9,6 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,40 +30,23 @@ public class Command {
         return SuccessResult.INSTANCE;
     }
 
-    @SuppressWarnings("unchecked")
     public @NotNull Map<String, NodeResult<?>> getNodes(@NotNull List<String> input) {
         if (input.isEmpty())
             return Map.of();
 
         Map<String, NodeResult<?>> nodes = new LinkedHashMap<>();
 
-        CommandNode<Object> root = (CommandNode<Object>) (Object) this.root;
-        String firstInput = input.getFirst();
-
-        NodeResult<Object> firstNodeResult = getNodeResult(root, firstInput);
-        if (firstNodeResult == null)
-            return Map.of();
-
-        nodes.put(firstInput, firstNodeResult);
-
-        if (root.getChildren().isEmpty())
-            return input.size() > 1 ? Map.of() : nodes;
-
-        Iterator<String> inputIterator = input.subList(1, input.size()).iterator();
-        Iterator<CommandNode<Object>> childrenIterator = (Iterator<CommandNode<Object>>) (Object) root.getChildren().iterator();
-
-        if (!inputIterator.hasNext() && childrenIterator.hasNext())
-            return Map.of();
+        List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> last = null;
-        inputLoop: for (String inputString : input.subList(1, input.size())) {
-            for (CommandNode<?> child : root.getChildren()) {
-                NodeResult<Object> nodeResult = getNodeResult(child, inputString);
+        inputLoop: for (String inputString : input) {
+            for (CommandNode<?> child : children) {
+                NodeResult<?> nodeResult = getNodeResult(child, inputString);
                 if (nodeResult == null)
                     continue;
 
                 last = child;
-                root = (CommandNode<Object>) child;
+                children = child.getChildren();
 
                 nodes.put(inputString, nodeResult);
                 continue inputLoop;
@@ -72,9 +54,6 @@ public class Command {
 
             return Map.of();
         }
-
-        if (last == null)
-            return Map.of();
 
         if (!last.getChildren().isEmpty())
             return Map.of();
