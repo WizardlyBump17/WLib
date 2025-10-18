@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework;
 
+import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
@@ -86,22 +87,28 @@ public class Command {
 
     public static @Nullable Command createCommand(@NotNull String execution) {
         LiteralCommandNode firstNode = null;
-        LiteralCommandNode lastNode = null;
+
         List<CommandNode<?>> children = new ArrayList<>();
-        for (String string : execution.split(" ")) {
-            if (firstNode == null) {
-                firstNode = new LiteralCommandNode(string, children);
-                lastNode = firstNode;
+        String[] strings = execution.split(" ");
+
+        for (int i = 0; i < strings.length; i++) {
+            String string = strings[i];
+            if (i == 0) {
+                firstNode = new LiteralCommandNode(string, children, null);
                 continue;
             }
 
+            CommandExecutor executor;
+            if (i + 1 >= strings.length)
+                executor = CommandExecutor.TEST_EXECUTOR;
+            else
+                executor = null;
+
             List<CommandNode<?>> newChildren = new ArrayList<>();
-            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren);
+            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren, executor);
             children.add(newNode);
-            newNode.setParent(lastNode);
 
             children = newChildren;
-            lastNode = newNode;
         }
 
         return firstNode == null ? null : new Command(firstNode);

@@ -1,12 +1,18 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
+import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.LiteralAllowedInput;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class LiteralCommandNode extends CommandNode<String> {
+
+    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandExecutor executor) {
+        super(name, children, new LiteralAllowedInput(name, false), executor);
+    }
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children) {
         super(name, children, new LiteralAllowedInput(name, false));

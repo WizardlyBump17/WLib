@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
+import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -15,15 +16,17 @@ public abstract class CommandNode<T> {
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
-    private @NotNull CommandNode<?> parent = this;
+    private final @Nullable CommandExecutor executor;
+
+    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandExecutor executor) {
+        this.name = name;
+        this.children = Collections.unmodifiableList(children);
+        this.allowedInputs = allowedInputs;
+        this.executor = executor;
+    }
 
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs) {
-        this.name = name;
-
-        children.forEach(child -> child.setParent(this));
-        this.children = Collections.unmodifiableList(children);
-
-        this.allowedInputs = allowedInputs;
+        this(name, children, allowedInputs, null);
     }
 
     public @NotNull String getName() {
@@ -48,18 +51,6 @@ public abstract class CommandNode<T> {
         return List.of();
     }
 
-    public @NotNull CommandNode<?> getParent() {
-        return parent;
-    }
-
-    public void setParent(@NotNull CommandNode<?> parent) {
-        this.parent = parent;
-    }
-
-    public boolean hasParent() {
-        return parent != this;
-    }
-
     public record ParseResult<T>(boolean success, @Nullable T value) {
 
         public static <T> @NotNull ParseResult<T> success(@Nullable T value) {
@@ -75,13 +66,17 @@ public abstract class CommandNode<T> {
         }
     }
 
+    public @Nullable CommandExecutor getExecutor() {
+        return executor;
+    }
+
     @Override
     public String toString() {
         return "CommandNode{" +
                 "name='" + name + '\'' +
                 ", children=" + children +
                 ", allowedInputs=" + allowedInputs +
-                ", parent=" + parent.name +
+                ", executor=" + executor +
                 '}';
     }
 
@@ -90,11 +85,14 @@ public abstract class CommandNode<T> {
         if (o == null || getClass() != o.getClass())
             return false;
         CommandNode<?> that = (CommandNode<?>) o;
-        return Objects.equals(name, that.name) && Objects.equals(children, that.children) && Objects.equals(allowedInputs, that.allowedInputs) && Objects.equals(parent.name, that.parent.name);
+        return Objects.equals(name, that.name)
+                && Objects.equals(children, that.children)
+                && Objects.equals(allowedInputs, that.allowedInputs)
+                && Objects.equals(executor, that.executor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, children, allowedInputs, parent.name);
+        return Objects.hash(name, children, allowedInputs, executor);
     }
 }

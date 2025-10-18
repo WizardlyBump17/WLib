@@ -1,17 +1,19 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
+import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.rework.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
-        super(name, children, allowedInputs);
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandExecutor executor) {
+        super(name, children, allowedInputs, executor);
     }
 
     @Override
