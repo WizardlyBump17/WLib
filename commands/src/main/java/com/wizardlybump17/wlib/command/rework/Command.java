@@ -26,8 +26,17 @@ public class Command {
     }
 
     public @NotNull CommandResult execute(@NotNull CommandSender<?> sender, @NotNull String execution) {
-        List<String> strings = StringUtil.parseQuotedStrings(execution);
+        List<String> strings = getInputList(execution);
+        Map<String, NodeResult<?>> results = getNodes(strings);
+
+        if (results.isEmpty())
+            return CommandResult.error();
+
         return SuccessResult.INSTANCE;
+    }
+
+    public @NotNull List<String> getInputList(@NotNull String original) {
+        return StringUtil.parseQuotedStrings(original);
     }
 
     public @NotNull Map<String, NodeResult<?>> getNodes(@NotNull List<String> input) {
