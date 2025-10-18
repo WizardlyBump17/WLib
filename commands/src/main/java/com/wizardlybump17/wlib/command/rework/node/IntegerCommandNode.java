@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
-import com.wizardlybump17.wlib.command.rework.node.input.AllowedNumberInputs;
-import com.wizardlybump17.wlib.command.rework.node.input.RangedAllowedInputs;
+import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.rework.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.rework.node.input;
+package com.wizardlybump17.wlib.command.rework.input;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

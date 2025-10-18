@@ -1,6 +1,6 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
-import com.wizardlybump17.wlib.command.rework.node.input.LiteralAllowedInput;
+import com.wizardlybump17.wlib.command.rework.input.LiteralAllowedInput;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
