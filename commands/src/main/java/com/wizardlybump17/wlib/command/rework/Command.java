@@ -9,6 +9,7 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ public class Command {
 
     @SuppressWarnings("unchecked")
     public @NotNull Map<String, NodeResult<?>> getNodes(@NotNull List<String> input) {
+        if (input.isEmpty())
+            return Map.of();
+
         Map<String, NodeResult<?>> nodes = new LinkedHashMap<>();
 
         CommandNode<Object> root = (CommandNode<Object>) (Object) this.root;
@@ -46,25 +50,36 @@ public class Command {
         if (root.getChildren().isEmpty())
             return input.size() > 1 ? Map.of() : nodes;
 
-        for (String inputString : input.subList(1, input.size())) {
-            boolean found = false;
+        Iterator<String> inputIterator = input.subList(1, input.size()).iterator();
+        Iterator<CommandNode<Object>> childrenIterator = (Iterator<CommandNode<Object>>) (Object) root.getChildren().iterator();
 
+        if (!inputIterator.hasNext() && childrenIterator.hasNext())
+            return Map.of();
+
+        CommandNode<?> last = null;
+        inputLoop: for (String inputString : input.subList(1, input.size())) {
             for (CommandNode<?> child : root.getChildren()) {
                 NodeResult<Object> nodeResult = getNodeResult(child, inputString);
                 if (nodeResult == null)
                     continue;
 
-                found = true;
+                last = child;
                 root = (CommandNode<Object>) child;
+
                 nodes.put(inputString, nodeResult);
-                break;
+                continue inputLoop;
             }
 
-            if (!found)
-                return Map.of();
+            return Map.of();
         }
 
-        return nodes.size() < input.size() ? Map.of() : nodes;
+        if (last == null)
+            return Map.of();
+
+        if (!last.getChildren().isEmpty())
+            return Map.of();
+
+        return nodes;
     }
 
     @SuppressWarnings("unchecked")
