@@ -71,11 +71,11 @@ public class Command {
 
     @SuppressWarnings("unchecked")
     public static @Nullable CommandContext.CommandNodeArgument<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
-        CommandNode.ParseResult<?> parseResult = node.parse(input);
+        CommandResult<?> parseResult = node.parse(input);
         if (!parseResult.success())
             return null;
 
-        Object value = parseResult.value();
+        Object value = parseResult.data();
         if (!((CommandNode<Object>) node).isValidInput(value))
             return null;
 

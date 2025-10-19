@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.rework.node;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.rework.input.RangedAllowedInputs;
+import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,11 +23,11 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     }
 
     @Override
-    public @NotNull ParseResult<Integer> parse(@NotNull String input) {
+    public @NotNull CommandResult<Integer> parse(@NotNull String input) {
         try {
-            return ParseResult.success(Integer.parseInt(input));
+            return CommandResult.successful(Integer.parseInt(input));
         } catch (NumberFormatException e) {
-            return ParseResult.failure();
+            return CommandResult.exceptionally(e);
         }
     }
 
