@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandExecutor executor) {
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandExecutor<Integer> executor) {
         super(name, children, allowedInputs, executor);
     }
 

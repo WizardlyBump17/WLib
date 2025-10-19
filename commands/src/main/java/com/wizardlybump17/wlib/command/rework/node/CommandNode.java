@@ -16,9 +16,9 @@ public abstract class CommandNode<T> {
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
-    private final @Nullable CommandExecutor executor;
+    private final @Nullable CommandExecutor<T> executor;
 
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandExecutor executor) {
+    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandExecutor<T> executor) {
         this.name = name;
         this.children = Collections.unmodifiableList(children);
         this.allowedInputs = allowedInputs;
@@ -66,7 +66,7 @@ public abstract class CommandNode<T> {
         }
     }
 
-    public @Nullable CommandExecutor getExecutor() {
+    public @Nullable CommandExecutor<T> getExecutor() {
         return executor;
     }
 

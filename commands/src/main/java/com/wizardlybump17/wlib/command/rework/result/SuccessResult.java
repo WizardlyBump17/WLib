@@ -1,13 +1,8 @@
 package com.wizardlybump17.wlib.command.rework.result;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class SuccessResult implements CommandResult {
-
-    public static final @NotNull SuccessResult INSTANCE = new SuccessResult();
-
-    private SuccessResult() {
-    }
+public record SuccessResult<T>(@Nullable T data) implements CommandResult<T> {
 
     @Override
     public boolean success() {

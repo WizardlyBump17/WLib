@@ -5,7 +5,6 @@ import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
-import com.wizardlybump17.wlib.command.rework.result.SuccessResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -25,14 +24,14 @@ public class Command {
         return root;
     }
 
-    public @NotNull CommandResult execute(@NotNull CommandSender<?> sender, @NotNull String execution) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String execution) {
         List<String> strings = getInputList(execution);
         CommandContext.CommandNodeArguments arguments = getArguments(strings);
 
         if (arguments == null)
             return CommandResult.error();
 
-        return SuccessResult.INSTANCE;
+        return CommandResult.successful(new Object());
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {
@@ -61,7 +60,7 @@ public class Command {
                 continue inputLoop;
             }
 
-            return null;
+            return null; //return something that holds the CommandNodeArguments and an error, if any
         }
 
         if (!last.getChildren().isEmpty())
@@ -96,7 +95,7 @@ public class Command {
                 continue;
             }
 
-            CommandExecutor executor;
+            CommandExecutor<String> executor;
             if (i + 1 >= strings.length)
                 executor = CommandExecutor.TEST_EXECUTOR;
             else

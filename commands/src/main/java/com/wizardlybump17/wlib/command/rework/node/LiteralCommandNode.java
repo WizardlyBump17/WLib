@@ -10,7 +10,7 @@ import java.util.List;
 
 public class LiteralCommandNode extends CommandNode<String> {
 
-    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandExecutor executor) {
+    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandExecutor<String> executor) {
         super(name, children, new LiteralAllowedInput(name, false), executor);
     }
 
