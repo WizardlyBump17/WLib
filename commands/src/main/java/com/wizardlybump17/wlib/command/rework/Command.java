@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework;
 
+import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
@@ -26,9 +27,9 @@ public class Command {
 
     public @NotNull CommandResult execute(@NotNull CommandSender<?> sender, @NotNull String execution) {
         List<String> strings = getInputList(execution);
-        Map<String, NodeResult<?>> results = getNodes(strings);
+        CommandContext.CommandNodeArguments arguments = getArguments(strings);
 
-        if (results.isEmpty())
+        if (arguments == null)
             return CommandResult.error();
 
         return SuccessResult.INSTANCE;
@@ -38,39 +39,39 @@ public class Command {
         return StringUtil.parseQuotedStrings(original);
     }
 
-    public @NotNull Map<String, NodeResult<?>> getNodes(@NotNull List<String> input) {
+    public @Nullable CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
         if (input.isEmpty())
-            return Map.of();
+            return null;
 
-        Map<String, NodeResult<?>> nodes = new LinkedHashMap<>();
+        Map<String, CommandContext.CommandNodeArgument<?>> arguments = new LinkedHashMap<>();
 
         List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> last = null;
         inputLoop: for (String inputString : input) {
             for (CommandNode<?> child : children) {
-                NodeResult<?> nodeResult = getNodeResult(child, inputString);
-                if (nodeResult == null)
+                CommandContext.CommandNodeArgument<?> argument = getNodeResult(child, inputString);
+                if (argument == null)
                     continue;
 
                 last = child;
                 children = child.getChildren();
 
-                nodes.put(inputString, nodeResult);
+                arguments.put(inputString, argument);
                 continue inputLoop;
             }
 
-            return Map.of();
+            return null;
         }
 
         if (!last.getChildren().isEmpty())
-            return Map.of();
+            return null;
 
-        return nodes;
+        return new CommandContext.CommandNodeArguments(arguments);
     }
 
     @SuppressWarnings("unchecked")
-    public static @Nullable NodeResult<Object> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
+    public static @Nullable CommandContext.CommandNodeArgument<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
         CommandNode.ParseResult<?> parseResult = node.parse(input);
         if (!parseResult.success())
             return null;
@@ -79,10 +80,7 @@ public class Command {
         if (!((CommandNode<Object>) node).isValidInput(value))
             return null;
 
-        return new NodeResult<>((CommandNode<Object>) node, value);
-    }
-
-    public record NodeResult<T>(@NotNull CommandNode<T> node, @Nullable T value) {
+        return new CommandContext.CommandNodeArgument<>((CommandNode<Object>) node, input, value);
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {

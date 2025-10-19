@@ -1,8 +1,39 @@
 package com.wizardlybump17.wlib.command.rework.context;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender) {
+import java.util.*;
+
+public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments) {
+
+    public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @NotNull String input, @Nullable T value) {
+    }
+
+    public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments) {
+
+        public CommandNodeArguments {
+            arguments = Collections.unmodifiableMap(arguments);
+        }
+
+        @SuppressWarnings("unchecked")
+        public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments) {
+            this(Map.ofEntries(arguments.stream()
+                    .map(argument -> new AbstractMap.SimpleEntry<>(argument.node().getName(), argument))
+                    .toArray(Map.Entry[]::new)
+            ));
+        }
+
+        public boolean hasArgument(@NotNull String key) {
+            return arguments.containsKey(key);
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> @NotNull Optional<CommandNodeArgument<T>> getArgument(@NotNull String key) {
+            return Optional.ofNullable((CommandNodeArgument<T>) arguments.get(key));
+        }
+    }
 }

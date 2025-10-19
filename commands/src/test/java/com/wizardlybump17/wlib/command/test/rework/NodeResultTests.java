@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.test.rework;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,11 +17,12 @@ class NodeResultTests {
         LiteralCommandNode hello = new LiteralCommandNode("hello", List.of(world));
         Command command = new Command(hello);
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world"));
-        Assertions.assertEquals(Map.of(
-                "hello", new Command.NodeResult<>(hello, "hello"),
-                "world", new Command.NodeResult<>(world, "world")
-        ), nodes);
+        CommandContext.CommandNodeArguments expected = new CommandContext.CommandNodeArguments(Map.of(
+                "hello", new CommandContext.CommandNodeArgument<>(hello, "hello", "hello"),
+                "world", new CommandContext.CommandNodeArgument<>(world, "world", "world")
+        ));
+        CommandContext.CommandNodeArguments actual = command.getArguments(List.of("hello", "world"));
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -31,8 +33,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world", "a"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world", "a"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -43,8 +45,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world", "a", "b"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world", "a", "b"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -55,8 +57,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world", "a", "b", "c"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world", "a", "b", "c"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -73,8 +75,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world", "a", "b"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world", "a", "b"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -91,8 +93,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world", "a"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world", "a"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -109,8 +111,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello", "world"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello", "world"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -127,8 +129,8 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of("hello"));
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of("hello"));
+        Assertions.assertNull(arguments);
     }
 
     @Test
@@ -145,7 +147,7 @@ class NodeResultTests {
                 ))
         );
 
-        Map<String, Command.NodeResult<?>> nodes = command.getNodes(List.of());
-        Assertions.assertEquals(Map.of(), nodes);
+        CommandContext.CommandNodeArguments arguments = command.getArguments(List.of());
+        Assertions.assertNull(arguments);
     }
 }
