@@ -38,6 +38,7 @@ public class Command {
         return StringUtil.parseQuotedStrings(original);
     }
 
+    @SuppressWarnings("unchecked")
     public @Nullable CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
         if (input.isEmpty())
             return null;
@@ -46,40 +47,49 @@ public class Command {
 
         List<CommandNode<?>> children = List.of(root);
 
-        CommandNode<?> last = null;
+        CommandNode<?> lastSuccessfulNode = null;
+        CommandResult<?> lastResult = null;
+        String lastInputString = null;
         inputLoop: for (String inputString : input) {
             for (CommandNode<?> child : children) {
-                CommandContext.CommandNodeArgument<?> argument = getNodeResult(child, inputString);
-                if (argument == null)
+                CommandResult<?> result = child.parseOrInvalid(inputString);
+
+                lastResult = result;
+                lastInputString = inputString;
+
+                if (!result.success())
                     continue;
 
-                last = child;
+                lastSuccessfulNode = child;
                 children = child.getChildren();
 
-                arguments.put(inputString, argument);
+                arguments.put(inputString, new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, (CommandResult<Object>) result));
                 continue inputLoop;
             }
 
-            return null; //return something that holds the CommandNodeArguments and an error, if any
+            return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
         }
 
-        if (!last.getChildren().isEmpty())
-            return null;
+        if (!lastSuccessfulNode.getChildren().isEmpty())
+            return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
 
-        return new CommandContext.CommandNodeArguments(arguments);
+        return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
     }
 
-    @SuppressWarnings("unchecked")
-    public static @Nullable CommandContext.CommandNodeArgument<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
-        CommandResult<?> parseResult = node.parse(input);
-        if (!parseResult.success())
-            return null;
-
-        Object value = parseResult.data();
-        if (!((CommandNode<Object>) node).isValidInput(value))
-            return null;
-
-        return new CommandContext.CommandNodeArgument<>((CommandNode<Object>) node, input, value);
+    public static @NotNull CommandResult<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
+        return node.parseOrInvalid(input);
+//
+//        CommandResult<Object> parseResult = (CommandResult<Object>) node.parse(input);
+//        Object value = parseResult.data();
+//
+//        CommandContext.CommandNodeArgument<Object> argument = new CommandContext.CommandNodeArgument<>((CommandNode<Object>) node, input, parseResult);
+//        if (!parseResult.success())
+//            return argument;
+//
+//        if (!((CommandNode<Object>) node).isValidInput(value))
+//            return argument;
+//
+//        return argument;
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {

@@ -3,6 +3,8 @@ package com.wizardlybump17.wlib.command.test.rework;
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.SuccessResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,10 +19,16 @@ class NodeResultTests {
         LiteralCommandNode hello = new LiteralCommandNode("hello", List.of(world));
         Command command = new Command(hello);
 
-        CommandContext.CommandNodeArguments expected = new CommandContext.CommandNodeArguments(Map.of(
-                "hello", new CommandContext.CommandNodeArgument<>(hello, "hello", "hello"),
-                "world", new CommandContext.CommandNodeArgument<>(world, "world", "world")
-        ));
+        SuccessResult<String> worldResult = CommandResult.successful("world");
+        CommandContext.CommandNodeArguments expected = new CommandContext.CommandNodeArguments(
+                Map.of(
+                    "hello", new CommandContext.CommandNodeArgument<>(hello, "hello", CommandResult.successful("hello")),
+                    "world", new CommandContext.CommandNodeArgument<>(world, "world", worldResult)
+                ),
+                worldResult,
+                world,
+                "world"
+        );
         CommandContext.CommandNodeArguments actual = command.getArguments(List.of("hello", "world"));
         Assertions.assertEquals(expected, actual);
     }

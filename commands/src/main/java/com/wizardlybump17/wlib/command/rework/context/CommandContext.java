@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.rework.context;
 
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
+import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,21 +11,30 @@ import java.util.*;
 
 public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments) {
 
-    public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @NotNull String input, @Nullable T value) {
+    public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @NotNull String input, @NotNull CommandResult<T> result) {
+
+        public @Nullable T data() {
+            return result.data();
+        }
     }
 
-    public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments) {
+    public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments, @Nullable CommandResult<?> lastResult, @Nullable CommandNode<?> lastNode, @Nullable String lastInput) {
 
         public CommandNodeArguments {
             arguments = Collections.unmodifiableMap(arguments);
         }
 
         @SuppressWarnings("unchecked")
-        public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments) {
-            this(Map.ofEntries(arguments.stream()
-                    .map(argument -> new AbstractMap.SimpleEntry<>(argument.node().getName(), argument))
-                    .toArray(Map.Entry[]::new)
-            ));
+        public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments, @Nullable CommandResult<?> lastResult, @Nullable CommandNode<?> lastNode, @Nullable String lastInput) {
+            this(
+                    Map.ofEntries(arguments.stream()
+                            .map(argument -> new AbstractMap.SimpleEntry<>(argument.node().getName(), argument))
+                            .toArray(Map.Entry[]::new)
+                    ),
+                    lastResult,
+                    lastNode,
+                    lastInput
+            );
         }
 
         public boolean hasArgument(@NotNull String key) {
