@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.InvalidArgumentResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -47,11 +48,13 @@ public class Command {
 
         List<CommandNode<?>> children = List.of(root);
 
-        CommandNode<?> lastSuccessfulNode = null;
+        CommandNode<?> lastNode = null;
         CommandResult<?> lastResult = null;
         String lastInputString = null;
         inputLoop: for (String inputString : input) {
             for (CommandNode<?> child : children) {
+                lastNode = child;
+
                 CommandResult<?> result = child.parseOrInvalid(inputString);
 
                 lastResult = result;
@@ -60,20 +63,19 @@ public class Command {
                 if (!result.success())
                     continue;
 
-                lastSuccessfulNode = child;
                 children = child.getChildren();
 
                 arguments.put(inputString, new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, (CommandResult<Object>) result));
                 continue inputLoop;
             }
 
-            return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
+            return new CommandContext.CommandNodeArguments(arguments, new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult), lastNode, lastInputString);
         }
 
-        if (!lastSuccessfulNode.getChildren().isEmpty())
-            return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
+        if (!lastNode.getChildren().isEmpty())
+            return new CommandContext.CommandNodeArguments(arguments, new InvalidArgumentResult<>((CommandNode<Object>) lastNode), lastNode, lastInputString);
 
-        return new CommandContext.CommandNodeArguments(arguments, lastResult, lastSuccessfulNode, lastInputString);
+        return new CommandContext.CommandNodeArguments(arguments, lastResult, lastNode, lastInputString);
     }
 
     public static @NotNull CommandResult<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
