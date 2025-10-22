@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.ExtraArgumentsResult;
 import com.wizardlybump17.wlib.command.rework.result.InvalidArgumentResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
@@ -69,7 +70,12 @@ public class Command {
                 continue inputLoop;
             }
 
-            return new CommandContext.CommandNodeArguments(arguments, new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult), lastNode, lastInputString);
+            CommandResult<?> error;
+            if (lastNode.getChildren().isEmpty())
+                error = new ExtraArgumentsResult<>(inputString);
+            else
+                error = new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult);
+            return new CommandContext.CommandNodeArguments(arguments, error, lastNode, lastInputString);
         }
 
         if (!lastNode.getChildren().isEmpty())
