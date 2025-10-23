@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.rework.result.ExtraArgumentsResult;
+import com.wizardlybump17.wlib.command.rework.result.InsufficientArgumentsResult;
 import com.wizardlybump17.wlib.command.rework.result.InvalidArgumentResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
@@ -41,9 +42,9 @@ public class Command {
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
+    public @NotNull CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
         if (input.isEmpty())
-            return null;
+            return CommandContext.CommandNodeArguments.EMPTY;
 
         Map<String, CommandContext.CommandNodeArgument<?>> arguments = new LinkedHashMap<>();
 
@@ -71,7 +72,7 @@ public class Command {
             }
 
             CommandResult<?> error;
-            if (lastNode.getChildren().isEmpty())
+            if (lastNode.getChildren().isEmpty()) //TODO: just because the last node has no children that it means the input is an extra argument
                 error = new ExtraArgumentsResult<>(inputString);
             else
                 error = new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult);
@@ -79,7 +80,7 @@ public class Command {
         }
 
         if (!lastNode.getChildren().isEmpty())
-            return new CommandContext.CommandNodeArguments(arguments, new InvalidArgumentResult<>((CommandNode<Object>) lastNode), lastNode, lastInputString);
+            return new CommandContext.CommandNodeArguments(arguments, new InsufficientArgumentsResult<>(lastInputString, lastNode), lastNode, lastInputString);
 
         return new CommandContext.CommandNodeArguments(arguments, lastResult, lastNode, lastInputString);
     }

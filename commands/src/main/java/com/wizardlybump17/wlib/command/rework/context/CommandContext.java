@@ -20,6 +20,8 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
 
     public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments, @Nullable CommandResult<?> lastResult, @Nullable CommandNode<?> lastNode, @Nullable String lastInput) {
 
+        public static @NotNull CommandNodeArguments EMPTY = new CommandNodeArguments(Map.of(), null, null, null);
+
         public CommandNodeArguments {
             arguments = Collections.unmodifiableMap(arguments);
         }
