@@ -31,9 +31,6 @@ public class Command {
         List<String> strings = getInputList(execution);
         CommandContext.CommandNodeArguments arguments = getArguments(strings);
 
-        if (arguments == null)
-            return CommandResult.error();
-
         return CommandResult.successful(new Object());
     }
 
@@ -42,9 +39,9 @@ public class Command {
     }
 
     @SuppressWarnings("unchecked")
-    public @NotNull CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
+    public @Nullable CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
         if (input.isEmpty())
-            return CommandContext.CommandNodeArguments.EMPTY;
+            return new CommandContext.CommandNodeArguments(Map.of(), new InsufficientArgumentsResult<>("", root), root, "");
 
         Map<String, CommandContext.CommandNodeArgument<?>> arguments = new LinkedHashMap<>();
 
@@ -72,7 +69,7 @@ public class Command {
             }
 
             CommandResult<?> error;
-            if (lastNode.getChildren().isEmpty()) //TODO: just because the last node has no children that it means the input is an extra argument
+            if (lastNode.getChildren().isEmpty())
                 error = new ExtraArgumentsResult<>(inputString);
             else
                 error = new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult);
@@ -83,22 +80,6 @@ public class Command {
             return new CommandContext.CommandNodeArguments(arguments, new InsufficientArgumentsResult<>(lastInputString, lastNode), lastNode, lastInputString);
 
         return new CommandContext.CommandNodeArguments(arguments, lastResult, lastNode, lastInputString);
-    }
-
-    public static @NotNull CommandResult<?> getNodeResult(@NotNull CommandNode<?> node, @NotNull String input) {
-        return node.parseOrInvalid(input);
-//
-//        CommandResult<Object> parseResult = (CommandResult<Object>) node.parse(input);
-//        Object value = parseResult.data();
-//
-//        CommandContext.CommandNodeArgument<Object> argument = new CommandContext.CommandNodeArgument<>((CommandNode<Object>) node, input, parseResult);
-//        if (!parseResult.success())
-//            return argument;
-//
-//        if (!((CommandNode<Object>) node).isValidInput(value))
-//            return argument;
-//
-//        return argument;
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {

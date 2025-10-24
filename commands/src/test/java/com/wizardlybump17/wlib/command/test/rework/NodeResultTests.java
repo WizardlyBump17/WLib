@@ -184,19 +184,23 @@ class NodeResultTests {
 
     @Test
     void testUnsuccessLess5() {
-        Command command = new Command(
-                new LiteralCommandNode("hello", List.of(
-                        new LiteralCommandNode("world", List.of(
-                                new LiteralCommandNode("a", List.of(
-                                        new LiteralCommandNode("b", List.of(
-                                                new LiteralCommandNode("c", List.of())
-                                        ))
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", List.of(
+                new LiteralCommandNode("world", List.of(
+                        new LiteralCommandNode("a", List.of(
+                                new LiteralCommandNode("b", List.of(
+                                        new LiteralCommandNode("c", List.of())
                                 ))
                         ))
                 ))
-        );
+        ));
+        Command command = new Command(helloNode);
 
-        CommandContext.CommandNodeArguments expected = CommandContext.CommandNodeArguments.EMPTY;
+        CommandContext.CommandNodeArguments expected = new CommandContext.CommandNodeArguments(
+                Map.of(),
+                new InsufficientArgumentsResult<>("", helloNode),
+                helloNode,
+                ""
+        );
         CommandContext.CommandNodeArguments actual = command.getArguments(List.of());
         Assertions.assertEquals(expected, actual);
     }

@@ -18,16 +18,14 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
         }
     }
 
-    public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments, @Nullable CommandResult<?> lastResult, @Nullable CommandNode<?> lastNode, @Nullable String lastInput) {
-
-        public static @NotNull CommandNodeArguments EMPTY = new CommandNodeArguments(Map.of(), null, null, null);
+    public record CommandNodeArguments(@NotNull Map<String, CommandNodeArgument<?>> arguments, @NotNull CommandResult<?> lastResult, @NotNull CommandNode<?> lastNode, @NotNull String lastInput) {
 
         public CommandNodeArguments {
             arguments = Collections.unmodifiableMap(arguments);
         }
 
         @SuppressWarnings("unchecked")
-        public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments, @Nullable CommandResult<?> lastResult, @Nullable CommandNode<?> lastNode, @Nullable String lastInput) {
+        public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments, @NotNull CommandResult<?> lastResult, @NotNull CommandNode<?> lastNode, @NotNull String lastInput) {
             this(
                     Map.ofEntries(arguments.stream()
                             .map(argument -> new AbstractMap.SimpleEntry<>(argument.node().getName(), argument))
