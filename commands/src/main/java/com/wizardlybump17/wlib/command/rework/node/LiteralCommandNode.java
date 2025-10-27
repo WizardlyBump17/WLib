@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.command.rework.node;
 
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.LiteralAllowedInput;
-import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +24,8 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     @Override
-    public @NotNull CommandResult<String> parse(@NotNull String input) {
-        return CommandResult.successful(input);
+    public @NotNull String parse(@NotNull String input) {
+        return input;
     }
 
     @Override

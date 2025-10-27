@@ -1,9 +1,9 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
+import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
-import com.wizardlybump17.wlib.command.rework.result.CommandResult;
-import com.wizardlybump17.wlib.command.rework.result.InvalidArgumentResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,18 +43,17 @@ public abstract class CommandNode<T> {
         return allowedInputs;
     }
 
-    public abstract @NotNull CommandResult<T> parse(@NotNull String input);
+    public abstract @Nullable T parse(@NotNull String input) throws InputParsingException;
 
     public final boolean isValidInput(@Nullable T input) {
         return allowedInputs.isAllowed(input);
     }
 
-    public final @NotNull CommandResult<T> parseOrInvalid(@NotNull String input) {
-        CommandResult<T> parse = parse(input);
-        if (parse.success() && isValidInput(parse.data()))
-            return parse;
-
-        return new InvalidArgumentResult<>(this, parse);
+    public final @Nullable T parseOrInvalid(@NotNull String input) throws InputParsingException, InvalidInputException {
+        T parse = parse(input);
+        if (!isValidInput(parse))
+            throw new InvalidInputException("Invalid input " + input);
+        return parse;
     }
 
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {

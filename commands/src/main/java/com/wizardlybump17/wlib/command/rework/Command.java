@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.command.rework;
 
 import com.wizardlybump17.wlib.command.rework.context.CommandContext;
+import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
@@ -13,7 +15,9 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Command {
 
@@ -27,59 +31,55 @@ public class Command {
         return root;
     }
 
-    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String execution) {
-        List<String> strings = getInputList(execution);
-        CommandContext.CommandNodeArguments arguments = getArguments(strings);
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
+        List<String> inputList = getInputList(input);
+        return execute(sender, inputList);
+    }
+
+    @SuppressWarnings("unchecked")
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+        if (input.isEmpty())
+            throw new IllegalArgumentException();
+
+        List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
+        List<CommandNode<?>> children = List.of(root);
+
+        CommandNode<?> lastNode = null;
+        int lastInputIndex = 0;
+
+        inputLoop: for (int i = 0; i < input.size(); i++) {
+            String inputString = input.get(i);
+            lastInputIndex = i;
+
+            for (CommandNode<?> child : children) {
+                lastNode = child;
+
+                try {
+                    Object result = child.parseOrInvalid(inputString);
+
+                    arguments.add(new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, result));
+
+                    children = child.getChildren();
+                    continue inputLoop;
+                } catch (InputParsingException | InvalidInputException ignored) {
+                    ignored.toString();
+                }
+            }
+
+            if (lastNode.getChildren().isEmpty())
+                return new ExtraArgumentsResult<>(i);
+            else
+                return new InvalidArgumentResult<>((CommandNode<Object>) lastNode);
+        }
+
+        if (!lastNode.getChildren().isEmpty())
+            return new InsufficientArgumentsResult<>(lastInputIndex, lastNode);
 
         return CommandResult.successful(new Object());
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {
         return StringUtil.parseQuotedStrings(original);
-    }
-
-    @SuppressWarnings("unchecked")
-    public @Nullable CommandContext.CommandNodeArguments getArguments(@NotNull List<String> input) {
-        if (input.isEmpty())
-            return new CommandContext.CommandNodeArguments(Map.of(), new InsufficientArgumentsResult<>("", root), root, "");
-
-        Map<String, CommandContext.CommandNodeArgument<?>> arguments = new LinkedHashMap<>();
-
-        List<CommandNode<?>> children = List.of(root);
-
-        CommandNode<?> lastNode = null;
-        CommandResult<?> lastResult = null;
-        String lastInputString = null;
-        inputLoop: for (String inputString : input) {
-            for (CommandNode<?> child : children) {
-                lastNode = child;
-
-                CommandResult<?> result = child.parseOrInvalid(inputString);
-
-                lastResult = result;
-                lastInputString = inputString;
-
-                if (!result.success())
-                    continue;
-
-                children = child.getChildren();
-
-                arguments.put(inputString, new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, (CommandResult<Object>) result));
-                continue inputLoop;
-            }
-
-            CommandResult<?> error;
-            if (lastNode.getChildren().isEmpty())
-                error = new ExtraArgumentsResult<>(inputString);
-            else
-                error = new InvalidArgumentResult<>((CommandNode<Object>) lastNode, lastResult);
-            return new CommandContext.CommandNodeArguments(arguments, error, lastNode, lastInputString);
-        }
-
-        if (!lastNode.getChildren().isEmpty())
-            return new CommandContext.CommandNodeArguments(arguments, new InsufficientArgumentsResult<>(lastInputString, lastNode), lastNode, lastInputString);
-
-        return new CommandContext.CommandNodeArguments(arguments, lastResult, lastNode, lastInputString);
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {
