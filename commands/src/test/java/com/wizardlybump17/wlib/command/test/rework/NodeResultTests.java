@@ -1,6 +1,8 @@
 package com.wizardlybump17.wlib.command.test.rework;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.rework.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import org.junit.jupiter.api.Test;
@@ -14,12 +16,12 @@ class NodeResultTests {
         Command command = new Command(
                 new LiteralCommandNode("hello", List.of(
                         new LiteralCommandNode("world", List.of(
-                                new LiteralCommandNode("a1", List.of())
+                                new IntegerCommandNode("a1", List.of(), new AllowedNumberInputs.AllowedIntegerInputs.Range(10, 100), null)
                         ))
                 ))
         );
 
-        CommandResult<?> result = command.execute(null, List.of("hello", "world", "a", "b"));
+        CommandResult<?> result = command.execute(null, List.of("hello", "world", "10", "b"));
         System.out.println(result);
     }
 

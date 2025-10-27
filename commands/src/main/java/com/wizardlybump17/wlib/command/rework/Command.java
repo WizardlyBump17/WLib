@@ -6,10 +6,7 @@ import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
-import com.wizardlybump17.wlib.command.rework.result.CommandResult;
-import com.wizardlybump17.wlib.command.rework.result.ExtraArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.InsufficientArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.InvalidArgumentResult;
+import com.wizardlybump17.wlib.command.rework.result.*;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +43,8 @@ public class Command {
 
         CommandNode<?> lastNode = null;
         int lastInputIndex = 0;
+        InputParsingException lastParsingError = null;
+        InvalidInputException lastInputError = null;
 
         inputLoop: for (int i = 0; i < input.size(); i++) {
             String inputString = input.get(i);
@@ -61,10 +60,17 @@ public class Command {
 
                     children = child.getChildren();
                     continue inputLoop;
-                } catch (InputParsingException | InvalidInputException ignored) {
-                    ignored.toString();
+                } catch (InputParsingException e) {
+                    lastParsingError = e;
+                } catch (InvalidInputException e) {
+                    lastInputError = e;
                 }
             }
+
+            if (lastParsingError != null)
+                return new ExceptionResult<>(lastParsingError);
+            if (lastInputError != null)
+                return new InvalidArgumentResult<>((CommandNode<Object>) lastNode);
 
             if (lastNode.getChildren().isEmpty())
                 return new ExtraArgumentsResult<>(i);

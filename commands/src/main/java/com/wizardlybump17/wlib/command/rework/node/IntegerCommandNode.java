@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
+import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.rework.input.RangedAllowedInputs;
@@ -22,11 +23,11 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     }
 
     @Override
-    public @NotNull Integer parse(@NotNull String input) {
+    public @NotNull Integer parse(@NotNull String input) throws InputParsingException {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Could not parse as int: " + input, e);
+            throw new InputParsingException("Could not parse as int: " + input, e);
         }
     }
 
