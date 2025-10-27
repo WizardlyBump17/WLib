@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.command.rework.node;
 
 import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
-import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -18,17 +17,11 @@ public abstract class CommandNode<T> {
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
-    private final @Nullable CommandExecutor<T> executor;
 
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandExecutor<T> executor) {
+    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs) {
         this.name = name;
         this.children = Collections.unmodifiableList(children);
         this.allowedInputs = allowedInputs;
-        this.executor = executor;
-    }
-
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs) {
-        this(name, children, allowedInputs, null);
     }
 
     public @NotNull String getName() {
@@ -60,17 +53,12 @@ public abstract class CommandNode<T> {
         return List.of();
     }
 
-    public @Nullable CommandExecutor<T> getExecutor() {
-        return executor;
-    }
-
     @Override
     public String toString() {
         return "CommandNode{" +
                 "name='" + name + '\'' +
                 ", children=" + children +
                 ", allowedInputs=" + allowedInputs +
-                ", executor=" + executor +
                 '}';
     }
 
@@ -81,12 +69,11 @@ public abstract class CommandNode<T> {
         CommandNode<?> that = (CommandNode<?>) o;
         return Objects.equals(name, that.name)
                 && Objects.equals(children, that.children)
-                && Objects.equals(allowedInputs, that.allowedInputs)
-                && Objects.equals(executor, that.executor);
+                && Objects.equals(allowedInputs, that.allowedInputs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, children, allowedInputs, executor);
+        return Objects.hash(name, children, allowedInputs);
     }
 }
