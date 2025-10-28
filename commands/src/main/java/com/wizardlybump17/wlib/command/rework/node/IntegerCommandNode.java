@@ -1,18 +1,32 @@
 package com.wizardlybump17.wlib.command.rework.node;
 
 import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.rework.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
 
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+        super(name, children, allowedInputs, executor);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+        this(name, List.of(), allowedInputs, executor);
+    }
+
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
-        super(name, children, allowedInputs);
+        this(name, children, allowedInputs, null);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
+        this(name, List.of(), allowedInputs, null);
     }
 
     @Override
