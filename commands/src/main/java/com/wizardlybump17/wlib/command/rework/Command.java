@@ -86,7 +86,9 @@ public class Command {
         CommandContext context = new CommandContext(
                 this,
                 sender,
-                new CommandContext.CommandNodeArguments(arguments)
+                new CommandContext.CommandNodeArguments(arguments),
+                lastInputIndex,
+                lastNode
         );
         return executor.execute(context);
     }

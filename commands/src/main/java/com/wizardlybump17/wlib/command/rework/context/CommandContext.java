@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments) {
+public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments, int lastInputIndex, @NotNull CommandNode<?> lastNode) {
 
     public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @NotNull String input, @Nullable T data) {
     }
