@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.rework;
 import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
+import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
@@ -73,15 +74,21 @@ public class Command {
             if (lastParsingError != null)
                 return CommandResult.parseInputException(lastInputIndex, lastNode, lastParsingError);
             if (lastInputError != null)
-                return CommandResult.outOfRangeInput(lastInputIndex, lastNode); //TODO: return a NotInRangeResult
+                return CommandResult.outOfRangeInput(lastInputIndex, lastNode);
 
             return CommandResult.extraArguments(lastInputIndex, lastNode);
         }
 
-        if (!lastNode.getChildren().isEmpty())
-            return CommandResult.insufficientArguments(lastInputIndex, lastNode);
+        CommandNodeExecutor<?> executor = lastNode.getExecutor();
+        if (executor == null)
+            return CommandResult.noCommandNodeExecutor(lastInputIndex, lastNode);
 
-        return CommandResult.successful(new Object(), lastInputIndex, lastNode);
+        CommandContext context = new CommandContext(
+                this,
+                sender,
+                new CommandContext.CommandNodeArguments(arguments)
+        );
+        return executor.execute(context);
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {

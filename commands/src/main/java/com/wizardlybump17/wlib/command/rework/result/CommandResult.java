@@ -39,4 +39,8 @@ public interface CommandResult<T> {
     static <T> @NotNull ParseInputExceptionResult<T> parseInputException(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull InputParsingException exception) {
         return new ParseInputExceptionResult<>(lastInputIndex, lastNode, exception);
     }
+
+    static <T> @NotNull CommandNodeExecutorNotFoundResult<T> noCommandNodeExecutor(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new CommandNodeExecutorNotFoundResult<>(lastInputIndex, lastNode);
+    }
 }
