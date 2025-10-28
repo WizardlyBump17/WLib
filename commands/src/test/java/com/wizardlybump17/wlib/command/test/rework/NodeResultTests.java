@@ -16,7 +16,7 @@ class NodeResultTests {
         Command command = new Command(
                 new LiteralCommandNode("hello", List.of(
                         new LiteralCommandNode("world", List.of(
-                                new IntegerCommandNode("a1", new AllowedNumberInputs.AllowedIntegerInputs.Range(10, 100), context -> CommandResult.successful("a1", context.lastInputIndex(), context.lastNode()))
+                                new IntegerCommandNode("a1", new AllowedNumberInputs.AllowedIntegerInputs.Range(10, 100), context -> CommandResult.successful(context, "a1"))
                         ))
                 ))
         );

@@ -3,9 +3,5 @@ package com.wizardlybump17.wlib.command.rework.result.error;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 
-public final class InsufficientArgumentsResult<T> extends AbstractUnsuccessResult<T> {
-
-    public InsufficientArgumentsResult(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        super(lastInputIndex, lastNode);
-    }
+public record InsufficientArgumentsResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastNode) implements UnsuccessResult<T> {
 }
