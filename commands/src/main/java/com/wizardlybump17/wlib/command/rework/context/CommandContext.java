@@ -6,11 +6,9 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.MapUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments, int lastInputIndex, @NotNull CommandNode<?> lastNode) {
 
@@ -36,6 +34,10 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
         @SuppressWarnings("unchecked")
         public <T> @NotNull Optional<CommandNodeArgument<T>> getArgument(@NotNull String key) {
             return Optional.ofNullable((CommandNodeArgument<T>) arguments.get(key));
+        }
+
+        public @NotNull @Unmodifiable Map<String, CommandNodeArgument<?>> getArguments() {
+            return Collections.unmodifiableMap(arguments);
         }
 
         @Override

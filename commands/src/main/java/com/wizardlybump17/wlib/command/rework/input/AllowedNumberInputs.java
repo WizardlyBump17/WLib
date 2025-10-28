@@ -21,5 +21,13 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
                 return isInRange(input);
             }
         }
+
+        record Unlimited() implements AllowedIntegerInputs {
+
+            @Override
+            public boolean isAllowed(@Nullable Integer input) {
+                return true;
+            }
+        }
     }
 }
