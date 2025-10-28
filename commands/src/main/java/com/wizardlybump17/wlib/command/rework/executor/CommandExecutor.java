@@ -6,10 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 public interface CommandExecutor<T> {
 
-    @NotNull CommandExecutor<String> TEST_EXECUTOR = context -> {
-        System.out.println(context);
-        return CommandResult.successful("");
-    };
+//    @NotNull CommandExecutor<String> TEST_EXECUTOR = context -> {
+//        System.out.println(context);
+//        return CommandResult.successful("");
+//    };
 
     @NotNull CommandResult<T> execute(@NotNull CommandContext context);
 }

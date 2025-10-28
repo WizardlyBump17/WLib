@@ -16,12 +16,12 @@ class NodeResultTests {
         Command command = new Command(
                 new LiteralCommandNode("hello", List.of(
                         new LiteralCommandNode("world", List.of(
-                                new IntegerCommandNode("a1", List.of(), new AllowedNumberInputs.AllowedIntegerInputs.Range(10, 100), null)
+                                new IntegerCommandNode("a1", List.of(), new AllowedNumberInputs.AllowedIntegerInputs.Range(10, 100))
                         ))
                 ))
         );
 
-        CommandResult<?> result = command.execute(null, List.of("hello", "world", "10", "b"));
+        CommandResult<?> result = command.execute(null, List.of("hello", "world", "10a", "a"));
         System.out.println(result);
     }
 

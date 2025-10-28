@@ -1,10 +1,8 @@
 package com.wizardlybump17.wlib.command.rework.result;
 
+import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
-import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
-import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.InsufficientArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.InvalidArgumentResult;
+import com.wizardlybump17.wlib.command.rework.result.error.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +24,8 @@ public interface CommandResult<T> {
         return new ExceptionResult<>(lastInputIndex, lastNode, throwable);
     }
 
-    static <T> @NotNull InvalidArgumentResult<T> invalidArgument(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new InvalidArgumentResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull OutOfRangeInputResult<T> outOfRangeInput(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new OutOfRangeInputResult<>(lastInputIndex, lastNode);
     }
 
     static <T> @NotNull ExtraArgumentsResult<T> extraArguments(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
@@ -36,5 +34,9 @@ public interface CommandResult<T> {
 
     static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
         return new InsufficientArgumentsResult<>(lastInputIndex, lastNode);
+    }
+
+    static <T> @NotNull ParseInputExceptionResult<T> parseInputException(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull InputParsingException exception) {
+        return new ParseInputExceptionResult<>(lastInputIndex, lastNode, exception);
     }
 }

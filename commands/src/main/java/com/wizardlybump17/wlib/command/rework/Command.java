@@ -3,14 +3,9 @@ package com.wizardlybump17.wlib.command.rework;
 import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
-import com.wizardlybump17.wlib.command.rework.executor.CommandExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
-import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
-import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.InsufficientArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.InvalidArgumentResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +58,10 @@ public class Command {
                     arguments.add(new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, result));
 
                     children = child.getChildren();
+
+                    lastParsingError = null;
+                    lastInputError = null;
+
                     continue inputLoop;
                 } catch (InputParsingException e) {
                     lastParsingError = e;
@@ -72,20 +71,17 @@ public class Command {
             }
 
             if (lastParsingError != null)
-                return new ExceptionResult<>(lastParsingError);
+                return CommandResult.parseInputException(lastInputIndex, lastNode, lastParsingError);
             if (lastInputError != null)
-                return new InvalidArgumentResult<>((CommandNode<Object>) lastNode);
+                return CommandResult.outOfRangeInput(lastInputIndex, lastNode); //TODO: return a NotInRangeResult
 
-            if (lastNode.getChildren().isEmpty())
-                return new ExtraArgumentsResult<>(i);
-            else
-                return new InvalidArgumentResult<>((CommandNode<Object>) lastNode);
+            return CommandResult.extraArguments(lastInputIndex, lastNode);
         }
 
         if (!lastNode.getChildren().isEmpty())
-            return new InsufficientArgumentsResult<>(lastInputIndex, lastNode);
+            return CommandResult.insufficientArguments(lastInputIndex, lastNode);
 
-        return CommandResult.successful(new Object());
+        return CommandResult.successful(new Object(), lastInputIndex, lastNode);
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {
@@ -101,18 +97,12 @@ public class Command {
         for (int i = 0; i < strings.length; i++) {
             String string = strings[i];
             if (i == 0) {
-                firstNode = new LiteralCommandNode(string, children, null);
+                firstNode = new LiteralCommandNode(string, children);
                 continue;
             }
 
-            CommandExecutor<String> executor;
-            if (i + 1 >= strings.length)
-                executor = CommandExecutor.TEST_EXECUTOR;
-            else
-                executor = null;
-
             List<CommandNode<?>> newChildren = new ArrayList<>();
-            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren, executor);
+            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren);
             children.add(newNode);
 
             children = newChildren;

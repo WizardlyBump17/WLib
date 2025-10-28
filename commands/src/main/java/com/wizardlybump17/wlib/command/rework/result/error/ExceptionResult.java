@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.command.rework.result.error;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 
-public final class ExceptionResult<T> extends AbstractUnsuccessResult<T> {
+public sealed class ExceptionResult<T> extends AbstractUnsuccessResult<T> permits ParseInputExceptionResult {
 
     private final @NotNull Throwable exception;
 
