@@ -10,20 +10,36 @@ import java.util.List;
 
 public class LiteralCommandNode extends CommandNode<String> {
 
+    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, new LiteralAllowedInput(name, false), executor, permission);
+    }
+
+    public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        this(name, List.of(), executor, permission);
+    }
+
+    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable String permission) {
+        this(name, children, null, permission);
+    }
+
+    public LiteralCommandNode(@NotNull String name, @Nullable String permission) {
+        this(name, List.of(), null, permission);
+    }
+
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, new LiteralAllowedInput(name, false), executor);
+        super(name, children, new LiteralAllowedInput(name, false), executor, null);
     }
 
     public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), executor);
+        this(name, List.of(), executor, null);
     }
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children) {
-        this(name, children, null);
+        this(name, children, null, null);
     }
 
     public LiteralCommandNode(@NotNull String name) {
-        this(name, List.of(), null);
+        this(name, List.of(), null, null);
     }
 
     @Override

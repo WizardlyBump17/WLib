@@ -13,20 +13,36 @@ import java.util.stream.IntStream;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
 
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, executor, permission);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        this(name, List.of(), allowedInputs, executor, permission);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable String permission) {
+        this(name, children, allowedInputs, null, permission);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable String permission) {
+        this(name, List.of(), allowedInputs, null, permission);
+    }
+
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, allowedInputs, executor);
+        super(name, children, allowedInputs, executor, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, executor);
+        this(name, List.of(), allowedInputs, executor, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
-        this(name, children, allowedInputs, null);
+        this(name, children, allowedInputs, null, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null);
+        this(name, List.of(), allowedInputs, null, null);
     }
 
     @Override
