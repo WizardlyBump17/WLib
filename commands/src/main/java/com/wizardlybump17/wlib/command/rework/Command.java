@@ -89,6 +89,10 @@ public class Command {
         if (executor == null)
             return CommandResult.noCommandNodeExecutor(lastInputIndex, lastNode);
 
+        String nodePermission = lastNode.getPermission();
+        if (nodePermission != null && !sender.hasPermission(nodePermission))
+            return CommandResult.noPermission(lastInputIndex, lastNode);
+
         CommandContext context = new CommandContext(
                 this,
                 sender,

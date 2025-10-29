@@ -55,6 +55,10 @@ public interface CommandResult<T> {
         return new GenericErrorResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull NoPermissionResult<T> noPermission(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new NoPermissionResult<>(lastInputIndex, lastNode);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
@@ -71,5 +75,9 @@ public interface CommandResult<T> {
 
     static <T> @NotNull GenericErrorResult<T> genericError(@NotNull CommandContext context) {
         return genericError(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull NoPermissionResult<T> noPermission(@NotNull CommandContext context) {
+        return noPermission(context.lastInputIndex(), context.lastNode());
     }
 }
