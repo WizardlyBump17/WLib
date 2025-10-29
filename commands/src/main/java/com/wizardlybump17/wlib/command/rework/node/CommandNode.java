@@ -5,25 +5,24 @@ import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.util.MapUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class CommandNode<T> {
 
     private final @NotNull String name;
-    private final @NotNull @Unmodifiable List<CommandNode<?>> children;
+    private final @NotNull LinkedHashMap<String, CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
     private final @Nullable CommandNodeExecutor<?> executor;
     private final @Nullable String permission;
 
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         this.name = name;
-        this.children = Collections.unmodifiableList(children);
+        this.children = (LinkedHashMap<String, CommandNode<?>>) MapUtils.collectionToMap(LinkedHashMap::new, children, CommandNode::getName);
         this.allowedInputs = allowedInputs;
         this.executor = executor;
         this.permission = permission;
@@ -57,8 +56,8 @@ public abstract class CommandNode<T> {
         return name;
     }
 
-    public @NotNull @Unmodifiable List<CommandNode<?>> getChildren() {
-        return children;
+    public @NotNull @Unmodifiable SequencedCollection<CommandNode<?>> getChildren() {
+        return Collections.unmodifiableSequencedCollection(children.sequencedValues());
     }
 
     public @NotNull AllowedInputs<T> getAllowedInputs() {
@@ -116,5 +115,22 @@ public abstract class CommandNode<T> {
     @Override
     public int hashCode() {
         return Objects.hash(name, children, allowedInputs, executor, permission);
+    }
+
+    public abstract @NotNull CommandNode<T> withChildren(@NotNull List<CommandNode<?>> children);
+
+    public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> other) {
+        LinkedHashMap<String, CommandNode<?>> newChildren = new LinkedHashMap<>();
+
+        children.forEach((leftKey, leftChild) -> {
+            if (!other.children.containsKey(leftKey)) {
+                newChildren.put(leftKey, leftChild);
+                return;
+            }
+
+            newChildren.put(leftKey, leftChild.merge(other.children.get(leftKey)));
+        });
+
+        return withChildren(new ArrayList<>(newChildren.values()));
     }
 }

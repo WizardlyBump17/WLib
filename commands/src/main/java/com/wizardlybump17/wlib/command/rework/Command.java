@@ -19,6 +19,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +46,7 @@ public class Command {
             return CommandResult.insufficientArguments(-1, root);
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
-        List<CommandNode<?>> children = List.of(root);
+        Collection<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
         int lastInputIndex = 0;
@@ -114,7 +115,7 @@ public class Command {
         String currentInput = input.getLast();
 
         List<String> suggestions = new ArrayList<>();
-        List<CommandNode<?>> children = List.of(root);
+        Collection<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
         InputParsingException lastParsingError = null;
@@ -172,6 +173,10 @@ public class Command {
             return List.of();
 
         return suggestions;
+    }
+
+    public @NotNull Command merge(@NotNull Command other) {
+        return new Command((LiteralCommandNode) root.merge(other.getRoot()));
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {

@@ -33,7 +33,7 @@ public class CommandManager {
     }
 
     protected @NotNull Command mergeCommand(@NotNull Command left, @NotNull Command right) {
-        return right;
+        return left.merge(right);
     }
 
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
