@@ -4,6 +4,8 @@ import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public record CommandNotFoundResult<T>(@NotNull String input) implements UnsuccessResult<T> {
 
     @Override
@@ -27,6 +29,11 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
         @Override
         public @Nullable Object parse(@NotNull String input) {
             return null;
+        }
+
+        @Override
+        public @NotNull DummyNode withChildren(@NotNull List<CommandNode<?>> children) {
+            return this;
         }
     }
 }

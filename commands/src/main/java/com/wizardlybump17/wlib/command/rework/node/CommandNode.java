@@ -120,15 +120,15 @@ public abstract class CommandNode<T> {
     public abstract @NotNull CommandNode<T> withChildren(@NotNull List<CommandNode<?>> children);
 
     public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> other) {
-        LinkedHashMap<String, CommandNode<?>> newChildren = new LinkedHashMap<>();
+        LinkedHashMap<String, CommandNode<?>> newChildren = new LinkedHashMap<>(children);
 
-        children.forEach((leftKey, leftChild) -> {
-            if (!other.children.containsKey(leftKey)) {
+        other.children.forEach((leftKey, leftChild) -> {
+            if (!children.containsKey(leftKey)) {
                 newChildren.put(leftKey, leftChild);
                 return;
             }
 
-            newChildren.put(leftKey, leftChild.merge(other.children.get(leftKey)));
+            newChildren.put(leftKey, leftChild.merge(children.get(leftKey)));
         });
 
         return withChildren(new ArrayList<>(newChildren.values()));

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CommandManager {
 
@@ -21,7 +22,7 @@ public class CommandManager {
         Command existingCommand = commands.get(fullCommandName);
 
         if (existingCommand != null) {
-            Command newCommand = mergeCommand(command, existingCommand);
+            Command newCommand = mergeCommand(existingCommand, command);
             commands.put(fullCommandName, newCommand);
             commands.put(commandName, newCommand);
             return newCommand;
@@ -46,5 +47,9 @@ public class CommandManager {
         if (command == null)
             return CommandResult.commandNotFound(commandName);
         return command.execute(sender, input);
+    }
+
+    public @NotNull Optional<Command> getCommand(@NotNull String name) {
+        return Optional.ofNullable(commands.get(name));
     }
 }

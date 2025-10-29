@@ -90,4 +90,9 @@ public class IntegerCommandNode extends CommandNode<Integer> {
             default -> List.of(-100, -10, 0, 10, 100);
         };
     }
+
+    @Override
+    public @NotNull IntegerCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
+        return new IntegerCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+    }
 }

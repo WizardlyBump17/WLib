@@ -56,4 +56,9 @@ public class LiteralCommandNode extends CommandNode<String> {
     public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
         return List.of(getName());
     }
+
+    @Override
+    public @NotNull LiteralCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
+        return new LiteralCommandNode(getName(), children, getExecutor(), getPermission());
+    }
 }
