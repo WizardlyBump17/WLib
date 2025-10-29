@@ -78,7 +78,7 @@ public abstract class CommandNode<T> {
         return parse;
     }
 
-    public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {
+    public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
         return List.of();
     }
 

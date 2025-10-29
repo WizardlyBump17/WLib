@@ -60,7 +60,7 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     }
 
     @Override
-    public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<Object> args, @NotNull String currentInput) {
+    public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
         return switch (getAllowedInputs()) {
             case RangedAllowedInputs<?> ranged -> {
                 int from = (int) ranged.from();
