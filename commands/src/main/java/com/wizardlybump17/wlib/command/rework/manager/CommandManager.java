@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.rework.manager;
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -47,6 +48,14 @@ public class CommandManager {
         if (command == null)
             return CommandResult.commandNotFound(commandName);
         return command.execute(sender, input);
+    }
+
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
+        return execute(sender, StringUtil.parseQuotedStrings(input));
+    }
+
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+        return execute(sender, String.join(" ", input));
     }
 
     public @NotNull Optional<Command> getCommand(@NotNull String name) {
