@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.util;
 import com.wizardlybump17.wlib.util.exception.PlaceholderException;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -385,6 +386,64 @@ public class StringUtil {
         if (!builder.isEmpty())
             strings.add(builder.toString());
         return strings;
+    }
+
+    public static boolean isProperlyQuoted(@NotNull String input, char quote, char escape, char delimiter) throws QuotedStringException {
+        char[] chars = input.toCharArray();
+
+        boolean escaped = false;
+        boolean delimited = true;
+        boolean hadQuote = false;
+        boolean insideQuotes = false;
+
+        for (char current : chars) {
+            if (current == escape && !escaped) { // start of an escaped char
+                escaped = true;
+                continue;
+            }
+
+            if (escaped) { // end of the escaped char
+                escaped = false;
+                continue;
+            }
+
+            if (current == quote) {
+                if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
+                    throw new QuotedStringException(QuotedStringException.QUOTED_WITHOUT_DELIMITER);
+
+                if (!insideQuotes) { // begin of quoted string
+                    insideQuotes = true;
+                    continue;
+                }
+
+                // end of quoted string
+                delimited = false;
+                hadQuote = true;
+                insideQuotes = false;
+                continue;
+            }
+
+            if (current == delimiter && !insideQuotes) { // delimiter (space)
+                delimited = true;
+                hadQuote = false;
+                continue;
+            }
+
+            if (hadQuote) // the previous char was a quote. Example case: "quoted"string
+                throw new QuotedStringException(QuotedStringException.NON_QUOTED_AFTER_QUOTED);
+
+            if (insideQuotes)
+                delimited = false;
+        }
+
+        if (escaped)
+            throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
+
+        return !insideQuotes;
+    }
+
+    public static boolean isProperlyQuoted(@NotNull String input) throws QuotedStringException {
+        return isProperlyQuoted(input, QUOTE, QUOTE_ESCAPE, QUOTE_DELIMITER);
     }
 
     /**
