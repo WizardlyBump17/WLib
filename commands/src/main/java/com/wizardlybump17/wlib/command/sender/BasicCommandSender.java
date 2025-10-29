@@ -3,10 +3,12 @@ package com.wizardlybump17.wlib.command.sender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BasicCommandSender<S> implements CommandSender<S> {
 
@@ -37,6 +39,19 @@ public class BasicCommandSender<S> implements CommandSender<S> {
     @Override
     public void sendMessage(String... messages) {
         sendMessage(String.join("\n", messages));
+    }
+
+    @Override
+    public void sendMessage(@Nullable Object message) {
+        sendMessage(String.valueOf(message));
+    }
+
+    @Override
+    public void sendMessage(@Nullable Object @Nullable ... messages) {
+        if (messages == null)
+            sendMessage((Object) null);
+        else
+            sendMessage(Arrays.stream(messages).map(String::valueOf).collect(Collectors.joining("\n")));
     }
 
     @Override
