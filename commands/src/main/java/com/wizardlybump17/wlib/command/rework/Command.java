@@ -109,7 +109,7 @@ public class Command {
 
     public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
-            return List.of();
+            return List.of(root.getName());
 
         String currentInput = input.getLast();
 
@@ -121,20 +121,41 @@ public class Command {
 
         inputLoop: for (int i = 0; i < input.size(); i++) {
             String inputString = input.get(i);
+            boolean isLastInput = i == input.size() - 1;
 
+            if (inputString.isEmpty()) {
+                suggestions.addAll(children.stream()
+                        .filter(child -> {
+                            String permission = child.getPermission();
+                            return permission == null || sender.hasPermission(permission);
+                        })
+                        .map(CommandNode::getName)
+                        .toList()
+                );
+                break;
+            }
+
+            boolean foundNode = false;
             for (CommandNode<?> child : children) {
                 lastNode = child;
 
                 try {
+                    foundNode = true;
+
                     child.parse(inputString);
 
-                    suggestions.addAll(child.getSuggestions(sender, input, currentInput).stream().map(String::valueOf).toList());
-
-                    children = child.getChildren();
+                    String permission = child.getPermission();
+                    if (isLastInput && (permission == null || sender.hasPermission(permission)))
+                        suggestions.addAll(child.getSuggestions(sender, input, currentInput).stream().map(String::valueOf).toList());
 
                     lastParsingError = null;
 
-                    continue inputLoop;
+                    if (isLastInput) {
+                        continue;
+                    } else {
+                        children = child.getChildren();
+                        continue inputLoop;
+                    }
                 } catch (InputParsingException e) {
                     lastParsingError = e;
                 }
@@ -143,14 +164,11 @@ public class Command {
             if (lastParsingError != null)
                 return List.of();
 
-            return List.of();
+            if (!foundNode)
+                return List.of();
         }
 
         if (lastNode == null)
-            return List.of();
-
-        String nodePermission = lastNode.getPermission();
-        if (nodePermission != null && !sender.hasPermission(nodePermission))
             return List.of();
 
         return suggestions;
