@@ -180,26 +180,20 @@ public class Command {
     }
 
     public static @Nullable Command createCommand(@NotNull String execution) {
-        LiteralCommandNode firstNode = null;
+        String[] parts = execution.split(" ");
 
-        List<CommandNode<?>> children = new ArrayList<>();
-        String[] strings = execution.split(" ");
-
-        for (int i = 0; i < strings.length; i++) {
-            String string = strings[i];
-            if (i == 0) {
-                firstNode = new LiteralCommandNode(string, children);
+        LiteralCommandNode lastNode = null;
+        for (int i = parts.length - 1; i >= 0; i--) {
+            String part = parts[i];
+            if (lastNode == null) {
+                lastNode = new LiteralCommandNode(part);
                 continue;
             }
 
-            List<CommandNode<?>> newChildren = new ArrayList<>();
-            LiteralCommandNode newNode = new LiteralCommandNode(string, newChildren);
-            children.add(newNode);
-
-            children = newChildren;
+            lastNode = new LiteralCommandNode(part, List.of(lastNode));
         }
 
-        return firstNode == null ? null : new Command(firstNode);
+        return new Command(lastNode);
     }
 
     @Override
@@ -234,13 +228,11 @@ public class Command {
         if (!parameterTypes[0].equals(CommandContext.class))
             throw new IllegalArgumentException("Method " + method.getName() + "'s first parameter is not a CommandContext");
 
-        LiteralCommandNode firstNode = null;
-
-        List<CommandNode<?>> children = new ArrayList<>();
         String[] parts = annotation.value().split(" ");
 
         int parameterIndex = 1;
-        for (int i = 0; i < parts.length; i++) {
+        CommandNode<?> lastNode = null;
+        for (int i = parts.length - 1; i >= 0; i--) {
             String part = parts[i];
 
             CommandNodeExecutor<?> executor;
@@ -281,12 +273,6 @@ public class Command {
                 executor = null;
             }
 
-            if (i == 0) {
-                firstNode = new LiteralCommandNode(part, children, executor);
-                continue;
-            }
-
-            List<CommandNode<?>> newChildren = new ArrayList<>();
             CommandNode<?> newNode;
 
             if (part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>') {
@@ -294,19 +280,17 @@ public class Command {
 
                 Class<?> parameterType = parameterTypes[parameterIndex++];
                 if (parameterType == int.class || parameterType == Integer.class)
-                    newNode = new IntegerCommandNode(nodeName, newChildren, new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(), executor);
+                    newNode = new IntegerCommandNode(nodeName, lastNode == null ? List.of() : List.of(lastNode), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(), executor);
                 else
                     throw new IllegalArgumentException("Just trying stuff for now. Come back later");
 
             } else {
-                newNode = new LiteralCommandNode(part, newChildren, executor);
+                newNode = new LiteralCommandNode(part, lastNode == null ? List.of() : List.of(lastNode), executor);
             }
 
-            children.add(newNode);
-
-            children = newChildren;
+            lastNode = newNode;
         }
 
-        return firstNode == null ? null : new Command(firstNode);
+        return new Command((LiteralCommandNode) lastNode);
     }
 }
