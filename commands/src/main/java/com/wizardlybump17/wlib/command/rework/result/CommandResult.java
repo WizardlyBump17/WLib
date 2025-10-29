@@ -59,6 +59,10 @@ public interface CommandResult<T> {
         return new NoPermissionResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull CommandNotFoundResult<T> commandNotFound(@NotNull String input) {
+        return new CommandNotFoundResult<>(input);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
