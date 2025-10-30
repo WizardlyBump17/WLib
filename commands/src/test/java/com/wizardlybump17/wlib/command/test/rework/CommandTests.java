@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.test.rework;
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +85,50 @@ public class CommandTests {
 
         CommandResult<String> expected = CommandResult.successful(2, hiWorldNode, "hello hi world");
         CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "hi", "world"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testExtraArguments0() {
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        Command command = new Command(helloNode);
+
+        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(1, helloNode);
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "world"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testExtraArguments1() {
+        LiteralCommandNode worldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world"));
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(worldNode)
+                )
+        );
+
+        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(2, worldNode);
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "world", "hi"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testExtraArguments2() {
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello hi world"));
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
+                        new LiteralCommandNode("hi", List.of(hiWorldNode))
+                )
+        ));
+
+        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(3, hiWorldNode);
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "hi", "world", "extra"));
 
         Assertions.assertEquals(expected, actual);
     }
