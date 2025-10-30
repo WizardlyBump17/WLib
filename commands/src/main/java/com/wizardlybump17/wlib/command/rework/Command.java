@@ -43,7 +43,7 @@ public class Command {
     @SuppressWarnings("unchecked")
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
-            return CommandResult.insufficientArguments(-1, root);
+            return CommandResult.insufficientArguments(this);
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         Collection<CommandNode<?>> children = List.of(root);

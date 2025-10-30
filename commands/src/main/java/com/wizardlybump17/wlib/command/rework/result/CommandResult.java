@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework.result;
 
+import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
@@ -35,8 +36,8 @@ public interface CommandResult<T> {
         return new ExtraArgumentsResult<>(lastInputIndex, lastNode);
     }
 
-    static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new InsufficientArgumentsResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(@NotNull Command command) {
+        return new InsufficientArgumentsResult<>(command);
     }
 
     static <T> @NotNull ParseInputExceptionResult<T> parseInputException(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull InputParsingException exception) {
