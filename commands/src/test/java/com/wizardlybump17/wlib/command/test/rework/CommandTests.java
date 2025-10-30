@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -47,6 +48,42 @@ public class CommandTests {
 
         CommandResult<String> expected = CommandResult.successful(2, hiNode, "hello world hi");
         CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "world", "hi"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Multiple children 0 (hello, hi): success")
+    void test0() {
+        LiteralCommandNode hiNode = new LiteralCommandNode("hi", context -> CommandResult.successful(context, "hello hi"));
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
+                        hiNode
+                )
+        ));
+
+        CommandResult<String> expected = CommandResult.successful(1, hiNode, "hello hi");
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "hi"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Multiple children 1 (hello, hi, world): success")
+    void test1() {
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello hi world"));
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
+                        new LiteralCommandNode("hi", List.of(hiWorldNode))
+                )
+        ));
+
+        CommandResult<String> expected = CommandResult.successful(2, hiWorldNode, "hello hi world");
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "hi", "world"));
 
         Assertions.assertEquals(expected, actual);
     }
