@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.test.rework;
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
 import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -129,6 +130,20 @@ public class CommandTests {
 
         ExtraArgumentsResult<?> expected = CommandResult.extraArguments(3, hiWorldNode);
         CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "hi", "world", "extra"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testException() {
+        RuntimeException helloException = new RuntimeException("hello");
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> {
+            throw helloException;
+        });
+        Command command = new Command(helloNode);
+
+        ExceptionResult<?> expected = CommandResult.exceptionally(0, helloNode, helloException);
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello"));
 
         Assertions.assertEquals(expected, actual);
     }
