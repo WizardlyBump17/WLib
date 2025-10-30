@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
 import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
 import com.wizardlybump17.wlib.command.rework.result.error.InsufficientArgumentsResult;
+import com.wizardlybump17.wlib.command.rework.result.error.NoPermissionResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -156,6 +157,17 @@ public class CommandTests {
 
         InsufficientArgumentsResult<?> expected = CommandResult.insufficientArguments(command);
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of());
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testNoPermission() {
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"), "permission");
+        Command command = new Command(helloNode);
+
+        NoPermissionResult<?> expected = CommandResult.noPermission(0, helloNode);
+        CommandResult<?> actual = command.execute(BETA_SENDER, List.of("hello"));
 
         Assertions.assertEquals(expected, actual);
     }
