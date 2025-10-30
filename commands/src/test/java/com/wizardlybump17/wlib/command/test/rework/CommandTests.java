@@ -1,68 +1,53 @@
 package com.wizardlybump17.wlib.command.test.rework;
 
 import com.wizardlybump17.wlib.command.rework.Command;
-import com.wizardlybump17.wlib.command.rework.context.CommandContext;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CommandTests {
 
-    @Test
-    void testCreate() {
-        Command expected = new Command(
-                new LiteralCommandNode("hello", List.of(
-                        new LiteralCommandNode("world", List.of())
-                ))
-        );
-        Command created = Command.createCommand("hello world");
-
-        Assertions.assertEquals(expected, created);
-    }
+    static final @NotNull Consumer<String> SENDER_MESSAGE_CONSUMER = System.out::println;
+    static final @NotNull CommandSender<Object> ALL_KNOWING_SENDER = new BasicCommandSender<>(new Object(), "Test", UUID.nameUUIDFromBytes("Test".getBytes()), SENDER_MESSAGE_CONSUMER, $ -> true);
 
     @Test
-    void testCreate1() {
-        Command expected = new Command(
-                new LiteralCommandNode("hello", List.of(
-                        new LiteralCommandNode("world", List.of(
-                                new LiteralCommandNode("hello1", List.of(
-                                        new LiteralCommandNode("world1", List.of(
-                                                new LiteralCommandNode("hello2", List.of(
-                                                        new LiteralCommandNode("world2", List.of())
-                                                ))
-                                        ))
-                                ))
-                        ))
-                ))
-        );
-        Command created = Command.createCommand("hello world hello1 world1 hello2 world2");
+    void testSuccessHello() {
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        Command command = new Command(helloNode);
 
-        Assertions.assertEquals(expected, created);
+        CommandResult<String> expected = CommandResult.successful(0, helloNode, "hello");
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello"));
+
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void testCreate2() {
-        CommandTests object = new CommandTests();
+    void testSuccessHelloWorld() {
+        LiteralCommandNode worldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world"));
+        Command command = new Command(new LiteralCommandNode("hello", List.of(worldNode)));
 
-        for (Method method : object.getClass().getMethods()) {
-            if (method.isAnnotationPresent(com.wizardlybump17.wlib.command.rework.annotation.Command.class)) {
-                Command command = Command.fromMethod(method, object);
-                CommandResult<?> result = command.execute(null, List.of("test", "test2"));
-                System.out.println(result);
-            }
-        }
+        CommandResult<String> expected = CommandResult.successful(1, worldNode, "hello world");
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "world"));
+
+        Assertions.assertEquals(expected, actual);
     }
 
-    @com.wizardlybump17.wlib.command.rework.annotation.Command("test")
-    public void testCommand(@NotNull CommandContext context) {
-    }
+    @Test
+    void testSuccessHelloWorldHi() {
+        LiteralCommandNode hiNode = new LiteralCommandNode("hi", context -> CommandResult.successful(context, "hello world hi"));
+        Command command = new Command(new LiteralCommandNode("hello", List.of(new LiteralCommandNode("world", List.of(hiNode)))));
 
-    @com.wizardlybump17.wlib.command.rework.annotation.Command("test test2")
-    public void testCommand2(@NotNull CommandContext context) {
+        CommandResult<String> expected = CommandResult.successful(2, hiNode, "hello world hi");
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello", "world", "hi"));
+
+        Assertions.assertEquals(expected, actual);
     }
 }
