@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
 import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
+import com.wizardlybump17.wlib.command.rework.result.error.InsufficientArgumentsResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -144,6 +145,16 @@ public class CommandTests {
 
         ExceptionResult<?> expected = CommandResult.exceptionally(0, helloNode, helloException);
         CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of("hello"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testInsufficientArguments() {
+        Command command = new Command(new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello")));
+
+        InsufficientArgumentsResult<?> expected = CommandResult.insufficientArguments(command);
+        CommandResult<?> actual = command.execute(ALL_KNOWING_SENDER, List.of());
 
         Assertions.assertEquals(expected, actual);
     }
