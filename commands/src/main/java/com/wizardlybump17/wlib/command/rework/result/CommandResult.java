@@ -19,11 +19,11 @@ public interface CommandResult<T> {
 
     //without context
 
-    static <T> @NotNull SuccessResult<T> successful(@Nullable T data, int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+    static <T> @NotNull SuccessResult<T> successful(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable T data) {
         return new SuccessResult<>(lastInputIndex, lastNode, data);
     }
 
-    static <T> @NotNull ExceptionResult<T> exceptionally(@NotNull Throwable throwable, int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+    static <T> @NotNull ExceptionResult<T> exceptionally( int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull Throwable throwable) {
         return new ExceptionResult<>(lastInputIndex, lastNode, throwable);
     }
 
@@ -66,11 +66,11 @@ public interface CommandResult<T> {
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
-        return successful(data, context.lastInputIndex(), context.lastNode());
+        return successful(context.lastInputIndex(), context.lastNode(), data);
     }
 
     static <T> @NotNull ExceptionResult<T> exceptionally(@NotNull CommandContext context, @NotNull Throwable exception) {
-        return exceptionally(exception, context.lastInputIndex(), context.lastNode());
+        return exceptionally(context.lastInputIndex(), context.lastNode(), exception);
     }
 
     static <T> @NotNull GenericErrorResult<T> genericError(@NotNull CommandContext context, @NotNull String message) {
