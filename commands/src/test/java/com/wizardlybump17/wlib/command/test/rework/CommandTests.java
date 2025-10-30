@@ -1,6 +1,9 @@
 package com.wizardlybump17.wlib.command.test.rework;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.rework.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.rework.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.rework.result.error.*;
@@ -178,5 +181,22 @@ public class CommandTests {
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello0"));
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testParseInputException() {
+        IntegerCommandNode worldNode = new IntegerCommandNode("world", new AllowedNumberInputs.AllowedIntegerInputs.SingleValue(10), context -> CommandResult.successful(context, 10));
+        Command command = new Command(new LiteralCommandNode("hello", List.of(worldNode)));
+
+        ParseInputExceptionResult<?> expected = CommandResult.parseInputException(1, worldNode, new InputParsingException("Could not parse as int: world", new NumberFormatException("For input string: \"world\"")));
+        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world"));
+
+        Assertions.assertInstanceOf(ParseInputExceptionResult.class, actual);
+
+        ParseInputExceptionResult<?> actualException = (ParseInputExceptionResult<?>) actual;
+        Assertions.assertEquals(expected.lastInputIndex(), actual.lastInputIndex());
+        Assertions.assertEquals(expected.lastNode(), actual.lastNode());
+        Assertions.assertEquals(expected.exception().getMessage(), actualException.exception().getMessage());
+        Assertions.assertEquals(expected.exception().getCause().getMessage(), actualException.exception().getCause().getMessage());
     }
 }
