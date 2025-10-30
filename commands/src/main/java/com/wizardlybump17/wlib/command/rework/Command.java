@@ -101,7 +101,12 @@ public class Command {
                 lastInputIndex,
                 lastNode
         );
-        return executor.execute(context);
+
+        try {
+            return executor.execute(context);
+        } catch (Throwable throwable) {
+            return CommandResult.exceptionally(lastInputIndex, lastNode, throwable);
+        }
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {
