@@ -3,10 +3,7 @@ package com.wizardlybump17.wlib.command.test.rework;
 import com.wizardlybump17.wlib.command.rework.Command;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
-import com.wizardlybump17.wlib.command.rework.result.error.ExceptionResult;
-import com.wizardlybump17.wlib.command.rework.result.error.ExtraArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.InsufficientArgumentsResult;
-import com.wizardlybump17.wlib.command.rework.result.error.NoPermissionResult;
+import com.wizardlybump17.wlib.command.rework.result.error.*;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -168,6 +165,17 @@ public class CommandTests {
 
         NoPermissionResult<?> expected = CommandResult.noPermission(0, helloNode);
         CommandResult<?> actual = command.execute(BETA_SENDER, List.of("hello"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testOutOfRange() {
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        Command command = new Command(helloNode);
+
+        OutOfRangeInputResult<?> expected = CommandResult.outOfRangeInput(0, helloNode);
+        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello0"));
 
         Assertions.assertEquals(expected, actual);
     }
