@@ -6,7 +6,6 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LiteralCommandNode extends CommandNode<String> {
@@ -64,7 +63,7 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     @Override
-    public @NotNull CommandNode<String> withExecutor(@NotNull CommandNodeExecutor<?> executor) {
-        return new LiteralCommandNode(getName(), new ArrayList<>(getChildren()), executor, getPermission());
+    public @NotNull CommandNode<String> withExecutor(@Nullable CommandNodeExecutor<?> executor) {
+        return new LiteralCommandNode(getName(), getChildren(), executor, getPermission());
     }
 }

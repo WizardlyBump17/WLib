@@ -122,7 +122,7 @@ public abstract class CommandNode<T> {
 
     public abstract @NotNull CommandNode<T> withChildren(@NotNull List<CommandNode<?>> children);
 
-    public abstract @NotNull CommandNode<T> withExecutor(@NotNull CommandNodeExecutor<?> executor);
+    public abstract @NotNull CommandNode<T> withExecutor(@Nullable CommandNodeExecutor<?> executor);
 
     public @NotNull Optional<CommandNode<?>> getChild(@NotNull String name) {
         for (CommandNode<?> child : children)
