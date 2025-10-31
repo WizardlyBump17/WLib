@@ -130,14 +130,11 @@ public class Command {
             boolean isLastInput = i == input.size() - 1;
 
             if (inputString.isEmpty()) {
-                suggestions.addAll(children.stream()
-                        .filter(child -> {
-                            String permission = child.getPermission();
-                            return permission == null || sender.hasPermission(permission);
-                        })
-                        .map(CommandNode::getName)
-                        .toList()
-                );
+                for (CommandNode<?> child : children) {
+                    String permission = child.getPermission();
+                    if (permission == null || sender.hasPermission(permission))
+                        suggestions.addAll(child.getSuggestions(sender, input, "").stream().map(String::valueOf).toList());
+                }
                 break;
             }
 
