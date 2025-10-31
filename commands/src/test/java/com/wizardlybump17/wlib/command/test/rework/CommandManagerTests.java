@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.manager.CommandManager;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.error.CommandNotFoundResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -228,5 +229,41 @@ class CommandManagerTests {
         Assertions.assertEquals(expectedCommand0, registeredCommand0);
         Assertions.assertEquals(expectedCommand1, registeredCommand1);
         Assertions.assertEquals(expectedCommand2, registeredCommand2);
+    }
+
+    @Test
+    void testCommandNotFound0() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        context -> CommandResult.successful(context, "hello")
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command);
+
+        CommandNotFoundResult<?> expected = CommandResult.commandNotFound("hello0");
+        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hello0"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testCommandNotFound1() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        context -> CommandResult.successful(context, "hello")
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command);
+
+        CommandNotFoundResult<?> expected = CommandResult.commandNotFound("");
+        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of());
+
+        Assertions.assertEquals(expected, actual);
     }
 }
