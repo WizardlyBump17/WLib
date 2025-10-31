@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.rework.result.error;
 
+import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +34,11 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
 
         @Override
         public @NotNull DummyNode withChildren(@NotNull List<CommandNode<?>> children) {
+            return this;
+        }
+
+        @Override
+        public @NotNull DummyNode withExecutor(@NotNull CommandNodeExecutor<?> executor) {
             return this;
         }
     }

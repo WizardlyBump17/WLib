@@ -8,6 +8,7 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -94,5 +95,10 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     @Override
     public @NotNull IntegerCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
         return new IntegerCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+    }
+
+    @Override
+    public @NotNull IntegerCommandNode withExecutor(@NotNull CommandNodeExecutor<?> executor) {
+        return new IntegerCommandNode(getName(), new ArrayList<>(getChildren()), getAllowedInputs(), executor, getPermission());
     }
 }

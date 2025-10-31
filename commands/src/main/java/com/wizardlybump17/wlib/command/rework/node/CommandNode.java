@@ -121,6 +121,7 @@ public abstract class CommandNode<T> {
 
     public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> other) {
         LinkedHashMap<String, CommandNode<?>> newChildren = new LinkedHashMap<>(children);
+    public abstract @NotNull CommandNode<T> withExecutor(@NotNull CommandNodeExecutor<?> executor);
 
         other.children.forEach((leftKey, leftChild) -> {
             if (!children.containsKey(leftKey)) {
