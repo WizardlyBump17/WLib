@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.manager.CommandManager;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
+import com.wizardlybump17.wlib.command.rework.result.SuccessResult;
 import com.wizardlybump17.wlib.command.rework.result.error.CommandNotFoundResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -263,6 +264,76 @@ class CommandManagerTests {
 
         CommandNotFoundResult<?> expected = CommandResult.commandNotFound("");
         CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of());
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuccess0() {
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello")
+        );
+        Command command0 = new Command(helloNode);
+
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        context -> CommandResult.successful(context, "hi")
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        context -> CommandResult.successful(context, "welcome")
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        SuccessResult<String> expected = CommandResult.successful(0, helloNode, "hello");
+        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hello"));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuccess1() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello")
+        ));
+
+        LiteralCommandNode thereNode = new LiteralCommandNode(
+                "there",
+                context -> CommandResult.successful(context, "hi there")
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                thereNode
+                        )
+                )
+        );
+
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        context -> CommandResult.successful(context, "welcome")
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        SuccessResult<String> expected = CommandResult.successful(1, thereNode, "hi there");
+        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hi", "there"));
 
         Assertions.assertEquals(expected, actual);
     }
