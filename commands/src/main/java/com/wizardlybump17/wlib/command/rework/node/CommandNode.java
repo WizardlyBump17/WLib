@@ -5,24 +5,26 @@ import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
-import com.wizardlybump17.wlib.util.MapUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public abstract class CommandNode<T> {
 
     private final @NotNull String name;
-    private final @NotNull LinkedHashMap<String, CommandNode<?>> children;
+    private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
     private final @Nullable CommandNodeExecutor<?> executor;
     private final @Nullable String permission;
 
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this.name = name;
-        this.children = (LinkedHashMap<String, CommandNode<?>>) MapUtils.collectionToMap(LinkedHashMap::new, children, CommandNode::getName);
+        this.name = name.toLowerCase();
+        this.children = List.copyOf(children);
         this.allowedInputs = allowedInputs;
         this.executor = executor;
         this.permission = permission;
@@ -56,8 +58,8 @@ public abstract class CommandNode<T> {
         return name;
     }
 
-    public @NotNull @Unmodifiable SequencedCollection<CommandNode<?>> getChildren() {
-        return Collections.unmodifiableSequencedCollection(children.sequencedValues());
+    public @NotNull @Unmodifiable List<CommandNode<?>> getChildren() {
+        return children;
     }
 
     public @NotNull AllowedInputs<T> getAllowedInputs() {
@@ -119,19 +121,30 @@ public abstract class CommandNode<T> {
 
     public abstract @NotNull CommandNode<T> withChildren(@NotNull List<CommandNode<?>> children);
 
-    public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> other) {
-        LinkedHashMap<String, CommandNode<?>> newChildren = new LinkedHashMap<>(children);
     public abstract @NotNull CommandNode<T> withExecutor(@NotNull CommandNodeExecutor<?> executor);
 
-        other.children.forEach((leftKey, leftChild) -> {
-            if (!children.containsKey(leftKey)) {
-                newChildren.put(leftKey, leftChild);
-                return;
+    public @NotNull Optional<CommandNode<?>> getChild(@NotNull String name) {
+        for (CommandNode<?> child : children)
+            if (child.getName().equals(name))
+                return Optional.of(child);
+        return Optional.empty();
+    }
+
+    public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> right) {
+        List<CommandNode<?>> newChildren = new ArrayList<>();
+
+        for (CommandNode<?> rightChild : right.children) {
+            Optional<CommandNode<?>> leftChildOptional = getChild(rightChild.name);
+
+            if (leftChildOptional.isEmpty()) {
+                newChildren.add(rightChild);
+                continue;
             }
 
-            newChildren.put(leftKey, leftChild.merge(children.get(leftKey)));
-        });
+            CommandNode<?> leftChild = leftChildOptional.get();
+            newChildren.add(leftChild.merge(rightChild));
+        }
 
-        return withChildren(new ArrayList<>(newChildren.values()));
+        return withChildren(newChildren);
     }
 }

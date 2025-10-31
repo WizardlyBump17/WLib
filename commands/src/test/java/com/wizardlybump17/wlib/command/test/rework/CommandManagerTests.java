@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.test.rework;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.manager.CommandManager;
 import com.wizardlybump17.wlib.command.rework.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -37,5 +39,88 @@ class CommandManagerTests {
         Assertions.assertEquals(command1, registeredCommand1);
         Assertions.assertEquals(command2, registeredCommand2);
         Assertions.assertEquals(command3, registeredCommand3);
+    }
+
+    @Test
+    void testRegisterMerging0() {
+        CommandNodeExecutor<?> helloExecutor = context -> CommandResult.successful(context, "hello");
+        CommandNodeExecutor<?> helloWorldExecutor = context -> CommandResult.successful(context, "hello world");
+        CommandNodeExecutor<?> helloWorldHiExecutor = context -> CommandResult.successful(context, "hello world hi");
+
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor
+                                )
+                        )
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+
+        Command registeredCommand0 = manager.registerCommand("test", command0);
+        Command registeredCommand1 = manager.registerCommand("test", command1);
+        Command registeredCommand2 = manager.registerCommand("test", command2);
+
+        Command expectedCommand0 = command0;
+        Command expectedCommand1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor
+                                )
+                        ),
+                        helloExecutor
+                )
+        );
+        Command expectedCommand2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor
+                                                )
+                                        ),
+                                        helloWorldExecutor
+                                )
+                        ),
+                        helloExecutor
+                )
+        );
+
+        Assertions.assertEquals(registeredCommand0, expectedCommand0);
+        Assertions.assertEquals(registeredCommand1, expectedCommand1);
+        Assertions.assertEquals(registeredCommand2, expectedCommand2);
     }
 }
