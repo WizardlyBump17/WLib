@@ -119,8 +119,8 @@ class CommandManagerTests {
                 )
         );
 
-        Assertions.assertEquals(registeredCommand0, expectedCommand0);
-        Assertions.assertEquals(registeredCommand1, expectedCommand1);
-        Assertions.assertEquals(registeredCommand2, expectedCommand2);
+        Assertions.assertEquals(expectedCommand0, registeredCommand0);
+        Assertions.assertEquals(expectedCommand1, registeredCommand1);
+        Assertions.assertEquals(expectedCommand2, registeredCommand2);
     }
 }
