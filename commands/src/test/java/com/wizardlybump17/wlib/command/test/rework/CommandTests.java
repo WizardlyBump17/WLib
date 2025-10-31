@@ -199,4 +199,15 @@ public class CommandTests {
         Assertions.assertEquals(expected.exception().getMessage(), actualException.exception().getMessage());
         Assertions.assertEquals(expected.exception().getCause().getMessage(), actualException.exception().getCause().getMessage());
     }
+
+    @Test
+    void testCommandNodeExecutorNotFound() {
+        LiteralCommandNode helloNode = new LiteralCommandNode("hello");
+        Command command = new Command(helloNode);
+
+        CommandNodeExecutorNotFoundResult<?> expected = CommandResult.noCommandNodeExecutor(0, helloNode);
+        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello"));
+
+        Assertions.assertEquals(expected, actual);
+    }
 }
