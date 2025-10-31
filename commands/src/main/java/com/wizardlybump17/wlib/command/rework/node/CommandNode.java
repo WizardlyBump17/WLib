@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.rework.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.rework.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.rework.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -108,7 +109,7 @@ public abstract class CommandNode<T> {
             return false;
         CommandNode<?> that = (CommandNode<?>) o;
         return Objects.equals(name, that.name)
-                && Objects.equals(children, that.children)
+                && CollectionUtil.contentEquals(children, that.children)
                 && Objects.equals(allowedInputs, that.allowedInputs)
                 && Objects.equals(executor, that.executor)
                 && Objects.equals(permission, that.permission);

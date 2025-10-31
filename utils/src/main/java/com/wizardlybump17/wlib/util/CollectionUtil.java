@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.util;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -234,5 +235,11 @@ public class CollectionUtil<E> {
      */
     public static <E> @NonNull List<E> sort(@NonNull Collection<E> collection) {
         return sort(collection, null);
+    }
+
+    public static <E> boolean contentEquals(@NotNull Collection<E> left, @NotNull Collection<E> right) {
+        if (left.size() != right.size())
+            return false;
+        return left.containsAll(right) && right.containsAll(left);
     }
 }
