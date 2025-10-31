@@ -87,7 +87,12 @@ class CommandManagerTests {
         Command registeredCommand1 = manager.registerCommand("test", command1);
         Command registeredCommand2 = manager.registerCommand("test", command2);
 
-        Command expectedCommand0 = command0;
+        Command expectedCommand0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor
+                )
+        );
         Command expectedCommand1 = new Command(
                 new LiteralCommandNode(
                         "hello",
@@ -113,6 +118,107 @@ class CommandManagerTests {
                                                 )
                                         ),
                                         helloWorldExecutor
+                                )
+                        ),
+                        helloExecutor
+                )
+        );
+
+        Assertions.assertEquals(expectedCommand0, registeredCommand0);
+        Assertions.assertEquals(expectedCommand1, registeredCommand1);
+        Assertions.assertEquals(expectedCommand2, registeredCommand2);
+    }
+
+    @Test
+    void testRegisterMerging1() {
+        CommandNodeExecutor<?> helloExecutor = context -> CommandResult.successful(context, "hello");
+        CommandNodeExecutor<?> helloWorldExecutor = context -> CommandResult.successful(context, "hello world");
+        CommandNodeExecutor<?> helloWorldHiExecutor = context -> CommandResult.successful(context, "hello world hi");
+        CommandNodeExecutor<?> helloThereExecutor = context -> CommandResult.successful(context, "hello there");
+
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor
+                                ),
+                                new LiteralCommandNode(
+                                        "there",
+                                        helloThereExecutor
+                                )
+                        )
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+
+        Command registeredCommand0 = manager.registerCommand("test", command0);
+        Command registeredCommand1 = manager.registerCommand("test", command1);
+        Command registeredCommand2 = manager.registerCommand("test", command2);
+
+        Command expectedCommand0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor
+                )
+        );
+        Command expectedCommand1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor
+                                ),
+                                new LiteralCommandNode(
+                                        "there",
+                                        helloThereExecutor
+                                )
+                        ),
+                        helloExecutor
+                )
+        );
+        Command expectedCommand2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor
+                                                )
+                                        ),
+                                        helloWorldExecutor
+                                ),
+                                new LiteralCommandNode(
+                                        "there",
+                                        helloThereExecutor
                                 )
                         ),
                         helloExecutor

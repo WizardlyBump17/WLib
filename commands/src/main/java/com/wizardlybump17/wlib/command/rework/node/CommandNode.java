@@ -132,10 +132,52 @@ public abstract class CommandNode<T> {
     }
 
     public @NotNull CommandNode<T> merge(@NotNull CommandNode<?> right) {
+        List<CommandNode<?>> newChildrenLeft = getNewChildren(right, this);
+        List<CommandNode<?>> newChildrenRight = getNewChildren(this, right);
+
+        newChildrenLeft.removeIf(newChildLeft -> {
+            for (CommandNode<?> newChildRight : newChildrenRight)
+                if (newChildRight.getName().equals(newChildLeft.getName()))
+                    return true;
+            return false;
+        });
+        newChildrenRight.removeIf(newChildRight -> {
+            for (CommandNode<?> newChildLeft : newChildrenLeft)
+                if (newChildLeft.getName().equals(newChildRight.getName()))
+                    return true;
+            return false;
+        });
+
+        newChildrenLeft.addAll(newChildrenRight);
+
+        return withChildren(newChildrenLeft);
+    }
+
+    private static @Nullable CommandNodeExecutor<?> getNewExecutor(@NotNull CommandNode<?> left, @NotNull CommandNode<?> right) {
+        CommandNodeExecutor<?> leftExecutor = left.getExecutor();
+        CommandNodeExecutor<?> rightExecutor = right.getExecutor();
+        CommandNodeExecutor<?> newLeftExecutor;
+
+        if (leftExecutor == null && rightExecutor == null) {
+            newLeftExecutor = null;
+        } else if (leftExecutor == null && rightExecutor != null) {
+            newLeftExecutor = rightExecutor;
+        } else if (leftExecutor != null && rightExecutor == null) {
+            newLeftExecutor = leftExecutor;
+        } else if (Objects.equals(leftExecutor, rightExecutor)) {
+            newLeftExecutor = leftExecutor;
+        } else {
+            throw new IllegalStateException("Could not resolve an executor for the merged node.");
+        }
+
+        return newLeftExecutor;
+    }
+
+    private static @NotNull List<CommandNode<?>> getNewChildren(@NotNull CommandNode<?> left, @NotNull CommandNode<?> right) {
         List<CommandNode<?>> newChildren = new ArrayList<>();
 
         for (CommandNode<?> rightChild : right.children) {
-            Optional<CommandNode<?>> leftChildOptional = getChild(rightChild.name);
+            Optional<CommandNode<?>> leftChildOptional = left.getChild(rightChild.name);
 
             if (leftChildOptional.isEmpty()) {
                 newChildren.add(rightChild);
@@ -143,9 +185,13 @@ public abstract class CommandNode<T> {
             }
 
             CommandNode<?> leftChild = leftChildOptional.get();
+
+            CommandNodeExecutor<?> newLeftExecutor = getNewExecutor(leftChild, rightChild);
+            leftChild = leftChild.withExecutor(newLeftExecutor);
+
             newChildren.add(leftChild.merge(rightChild));
         }
 
-        return withChildren(newChildren);
+        return newChildren;
     }
 }
