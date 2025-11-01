@@ -342,7 +342,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad0() {
+    void testSuggestionsSuccessListChad0() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
@@ -377,7 +377,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad1() {
+    void testSuggestionsSuccessListChad1() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
@@ -412,7 +412,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad2() {
+    void testSuggestionsSuccessListChad2() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
@@ -447,7 +447,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad3() {
+    void testSuggestionsSuccessListChad3() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
@@ -482,7 +482,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad4() {
+    void testSuggestionsSuccessListChad4() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
@@ -524,7 +524,7 @@ class CommandManagerTests {
     }
 
     @Test
-    void testSuggestionsListChad6() {
+    void testSuggestionsSuccessListChad6() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
                 context -> CommandResult.successful(context, "hello")
