@@ -194,4 +194,8 @@ public abstract class CommandNode<T> {
 
         return newChildren;
     }
+
+    public boolean canExecute(@NotNull CommandSender<?> sender) {
+        return permission == null || sender.hasPermission(permission);
+    }
 }
