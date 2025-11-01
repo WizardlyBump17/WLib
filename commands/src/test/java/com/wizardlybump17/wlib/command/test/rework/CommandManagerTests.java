@@ -28,10 +28,10 @@ class CommandManagerTests {
 
     @Test
     void testRegisterDifferent() {
-        Command command0 = new Command(new LiteralCommandNode("hello0", context -> CommandResult.successful(context, "hello0")));
-        Command command1 = new Command(new LiteralCommandNode("hello1", context -> CommandResult.successful(context, "hello1")));
-        Command command2 = new Command(new LiteralCommandNode("hello2", context -> CommandResult.successful(context, "hello2")));
-        Command command3 = new Command(new LiteralCommandNode("hello3", context -> CommandResult.successful(context, "hello3")));
+        Command command0 = new Command(new LiteralCommandNode("hello0", context -> CommandResult.successful(context, "hello0"), "permission"));
+        Command command1 = new Command(new LiteralCommandNode("hello1", context -> CommandResult.successful(context, "hello1"), "permission"));
+        Command command2 = new Command(new LiteralCommandNode("hello2", context -> CommandResult.successful(context, "hello2"), "permission"));
+        Command command3 = new Command(new LiteralCommandNode("hello3", context -> CommandResult.successful(context, "hello3"), "permission"));
 
         CommandManager manager = new CommandManager();
 
@@ -55,7 +55,8 @@ class CommandManagerTests {
         Command command0 = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command command1 = new Command(
@@ -64,9 +65,11 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
@@ -78,11 +81,14 @@ class CommandManagerTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "hi",
-                                                        helloWorldHiExecutor
+                                                        helloWorldHiExecutor,
+                                                        "permission"
                                                 )
-                                        )
+                                        ),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
 
@@ -95,7 +101,8 @@ class CommandManagerTests {
         Command expectedCommand0 = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command expectedCommand1 = new Command(
@@ -104,10 +111,12 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 )
                         ),
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command expectedCommand2 = new Command(
@@ -119,13 +128,16 @@ class CommandManagerTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "hi",
-                                                        helloWorldHiExecutor
+                                                        helloWorldHiExecutor,
+                                                        "permission"
                                                 )
                                         ),
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 )
                         ),
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
 
@@ -144,7 +156,8 @@ class CommandManagerTests {
         Command command0 = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command command1 = new Command(
@@ -153,13 +166,16 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 ),
                                 new LiteralCommandNode(
                                         "there",
-                                        helloThereExecutor
+                                        helloThereExecutor,
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
@@ -171,11 +187,14 @@ class CommandManagerTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "hi",
-                                                        helloWorldHiExecutor
+                                                        helloWorldHiExecutor,
+                                                        "permission"
                                                 )
-                                        )
+                                        ),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
 
@@ -188,7 +207,8 @@ class CommandManagerTests {
         Command expectedCommand0 = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command expectedCommand1 = new Command(
@@ -197,14 +217,17 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 ),
                                 new LiteralCommandNode(
                                         "there",
-                                        helloThereExecutor
+                                        helloThereExecutor,
+                                        "permission"
                                 )
                         ),
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
         Command expectedCommand2 = new Command(
@@ -216,17 +239,21 @@ class CommandManagerTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "hi",
-                                                        helloWorldHiExecutor
+                                                        helloWorldHiExecutor,
+                                                        "permission"
                                                 )
                                         ),
-                                        helloWorldExecutor
+                                        helloWorldExecutor,
+                                        "permission"
                                 ),
                                 new LiteralCommandNode(
                                         "there",
-                                        helloThereExecutor
+                                        helloThereExecutor,
+                                        "permission"
                                 )
                         ),
-                        helloExecutor
+                        helloExecutor,
+                        "permission"
                 )
         );
 
@@ -240,7 +267,8 @@ class CommandManagerTests {
         Command command = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        context -> CommandResult.successful(context, "hello")
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
                 )
         );
 
@@ -258,7 +286,8 @@ class CommandManagerTests {
         Command command = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        context -> CommandResult.successful(context, "hello")
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
                 )
         );
 
@@ -275,20 +304,23 @@ class CommandManagerTests {
     void testSuccess0() {
         LiteralCommandNode helloNode = new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         );
         Command command0 = new Command(helloNode);
 
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
-                        context -> CommandResult.successful(context, "hi")
+                        context -> CommandResult.successful(context, "hi"),
+                        "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -307,26 +339,30 @@ class CommandManagerTests {
     void testSuccess1() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
 
         LiteralCommandNode thereNode = new LiteralCommandNode(
                 "there",
-                context -> CommandResult.successful(context, "hi there")
+                context -> CommandResult.successful(context, "hi there"),
+                "permission"
         );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 thereNode
-                        )
+                        ),
+                        "permission"
                 )
         );
 
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -345,7 +381,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad0() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -353,15 +390,18 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -380,7 +420,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad1() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -388,15 +429,18 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -415,7 +459,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad2() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -423,15 +468,18 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -450,7 +498,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad3() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -458,15 +507,18 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -485,7 +537,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad4() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -493,9 +546,11 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
@@ -505,10 +560,12 @@ class CommandManagerTests {
                                 new IntegerCommandNode(
                                         "repeat",
                                         new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
-                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data()))
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
                                 )
                         ),
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
@@ -527,7 +584,8 @@ class CommandManagerTests {
     void testSuggestionsSuccessListChad6() {
         Command command0 = new Command(new LiteralCommandNode(
                 "hello",
-                context -> CommandResult.successful(context, "hello")
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
         ));
         Command command1 = new Command(
                 new LiteralCommandNode(
@@ -535,9 +593,11 @@ class CommandManagerTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hi there")
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
                                 )
-                        )
+                        ),
+                        "permission"
                 )
         );
         Command command2 = new Command(
@@ -547,10 +607,12 @@ class CommandManagerTests {
                                 new IntegerCommandNode(
                                         "repeat",
                                         new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
-                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data()))
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
                                 )
                         ),
-                        context -> CommandResult.successful(context, "welcome")
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
                 )
         );
 
