@@ -70,8 +70,14 @@ public class CommandManager {
     }
 
     public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
-        if (input.isEmpty())
-            return List.of();
+        if (input.isEmpty()) {
+            return commandsByName.values().stream()
+                    .map(Command::getRoot)
+                    .filter(node -> node.canExecute(sender))
+                    .map(CommandNode::getName)
+                    .map(string -> (Object) string)
+                    .toList();
+        }
 
         String commandName = input.getFirst();
 
