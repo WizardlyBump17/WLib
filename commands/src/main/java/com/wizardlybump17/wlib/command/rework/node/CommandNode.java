@@ -81,7 +81,7 @@ public abstract class CommandNode<T> {
     }
 
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
-        return List.of();
+        return allowedInputs.getSuggestions(sender, args, currentInput);
     }
 
     public @Nullable CommandNodeExecutor<?> getExecutor() {

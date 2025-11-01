@@ -517,7 +517,7 @@ class CommandManagerTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of(0, 536870911, 1073741822, 1610612733, 2147483647);
+        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
         List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", ""));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
@@ -559,7 +559,7 @@ class CommandManagerTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of(0, 536870911, 1073741822, 1610612733, 2147483647);
+        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
         List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", "10"));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
