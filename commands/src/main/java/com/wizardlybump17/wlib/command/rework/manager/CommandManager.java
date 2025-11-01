@@ -70,7 +70,7 @@ public class CommandManager {
     }
 
     public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
-        if (input.isEmpty()) {
+        if (input.isEmpty() || input.size() == 1) {
             return commandsByName.values().stream()
                     .map(Command::getRoot)
                     .filter(node -> node.canExecute(sender))
