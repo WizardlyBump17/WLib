@@ -82,6 +82,9 @@ public class CommandManager {
         String commandName = input.getFirst();
 
         Command command = commandsByFullName.get(commandName);
+
+        if (command == null)
+            command = commandsByName.get(commandName);
         if (command == null)
             return List.of();
 
