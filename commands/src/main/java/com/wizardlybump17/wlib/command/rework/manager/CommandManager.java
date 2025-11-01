@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.rework.manager;
 
 import com.wizardlybump17.wlib.command.rework.Command;
+import com.wizardlybump17.wlib.command.rework.node.CommandNode;
 import com.wizardlybump17.wlib.command.rework.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
@@ -16,22 +17,27 @@ public class CommandManager {
 
     private static final char SEPARATOR = ':';
 
-    private final @NotNull Map<String, Command> commands = new HashMap<>();
+    private final @NotNull Map<String, Command> commandsByFullName = new HashMap<>();
+    private final @NotNull Map<String, Command> commandsByName = new HashMap<>();
 
     public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
         String commandName = command.getRoot().getName().toLowerCase();
         String fullCommandName = identifier + SEPARATOR + commandName;
-        Command existingCommand = commands.get(fullCommandName);
+
+        Command existingCommand = commandsByFullName.get(fullCommandName);
 
         if (existingCommand != null) {
             Command newCommand = mergeCommand(existingCommand, command);
-            commands.put(fullCommandName, newCommand);
-            commands.put(commandName, newCommand);
+
+            commandsByFullName.put(fullCommandName, newCommand);
+            commandsByName.put(commandName, newCommand);
+
             return newCommand;
         }
 
-        commands.put(fullCommandName, command);
-        commands.put(commandName, command);
+        commandsByFullName.put(fullCommandName, command);
+        commandsByName.put(commandName, command);
+
         return command;
     }
 
@@ -45,9 +51,13 @@ public class CommandManager {
 
         String commandName = input.getFirst();
 
-        Command command = commands.get(commandName);
+        Command command = commandsByFullName.get(commandName);
+
+        if (command == null)
+            command = commandsByName.get(commandName);
         if (command == null)
             return CommandResult.commandNotFound(commandName);
+
         return command.execute(sender, input);
     }
 
@@ -65,7 +75,7 @@ public class CommandManager {
 
         String commandName = input.getFirst();
 
-        Command command = commands.get(commandName);
+        Command command = commandsByFullName.get(commandName);
         if (command == null)
             return List.of();
 
@@ -87,6 +97,8 @@ public class CommandManager {
     }
 
     public @NotNull Optional<Command> getCommand(@NotNull String name) {
-        return Optional.ofNullable(commands.get(name));
+        return Optional
+                .ofNullable(commandsByFullName.get(name))
+                .or(() -> Optional.ofNullable(commandsByName.get(name)));
     }
 }
