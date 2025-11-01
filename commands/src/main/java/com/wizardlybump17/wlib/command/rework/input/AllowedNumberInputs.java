@@ -54,5 +54,55 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
                 return false;
             }
         }
+
+        record Positive() implements AllowedIntegerInputs, RangedAllowedInputs<Integer> {
+
+            @Override
+            public @NotNull Integer from() {
+                return 0;
+            }
+
+            @Override
+            public @NotNull Integer to() {
+                return Integer.MAX_VALUE;
+            }
+
+            @Override
+            public boolean isInRange(@NotNull Integer input) {
+                return input > 0;
+            }
+
+            @Override
+            public boolean isAllowed(@Nullable Integer input) {
+                if (input == null)
+                    return false;
+                return isInRange(input);
+            }
+        }
+
+        record Negative() implements AllowedIntegerInputs, RangedAllowedInputs<Integer> {
+
+            @Override
+            public @NotNull Integer from() {
+                return Integer.MIN_VALUE;
+            }
+
+            @Override
+            public @NotNull Integer to() {
+                return -1;
+            }
+
+            @Override
+            public boolean isInRange(@NotNull Integer input) {
+                return input < 0;
+            }
+
+            @Override
+            public boolean isAllowed(@Nullable Integer input) {
+                if (input == null)
+                    return false;
+                return isInRange(input);
+            }
+        }
     }
 }
