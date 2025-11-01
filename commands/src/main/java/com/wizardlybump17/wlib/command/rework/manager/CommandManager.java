@@ -59,7 +59,7 @@ public class CommandManager {
         return execute(sender, String.join(" ", input));
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
             return List.of();
 
@@ -72,7 +72,7 @@ public class CommandManager {
         return command.getSuggestions(sender, input);
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) {
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) {
         try {
             if (!input.isEmpty() && !StringUtil.isProperlyQuoted(input))
                 input = input + "\"";
@@ -82,7 +82,7 @@ public class CommandManager {
         }
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
         return getSuggestions(sender, String.join(" ", input));
     }
 

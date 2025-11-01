@@ -37,8 +37,8 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("hello");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of());
+        List<Object> expected = List.of("hello");
+        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of());
 
         Assertions.assertEquals(expected, actual);
     }
@@ -58,8 +58,8 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("hello");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("he"));
+        List<Object> expected = List.of("hello");
+        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("he"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -87,8 +87,8 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("world", "hi", "there");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<Object> expected = List.of("world", "hi", "there");
+        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -117,8 +117,8 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("world", "hi", "1", "3", "5", "7", "10");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<Object> expected = List.of("world", "hi", 1, 3, 5, 7, 10);
+        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -151,8 +151,8 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("world", "hi", "happy");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
+        List<Object> expected = List.of("world", "hi", "happy");
+        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
 
         Assertions.assertEquals(expected, actual);
     }

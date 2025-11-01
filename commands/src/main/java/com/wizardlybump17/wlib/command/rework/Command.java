@@ -113,13 +113,13 @@ public class Command {
         return StringUtil.parseQuotedStrings(original);
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
             return List.of(root.getName());
 
         String currentInput = input.getLast();
 
-        List<String> suggestions = new ArrayList<>();
+        List<Object> suggestions = new ArrayList<>();
         Collection<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
@@ -133,7 +133,7 @@ public class Command {
                 for (CommandNode<?> child : children) {
                     String permission = child.getPermission();
                     if (permission == null || sender.hasPermission(permission))
-                        suggestions.addAll(child.getSuggestions(sender, input, "").stream().map(String::valueOf).toList());
+                        suggestions.addAll(child.getSuggestions(sender, input, ""));
                 }
                 break;
             }
@@ -149,7 +149,7 @@ public class Command {
 
                     String permission = child.getPermission();
                     if (isLastInput && (permission == null || sender.hasPermission(permission)))
-                        suggestions.addAll(child.getSuggestions(sender, input, currentInput).stream().map(String::valueOf).toList());
+                        suggestions.addAll(child.getSuggestions(sender, input, currentInput));
 
                     lastParsingError = null;
 
