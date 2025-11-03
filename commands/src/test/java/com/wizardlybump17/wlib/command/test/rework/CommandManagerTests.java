@@ -665,4 +665,206 @@ class CommandManagerTests {
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
+
+    @Test
+    void testSuggestionsSuccessStringChad0() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        ));
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        List<Object> expected = List.of("hi", "hello", "welcome");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "");
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringChad1() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        ));
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        List<Object> expected = List.of("there");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "hi t");
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringChad2() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        ));
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "welcome 1");
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringChad3() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        ));
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+        Command command3 = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "spaced string",
+                                        context -> CommandResult.successful(context, "spaced string"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+        manager.registerCommand("test", command3);
+
+        List<Object> expected = List.of("spaced string");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "test \"spaced ");
+
+        Assertions.assertEquals(expected, actual);
+    }
 }
