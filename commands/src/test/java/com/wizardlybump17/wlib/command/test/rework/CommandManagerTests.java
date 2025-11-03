@@ -626,4 +626,43 @@ class CommandManagerTests {
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
+
+    @Test
+    void testSuggestionsFailListBeta0() {
+        Command command0 = new Command(new LiteralCommandNode(
+                "hello",
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        ));
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+
+        List<Object> expected = List.of();
+        List<Object> actual = manager.getSuggestions(BETA_SENDER, List.of());
+
+        Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
+    }
 }
