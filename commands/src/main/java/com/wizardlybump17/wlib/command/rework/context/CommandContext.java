@@ -20,7 +20,7 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
         private final @NotNull LinkedHashMap<String, CommandNodeArgument<?>> arguments;
 
         private CommandNodeArguments(@NotNull LinkedHashMap<String, CommandNodeArgument<?>> arguments) {
-            this.arguments = arguments; //CommandResult and ParseResult
+            this.arguments = arguments;
         }
 
         public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments) {
