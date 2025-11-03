@@ -36,6 +36,11 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
             return Optional.ofNullable((CommandNodeArgument<T>) arguments.get(key));
         }
 
+        @SuppressWarnings("unchecked")
+        public <T> @NotNull Optional<T> getArgumentData(@NotNull String key) {
+            return (Optional<T>) getArgument(key).map(CommandNodeArgument::data);
+        }
+
         public @NotNull @Unmodifiable Map<String, CommandNodeArgument<?>> getArguments() {
             return Collections.unmodifiableMap(arguments);
         }
