@@ -373,4 +373,115 @@ class CommandManagerTests {
 
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void testRegisterMultipleDifferent0() {
+        Command command0 = new Command(new LiteralCommandNode("hello0", context -> CommandResult.successful(context, "hello0"), "permission"));
+        Command command1 = new Command(new LiteralCommandNode("hello1", context -> CommandResult.successful(context, "hello1"), "permission"));
+        Command command2 = new Command(new LiteralCommandNode("hello2", context -> CommandResult.successful(context, "hello2"), "permission"));
+        Command command3 = new Command(new LiteralCommandNode("hello3", context -> CommandResult.successful(context, "hello3"), "permission"));
+
+        CommandManager manager = new CommandManager();
+
+        List<Command> expected = List.of(command0, command1, command2, command3);
+        List<Command> actual = manager.registerCommands("test", List.of(command0, command1, command2, command3));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testRegisterMultipleMerging0() {
+        CommandNodeExecutor<?> helloExecutor = context -> CommandResult.successful(context, "hello");
+        CommandNodeExecutor<?> helloWorldExecutor = context -> CommandResult.successful(context, "hello world");
+        CommandNodeExecutor<?> helloWorldHiExecutor = context -> CommandResult.successful(context, "hello world hi");
+
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor,
+                        "permission"
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor,
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor,
+                                                        "permission"
+                                                )
+                                        ),
+                                        "permission"
+                                )
+                        ),
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+
+        Command expectedCommand0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        helloExecutor,
+                        "permission"
+                )
+        );
+        Command expectedCommand1 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        helloWorldExecutor,
+                                        "permission"
+                                )
+                        ),
+                        helloExecutor,
+                        "permission"
+                )
+        );
+        Command expectedCommand2 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "hi",
+                                                        helloWorldHiExecutor,
+                                                        "permission"
+                                                )
+                                        ),
+                                        helloWorldExecutor,
+                                        "permission"
+                                )
+                        ),
+                        helloExecutor,
+                        "permission"
+                )
+        );
+
+        List<Command> expected = List.of(expectedCommand0, expectedCommand1, expectedCommand2);
+        List<Command> actual = manager.registerCommands("test", List.of(command0, command1, command2));
+        Assertions.assertEquals(expected, actual);
+    }
 }

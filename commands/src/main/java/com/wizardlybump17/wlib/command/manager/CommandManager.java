@@ -8,10 +8,7 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class CommandManager {
 
@@ -39,6 +36,13 @@ public class CommandManager {
         commandsByName.put(commandName, command);
 
         return command;
+    }
+
+    public @NotNull List<Command> registerCommands(@NotNull String identifier, @NotNull List<Command> commands) {
+        List<Command> newCommands = new ArrayList<>(commands.size());
+        for (Command command : commands)
+            newCommands.add(registerCommand(identifier, command));
+        return newCommands;
     }
 
     protected @NotNull Command mergeCommand(@NotNull Command left, @NotNull Command right) {
