@@ -129,4 +129,20 @@ class QuotedStringsTests {
                 StringUtil.parseQuotedStrings("", QUOTE, ESCAPE, DELIMITER)
         );
     }
+
+    @Test
+    void testEndingWithSpace0() {
+        Assertions.assertEquals(
+                List.of(""),
+                StringUtil.parseQuotedStrings(" ", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testEndingWithSpace1() {
+        Assertions.assertEquals(
+                List.of("Hello", "World", ""),
+                StringUtil.parseQuotedStrings("Hello World ", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
 }

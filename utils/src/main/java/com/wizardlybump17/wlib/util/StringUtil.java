@@ -302,7 +302,15 @@ public class StringUtil {
      *         <tr>
      *             <td>{@code Hello "Beautiful World"}</td>
      *             <td>{@code [Hello, Beautiful World]}</td>
-     *          </tr>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello World } (there is an extra space at the end)</td>
+     *             <td>{@code [Hello, World, ]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>Empty String</td>
+     *             <td>{@code []}</td>
+     *         </tr>
      *     </table>
      * </p>
      *
@@ -388,6 +396,10 @@ public class StringUtil {
 
         if (!builder.isEmpty())
             strings.add(builder.toString());
+
+        if (input.charAt(input.length() - 1) == delimiter)
+            strings.add("");
+
         return strings;
     }
 
