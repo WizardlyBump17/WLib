@@ -1,0 +1,113 @@
+package com.wizardlybump17.wlib.command.manager;
+
+import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.util.StringUtil;
+import com.wizardlybump17.wlib.util.exception.QuotedStringException;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class CommandManager {
+
+    private static final char SEPARATOR = ':';
+
+    private final @NotNull Map<String, Command> commandsByFullName = new HashMap<>();
+    private final @NotNull Map<String, Command> commandsByName = new HashMap<>();
+
+    public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
+        String commandName = command.getRoot().getName().toLowerCase();
+        String fullCommandName = identifier + SEPARATOR + commandName;
+
+        Command existingCommand = commandsByFullName.get(fullCommandName);
+
+        if (existingCommand != null) {
+            Command newCommand = mergeCommand(existingCommand, command);
+
+            commandsByFullName.put(fullCommandName, newCommand);
+            commandsByName.put(commandName, newCommand);
+
+            return newCommand;
+        }
+
+        commandsByFullName.put(fullCommandName, command);
+        commandsByName.put(commandName, command);
+
+        return command;
+    }
+
+    protected @NotNull Command mergeCommand(@NotNull Command left, @NotNull Command right) {
+        return left.merge(right);
+    }
+
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+        if (input.isEmpty())
+            return CommandResult.commandNotFound("");
+
+        String commandName = input.getFirst();
+
+        Command command = commandsByFullName.get(commandName);
+
+        if (command == null)
+            command = commandsByName.get(commandName);
+        if (command == null)
+            return CommandResult.commandNotFound(commandName);
+
+        return command.execute(sender, input);
+    }
+
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
+        return execute(sender, StringUtil.parseQuotedStrings(input));
+    }
+
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+        return execute(sender, String.join(" ", input));
+    }
+
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+        if (input.isEmpty() || input.size() == 1) {
+            return commandsByName.values().stream()
+                    .map(Command::getRoot)
+                    .filter(node -> node.canExecute(sender))
+                    .map(CommandNode::getName)
+                    .map(string -> (Object) string)
+                    .toList();
+        }
+
+        String commandName = input.getFirst();
+
+        Command command = commandsByFullName.get(commandName);
+
+        if (command == null)
+            command = commandsByName.get(commandName);
+        if (command == null)
+            return List.of();
+
+        return command.getSuggestions(sender, input);
+    }
+
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) {
+        try {
+            if (!input.isEmpty() && !StringUtil.isProperlyQuoted(input))
+                input = input + "\"";
+            return getSuggestions(sender, StringUtil.parseQuotedStrings(input));
+        } catch (QuotedStringException e) {
+            return List.of();
+        }
+    }
+
+    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+        return getSuggestions(sender, String.join(" ", input));
+    }
+
+    public @NotNull Optional<Command> getCommand(@NotNull String name) {
+        return Optional
+                .ofNullable(commandsByFullName.get(name))
+                .or(() -> Optional.ofNullable(commandsByName.get(name)));
+    }
+}

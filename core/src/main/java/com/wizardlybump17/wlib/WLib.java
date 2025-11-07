@@ -4,8 +4,6 @@ import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
-import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
-import com.wizardlybump17.wlib.command.reader.*;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
 import com.wizardlybump17.wlib.config.registry.ConfigHandlerRegistry;
 import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
@@ -78,15 +76,6 @@ public class WLib extends JavaPlugin {
     }
 
     private void initCommandSystem() {
-        ArgsReaderRegistry.INSTANCE.add(new PlayerReader());
-        ArgsReaderRegistry.INSTANCE.add(new OfflinePlayerReader());
-        ArgsReaderRegistry.INSTANCE.add(new EntityTypeArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new MaterialReader());
-        ArgsReaderRegistry.INSTANCE.add(new BlockDataArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new MapJsonArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new PotionEffectTypeReader());
-        ArgsReaderRegistry.INSTANCE.add(new EnchantmentReader());
-        ArgsReaderRegistry.INSTANCE.add(new NamespacedKeyReader());
     }
 
     private void initSerializables() {
