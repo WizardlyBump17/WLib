@@ -324,6 +324,9 @@ public class StringUtil {
     public static @NonNull List<String> parseQuotedStrings(@NonNull String input, char quote, char escape, char delimiter) throws QuotedStringException {
         List<String> strings = new ArrayList<>();
 
+        if (input.isEmpty())
+            return strings;
+
         char[] chars = input.toCharArray();
         StringBuilder builder = new StringBuilder();
         StringBuilder quoted = new StringBuilder();

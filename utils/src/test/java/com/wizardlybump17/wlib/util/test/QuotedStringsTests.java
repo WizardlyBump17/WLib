@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.util.test;
 
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -118,6 +119,14 @@ class QuotedStringsTests {
                 QuotedStringException.class,
                 () -> StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER),
                 QuotedStringException.NON_QUOTED_AFTER_QUOTED
+        );
+    }
+
+    @Test
+    void testEmpty() {
+        Assertions.assertEquals(
+                List.of(),
+                StringUtil.parseQuotedStrings("", QUOTE, ESCAPE, DELIMITER)
         );
     }
 }
