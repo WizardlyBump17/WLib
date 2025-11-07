@@ -12,4 +12,6 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     @NotNull String value();
+
+    @NotNull String permission() default "";
 }
