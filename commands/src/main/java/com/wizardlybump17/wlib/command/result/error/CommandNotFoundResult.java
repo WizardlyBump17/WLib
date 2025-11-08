@@ -41,5 +41,10 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
         public @NotNull DummyNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
             return this;
         }
+
+        @Override
+        public @NotNull CommandNode<Object> withPermission(@Nullable String permission) {
+            return this;
+        }
     }
 }

@@ -65,4 +65,9 @@ public class IntegerCommandNode extends CommandNode<Integer> {
     public @NotNull IntegerCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
         return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
     }
+
+    @Override
+    public @NotNull CommandNode<Integer> withPermission(@Nullable String permission) {
+        return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+    }
 }

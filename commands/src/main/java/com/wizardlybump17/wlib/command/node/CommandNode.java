@@ -124,6 +124,8 @@ public abstract class CommandNode<T> {
 
     public abstract @NotNull CommandNode<T> withExecutor(@Nullable CommandNodeExecutor<?> executor);
 
+    public abstract @NotNull CommandNode<T> withPermission(@Nullable String permission);
+
     public @NotNull Optional<CommandNode<?>> getChild(@NotNull String name) {
         for (CommandNode<?> child : children)
             if (child.getName().equals(name))

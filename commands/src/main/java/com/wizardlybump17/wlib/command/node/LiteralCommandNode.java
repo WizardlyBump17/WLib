@@ -66,4 +66,9 @@ public class LiteralCommandNode extends CommandNode<String> {
     public @NotNull CommandNode<String> withExecutor(@Nullable CommandNodeExecutor<?> executor) {
         return new LiteralCommandNode(getName(), getChildren(), executor, getPermission());
     }
+
+    @Override
+    public @NotNull CommandNode<String> withPermission(@Nullable String permission) {
+        return new LiteralCommandNode(getName(), getChildren(), getExecutor(), permission);
+    }
 }
