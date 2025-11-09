@@ -120,6 +120,21 @@ public abstract class CommandNode<T> {
         return Objects.hash(name, children, allowedInputs, executor, permission);
     }
 
+    public @NotNull String getFullCommand() {
+        StringBuilder builder = new StringBuilder();
+        if (this instanceof LiteralCommandNode)
+            builder.append(name);
+        else
+            builder.append('<').append(name).append('>');
+
+        for (CommandNode<?> child : children) {
+            builder.append(' ');
+            builder.append(child.getFullCommand());
+        }
+
+        return builder.toString();
+    }
+
     public abstract @NotNull CommandNode<T> withChildren(@NotNull List<CommandNode<?>> children);
 
     public abstract @NotNull CommandNode<T> withExecutor(@Nullable CommandNodeExecutor<?> executor);
