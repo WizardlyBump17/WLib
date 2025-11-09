@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.extractor.method;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
+import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
@@ -15,9 +16,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodCommandExtractor {
+public class MethodCommandExtractor implements CommandExtractor {
 
-    public static @NotNull List<Command> extract(@NotNull Object object) {
+    public static final @NotNull MethodCommandExtractor INSTANCE = new MethodCommandExtractor();
+
+    @Override
+    public boolean isAccepted(@NotNull Object object) {
+        return true;
+    }
+
+    @Override
+    public @NotNull List<Command> extract(@NotNull Object object) {
         List<Command> commands = new ArrayList<>();
 
         Class<?> clazz = object.getClass();

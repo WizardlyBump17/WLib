@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.test.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -52,7 +53,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = MethodCommandExtractor.extract(object);
+        List<Command> actual = CommandExtractor.METHOD.extract(object);
 
         expected.sort(null);
         actual.sort(null);
