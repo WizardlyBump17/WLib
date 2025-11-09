@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class Command {
+public class Command implements Comparable<Command> {
 
     private final @NotNull LiteralCommandNode root;
 
@@ -192,6 +192,13 @@ public class Command {
     @Override
     public int hashCode() {
         return Objects.hashCode(root);
+    }
+
+    @Override
+    public int compareTo(@NotNull Command other) {
+        String fullCommand = getFullCommand();
+        String otherFullCommand = other.getFullCommand();
+        return fullCommand.compareTo(otherFullCommand);
     }
 
     public @NotNull String getFullCommand() {
