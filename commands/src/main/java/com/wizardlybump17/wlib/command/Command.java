@@ -193,4 +193,8 @@ public class Command {
     public int hashCode() {
         return Objects.hashCode(root);
     }
+
+    public @NotNull String getFullCommand() {
+        return root.getFullCommand();
+    }
 }
