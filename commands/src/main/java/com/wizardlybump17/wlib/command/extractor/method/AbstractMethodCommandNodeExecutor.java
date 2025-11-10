@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.result.CommandResult;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodCommandNodeExecutor<T> {
+@ApiStatus.Internal
+public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodCommandNodeExecutor<T> {
 
     private final @NotNull Object object;
     private final @NotNull MethodHandle methodHandle;
@@ -66,7 +68,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
                 '}';
     }
 
-    static final class CommandSenderCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandSenderCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandSenderCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -86,7 +89,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandSenderExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandSenderExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandSenderExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -106,7 +110,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandContextCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandContextCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -126,7 +131,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandContextExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -146,7 +152,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandSenderAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandSenderAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandSenderAndArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -167,7 +174,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandSenderAndArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandSenderAndArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandSenderAndArgumentsExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -188,7 +196,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandContextAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandContextAndArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -209,7 +218,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextAndArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class CommandContextAndArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandContextAndArgumentsExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -230,7 +240,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class ArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class ArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public ArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -250,7 +261,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class ArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class ArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public ArgumentsExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -270,7 +282,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class NoArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class NoArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public NoArgumentsExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
@@ -289,7 +302,8 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class NoArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    @ApiStatus.Internal
+    public static final class NoArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public NoArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
