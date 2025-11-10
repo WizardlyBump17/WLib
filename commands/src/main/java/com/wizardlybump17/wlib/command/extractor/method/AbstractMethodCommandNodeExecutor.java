@@ -66,9 +66,9 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
                 '}';
     }
 
-    static final class CommandSenderCommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    static final class CommandSenderCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
-        public CommandSenderCommandContextExecutor(@NotNull Object object, @NotNull Method method) {
+        public CommandSenderCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
         }
 
@@ -106,9 +106,9 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextCommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    static final class CommandContextCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
-        public CommandContextCommandContextExecutor(@NotNull Object object, @NotNull Method method) {
+        public CommandContextCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
         }
 
@@ -146,9 +146,9 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandSenderAndArgumentsCommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    static final class CommandSenderAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
-        public CommandSenderAndArgumentsCommandContextExecutor(@NotNull Object object, @NotNull Method method) {
+        public CommandSenderAndArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
         }
 
@@ -188,9 +188,9 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class CommandContextAndArgumentsCommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    static final class CommandContextAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
-        public CommandContextAndArgumentsCommandContextExecutor(@NotNull Object object, @NotNull Method method) {
+        public CommandContextAndArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
         }
 
@@ -230,9 +230,9 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
         }
     }
 
-    static final class ArgumentsCommandContextExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+    static final class ArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
-        public ArgumentsCommandContextExecutor(@NotNull Object object, @NotNull Method method) {
+        public ArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
             super(object, method);
         }
 
