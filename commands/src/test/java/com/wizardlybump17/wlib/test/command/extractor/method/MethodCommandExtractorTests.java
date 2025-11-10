@@ -24,7 +24,7 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class)
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class))
                         )
                 ),
                 new Command(
@@ -33,7 +33,7 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class)
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class))
                                         )
                                 )
                         )
@@ -47,7 +47,7 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class)
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class))
                                                         )
                                                 )
                                         )
@@ -55,7 +55,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = CommandExtractor.METHOD.extract(object);
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -86,7 +86,7 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class)
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class))
                         )
                 ),
                 new Command(
@@ -95,7 +95,7 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class)
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class))
                                         )
                                 )
                         )
@@ -109,7 +109,7 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class)
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class))
                                                         )
                                                 )
                                         )
@@ -117,7 +117,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = CommandExtractor.METHOD.extract(object);
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -148,7 +148,7 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class)
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class))
                         )
                 ),
                 new Command(
@@ -157,7 +157,7 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class)
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class))
                                         )
                                 )
                         )
@@ -171,7 +171,7 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class)
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class))
                                                         )
                                                 )
                                         )
@@ -179,7 +179,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = CommandExtractor.METHOD.extract(object);
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
 
         expected.sort(null);
         actual.sort(null);

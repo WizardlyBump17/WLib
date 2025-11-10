@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
+import com.wizardlybump17.wlib.command.exception.extractor.method.InvalidCombinationException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
@@ -27,7 +28,7 @@ public class MethodCommandExtractor implements CommandExtractor {
     }
 
     @Override
-    public @NotNull List<Command> extract(@NotNull Object object) {
+    public @NotNull List<Command> extract(@NotNull Object object) throws InvalidCombinationException {
         List<Command> commands = new ArrayList<>();
 
         Class<?> clazz = object.getClass();
@@ -88,7 +89,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         return newNode;
     }
 
-    public static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull String methodName, @NotNull Class<?> @NotNull ... parameterTypes) {
+    public static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull String methodName, @NotNull Class<?> @NotNull ... parameterTypes) throws InvalidCombinationException {
         try {
             Method method = object.getClass().getMethod(methodName, parameterTypes);
             return createExecutor(object, parameterTypes, method.getReturnType(), method);
@@ -97,7 +98,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         }
     }
 
-    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) {
+    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) throws InvalidCombinationException {
         /*
         If empty -> error
         If CommandSender only -|
@@ -117,7 +118,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         if (parameterTypes.length == 1) {
             if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender only
                 if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
-                    throw new IllegalArgumentException();
+                    throw new InvalidCombinationException("You can not return a CommandResult when having the first method parameter is a CommandSender: " + method);
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderExecutor<>(object, method);
                 }
