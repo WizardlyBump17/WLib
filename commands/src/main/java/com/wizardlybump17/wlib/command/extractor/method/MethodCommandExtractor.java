@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
-import com.wizardlybump17.wlib.command.exception.extractor.method.InvalidCombinationException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
@@ -28,7 +27,7 @@ public class MethodCommandExtractor implements CommandExtractor {
     }
 
     @Override
-    public @NotNull List<Command> extract(@NotNull Object object) throws InvalidCombinationException {
+    public @NotNull List<Command> extract(@NotNull Object object) {
         List<Command> commands = new ArrayList<>();
 
         Class<?> clazz = object.getClass();
@@ -89,7 +88,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         return newNode;
     }
 
-    public static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull String methodName, @NotNull Class<?> @NotNull ... parameterTypes) throws InvalidCombinationException {
+    public static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull String methodName, @NotNull Class<?> @NotNull ... parameterTypes) {
         try {
             Method method = object.getClass().getMethod(methodName, parameterTypes);
             return createExecutor(object, parameterTypes, method.getReturnType(), method);
@@ -98,16 +97,12 @@ public class MethodCommandExtractor implements CommandExtractor {
         }
     }
 
-    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) throws InvalidCombinationException {
+    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) {
         /*
         If empty -> error
-        If CommandSender only -|
-                               |-> if CommandResult return type, error
-                               |-> anything else, success
+        If CommandSender only -> pass only the command sender and check the return type
         If CommandContext only -> pass only the command context and check the return type
-        If CommandSender + more parameters -|
-                                            |-> if CommandResult return type, error
-                                            |-> pass the command sender and the parameters, success
+        If CommandSender + more parameters -> pass the command sender and the parameters and check the return type
         If CommandContext + more parameters -> pass the command context and the parameters and check the return type
         If only parameters -> pass the parameters and check the return type
         */
@@ -118,7 +113,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         if (parameterTypes.length == 1) {
             if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender only
                 if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
-                    throw new InvalidCombinationException("You can not return a CommandResult when having the first method parameter is a CommandSender: " + method);
+                    return new AbstractMethodCommandNodeExecutor.CommandSenderCommandResultExecutor<>(object, method);
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderExecutor<>(object, method);
                 }
@@ -133,7 +128,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
         if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender + more arguments
             if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
-                throw new IllegalArgumentException();
+                return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsCommandResultExecutor<>(object, method);
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsExecutor<>(object, method);
             }
