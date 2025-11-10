@@ -99,7 +99,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
     private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) {
         /*
-        If empty -> error
+        If empty -> check the return type
         If CommandSender only -> pass only the command sender and check the return type
         If CommandContext only -> pass only the command context and check the return type
         If CommandSender + more parameters -> pass the command sender and the parameters and check the return type
@@ -107,8 +107,13 @@ public class MethodCommandExtractor implements CommandExtractor {
         If only parameters -> pass the parameters and check the return type
         */
 
-        if (parameterTypes.length == 0) //empty -> error
-            throw new IllegalArgumentException();
+        if (parameterTypes.length == 0) { //no parameters
+            if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+                return new AbstractMethodCommandNodeExecutor.NoArgumentsCommandResultExecutor<>(object, method);
+            } else {
+                return new AbstractMethodCommandNodeExecutor.NoArgumentsExecutor<>(object, method);
+            }
+        }
 
         if (parameterTypes.length == 1) {
             if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender only

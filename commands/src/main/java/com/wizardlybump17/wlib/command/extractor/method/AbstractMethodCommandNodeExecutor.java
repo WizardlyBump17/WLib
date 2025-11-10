@@ -269,4 +269,42 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
             }
         }
     }
+
+    static final class NoArgumentsExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+
+        public NoArgumentsExecutor(@NotNull Object object, @NotNull Method method) {
+            super(object, method);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
+            try {
+                List<Object> parameters = new ArrayList<>();
+                parameters.add(object());
+                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
+            } catch (Throwable throwable) {
+                return CommandResult.exceptionally(context, throwable);
+            }
+        }
+    }
+
+    static final class NoArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
+
+        public NoArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
+            super(object, method);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
+            try {
+                List<Object> parameters = new ArrayList<>();
+                parameters.add(object());
+                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
+            } catch (Throwable throwable) {
+                return CommandResult.exceptionally(context, throwable);
+            }
+        }
+    }
 }
