@@ -204,4 +204,69 @@ class MethodCommandExtractorTests {
             return CommandResult.successful(context, null);
         }
     }
+
+    @Test
+    void test3() {
+        Test3 object = new Test3();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class))
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class Test3 {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello")
+        public @NotNull CommandResult<?> hello(@NotNull CommandSender<?> sender) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world")
+        public @NotNull CommandResult<?> helloWorld(@NotNull CommandSender<?> sender) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi")
+        public @NotNull CommandResult<?> helloThereHi(@NotNull CommandSender<?> sender) {
+            return null;
+        }
+    }
 }
