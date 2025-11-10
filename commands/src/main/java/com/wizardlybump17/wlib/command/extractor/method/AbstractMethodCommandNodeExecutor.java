@@ -66,26 +66,6 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
                 '}';
     }
 
-    static final class CommandSenderCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
-
-        public CommandSenderCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
-            super(object, method);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
-        }
-    }
-
     static final class CommandSenderExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
 
         public CommandSenderExecutor(@NotNull Object object, @NotNull Method method) {
@@ -140,27 +120,6 @@ abstract sealed class AbstractMethodCommandNodeExecutor<T> implements MethodComm
                 parameters.add(object());
                 parameters.add(context);
                 return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
-        }
-    }
-
-    static final class CommandSenderAndArgumentsCommandResultExecutor<T> extends AbstractMethodCommandNodeExecutor<T> {
-
-        public CommandSenderAndArgumentsCommandResultExecutor(@NotNull Object object, @NotNull Method method) {
-            super(object, method);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
             }

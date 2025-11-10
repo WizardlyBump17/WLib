@@ -100,9 +100,13 @@ public class MethodCommandExtractor implements CommandExtractor {
     private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Class<?> @NotNull [] parameterTypes, @NotNull Class<?> returnType, @NotNull Method method) {
         /*
         If empty -> error
-        If CommandSender only -> pass only the command sender and check the return type
+        If CommandSender only -|
+                               |-> if CommandResult return type, error
+                               |-> anything else, success
         If CommandContext only -> pass only the command context and check the return type
-        If CommandSender + more parameters -> pass the command sender and the parameters and check the return type
+        If CommandSender + more parameters -|
+                                            |-> if CommandResult return type, error
+                                            |-> pass the command sender and the parameters, success
         If CommandContext + more parameters -> pass the command context and the parameters and check the return type
         If only parameters -> pass the parameters and check the return type
         */
@@ -113,7 +117,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         if (parameterTypes.length == 1) {
             if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender only
                 if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
-                    return new AbstractMethodCommandNodeExecutor.CommandSenderCommandResultExecutor<>(object, method);
+                    throw new IllegalArgumentException();
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderExecutor<>(object, method);
                 }
@@ -128,7 +132,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
         if (parameterTypes[0].isAssignableFrom(CommandSender.class)) { //CommandSender + more arguments
             if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
-                return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsCommandResultExecutor<>(object, method);
+                throw new IllegalArgumentException();
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsExecutor<>(object, method);
             }
