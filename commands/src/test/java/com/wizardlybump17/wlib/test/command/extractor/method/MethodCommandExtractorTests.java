@@ -5,9 +5,13 @@ import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
+import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.node.StringCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 class MethodCommandExtractorTests {
 
@@ -914,6 +920,194 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello there hi <int>")
         public CommandResult<?> helloThereHi(int arg0) {
+            return null;
+        }
+    }
+
+    /*
+    Lets execute some commands
+     */
+
+    static final @NotNull Consumer<String> SENDER_MESSAGE_CONSUMER = System.out::println;
+    static final @NotNull CommandSender<Object> CHAD_SENDER = new BasicCommandSender<>(new Object(), "Chad", UUID.nameUUIDFromBytes("Chad".getBytes()), SENDER_MESSAGE_CONSUMER, $ -> true);
+    static final @NotNull CommandSender<Object> BETA_SENDER = new BasicCommandSender<>(new Object(), "Beta", UUID.nameUUIDFromBytes("Beta".getBytes()), SENDER_MESSAGE_CONSUMER, $ -> false);
+
+    @Test
+    void testExecute() {
+        TestExecute object = new TestExecute();
+
+        Command hello = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                )
+                        ),
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                )
+        );
+        Command hi = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hiWorld", CommandSender.class))
+                                )
+                        ),
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hi", CommandSender.class))
+                )
+        );
+        Command greetings = new Command(
+                new LiteralCommandNode(
+                        "greetings",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetingsWorld", CommandContext.class))
+                                )
+                        ),
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetings", CommandContext.class))
+                )
+        );
+        Command welcome = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new StringCommandNode(
+                                        "name",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "world",
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcomeWorld", CommandSender.class, String.class))
+                                                )
+                                        ),
+                                        new AllowedStringInputs.Any(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcome", CommandSender.class, String.class)),
+                                        null
+                                )
+                        )
+                )
+        );
+        Command wassup = new Command(
+                new LiteralCommandNode(
+                        "wassup",
+                        List.of(
+                                new StringCommandNode(
+                                        "name",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "nice",
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassupNice", CommandContext.class, String.class))
+                                                )
+                                        ),
+                                        new AllowedStringInputs.Any(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassup", CommandContext.class, String.class)),
+                                        null
+                                )
+                        )
+                )
+        );
+        Command aye = new Command(
+                new LiteralCommandNode(
+                        "aye",
+                        List.of(
+                                new StringCommandNode(
+                                        "name",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "nice",
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "ayeNice", String.class))
+                                                )
+                                        ),
+                                        new AllowedStringInputs.Any(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "aye", String.class)),
+                                        null
+                                )
+                        )
+                )
+        );
+
+        List<Command> extractedCommands = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        CommandManager manager = new CommandManager();
+
+        List<Command> expectedCommands = new ArrayList<>(List.of(hello, hi, greetings, welcome, wassup, aye));
+        List<Command> actualCommands = manager.registerCommands("test", extractedCommands);
+
+        expectedCommands.sort(null);
+        actualCommands.sort(null);
+
+        actualCommands.remove(0);
+        actualCommands.remove(1);
+        actualCommands.remove(2);
+        actualCommands.remove(3);
+        actualCommands.remove(4);
+        actualCommands.remove(5);
+
+        Assertions.assertEquals(expectedCommands, actualCommands);
+
+        Assertions.assertEquals(
+                CommandResult.successful(0, null, null),
+                manager.execute(CHAD_SENDER, "hello")
+        );
+    }
+
+    public static class TestExecute {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello")
+        public void hello() {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world")
+        public CommandResult<?> helloWorld() {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hi")
+        public void hi(@NotNull CommandSender<?> sender) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hi world")
+        public CommandResult<?> hiWorld(@NotNull CommandSender<?> sender) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("greetings")
+        public void greetings(@NotNull CommandContext context) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("greetings world")
+        public @NotNull CommandResult<?> greetingsWorld(@NotNull CommandContext context) {
+            return CommandResult.successful(context, "Hello, world!");
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("welcome <name>")
+        public void welcome(@NotNull CommandSender<?> sender, @NotNull String name) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("welcome <name> world")
+        public CommandResult<?> welcomeWorld(@NotNull CommandSender<?> sender, @NotNull String name) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("wassup <name>")
+        public void wassup(@NotNull CommandContext context, @NotNull String name) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("wassup <name> nice")
+        public @NotNull CommandResult<?> wassupNice(@NotNull CommandContext context, @NotNull String name) {
+            return CommandResult.successful(context, "Nice to meet you, " + name + "!");
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("aye <name>")
+        public void aye(@NotNull String name) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("aye <name> nice")
+        public CommandResult<?> ayeNice(@NotNull String name) {
             return null;
         }
     }
