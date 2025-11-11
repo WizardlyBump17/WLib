@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
@@ -83,7 +84,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 if (parameterType == int.class || parameterType == Integer.class) {
                     newNode = new IntegerCommandNode(part, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
                 } else if (parameterType == String.class) {
-                    newNode = new StringCommandNode(part, root == null ? List.of() : List.of(root), $ -> true);
+                    newNode = new StringCommandNode(part, root == null ? List.of() : List.of(root), new AllowedStringInputs.Any());
                 } else {
                     throw new UnsupportedOperationException();
                 }
