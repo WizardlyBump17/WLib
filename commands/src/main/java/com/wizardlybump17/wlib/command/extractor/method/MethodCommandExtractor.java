@@ -44,15 +44,12 @@ public class MethodCommandExtractor implements CommandExtractor {
 
             CommandNode<?> root = null;
 
-            if (parameterTypes.length == 0)
-                throw new IllegalArgumentException();
-
             int parameterIndex = parameterTypes.length - 1;
             for (int i = commandParts.length - 1; i >= 0; i--) {
                 String part = commandParts[i];
 
                 CommandNode<?> oldRoot = root;
-                root = createNode(part, parameterTypes[parameterIndex], root, annotation);
+                root = createNode(part, parameterTypes, parameterIndex, root, annotation);
                 if (!(root instanceof LiteralCommandNode))
                     parameterIndex--;
 
@@ -69,18 +66,27 @@ public class MethodCommandExtractor implements CommandExtractor {
         return commands;
     }
 
-    private static @NotNull CommandNode<?> createNode(@NotNull String part, @NotNull Class<?> type, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation) {
+    private static @NotNull CommandNode<?> createNode(@NotNull String part, @NotNull Class<?> @NotNull [] parameterTypes, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation) {
         CommandNode<?> newNode;
 
-        if (part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>') {
+        boolean argument = part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>';
+        if (argument)
             part = part.substring(1, part.length() - 1);
-            if (type == int.class || type == Integer.class) {
-                newNode = new IntegerCommandNode(part, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
-            } else {
-                throw new UnsupportedOperationException();
-            }
-        } else {
+
+        if (parameterIndex < 1) {
             newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
+        } else {
+            Class<?> parameterType = parameterTypes[parameterIndex];
+
+            if (argument) {
+                if (parameterType == int.class || parameterType == Integer.class) {
+                    newNode = new IntegerCommandNode(part, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            } else {
+                newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
+            }
         }
 
         if (!annotation.permission().isEmpty())
