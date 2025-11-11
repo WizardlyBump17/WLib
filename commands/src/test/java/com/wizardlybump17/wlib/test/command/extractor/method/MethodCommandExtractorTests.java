@@ -17,8 +17,8 @@ import java.util.List;
 class MethodCommandExtractorTests {
 
     @Test
-    void test0() {
-        Test0 object = new Test0();
+    void testCommandSender() {
+        TestCommandSender object = new TestCommandSender();
 
         List<Command> expected = new ArrayList<>(List.of(
                 new Command(
@@ -63,7 +63,7 @@ class MethodCommandExtractorTests {
         Assertions.assertEquals(expected, actual);
     }
 
-    public static class Test0 {
+    public static class TestCommandSender {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello")
         public void hello(@NotNull CommandSender<?> sender) {
@@ -79,8 +79,8 @@ class MethodCommandExtractorTests {
     }
 
     @Test
-    void test1() {
-        Test1 object = new Test1();
+    void testCommandContext() {
+        TestCommandContext object = new TestCommandContext();
 
         List<Command> expected = new ArrayList<>(List.of(
                 new Command(
@@ -125,7 +125,7 @@ class MethodCommandExtractorTests {
         Assertions.assertEquals(expected, actual);
     }
 
-    public static class Test1 {
+    public static class TestCommandContext {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello")
         public void hello(@NotNull CommandContext context) {
@@ -141,8 +141,8 @@ class MethodCommandExtractorTests {
     }
 
     @Test
-    void test2() {
-        Test2 object = new Test2();
+    void testCommandContextCommandResult() {
+        TestCommandContextCommandResult object = new TestCommandContextCommandResult();
 
         List<Command> expected = new ArrayList<>(List.of(
                 new Command(
@@ -187,7 +187,7 @@ class MethodCommandExtractorTests {
         Assertions.assertEquals(expected, actual);
     }
 
-    public static class Test2 {
+    public static class TestCommandContextCommandResult {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello")
         public @NotNull CommandResult<?> hello(@NotNull CommandContext context) {
@@ -206,8 +206,8 @@ class MethodCommandExtractorTests {
     }
 
     @Test
-    void test3() {
-        Test3 object = new Test3();
+    void testCommandSenderCommandResult() {
+        TestCommandSenderCommandResult object = new TestCommandSenderCommandResult();
 
         List<Command> expected = new ArrayList<>(List.of(
                 new Command(
@@ -252,20 +252,20 @@ class MethodCommandExtractorTests {
         Assertions.assertEquals(expected, actual);
     }
 
-    public static class Test3 {
+    public static class TestCommandSenderCommandResult {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello")
-        public @NotNull CommandResult<?> hello(@NotNull CommandSender<?> sender) {
+        public CommandResult<?> hello(@NotNull CommandSender<?> sender) {
             return null;
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello world")
-        public @NotNull CommandResult<?> helloWorld(@NotNull CommandSender<?> sender) {
+        public CommandResult<?> helloWorld(@NotNull CommandSender<?> sender) {
             return null;
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello there hi")
-        public @NotNull CommandResult<?> helloThereHi(@NotNull CommandSender<?> sender) {
+        public CommandResult<?> helloThereHi(@NotNull CommandSender<?> sender) {
             return null;
         }
     }
