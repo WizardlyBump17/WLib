@@ -8,6 +8,7 @@ import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.node.StringCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -81,6 +82,8 @@ public class MethodCommandExtractor implements CommandExtractor {
             if (argument) {
                 if (parameterType == int.class || parameterType == Integer.class) {
                     newNode = new IntegerCommandNode(part, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
+                } else if (parameterType == String.class) {
+                    newNode = new StringCommandNode(part, root == null ? List.of() : List.of(root), $ -> true);
                 } else {
                     throw new UnsupportedOperationException();
                 }
