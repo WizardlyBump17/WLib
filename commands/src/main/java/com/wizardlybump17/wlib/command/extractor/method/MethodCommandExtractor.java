@@ -73,7 +73,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         if (argument)
             part = part.substring(1, part.length() - 1);
 
-        if (parameterIndex < 1) {
+        if (parameterIndex < 0) {
             newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
         } else {
             Class<?> parameterType = parameterTypes[parameterIndex];
