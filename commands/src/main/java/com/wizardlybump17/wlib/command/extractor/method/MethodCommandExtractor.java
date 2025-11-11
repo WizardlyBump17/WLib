@@ -73,6 +73,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         CommandNode<?> newNode;
 
         if (part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>') {
+            part = part.substring(1, part.length() - 1);
             if (type == int.class || type == Integer.class) {
                 newNode = new IntegerCommandNode(part, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
             } else {
