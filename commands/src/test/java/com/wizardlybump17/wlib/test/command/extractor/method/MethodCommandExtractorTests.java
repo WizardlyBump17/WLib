@@ -19,6 +19,139 @@ import java.util.List;
 class MethodCommandExtractorTests {
 
     /*
+    No parameters
+     */
+    @Test
+    void testNoParameters() {
+        TestNoParameters object = new TestNoParameters();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi"))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = CommandExtractor.METHOD.extract(object);
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestNoParameters {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello")
+        public void hello() {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world")
+        public void helloWorld() {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi")
+        public void helloThereHi() {
+        }
+    }
+
+    /*
+    No parameters returning CommandResult
+     */
+    @Test
+    void testNoParametersCommandResult() {
+        TestNoParametersCommandResult object = new TestNoParametersCommandResult();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi"))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = CommandExtractor.METHOD.extract(object);
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestNoParametersCommandResult {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello")
+        public CommandResult<?> hello() {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world")
+        public CommandResult<?> helloWorld() {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi")
+        public CommandResult<?> helloThereHi() {
+            return null;
+        }
+    }
+
+    /*
     CommandSender/CommandContext only
      */
 
