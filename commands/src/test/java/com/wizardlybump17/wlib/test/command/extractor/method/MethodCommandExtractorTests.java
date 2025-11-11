@@ -4,6 +4,8 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -15,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class MethodCommandExtractorTests {
+
+    /*
+    CommandSender/CommandContext only
+     */
 
     @Test
     void testCommandSender() {
@@ -139,6 +145,10 @@ class MethodCommandExtractorTests {
         public void helloThereHi(@NotNull CommandContext context) {
         }
     }
+
+    /*
+    CommandSender/CommandSender returning CommandResult
+     */
 
     @Test
     void testCommandContextCommandResult() {
@@ -267,6 +277,170 @@ class MethodCommandExtractorTests {
         @com.wizardlybump17.wlib.command.annotation.Command("hello there hi")
         public CommandResult<?> helloThereHi(@NotNull CommandSender<?> sender) {
             return null;
+        }
+    }
+
+    /*
+    CommandSender/CommandContext + parameters
+     */
+
+    @Test
+    void testCommandSenderParameters() {
+        TestCommandSenderParameters object = new TestCommandSenderParameters();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new IntegerCommandNode(
+                                                "int",
+                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class, int.class))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                List.of(
+                                                        new IntegerCommandNode(
+                                                                "int",
+                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class, int.class))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                List.of(
+                                                                        new IntegerCommandNode(
+                                                                                "int",
+                                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class, int.class))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestCommandSenderParameters {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello <int>")
+        public void hello(@NotNull CommandSender<?> sender, int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world <int>")
+        public void helloWorld(@NotNull CommandSender<?> sender, int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi <int>")
+        public void helloThereHi(@NotNull CommandSender<?> sender, int arg0) {
+        }
+    }
+
+    @Test
+    void testCommandContextParameters() {
+        TestCommandContextParameters object = new TestCommandContextParameters();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new IntegerCommandNode(
+                                                "int",
+                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class, int.class))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                List.of(
+                                                        new IntegerCommandNode(
+                                                                "int",
+                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class, int.class))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                List.of(
+                                                                        new IntegerCommandNode(
+                                                                                "int",
+                                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class, int.class))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestCommandContextParameters {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello <int>")
+        public void hello(@NotNull CommandContext context, int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world <int>")
+        public void helloWorld(@NotNull CommandContext context, int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi <int>")
+        public void helloThereHi(@NotNull CommandContext context, int arg0) {
         }
     }
 }
