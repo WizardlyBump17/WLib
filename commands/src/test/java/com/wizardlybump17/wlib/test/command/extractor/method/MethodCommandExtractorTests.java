@@ -746,4 +746,175 @@ class MethodCommandExtractorTests {
             return null;
         }
     }
+
+    /*
+    Parameters not starting with CommandSender/CommandContext
+     */
+
+    @Test
+    void testParametersPure() {
+        TestParametersPure object = new TestParametersPure();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new IntegerCommandNode(
+                                                "int",
+                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                List.of(
+                                                        new IntegerCommandNode(
+                                                                "int",
+                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                List.of(
+                                                                        new IntegerCommandNode(
+                                                                                "int",
+                                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestParametersPure {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello <int>")
+        public void hello(int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world <int>")
+        public void helloWorld(int arg0) {
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi <int>")
+        public void helloThereHi(int arg0) {
+        }
+    }
+
+    /*
+    Parameters not starting with CommandSender/CommandContext returning CommandResult
+     */
+
+    @Test
+    void testParametersPureCommandResult() {
+        TestParametersPureCommandResult object = new TestParametersPureCommandResult();
+
+        List<Command> expected = new ArrayList<>(List.of(
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new IntegerCommandNode(
+                                                "int",
+                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class))
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                List.of(
+                                                        new IntegerCommandNode(
+                                                                "int",
+                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(
+                                                        new LiteralCommandNode(
+                                                                "hi",
+                                                                List.of(
+                                                                        new IntegerCommandNode(
+                                                                                "int",
+                                                                                new AllowedNumberInputs.AllowedIntegerInputs.Unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        ));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    public static class TestParametersPureCommandResult {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello <int>")
+        public CommandResult<?> hello(int arg0) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello world <int>")
+        public CommandResult<?> helloWorld(int arg0) {
+            return null;
+        }
+
+        @com.wizardlybump17.wlib.command.annotation.Command("hello there hi <int>")
+        public CommandResult<?> helloThereHi(int arg0) {
+            return null;
+        }
+    }
 }
