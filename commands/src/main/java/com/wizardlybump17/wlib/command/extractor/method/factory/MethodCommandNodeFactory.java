@@ -9,5 +9,5 @@ import java.lang.reflect.Parameter;
 
 public abstract class MethodCommandNodeFactory {
 
-    public abstract @NotNull CommandNode<?> create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter);
+    public abstract @NotNull CommandNode<?> create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name);
 }
