@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.extractor.method;
+package com.wizardlybump17.wlib.command.extractor.method.executor;
 
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import org.jetbrains.annotations.NotNull;

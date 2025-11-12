@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.executor.AbstractMethodCommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;

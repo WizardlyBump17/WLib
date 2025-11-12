@@ -2,8 +2,8 @@ package com.wizardlybump17.wlib.test.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.extractor.method.AbstractMethodCommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.executor.AbstractMethodCommandNodeExecutor;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
