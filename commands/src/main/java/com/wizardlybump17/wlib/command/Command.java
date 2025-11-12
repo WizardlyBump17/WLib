@@ -100,6 +100,8 @@ public class Command implements Comparable<Command> {
             CommandResult<?> result = executor.execute(context);
             if (result == null)
                 return CommandResult.successful(context, null);
+            if (result.lastNode() == null || result.lastInputIndex() < 0)
+                return CommandResult.genericError(context);
             return result;
         } catch (Throwable throwable) {
             return CommandResult.exceptionally(lastInputIndex, lastNode, throwable);
