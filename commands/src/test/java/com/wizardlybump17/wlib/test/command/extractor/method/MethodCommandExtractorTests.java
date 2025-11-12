@@ -1055,7 +1055,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "hello")
         );
         Assertions.assertEquals(
-                CommandResult.emptySuccess(),
+                CommandResult.successful(1, hello.findNode("world"), null),
                 manager.execute(CHAD_SENDER, "hello world")
         );
 
@@ -1064,7 +1064,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "hi")
         );
         Assertions.assertEquals(
-                CommandResult.emptySuccess(),
+                CommandResult.successful(1, hi.findNode("world"), null),
                 manager.execute(CHAD_SENDER, "hi world")
         );
 
@@ -1082,7 +1082,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "welcome test")
         );
         Assertions.assertEquals(
-                CommandResult.emptySuccess(),
+                CommandResult.successful(2, welcome.findNode("world"), null),
                 manager.execute(CHAD_SENDER, "welcome test world")
         );
 
@@ -1100,7 +1100,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "aye test")
         );
         Assertions.assertEquals(
-                CommandResult.emptySuccess(),
+                CommandResult.successful(2, aye.findNode("nice"), null),
                 manager.execute(CHAD_SENDER, "aye test nice")
         );
     }
@@ -1112,8 +1112,8 @@ class MethodCommandExtractorTests {
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello world")
-        public @NotNull CommandResult<?> helloWorld() {
-            return CommandResult.emptySuccess();
+        public CommandResult<?> helloWorld() {
+            return null;
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi")
@@ -1122,7 +1122,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi world")
         public CommandResult<?> hiWorld(@NotNull CommandSender<?> sender) {
-            return CommandResult.emptySuccess();
+            return null;
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("greetings")
@@ -1140,7 +1140,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("welcome <name> world")
         public CommandResult<?> welcomeWorld(@NotNull CommandSender<?> sender, @NotNull String name) {
-            return CommandResult.emptySuccess();
+            return null;
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("wassup <name>")
@@ -1158,7 +1158,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("aye <name> nice")
         public CommandResult<?> ayeNice(@NotNull String name) {
-            return CommandResult.emptySuccess();
+            return null;
         }
     }
 }

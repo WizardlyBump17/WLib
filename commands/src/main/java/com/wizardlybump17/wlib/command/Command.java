@@ -97,7 +97,10 @@ public class Command implements Comparable<Command> {
         );
 
         try {
-            return Objects.requireNonNull(executor.execute(context), "The CommandExecutor can not return null. (" + lastNode.getName() + ")");
+            CommandResult<?> result = executor.execute(context);
+            if (result == null)
+                return CommandResult.successful(context, null);
+            return result;
         } catch (Throwable throwable) {
             return CommandResult.exceptionally(lastInputIndex, lastNode, throwable);
         }

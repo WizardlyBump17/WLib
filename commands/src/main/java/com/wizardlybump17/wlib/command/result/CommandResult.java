@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.result.empty.EmptyResult;
 import com.wizardlybump17.wlib.command.result.error.*;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +18,6 @@ public interface CommandResult<T> {
     int lastInputIndex();
 
     @NotNull CommandNode<?> lastNode();
-
-    default boolean empty() {
-        return this instanceof EmptyResult;
-    }
 
     //without context
 
@@ -98,15 +93,5 @@ public interface CommandResult<T> {
 
     static <T> @NotNull InvalidSenderResult<T> invalidSender(@NotNull CommandContext context, @NotNull Class<? extends CommandSender<?>> expectedSender) {
         return invalidSender(context.lastInputIndex(), context.lastNode(), context.sender(), expectedSender);
-    }
-
-    //empty
-
-    static <T> @NotNull EmptyResult<T> emptySuccess() {
-        return EmptyResult.emptySuccess();
-    }
-
-    static <T> @NotNull EmptyResult<T> emptyError() {
-        return EmptyResult.emptyError();
     }
 }
