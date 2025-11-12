@@ -1087,16 +1087,16 @@ class MethodCommandExtractorTests {
         );
 
         Assertions.assertEquals(
-                CommandResult.successful(1, wassup.getRoot(), "Nice to meet you, test!"),
+                CommandResult.successful(1, wassup.findNode("name"), null),
                 manager.execute(CHAD_SENDER, "wassup test")
         );
         Assertions.assertEquals(
-                CommandResult.successful(2, greetings.findNode("name"), "Nice to meet you, test!"),
+                CommandResult.successful(2, wassup.findNode("nice"), "Nice to meet you, test!"),
                 manager.execute(CHAD_SENDER, "wassup test nice")
         );
 
         Assertions.assertEquals(
-                CommandResult.successful(1, wassup.getRoot(), null),
+                CommandResult.successful(1, aye.findNode("name"), null),
                 manager.execute(CHAD_SENDER, "aye test")
         );
         Assertions.assertEquals(
