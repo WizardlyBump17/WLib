@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.context.CommandContext;
+import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -166,7 +167,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
                 parameters.add(context.sender());
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });
                 return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
@@ -188,7 +192,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
                 parameters.add(context.sender());
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });
                 return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
@@ -210,8 +217,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
                 parameters.add(context);
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
             }
@@ -232,7 +241,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
                 parameters.add(context);
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });
                 return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
@@ -253,7 +265,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
             try {
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });
                 return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
@@ -274,7 +289,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
             try {
                 List<Object> parameters = new ArrayList<>();
                 parameters.add(object());
-                context.arguments().getArguments().forEach((nodeName, argument) -> parameters.add(argument.data()));
+                context.arguments().getArguments().forEach((nodeName, argument) -> {
+                    if (!(argument.node() instanceof LiteralCommandNode))
+                        parameters.add(argument.data());
+                });
                 return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
             } catch (Throwable throwable) {
                 return CommandResult.exceptionally(context, throwable);
