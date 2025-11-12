@@ -1040,6 +1040,7 @@ class MethodCommandExtractorTests {
         expectedCommands.sort(null);
         actualCommands.sort(null);
 
+        //We already know that the register method works
         actualCommands.remove(0);
         actualCommands.remove(1);
         actualCommands.remove(2);
@@ -1050,8 +1051,57 @@ class MethodCommandExtractorTests {
         Assertions.assertEquals(expectedCommands, actualCommands);
 
         Assertions.assertEquals(
-                CommandResult.successful(0, null, null),
+                CommandResult.successful(0, hello.getRoot(), null),
                 manager.execute(CHAD_SENDER, "hello")
+        );
+        Assertions.assertEquals(
+                CommandResult.emptySuccess(),
+                manager.execute(CHAD_SENDER, "hello world")
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(0, hi.getRoot(), null),
+                manager.execute(CHAD_SENDER, "hi")
+        );
+        Assertions.assertEquals(
+                CommandResult.emptySuccess(),
+                manager.execute(CHAD_SENDER, "hi world")
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(0, greetings.getRoot(), null),
+                manager.execute(CHAD_SENDER, "greetings")
+        );
+        Assertions.assertEquals(
+                CommandResult.successful(1, greetings.findNode("world"), "Hello, world!"),
+                manager.execute(CHAD_SENDER, "greetings world")
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(1, welcome.findNode("name"), null),
+                manager.execute(CHAD_SENDER, "welcome test")
+        );
+        Assertions.assertEquals(
+                CommandResult.emptySuccess(),
+                manager.execute(CHAD_SENDER, "welcome test world")
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(1, wassup.getRoot(), "Nice to meet you, test!"),
+                manager.execute(CHAD_SENDER, "wassup test")
+        );
+        Assertions.assertEquals(
+                CommandResult.successful(2, greetings.findNode("name"), "Nice to meet you, test!"),
+                manager.execute(CHAD_SENDER, "wassup test nice")
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(1, wassup.getRoot(), null),
+                manager.execute(CHAD_SENDER, "aye test")
+        );
+        Assertions.assertEquals(
+                CommandResult.emptySuccess(),
+                manager.execute(CHAD_SENDER, "aye test nice")
         );
     }
 
@@ -1062,8 +1112,8 @@ class MethodCommandExtractorTests {
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello world")
-        public CommandResult<?> helloWorld() {
-            return null;
+        public @NotNull CommandResult<?> helloWorld() {
+            return CommandResult.emptySuccess();
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi")
@@ -1072,7 +1122,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi world")
         public CommandResult<?> hiWorld(@NotNull CommandSender<?> sender) {
-            return null;
+            return CommandResult.emptySuccess();
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("greetings")
@@ -1090,7 +1140,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("welcome <name> world")
         public CommandResult<?> welcomeWorld(@NotNull CommandSender<?> sender, @NotNull String name) {
-            return null;
+            return CommandResult.emptySuccess();
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("wassup <name>")
@@ -1108,7 +1158,7 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("aye <name> nice")
         public CommandResult<?> ayeNice(@NotNull String name) {
-            return null;
+            return CommandResult.emptySuccess();
         }
     }
 }
