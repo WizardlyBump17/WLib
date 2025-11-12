@@ -22,4 +22,9 @@ final class EmptySuccess<T> implements EmptyResult<T> {
     public @NotNull CommandNode<?> lastNode() {
         return EmptyCommandNode.INSTANCE;
     }
+
+    @Override
+    public String toString() {
+        return "EmptySuccess{}";
+    }
 }
