@@ -10,6 +10,7 @@ import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -203,5 +204,9 @@ public class Command implements Comparable<Command> {
 
     public @NotNull String getFullCommand() {
         return root.getFullCommand();
+    }
+
+    public @Nullable CommandNode<?> findNode(@NotNull String name) {
+        return root.findChild(name);
     }
 }

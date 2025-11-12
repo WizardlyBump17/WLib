@@ -215,4 +215,18 @@ public abstract class CommandNode<T> {
     public boolean canExecute(@NotNull CommandSender<?> sender) {
         return permission == null || sender.hasPermission(permission);
     }
+
+    public @Nullable CommandNode<?> findChild(@NotNull String name) {
+        for (CommandNode<?> child : children)
+            if (child.getName().equals(name))
+                return child;
+
+        for (CommandNode<?> child : children) {
+            CommandNode<?> found = child.findChild(name);
+            if (found != null)
+                return found;
+        }
+
+        return null;
+    }
 }
