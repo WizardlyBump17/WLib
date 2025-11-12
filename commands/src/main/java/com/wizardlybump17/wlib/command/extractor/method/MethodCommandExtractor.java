@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
+import com.wizardlybump17.wlib.command.exception.extractor.method.MethodCommandNodeFactoryNotFoundException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.executor.AbstractMethodCommandNodeExecutor;
@@ -29,7 +30,7 @@ public class MethodCommandExtractor implements CommandExtractor {
     }
 
     @Override
-    public @NotNull List<Command> extract(@NotNull Object object) {
+    public @NotNull List<Command> extract(@NotNull Object object) throws MethodCommandNodeFactoryNotFoundException {
         List<Command> commands = new ArrayList<>();
 
         Class<?> clazz = object.getClass();
@@ -68,7 +69,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         return commands;
     }
 
-    private static @NotNull CommandNode<?> createNode(@NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method) {
+    private static @NotNull CommandNode<?> createNode(@NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method) throws MethodCommandNodeFactoryNotFoundException {
         CommandNode<?> newNode;
 
         boolean argument = part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>';
@@ -84,7 +85,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
                 MethodCommandNodeFactory factory = MethodCommandNodeFactoryRegistry.INSTANCE.getFactory(parameterType);
                 if (factory == null)
-                    throw new UnsupportedOperationException();
+                    throw new MethodCommandNodeFactoryNotFoundException("MethodCommandNodeFactory not found for the parameter " + parameter);
 
                 newNode = factory.create(object, method, annotation, parameter, part);
             } else {

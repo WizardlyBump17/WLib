@@ -66,7 +66,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = CommandExtractor.METHOD.extract(object);
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -131,7 +131,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = CommandExtractor.METHOD.extract(object);
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
 
         expected.sort(null);
         actual.sort(null);
