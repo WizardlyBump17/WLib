@@ -11,7 +11,7 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
 
     @Override
     public int lastInputIndex() {
-        return -1;
+        return 0;
     }
 
     @Override
