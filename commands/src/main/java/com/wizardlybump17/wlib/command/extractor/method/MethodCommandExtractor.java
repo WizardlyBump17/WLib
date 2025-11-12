@@ -83,11 +83,11 @@ public class MethodCommandExtractor implements CommandExtractor {
                 Parameter parameter = parameters[parameterIndex];
                 Class<?> parameterType = parameter.getType();
 
-                MethodCommandNodeFactory factory = MethodCommandNodeFactoryRegistry.INSTANCE.getFactory(parameterType);
+                MethodCommandNodeFactory<?> factory = MethodCommandNodeFactoryRegistry.INSTANCE.getFactory(parameterType);
                 if (factory == null)
                     throw new MethodCommandNodeFactoryNotFoundException("MethodCommandNodeFactory not found for the parameter " + parameter);
 
-                newNode = factory.create(object, method, annotation, parameter, part);
+                newNode = factory.create(object, method, annotation, parameter, part, root);
             } else {
                 newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
             }

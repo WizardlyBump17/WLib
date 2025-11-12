@@ -4,25 +4,60 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
+import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.StringCommandNode;
+import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 class MethodCommandExtractorTests {
+
+    @BeforeAll
+    static void setup() {
+        MethodCommandNodeFactoryRegistry.INSTANCE.addFactory(
+                int.class,
+                new MethodCommandNodeFactory<IntegerCommandNode>() {
+                    @Override
+                    public @NotNull IntegerCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
+                        return new IntegerCommandNode(name, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
+                    }
+                }
+        );
+        MethodCommandNodeFactoryRegistry.INSTANCE.addFactory(
+                String.class,
+                new MethodCommandNodeFactory<StringCommandNode>() {
+                    @Override
+                    public @NotNull StringCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
+                        return new StringCommandNode(name, root == null ? List.of() : List.of(root), new AllowedStringInputs.Any());
+                    }
+                }
+        );
+    }
+
+    @AfterAll
+    static void clear() {
+        MethodCommandNodeFactoryRegistry.INSTANCE.clear();
+    }
 
     /*
     No parameters
