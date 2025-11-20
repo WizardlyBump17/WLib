@@ -115,6 +115,16 @@ public abstract class CommandNode<T> {
                 && Objects.equals(permission, that.permission);
     }
 
+    public boolean equalsIgnoreExecutor(@Nullable Object other) {
+        if (other == null || getClass() != other.getClass())
+            return false;
+        CommandNode<?> that = (CommandNode<?>) other;
+        return Objects.equals(name, that.name)
+                && CollectionUtil.contentEquals(children, that.children)
+                && Objects.equals(allowedInputs, that.allowedInputs)
+                && Objects.equals(permission, that.permission);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(name, children, allowedInputs, executor, permission);

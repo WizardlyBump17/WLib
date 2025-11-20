@@ -195,6 +195,13 @@ public class Command implements Comparable<Command> {
         return Objects.equals(root, command.root);
     }
 
+    public boolean equalsIgnoreExecutor(@Nullable Object other) {
+        if (other == null || getClass() != other.getClass())
+            return false;
+        Command command = (Command) other;
+        return root.equalsIgnoreExecutor(command.root);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(root);
