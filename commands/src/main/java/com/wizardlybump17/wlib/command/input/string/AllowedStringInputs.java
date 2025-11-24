@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.input.string;
 
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.input.AllowedListInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,55 +12,73 @@ import java.util.Objects;
 
 public interface AllowedStringInputs extends AllowedInputs<String> {
 
-    final class Listed implements AllowedStringInputs {
+    static @NotNull Values valuesIgnoreCase(@NotNull List<String> values) {
+        return new Values(values, true);
+    }
 
-        private final @NotNull List<String> list;
-        private final @NotNull List<String> listToCheck;
+    static @NotNull Values values(@NotNull List<String> values) {
+        return new Values(values, false);
+    }
+
+    static @NotNull Any anyNullable() {
+        return Any.NULLABLE;
+    }
+
+    static @NotNull Any anyNotNull() {
+        return Any.NOT_NULL;
+    }
+
+    final class Values implements AllowedStringInputs, AllowedListInputs<String> {
+
+        private final @NotNull List<String> values;
+        private final @NotNull List<String> toCheck;
         private final boolean ignoreCase;
 
-        public Listed(@NotNull List<String> list, boolean ignoreCase) {
-            this.list = List.copyOf(list);
-            if (ignoreCase) {
-                listToCheck = list.stream()
-                        .map(String::toLowerCase)
-                        .toList();
-            } else {
-                listToCheck = list;
-            }
+        private Values(@NotNull List<String> values, boolean ignoreCase) {
+            this.values = List.copyOf(values);
             this.ignoreCase = ignoreCase;
+            if (ignoreCase)
+                toCheck = values.stream().map(String::toLowerCase).toList();
+            else
+                toCheck = this.values;
+        }
+
+        @Override
+        public @NotNull @Unmodifiable List<String> getAllowedValues() {
+            return values;
+        }
+
+        @Override
+        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
+            return values;
         }
 
         @Override
         public boolean isAllowed(@Nullable String input) {
-            return listToCheck.contains(input);
-        }
-
-        public @NotNull @Unmodifiable List<String> list() {
-            return list;
-        }
-
-        public boolean ignoreCase() {
-            return ignoreCase;
+            if (input == null)
+                return false;
+            if (ignoreCase)
+                return toCheck.contains(input.toLowerCase());
+            return toCheck.contains(input);
         }
 
         @Override
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Listed listed = (Listed) object;
-            return ignoreCase == listed.ignoreCase && Objects.equals(list, listed.list) && Objects.equals(listToCheck, listed.listToCheck);
+            Values values1 = (Values) object;
+            return ignoreCase == values1.ignoreCase && Objects.equals(values, values1.values) && Objects.equals(toCheck, values1.toCheck);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(list, listToCheck, ignoreCase);
+            return Objects.hash(values, toCheck, ignoreCase);
         }
 
         @Override
         public String toString() {
-            return "Listed{" +
-                    "list=" + list +
-                    ", listToCheck=" + listToCheck +
+            return "Values{" +
+                    "values=" + values +
                     ", ignoreCase=" + ignoreCase +
                     '}';
         }
@@ -67,9 +86,18 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
     final class Any implements AllowedStringInputs {
 
+        private static final @NotNull Any NULLABLE = new Any(true);
+        private static final @NotNull Any NOT_NULL = new Any(false);
+
+        private final boolean nullable;
+
+        private Any(boolean nullable) {
+            this.nullable = nullable;
+        }
+
         @Override
         public boolean isAllowed(@Nullable String input) {
-            return true;
+            return nullable || input != null;
         }
 
         @Override
@@ -79,17 +107,22 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         @Override
         public boolean equals(Object object) {
-            return object != null && getClass() == object.getClass();
+            if (object == null || getClass() != object.getClass())
+                return false;
+            Any any = (Any) object;
+            return nullable == any.nullable;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash();
+            return Objects.hashCode(nullable);
         }
 
         @Override
         public String toString() {
-            return "Any{}";
+            return "Any{" +
+                    "nullable=" + nullable +
+                    '}';
         }
     }
 }
