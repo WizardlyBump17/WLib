@@ -18,10 +18,8 @@ public final class AssertionUtil {
                         .expected(null)
                         .actual(actual)
                         .buildAndThrow();
-                return;
-            } else {
-                return;
             }
+            return;
         }
 
         if (expected != null) {
@@ -30,8 +28,6 @@ public final class AssertionUtil {
                         .expected(expected)
                         .actual(null)
                         .buildAndThrow();
-                return;
-            } else {
                 return;
             }
         }

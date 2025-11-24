@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class CommandNode<T> {
 
@@ -120,9 +117,26 @@ public abstract class CommandNode<T> {
             return false;
         CommandNode<?> that = (CommandNode<?>) other;
         return Objects.equals(name, that.name)
-                && CollectionUtil.contentEquals(children, that.children)
+                && equalsIgnoreExecutor(children, that.children)
                 && Objects.equals(allowedInputs, that.allowedInputs)
                 && Objects.equals(permission, that.permission);
+    }
+
+    public static boolean equalsIgnoreExecutor(@NotNull Collection<CommandNode<?>> a, @NotNull Collection<CommandNode<?>> b) {
+        if (a.size() != b.size())
+            return false;
+
+        Iterator<CommandNode<?>> aIterator = a.iterator();
+        Iterator<CommandNode<?>> bIterator = b.iterator();
+
+        while (aIterator.hasNext() && bIterator.hasNext()) {
+            CommandNode<?> aNode = aIterator.next();
+            CommandNode<?> bNode = bIterator.next();
+            if (!aNode.equalsIgnoreExecutor(bNode))
+                return false;
+        }
+
+        return true;
     }
 
     @Override
