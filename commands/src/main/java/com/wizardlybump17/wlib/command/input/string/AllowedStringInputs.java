@@ -100,6 +100,10 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
             return nullable || input != null;
         }
 
+        public boolean isNullable() {
+            return nullable;
+        }
+
         @Override
         public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
             return List.of(current);
