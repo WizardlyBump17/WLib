@@ -48,7 +48,7 @@ class MethodCommandExtractorTests {
                 new MethodCommandNodeFactory<StringCommandNode>() {
                     @Override
                     public @NotNull StringCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
-                        return new StringCommandNode(name, root == null ? List.of() : List.of(root), new AllowedStringInputs.Any());
+                        return new StringCommandNode(name, root == null ? List.of() : List.of(root), AllowedStringInputs.anyNullable());
                     }
                 }
         );
@@ -1019,7 +1019,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcomeWorld", CommandSender.class, String.class))
                                                 )
                                         ),
-                                        new AllowedStringInputs.Any(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcome", CommandSender.class, String.class)),
                                         null
                                 )
@@ -1038,7 +1038,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassupNice", CommandContext.class, String.class))
                                                 )
                                         ),
-                                        new AllowedStringInputs.Any(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassup", CommandContext.class, String.class)),
                                         null
                                 )
@@ -1057,7 +1057,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "ayeNice", String.class))
                                                 )
                                         ),
-                                        new AllowedStringInputs.Any(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "aye", String.class)),
                                         null
                                 )

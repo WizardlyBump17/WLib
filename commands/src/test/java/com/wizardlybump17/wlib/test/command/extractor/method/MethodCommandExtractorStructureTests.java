@@ -41,7 +41,7 @@ class MethodCommandExtractorStructureTests {
                 new MethodCommandNodeFactory<StringCommandNode>() {
                     @Override
                     public @NotNull StringCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
-                        return new StringCommandNode(name, root == null ? List.of() : List.of(root), new AllowedStringInputs.Any());
+                        return new StringCommandNode(name, root == null ? List.of() : List.of(root), AllowedStringInputs.anyNullable());
                     }
                 }
         );
