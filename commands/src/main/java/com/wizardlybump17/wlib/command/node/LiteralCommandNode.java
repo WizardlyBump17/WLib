@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.LiteralAllowedInput;
+import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +11,7 @@ import java.util.List;
 public class LiteralCommandNode extends CommandNode<String> {
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, new LiteralAllowedInput(name, false), executor, permission);
+        super(name, children, AllowedStringInputs.valueIgnoreCase(name), executor, permission);
     }
 
     public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
@@ -27,7 +27,7 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, new LiteralAllowedInput(name, false), executor, null);
+        super(name, children, AllowedStringInputs.valueIgnoreCase(name), executor, null);
     }
 
     public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor) {
@@ -43,8 +43,8 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     @Override
-    public @NotNull LiteralAllowedInput getAllowedInputs() {
-        return (LiteralAllowedInput) super.getAllowedInputs();
+    public @NotNull AllowedStringInputs.Value getAllowedInputs() {
+        return (AllowedStringInputs.Value) super.getAllowedInputs();
     }
 
     @Override

@@ -20,6 +20,14 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         return new Values(values, false);
     }
 
+    static @NotNull Value valueIgnoreCase(@NotNull String value) {
+        return new Value(value, true);
+    }
+
+    static @NotNull Value value(@NotNull String value) {
+        return new Value(value, false);
+    }
+
     static @NotNull Any anyNullable() {
         return Any.NULLABLE;
     }
@@ -79,6 +87,55 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         public String toString() {
             return "Values{" +
                     "values=" + values +
+                    ", ignoreCase=" + ignoreCase +
+                    '}';
+        }
+    }
+
+    final class Value implements AllowedStringInputs {
+
+        private final @NotNull String value;
+        private final boolean ignoreCase;
+
+        public Value(@NotNull String value, boolean ignoreCase) {
+            this.value = value;
+            this.ignoreCase = ignoreCase;
+        }
+
+        public @NotNull String value() {
+            return value;
+        }
+
+        public boolean ignoreCase() {
+            return ignoreCase;
+        }
+
+        @Override
+        public boolean isAllowed(@Nullable String input) {
+            if (input == null)
+                return false;
+            if (ignoreCase)
+                return value.equalsIgnoreCase(input);
+            return value.equals(input);
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass())
+                return false;
+            Value value1 = (Value) object;
+            return ignoreCase == value1.ignoreCase && Objects.equals(value, value1.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value, ignoreCase);
+        }
+
+        @Override
+        public String toString() {
+            return "Value{" +
+                    "value='" + value + '\'' +
                     ", ignoreCase=" + ignoreCase +
                     '}';
         }
