@@ -52,7 +52,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         }
 
         @Override
-        public @NotNull @Unmodifiable List<String> getAllowedValues() {
+        public @NotNull @Unmodifiable List<String> allowedValues() {
             return values;
         }
 
@@ -111,6 +111,11 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         }
 
         @Override
+        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
+            return List.of(value);
+        }
+
+        @Override
         public boolean isAllowed(@Nullable String input) {
             if (input == null)
                 return false;
@@ -157,7 +162,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
             return nullable || input != null;
         }
 
-        public boolean isNullable() {
+        public boolean nullable() {
             return nullable;
         }
 

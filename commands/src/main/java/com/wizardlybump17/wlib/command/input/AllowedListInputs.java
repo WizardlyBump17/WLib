@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface AllowedListInputs<T> extends AllowedInputs<T> {
 
-    @NotNull List<T> getAllowedValues();
+    @NotNull List<T> allowedValues();
 }
