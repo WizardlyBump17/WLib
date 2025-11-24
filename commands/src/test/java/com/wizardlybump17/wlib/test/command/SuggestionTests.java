@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
-import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
@@ -110,7 +110,7 @@ class SuggestionTests {
                                 ),
                                 new IntegerCommandNode(
                                         "there",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Range(1, 10),
+                                        AllowedIntegerInputs.range(1, 10),
                                         context -> CommandResult.successful(context, "hello there")
                                 )
                         )
@@ -140,7 +140,7 @@ class SuggestionTests {
                                 ),
                                 new IntegerCommandNode(
                                         "there",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Range(1, 10),
+                                        AllowedIntegerInputs.range(1, 10),
                                         context -> CommandResult.successful(context, "hello there")
                                 ),
                                 new LiteralCommandNode(

@@ -1,7 +1,7 @@
 package com.wizardlybump17.wlib.test.command.manager;
 
 import com.wizardlybump17.wlib.command.Command;
-import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
@@ -205,7 +205,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -252,7 +252,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -338,7 +338,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -385,7 +385,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -432,7 +432,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -479,7 +479,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -540,7 +540,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -601,7 +601,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -662,7 +662,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -723,7 +723,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -784,7 +784,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -845,7 +845,7 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Positive(),
+                                        AllowedIntegerInputs.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )

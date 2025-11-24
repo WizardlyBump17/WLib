@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.number.AllowedNumberInputs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,41 +10,41 @@ import java.util.List;
 
 public class IntegerCommandNode extends CommandNode<Integer> {
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         this(name, List.of(), allowedInputs, executor, permission);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable String permission) {
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable String permission) {
         this(name, children, allowedInputs, null, permission);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable String permission) {
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable String permission) {
         this(name, List.of(), allowedInputs, null, permission);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
         super(name, children, allowedInputs, executor, null);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs<Integer> allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
         this(name, List.of(), allowedInputs, executor, null);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedNumberInputs<Integer> allowedInputs) {
         this(name, children, allowedInputs, null, null);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs.AllowedIntegerInputs allowedInputs) {
+    public IntegerCommandNode(@NotNull String name, @NotNull AllowedNumberInputs<Integer> allowedInputs) {
         this(name, List.of(), allowedInputs, null, null);
     }
 
     @Override
-    public @NotNull AllowedNumberInputs.AllowedIntegerInputs getAllowedInputs() {
-        return (AllowedNumberInputs.AllowedIntegerInputs) super.getAllowedInputs();
+    public @NotNull AllowedNumberInputs<Integer> getAllowedInputs() {
+        return (AllowedNumberInputs<Integer>) super.getAllowedInputs();
     }
 
     @Override

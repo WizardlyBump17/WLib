@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.test.command.extractor.method;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
-import com.wizardlybump17.wlib.command.input.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
@@ -32,7 +32,7 @@ class MethodCommandExtractorStructureTests {
                 new MethodCommandNodeFactory<IntegerCommandNode>() {
                     @Override
                     public @NotNull IntegerCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
-                        return new IntegerCommandNode(name, root == null ? List.of() : List.of(root), new AllowedNumberInputs.AllowedIntegerInputs.Unlimited());
+                        return new IntegerCommandNode(name, root == null ? List.of() : List.of(root), AllowedIntegerInputs.unlimited());
                     }
                 }
         );
@@ -115,7 +115,7 @@ class MethodCommandExtractorStructureTests {
                                                         "123"
                                                 )
                                         ),
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Unlimited()
+                                        AllowedIntegerInputs.unlimited()
                                 )
                         )
                 )
@@ -139,10 +139,10 @@ class MethodCommandExtractorStructureTests {
                                                                         )
                                                                 )
                                                         ),
-                                                        new AllowedNumberInputs.AllowedIntegerInputs.Unlimited()
+                                                        AllowedIntegerInputs.unlimited()
                                                 )
                                         ),
-                                        new AllowedNumberInputs.AllowedIntegerInputs.Unlimited()
+                                        AllowedIntegerInputs.unlimited()
                                 )
                         )
                 )
