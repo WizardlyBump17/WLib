@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ByteCommandNode extends PrimitiveCommandNode<Byte> {
+public class ByteCommandNode extends NumberCommandNode<Byte> implements PrimitiveCommandNode {
 
     public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

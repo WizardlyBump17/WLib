@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class IntegerCommandNode extends PrimitiveCommandNode<Integer> {
+public class IntegerCommandNode extends NumberCommandNode<Integer> implements PrimitiveCommandNode {
 
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

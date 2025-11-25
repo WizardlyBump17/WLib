@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CharacterCommandNode extends PrimitiveCommandNode<Character> {
+public class CharacterCommandNode extends AbstractPrimitiveCommandNode<Character> {
 
     public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedCharacterInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);
