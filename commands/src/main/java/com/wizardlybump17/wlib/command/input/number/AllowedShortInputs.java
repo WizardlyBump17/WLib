@@ -62,7 +62,7 @@ public interface AllowedShortInputs extends AllowedNumberInputs<Short> {
         }
     }
 
-    final class Unlimited implements AllowedNumberInputs.Unlimited<Short>, AllowedShortInputs {
+    final class Unlimited extends AllowedNumberInputs.Unlimited<Short> implements AllowedShortInputs {
 
         static final @NotNull AllowedShortInputs.Unlimited INSTANCE = new AllowedShortInputs.Unlimited();
 
@@ -85,7 +85,7 @@ public interface AllowedShortInputs extends AllowedNumberInputs<Short> {
         }
     }
 
-    final class Positive implements AllowedNumberInputs.Positive<Short>, AllowedShortInputs {
+    final class Positive extends AllowedNumberInputs.Positive<Short> implements AllowedShortInputs {
 
         static final @NotNull AllowedShortInputs.Positive INSTANCE = new AllowedShortInputs.Positive();
 
@@ -119,7 +119,7 @@ public interface AllowedShortInputs extends AllowedNumberInputs<Short> {
         }
     }
 
-    final class Negative implements AllowedNumberInputs.Negative<Short>, AllowedShortInputs {
+    final class Negative extends AllowedNumberInputs.Negative<Short> implements AllowedShortInputs {
 
         static final @NotNull AllowedShortInputs.Negative INSTANCE = new AllowedShortInputs.Negative();
 

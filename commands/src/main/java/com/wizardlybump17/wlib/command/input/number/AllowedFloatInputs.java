@@ -62,7 +62,7 @@ public interface AllowedFloatInputs extends AllowedNumberInputs<Float> {
         }
     }
 
-    final class Unlimited implements AllowedNumberInputs.Unlimited<Float>, AllowedFloatInputs {
+    final class Unlimited extends AllowedNumberInputs.Unlimited<Float> implements AllowedFloatInputs {
 
         static final @NotNull AllowedFloatInputs.Unlimited INSTANCE = new AllowedFloatInputs.Unlimited();
 
@@ -87,7 +87,7 @@ public interface AllowedFloatInputs extends AllowedNumberInputs<Float> {
         }
     }
 
-    final class Positive implements AllowedNumberInputs.Positive<Float>, AllowedFloatInputs {
+    final class Positive extends AllowedNumberInputs.Positive<Float> implements AllowedFloatInputs {
 
         static final @NotNull AllowedFloatInputs.Positive INSTANCE = new AllowedFloatInputs.Positive();
 
@@ -122,7 +122,7 @@ public interface AllowedFloatInputs extends AllowedNumberInputs<Float> {
         }
     }
 
-    final class Negative implements AllowedNumberInputs.Negative<Float>, AllowedFloatInputs {
+    final class Negative extends AllowedNumberInputs.Negative<Float> implements AllowedFloatInputs {
 
         static final @NotNull AllowedFloatInputs.Negative INSTANCE = new AllowedFloatInputs.Negative();
 

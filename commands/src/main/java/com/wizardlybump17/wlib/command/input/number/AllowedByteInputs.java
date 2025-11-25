@@ -62,7 +62,7 @@ public interface AllowedByteInputs extends AllowedNumberInputs<Byte> {
         }
     }
 
-    final class Unlimited implements AllowedNumberInputs.Unlimited<Byte>, AllowedByteInputs {
+    final class Unlimited extends AllowedNumberInputs.Unlimited<Byte> implements AllowedByteInputs {
 
         static final @NotNull AllowedByteInputs.Unlimited INSTANCE = new AllowedByteInputs.Unlimited();
 
@@ -83,7 +83,7 @@ public interface AllowedByteInputs extends AllowedNumberInputs<Byte> {
         }
     }
 
-    final class Positive implements AllowedNumberInputs.Positive<Byte>, AllowedByteInputs {
+    final class Positive extends AllowedNumberInputs.Positive<Byte> implements AllowedByteInputs {
 
         static final @NotNull AllowedByteInputs.Positive INSTANCE = new AllowedByteInputs.Positive();
 
@@ -116,7 +116,7 @@ public interface AllowedByteInputs extends AllowedNumberInputs<Byte> {
         }
     }
 
-    final class Negative implements AllowedNumberInputs.Negative<Byte>, AllowedByteInputs {
+    final class Negative extends AllowedNumberInputs.Negative<Byte> implements AllowedByteInputs {
 
         static final @NotNull AllowedByteInputs.Negative INSTANCE = new AllowedByteInputs.Negative();
 

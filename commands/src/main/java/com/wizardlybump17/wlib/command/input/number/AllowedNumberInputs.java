@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> {
 
@@ -50,13 +51,39 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
                 return false;
             return isInRange(input);
         }
-    }
-
-    interface Unlimited<N extends Number> extends AllowedNumberInputs<N> {
 
         @Override
-        default boolean isAllowed(@Nullable N input) {
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass())
+                return false;
+            Ranged<?> ranged = (Ranged<?>) object;
+            return Objects.equals(from, ranged.from) && Objects.equals(to, ranged.to);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(from, to);
+        }
+
+        @Override
+        public String toString() {
+            return "Ranged{" +
+                    "from=" + from +
+                    ", to=" + to +
+                    '}';
+        }
+    }
+
+    abstract class Unlimited<N extends Number> implements AllowedNumberInputs<N> {
+
+        @Override
+        public boolean isAllowed(@Nullable N input) {
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return "Unlimited{}";
         }
     }
 
@@ -71,6 +98,26 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         @Override
         public @NotNull N value() {
             return value;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass())
+                return false;
+            Value<?> value1 = (Value<?>) object;
+            return Objects.equals(value, value1.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(value);
+        }
+
+        @Override
+        public String toString() {
+            return "Value{" +
+                    "value=" + value +
+                    '}';
         }
     }
 
@@ -93,25 +140,55 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         public @NotNull List<N> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
             return values;
         }
-    }
-
-    interface Positive<N extends Number> extends AllowedNumberInputs<N>, RangedAllowedInputs<N> {
 
         @Override
-        default boolean isAllowed(@Nullable N input) {
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass())
+                return false;
+            Values<?> values1 = (Values<?>) object;
+            return Objects.equals(values, values1.values);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(values);
+        }
+
+        @Override
+        public String toString() {
+            return "Values{" +
+                    "values=" + values +
+                    '}';
+        }
+    }
+
+    abstract class Positive<N extends Number> implements AllowedNumberInputs<N>, RangedAllowedInputs<N> {
+
+        @Override
+        public boolean isAllowed(@Nullable N input) {
             if (input == null)
                 return false;
             return isInRange(input);
         }
-    }
-
-    interface Negative<N extends Number> extends AllowedNumberInputs<N>, RangedAllowedInputs<N> {
 
         @Override
-        default boolean isAllowed(@Nullable N input) {
+        public String toString() {
+            return "Positive{}";
+        }
+    }
+
+    abstract class Negative<N extends Number> implements AllowedNumberInputs<N>, RangedAllowedInputs<N> {
+
+        @Override
+        public boolean isAllowed(@Nullable N input) {
             if (input == null)
                 return false;
             return isInRange(input);
+        }
+
+        @Override
+        public String toString() {
+            return "Negative{}";
         }
     }
 }

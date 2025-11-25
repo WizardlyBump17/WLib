@@ -53,7 +53,7 @@ public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
         }
     }
 
-    final class Unlimited implements AllowedNumberInputs.Unlimited<Integer>, AllowedIntegerInputs{
+    final class Unlimited extends AllowedNumberInputs.Unlimited<Integer> implements AllowedIntegerInputs{
 
         static final @NotNull AllowedIntegerInputs.Unlimited INSTANCE = new AllowedIntegerInputs.Unlimited();
 
@@ -78,7 +78,7 @@ public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
         }
     }
 
-    final class Positive implements AllowedNumberInputs.Positive<Integer>, AllowedIntegerInputs {
+    final class Positive extends AllowedNumberInputs.Positive<Integer> implements AllowedIntegerInputs {
 
         static final @NotNull AllowedIntegerInputs.Positive INSTANCE = new AllowedIntegerInputs.Positive();
 
@@ -113,7 +113,7 @@ public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
         }
     }
 
-    final class Negative implements AllowedNumberInputs.Negative<Integer>, AllowedIntegerInputs {
+    final class Negative extends AllowedNumberInputs.Negative<Integer> implements AllowedIntegerInputs {
 
         static final @NotNull AllowedIntegerInputs.Negative INSTANCE = new AllowedIntegerInputs.Negative();
 
