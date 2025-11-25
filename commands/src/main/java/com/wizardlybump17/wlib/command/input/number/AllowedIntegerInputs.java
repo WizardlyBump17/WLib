@@ -34,7 +34,7 @@ public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
 
     final class Range extends AllowedNumberInputs.Ranged<Integer> implements AllowedIntegerInputs {
 
-        Range(@NotNull Integer from, @NotNull Integer to) {
+        Range(int from, int to) {
             super(from, to);
             if (from >= to)
                 throw new IllegalArgumentException("from must be less than to");
@@ -42,8 +42,8 @@ public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
 
         @Override
         public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            Integer to = to();
-            Integer from = from();
+            int to = to();
+            int from = from();
 
             if (to - from < 5)
                 return IntStream.rangeClosed(from, to).boxed().toList();
