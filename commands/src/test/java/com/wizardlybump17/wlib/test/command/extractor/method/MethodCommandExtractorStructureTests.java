@@ -6,9 +6,9 @@ import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNod
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.StringCommandNode;
+import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
 import com.wizardlybump17.wlib.test.util.AssertionUtil;
 import org.jetbrains.annotations.NotNull;

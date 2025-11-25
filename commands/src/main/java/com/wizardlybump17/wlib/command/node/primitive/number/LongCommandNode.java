@@ -1,0 +1,74 @@
+package com.wizardlybump17.wlib.command.node.primitive.number;
+
+import com.wizardlybump17.wlib.command.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedLongInputs;
+import com.wizardlybump17.wlib.command.node.CommandNode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+public class LongCommandNode extends CommandNode<Long> {
+
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, executor, permission);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        this(name, List.of(), allowedInputs, executor, permission);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
+        this(name, children, allowedInputs, null, permission);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
+        this(name, List.of(), allowedInputs, null, permission);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+        super(name, children, allowedInputs, executor, null);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+        this(name, List.of(), allowedInputs, executor, null);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs) {
+        this(name, children, allowedInputs, null, null);
+    }
+
+    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs) {
+        this(name, List.of(), allowedInputs, null, null);
+    }
+
+    @Override
+    public @NotNull AllowedLongInputs getAllowedInputs() {
+        return (AllowedLongInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @NotNull Long parse(@NotNull String input) throws InputParsingException {
+        try {
+            return Long.parseLong(input);
+        } catch (NumberFormatException e) {
+            throw new InputParsingException("Could not parse as short: " + input, e);
+        }
+    }
+
+    @Override
+    public @NotNull LongCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
+        return new LongCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+    }
+
+    @Override
+    public @NotNull LongCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
+        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+    }
+
+    @Override
+    public @NotNull LongCommandNode withPermission(@Nullable String permission) {
+        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+    }
+}

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public interface AllowedCharacterInputs extends AllowedInputs<Character> {
+public interface CharacterAllowedInputs extends AllowedInputs<Character> {
 
     static @NotNull Value value(char value) {
         return new Value(value, false);
@@ -48,7 +48,7 @@ public interface AllowedCharacterInputs extends AllowedInputs<Character> {
         return Any.NOT_NULL;
     }
 
-    final class Value implements AllowedCharacterInputs, SingleValueInput<Character> {
+    final class Value implements CharacterAllowedInputs, SingleValueInput<Character> {
 
         private final char value;
         private final boolean ignoreCase;
@@ -96,7 +96,7 @@ public interface AllowedCharacterInputs extends AllowedInputs<Character> {
         }
     }
 
-    final class Values implements AllowedCharacterInputs, AllowedListInputs<Character> {
+    final class Values implements CharacterAllowedInputs, AllowedListInputs<Character> {
 
         private final @NotNull List<Character> values;
         private final @NotNull List<Character> toCheck;
@@ -148,7 +148,7 @@ public interface AllowedCharacterInputs extends AllowedInputs<Character> {
         }
     }
 
-    final class Any implements AllowedCharacterInputs {
+    final class Any implements CharacterAllowedInputs {
 
         private static final @NotNull Any NULLABLE = new Any(true);
         private static final @NotNull Any NOT_NULL = new Any(false);

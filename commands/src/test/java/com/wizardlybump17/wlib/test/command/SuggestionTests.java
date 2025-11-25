@@ -2,8 +2,8 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
-import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
