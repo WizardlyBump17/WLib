@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.input.number;
 
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.input.AllowedListInputs;
 import com.wizardlybump17.wlib.command.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.input.SingleValueInput;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -121,7 +122,7 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         }
     }
 
-    class Values<N extends Number> implements AllowedNumberInputs<N> {
+    class Values<N extends Number> implements AllowedNumberInputs<N>, AllowedListInputs<N> {
 
         private final @NotNull List<N> values;
 
@@ -130,10 +131,8 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         }
 
         @Override
-        public boolean isAllowed(@Nullable N input) {
-            if (input == null)
-                return false;
-            return values.contains(input);
+        public @NotNull List<N> allowedValues() {
+            return values;
         }
 
         @Override

@@ -11,6 +11,8 @@ public interface AllowedListInputs<T> extends AllowedInputs<T> {
 
     @Override
     default boolean isAllowed(@Nullable T input) {
+        if (input == null)
+            return false;
         return allowedValues().contains(input);
     }
 }
