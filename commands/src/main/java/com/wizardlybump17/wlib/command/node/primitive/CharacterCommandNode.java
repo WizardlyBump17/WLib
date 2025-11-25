@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.command.node.primitive;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.primitive.CharacterAllowedInputs;
+import com.wizardlybump17.wlib.command.input.primitive.AllowedCharacterInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,37 +11,37 @@ import java.util.List;
 
 public class CharacterCommandNode extends CommandNode<Character> {
 
-    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull CharacterAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedCharacterInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull CharacterAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public CharacterCommandNode(@NotNull String name, @NotNull AllowedCharacterInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, allowedInputs, executor, permission);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull CharacterAllowedInputs allowedInputs, @Nullable String permission) {
+    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedCharacterInputs allowedInputs, @Nullable String permission) {
         super(name, children, allowedInputs, permission);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull CharacterAllowedInputs allowedInputs, @Nullable String permission) {
+    public CharacterCommandNode(@NotNull String name, @NotNull AllowedCharacterInputs allowedInputs, @Nullable String permission) {
         super(name, allowedInputs, permission);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull CharacterAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+    public CharacterCommandNode(@NotNull String name, @NotNull AllowedCharacterInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
         super(name, allowedInputs, executor);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull CharacterAllowedInputs allowedInputs) {
+    public CharacterCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedCharacterInputs allowedInputs) {
         super(name, children, allowedInputs);
     }
 
-    public CharacterCommandNode(@NotNull String name, @NotNull CharacterAllowedInputs allowedInputs) {
+    public CharacterCommandNode(@NotNull String name, @NotNull AllowedCharacterInputs allowedInputs) {
         super(name, allowedInputs);
     }
 
     @Override
-    public @NotNull CharacterAllowedInputs getAllowedInputs() {
-        return (CharacterAllowedInputs) super.getAllowedInputs();
+    public @NotNull AllowedCharacterInputs getAllowedInputs() {
+        return (AllowedCharacterInputs) super.getAllowedInputs();
     }
 
     @Override

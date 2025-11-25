@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public interface BooleanAllowedInputs extends AllowedInputs<Boolean> {
+public interface AllowedBooleanInputs extends AllowedInputs<Boolean> {
 
     static @NotNull True trueValue() {
         return True.INSTANCE;
@@ -25,7 +25,7 @@ public interface BooleanAllowedInputs extends AllowedInputs<Boolean> {
         return Any.NOT_NULL;
     }
 
-    final class True implements BooleanAllowedInputs, SingleValueInput<Boolean> {
+    final class True implements AllowedBooleanInputs, SingleValueInput<Boolean> {
 
         private static final @NotNull True INSTANCE = new True();
 
@@ -43,7 +43,7 @@ public interface BooleanAllowedInputs extends AllowedInputs<Boolean> {
         }
     }
 
-    final class False implements BooleanAllowedInputs, SingleValueInput<Boolean> {
+    final class False implements AllowedBooleanInputs, SingleValueInput<Boolean> {
 
         private static final @NotNull False INSTANCE = new False();
 
@@ -61,7 +61,7 @@ public interface BooleanAllowedInputs extends AllowedInputs<Boolean> {
         }
     }
 
-    final class Any implements BooleanAllowedInputs {
+    final class Any implements AllowedBooleanInputs {
 
         private static final @NotNull Any NULLABLE = new Any(true);
         private static final @NotNull Any NOT_NULL = new Any(false);

@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.command.node.primitive;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.primitive.BooleanAllowedInputs;
+import com.wizardlybump17.wlib.command.input.primitive.AllowedBooleanInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,37 +11,37 @@ import java.util.List;
 
 public class BooleanCommandNode extends CommandNode<Boolean> {
 
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull BooleanAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull BooleanAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, allowedInputs, executor, permission);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull BooleanAllowedInputs allowedInputs, @Nullable String permission) {
+    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable String permission) {
         super(name, children, allowedInputs, permission);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull BooleanAllowedInputs allowedInputs, @Nullable String permission) {
+    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable String permission) {
         super(name, allowedInputs, permission);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull BooleanAllowedInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
+    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
         super(name, allowedInputs, executor);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull BooleanAllowedInputs allowedInputs) {
+    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs) {
         super(name, children, allowedInputs);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull BooleanAllowedInputs allowedInputs) {
+    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs) {
         super(name, allowedInputs);
     }
 
     @Override
-    public @NotNull BooleanAllowedInputs getAllowedInputs() {
-        return (BooleanAllowedInputs) super.getAllowedInputs();
+    public @NotNull AllowedBooleanInputs getAllowedInputs() {
+        return (AllowedBooleanInputs) super.getAllowedInputs();
     }
 
     @Override
