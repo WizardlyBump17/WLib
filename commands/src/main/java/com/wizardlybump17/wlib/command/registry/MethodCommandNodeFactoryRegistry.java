@@ -16,20 +16,20 @@ public final class MethodCommandNodeFactoryRegistry {
     private MethodCommandNodeFactoryRegistry() {
     }
 
-    private final @NotNull Map<Class<?>, MethodCommandNodeFactory> factories = new HashMap<>();
+    private final @NotNull Map<Class<?>, MethodCommandNodeFactory<?>> factories = new HashMap<>();
 
-    public void addFactory(@NotNull Class<?> clazz, @NotNull MethodCommandNodeFactory factory) {
+    public void addFactory(@NotNull Class<?> clazz, @NotNull MethodCommandNodeFactory<?> factory) {
         factories.put(clazz, factory);
     }
 
-    public void addFactory(@NotNull MethodCommandNodeFactory factory, @NotNull Class<?> ... classes) {
+    public void addFactory(@NotNull MethodCommandNodeFactory<?> factory, @NotNull Class<?> ... classes) {
         if (classes.length < 1)
             throw new IllegalArgumentException("The classes array must contain at least one element");
         for (Class<?> clazz : classes)
             addFactory(clazz, factory);
     }
 
-    public @Nullable MethodCommandNodeFactory getFactory(@NotNull Class<?> clazz) {
+    public @Nullable MethodCommandNodeFactory<?> getFactory(@NotNull Class<?> clazz) {
         return factories.get(clazz);
     }
 
@@ -48,7 +48,7 @@ public final class MethodCommandNodeFactoryRegistry {
         return factories.containsKey(clazz);
     }
 
-    public @NotNull @Unmodifiable Map<Class<?>, MethodCommandNodeFactory> getFactories() {
+    public @NotNull @Unmodifiable Map<Class<?>, MethodCommandNodeFactory<?>> getFactories() {
         return Collections.unmodifiableMap(factories);
     }
 
