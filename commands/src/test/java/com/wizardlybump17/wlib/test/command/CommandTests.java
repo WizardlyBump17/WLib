@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
@@ -185,7 +185,7 @@ public class CommandTests {
 
     @Test
     void testParseInputException() {
-        IntegerCommandNode worldNode = new IntegerCommandNode("world", AllowedNumberInputs.value(10), context -> CommandResult.successful(context, 10));
+        IntegerCommandNode worldNode = new IntegerCommandNode("world", AllowedIntegerInputs.value(10), context -> CommandResult.successful(context, 10));
         Command command = new Command(new LiteralCommandNode("hello", List.of(worldNode)));
 
         ParseInputExceptionResult<?> expected = CommandResult.parseInputException(1, worldNode, new InputParsingException("Could not parse as int: world", new NumberFormatException("For input string: \"world\"")));
