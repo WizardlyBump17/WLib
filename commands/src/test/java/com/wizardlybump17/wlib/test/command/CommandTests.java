@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
-import com.wizardlybump17.wlib.command.input.number.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedNumberInputs;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;

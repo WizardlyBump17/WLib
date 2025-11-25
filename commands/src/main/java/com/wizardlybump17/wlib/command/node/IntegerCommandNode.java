@@ -2,7 +2,7 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.number.AllowedNumberInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedNumberInputs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

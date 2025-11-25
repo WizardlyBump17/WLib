@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.input.logical;
+package com.wizardlybump17.wlib.command.input.primitive;
 
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.SingleValueInput;

@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.test.command.extractor.method;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
-import com.wizardlybump17.wlib.command.input.number.AllowedIntegerInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.IntegerCommandNode;

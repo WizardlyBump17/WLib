@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.input.number;
+package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;

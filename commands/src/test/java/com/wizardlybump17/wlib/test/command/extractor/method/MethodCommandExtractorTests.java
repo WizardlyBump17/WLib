@@ -5,7 +5,7 @@ import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
-import com.wizardlybump17.wlib.command.input.number.AllowedIntegerInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.node.CommandNode;
