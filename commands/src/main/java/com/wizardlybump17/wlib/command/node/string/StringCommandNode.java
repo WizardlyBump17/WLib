@@ -1,8 +1,9 @@
-package com.wizardlybump17.wlib.command.node;
+package com.wizardlybump17.wlib.command.node.string;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

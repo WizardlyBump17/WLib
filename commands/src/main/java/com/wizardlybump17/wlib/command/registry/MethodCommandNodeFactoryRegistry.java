@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.registry;
 
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -54,5 +55,13 @@ public final class MethodCommandNodeFactoryRegistry {
 
     public void clear() {
         factories.clear();
+    }
+
+    @ApiStatus.Internal
+    public void registerDefaults() {
+    }
+
+    @ApiStatus.Internal
+    public void unregisterDefaults() {
     }
 }
