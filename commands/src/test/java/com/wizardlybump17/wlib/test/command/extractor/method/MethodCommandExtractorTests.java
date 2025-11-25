@@ -36,7 +36,7 @@ class MethodCommandExtractorTests {
     static void setup() {
         MethodCommandNodeFactoryRegistry.INSTANCE.addFactory(
                 int.class,
-                new MethodCommandNodeFactory<IntegerCommandNode>() {
+                new MethodCommandNodeFactory() {
                     @Override
                     public @NotNull IntegerCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
                         return new IntegerCommandNode(name, root == null ? List.of() : List.of(root), AllowedIntegerInputs.unlimited());
@@ -45,7 +45,7 @@ class MethodCommandExtractorTests {
         );
         MethodCommandNodeFactoryRegistry.INSTANCE.addFactory(
                 String.class,
-                new MethodCommandNodeFactory<StringCommandNode>() {
+                new MethodCommandNodeFactory() {
                     @Override
                     public @NotNull StringCommandNode create(@NotNull Object object, @NotNull Method method, com.wizardlybump17.wlib.command.annotation.@NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
                         return new StringCommandNode(name, root == null ? List.of() : List.of(root), AllowedStringInputs.anyNullable());
