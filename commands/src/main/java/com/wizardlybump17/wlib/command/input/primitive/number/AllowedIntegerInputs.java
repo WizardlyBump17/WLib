@@ -1,12 +1,13 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
+import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
-public interface AllowedIntegerInputs extends AllowedNumberInputs<Integer> {
+public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
 
     static @NotNull Range range(int from, int to) {
         return new Range(from, to);

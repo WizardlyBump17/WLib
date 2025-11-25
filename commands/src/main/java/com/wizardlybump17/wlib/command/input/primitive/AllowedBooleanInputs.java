@@ -1,13 +1,12 @@
 package com.wizardlybump17.wlib.command.input.primitive;
 
-import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.SingleValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public interface AllowedBooleanInputs extends AllowedInputs<Boolean> {
+public interface AllowedBooleanInputs extends PrimitiveAllowedInputs<Boolean> {
 
     static @NotNull True trueValue() {
         return True.INSTANCE;

@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.command.input.primitive;
 
-import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.AllowedListInputs;
 import com.wizardlybump17.wlib.command.input.SingleValueInput;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public interface AllowedCharacterInputs extends AllowedInputs<Character> {
+public interface AllowedCharacterInputs extends PrimitiveAllowedInputs<Character> {
 
     static @NotNull Value value(char value) {
         return new Value(value, false);

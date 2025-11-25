@@ -4,12 +4,13 @@ import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedDoubleInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DoubleCommandNode extends CommandNode<Double> {
+public class DoubleCommandNode extends PrimitiveCommandNode<Double> {
 
     public DoubleCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedDoubleInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

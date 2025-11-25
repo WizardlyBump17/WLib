@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BooleanCommandNode extends CommandNode<Boolean> {
+public class BooleanCommandNode extends PrimitiveCommandNode<Boolean> {
 
     public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

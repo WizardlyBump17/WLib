@@ -1,11 +1,12 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
+import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface AllowedShortInputs extends AllowedNumberInputs<Short> {
+public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
 
     static @NotNull Range range(short from, short to) {
         return new Range(from, to);
@@ -31,7 +32,7 @@ public interface AllowedShortInputs extends AllowedNumberInputs<Short> {
         return new Value(value);
     }
 
-    final class Range extends Ranged<Short> implements AllowedShortInputs {
+    final class Range extends AllowedNumberInputs.Ranged<Short> implements AllowedShortInputs {
 
         Range(short from, short to) {
             super(from, to);
