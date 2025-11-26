@@ -28,4 +28,9 @@ public class BooleanMethodCommandNodeFactory extends PrimitiveMethodCommandNodeF
                 null
         );
     }
+
+    @Override
+    public @NotNull Class<?> @NotNull [] getSupportedTypes() {
+        return new Class[] {boolean.class, Boolean.class};
+    }
 }

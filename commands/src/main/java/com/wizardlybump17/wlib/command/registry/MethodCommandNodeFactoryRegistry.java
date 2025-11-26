@@ -1,6 +1,10 @@
 package com.wizardlybump17.wlib.command.registry;
 
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.BooleanMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.CharacterMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.NumberMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.string.StringMethodCommandNodeFactory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +32,10 @@ public final class MethodCommandNodeFactoryRegistry {
             throw new IllegalArgumentException("The classes array must contain at least one element");
         for (Class<?> clazz : classes)
             addFactory(clazz, factory);
+    }
+
+    public void addFactory(@NotNull MethodCommandNodeFactory factory) {
+        addFactory(factory, factory.getSupportedTypes());
     }
 
     public @Nullable MethodCommandNodeFactory getFactory(@NotNull Class<?> clazz) {
@@ -59,9 +67,32 @@ public final class MethodCommandNodeFactoryRegistry {
 
     @ApiStatus.Internal
     public void registerDefaults() {
+        addFactory(new BooleanMethodCommandNodeFactory());
+        addFactory(new CharacterMethodCommandNodeFactory());
+        addFactory(new NumberMethodCommandNodeFactory());
+        addFactory(new StringMethodCommandNodeFactory());
     }
 
     @ApiStatus.Internal
     public void unregisterDefaults() {
+        removeFactory(
+                boolean.class,
+                Boolean.class,
+                char.class,
+                Character.class,
+                byte.class,
+                Byte.class,
+                short.class,
+                Short.class,
+                int.class,
+                Integer.class,
+                long.class,
+                Long.class,
+                float.class,
+                Float.class,
+                double.class,
+                Double.class,
+                String.class
+        );
     }
 }

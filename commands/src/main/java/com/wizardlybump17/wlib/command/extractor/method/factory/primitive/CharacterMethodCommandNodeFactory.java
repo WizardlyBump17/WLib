@@ -29,4 +29,9 @@ public class CharacterMethodCommandNodeFactory extends PrimitiveMethodCommandNod
                 null
         );
     }
+
+    @Override
+    public @NotNull Class<?> @NotNull [] getSupportedTypes() {
+        return new Class<?>[] {char.class, Character.class};
+    }
 }

@@ -34,4 +34,16 @@ public class NumberMethodCommandNodeFactory extends PrimitiveMethodCommandNodeFa
 
         throw new IllegalArgumentException("Unsupported type. We accept only primitive numbers: " + type);
     }
+
+    @Override
+    public @NotNull Class<?> @NotNull [] getSupportedTypes() {
+        return new Class<?>[] {
+                byte.class, Byte.class,
+                short.class, Short.class,
+                int.class, Integer.class,
+                long.class, Long.class,
+                float.class, Float.class,
+                double.class, Double.class
+        };
+    }
 }
