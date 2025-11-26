@@ -16,6 +16,8 @@ public class NumberMethodCommandNodeFactory extends PrimitiveMethodCommandNodeFa
     @Override
     public @NotNull NumberCommandNode<?> create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
         Class<?> type = parameter.getType();
+        if (!isSupported(type))
+            throw new IllegalArgumentException("Unsupported type. We accept only primitive numbers: " + type);
 
         List<CommandNode<?>> children = root == null ? List.of() : List.of(root);
 

@@ -13,4 +13,22 @@ public abstract class MethodCommandNodeFactory {
     public abstract @NotNull CommandNode<?> create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root);
 
     public abstract @NotNull Class<?> @NotNull [] getSupportedTypes();
+
+    public boolean isSupported(@NotNull Class<?> type) {
+        if (isStrict()) {
+            for (Class<?> supportedType : getSupportedTypes())
+                if (supportedType.equals(type))
+                    return true;
+            return false;
+        }
+
+        for (Class<?> supportedType : getSupportedTypes())
+            if (supportedType.isAssignableFrom(type))
+                return true;
+        return false;
+    }
+
+    public boolean isStrict() {
+        return true;
+    }
 }

@@ -17,8 +17,7 @@ public class CharacterMethodCommandNodeFactory extends PrimitiveMethodCommandNod
     @Override
     public @NotNull AbstractPrimitiveCommandNode<?> create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
         Class<?> type = parameter.getType();
-
-        if (type != char.class && type != Character.class)
+        if (!isSupported(type))
             throw new IllegalArgumentException("Unsupported type. We only accept chars: " + type);
 
         return new CharacterCommandNode(

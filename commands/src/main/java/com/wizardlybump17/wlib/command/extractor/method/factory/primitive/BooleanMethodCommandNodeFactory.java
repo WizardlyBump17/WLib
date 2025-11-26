@@ -16,8 +16,7 @@ public class BooleanMethodCommandNodeFactory extends PrimitiveMethodCommandNodeF
     @Override
     public @NotNull BooleanCommandNode create(@NotNull Object object, @NotNull Method method, @NotNull Command commandAnnotation, @NotNull Parameter parameter, @NotNull String name, @Nullable CommandNode<?> root) {
         Class<?> type = parameter.getType();
-
-        if (type != boolean.class && type != Boolean.class)
+        if (isSupported(type))
             throw new IllegalArgumentException("Unsupported type. We only accept booleans: " + type);
 
         return new BooleanCommandNode(
