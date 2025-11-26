@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.registry;
 
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.object.UUIDMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.BooleanMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.CharacterMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.NumberMethodCommandNodeFactory;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public final class MethodCommandNodeFactoryRegistry {
 
@@ -71,6 +73,7 @@ public final class MethodCommandNodeFactoryRegistry {
         addFactory(new CharacterMethodCommandNodeFactory());
         addFactory(new NumberMethodCommandNodeFactory());
         addFactory(new StringMethodCommandNodeFactory());
+        addFactory(new UUIDMethodCommandNodeFactory());
     }
 
     @ApiStatus.Internal
@@ -92,7 +95,8 @@ public final class MethodCommandNodeFactoryRegistry {
                 Float.class,
                 double.class,
                 Double.class,
-                String.class
+                String.class,
+                UUID.class
         );
     }
 }
