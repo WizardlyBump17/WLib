@@ -86,6 +86,11 @@ public interface AllowedLongInputs extends PrimitiveAllowedInputs<Long> {
                     100000L
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Long> implements AllowedLongInputs {

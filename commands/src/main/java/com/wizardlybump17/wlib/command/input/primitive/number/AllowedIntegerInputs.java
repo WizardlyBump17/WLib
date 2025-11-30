@@ -77,6 +77,11 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
                     100000
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Integer> implements AllowedIntegerInputs {

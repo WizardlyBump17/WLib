@@ -84,6 +84,11 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
                     (short) 32767
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Short> implements AllowedShortInputs {

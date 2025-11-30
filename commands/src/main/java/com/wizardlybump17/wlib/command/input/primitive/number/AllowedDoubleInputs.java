@@ -86,6 +86,11 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
                     100000.5
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedDoubleInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Double> implements AllowedDoubleInputs {

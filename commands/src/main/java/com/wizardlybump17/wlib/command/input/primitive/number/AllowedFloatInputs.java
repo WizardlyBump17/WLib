@@ -86,6 +86,11 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
                     100000.5F
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Float> implements AllowedFloatInputs {

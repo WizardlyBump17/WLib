@@ -81,11 +81,6 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         public boolean isAllowed(@Nullable N input) {
             return true;
         }
-
-        @Override
-        public String toString() {
-            return "Unlimited{}";
-        }
     }
 
     class Value<N extends Number> implements AllowedNumberInputs<N>, SingleValueInput<N> {

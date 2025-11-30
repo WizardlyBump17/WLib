@@ -82,6 +82,11 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
                     (byte) 127
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Unlimited{}";
+        }
     }
 
     final class Positive extends AllowedNumberInputs.Positive<Byte> implements AllowedByteInputs {
