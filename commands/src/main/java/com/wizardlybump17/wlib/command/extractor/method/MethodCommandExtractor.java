@@ -22,11 +22,19 @@ import java.util.List;
 
 public class MethodCommandExtractor implements CommandExtractor {
 
-    public static final @NotNull MethodCommandExtractor INSTANCE = new MethodCommandExtractor();
+    private final @NotNull MethodCommandNodeFactoryRegistry factoryRegistry;
+
+    public MethodCommandExtractor(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry) {
+        this.factoryRegistry = factoryRegistry;
+    }
 
     @Override
     public boolean isAccepted(@NotNull Object object) {
         return true;
+    }
+
+    public @NotNull MethodCommandNodeFactoryRegistry getFactoryRegistry() {
+        return factoryRegistry;
     }
 
     @Override
@@ -52,7 +60,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 String part = commandParts[i];
 
                 CommandNode<?> oldRoot = root;
-                root = createNode(part, parameters, parameterIndex, root, annotation, object, method);
+                root = createNode(factoryRegistry, part, parameters, parameterIndex, root, annotation, object, method);
                 if (!(root instanceof LiteralCommandNode))
                     parameterIndex--;
 
@@ -69,7 +77,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         return commands;
     }
 
-    private static @NotNull CommandNode<?> createNode(@NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method) throws MethodCommandNodeFactoryNotFoundException {
+    private static @NotNull CommandNode<?> createNode(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry, @NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method) throws MethodCommandNodeFactoryNotFoundException {
         CommandNode<?> newNode;
 
         boolean argument = part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>';
@@ -83,7 +91,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 Parameter parameter = parameters[parameterIndex];
                 Class<?> parameterType = parameter.getType();
 
-                MethodCommandNodeFactory factory = MethodCommandNodeFactoryRegistry.INSTANCE.getFactory(parameterType);
+                MethodCommandNodeFactory factory = factoryRegistry.getFactory(parameterType);
                 if (factory == null)
                     throw new MethodCommandNodeFactoryNotFoundException("MethodCommandNodeFactory not found for the parameter " + parameter);
 

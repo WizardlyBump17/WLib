@@ -18,11 +18,6 @@ import java.util.UUID;
 
 public final class MethodCommandNodeFactoryRegistry {
 
-    public static final @NotNull MethodCommandNodeFactoryRegistry INSTANCE = new MethodCommandNodeFactoryRegistry();
-
-    private MethodCommandNodeFactoryRegistry() {
-    }
-
     private final @NotNull Map<Class<?>, MethodCommandNodeFactory> factories = new HashMap<>();
 
     public void addFactory(@NotNull Class<?> clazz, @NotNull MethodCommandNodeFactory factory) {

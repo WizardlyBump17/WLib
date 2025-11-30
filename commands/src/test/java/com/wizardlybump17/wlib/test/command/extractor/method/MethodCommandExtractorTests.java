@@ -27,14 +27,23 @@ import java.util.function.Consumer;
 
 class MethodCommandExtractorTests {
 
+    static MethodCommandExtractor methodCommandExtractor;
+
     @BeforeAll
     static void setup() {
-        MethodCommandNodeFactoryRegistry.INSTANCE.registerDefaults();
+        MethodCommandNodeFactoryRegistry registry = new MethodCommandNodeFactoryRegistry();
+        registry.registerDefaults();
+        methodCommandExtractor = CommandExtractor.method(registry);
     }
 
     @AfterAll
     static void clear() {
-        MethodCommandNodeFactoryRegistry.INSTANCE.clear();
+        if (methodCommandExtractor == null)
+            return;
+
+        MethodCommandNodeFactoryRegistry registry = methodCommandExtractor.getFactoryRegistry();
+        registry.clear();
+        methodCommandExtractor = null;
     }
 
     /*
@@ -79,7 +88,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -144,7 +153,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -213,7 +222,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -275,7 +284,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -341,7 +350,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -406,7 +415,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -493,7 +502,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -573,7 +582,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -657,7 +666,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -740,7 +749,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -827,7 +836,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -911,7 +920,7 @@ class MethodCommandExtractorTests {
                         )
                 )
         ));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -1043,7 +1052,7 @@ class MethodCommandExtractorTests {
                 )
         );
 
-        List<Command> extractedCommands = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> extractedCommands = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         CommandManager manager = new CommandManager();
 

@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.test.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.extractor.CommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
@@ -17,14 +18,23 @@ import java.util.List;
 
 class MethodCommandExtractorStructureTests {
 
+    static MethodCommandExtractor methodCommandExtractor;
+
     @BeforeAll
     static void setup() {
-        MethodCommandNodeFactoryRegistry.INSTANCE.registerDefaults();
+        MethodCommandNodeFactoryRegistry registry = new MethodCommandNodeFactoryRegistry();
+        registry.registerDefaults();
+        methodCommandExtractor = CommandExtractor.method(registry);
     }
 
     @AfterAll
     static void clear() {
-        MethodCommandNodeFactoryRegistry.INSTANCE.clear();
+        if (methodCommandExtractor == null)
+            return;
+
+        MethodCommandNodeFactoryRegistry registry = methodCommandExtractor.getFactoryRegistry();
+        registry.clear();
+        methodCommandExtractor = null;
     }
 
     @Test
@@ -58,7 +68,7 @@ class MethodCommandExtractorStructureTests {
         Test0 object = new Test0();
 
         List<Command> expected = new ArrayList<>(List.of(test0, test1));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
@@ -126,7 +136,7 @@ class MethodCommandExtractorStructureTests {
         Test1 object = new Test1();
 
         List<Command> expected = new ArrayList<>(List.of(test0, test1));
-        List<Command> actual = Assertions.assertDoesNotThrow(() -> CommandExtractor.METHOD.extract(object));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> methodCommandExtractor.extract(object));
 
         expected.sort(null);
         actual.sort(null);
