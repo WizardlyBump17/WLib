@@ -13,6 +13,7 @@ dependencies {
             project(':versions:v1_20_R4'),
             project(':versions:v1_21_R1'),
             project(':versions:v1_21_R3'),
+            project(':versions:v1_21_R5'),
 
             project(':database'),
 

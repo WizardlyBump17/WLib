@@ -4,23 +4,14 @@ on:
   release:
     types:
       - published
+  push:
+    branches:
+      - 1.20.6\+
 
 env:
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WLIB_UPLOAD_FILES: |
-    bukkit-utils/build/libs/*.jar
-    bungee/build/libs/*.jar
-    commands/build/libs/*.jar
-    config/build/libs/*.jar
-    core/build/libs/*.jar
-    database/build/libs/*.jar
-    objects/build/libs/*.jar
-    utils/build/libs/*.jar
-    versions/adapter/build/libs/*.jar
-    versions/v1_20_R4/build/libs/*.jar
-    versions/v1_21_R1/build/libs/*.jar
-    versions/v1_21_R3/build/libs/*.jar
+  WLIB_SNAPSHOT: ${{ github.event_name != 'release' }}
 
 jobs:
   build:
@@ -29,6 +20,10 @@ jobs:
       contents: write
       packages: write
     steps:
+      - name: Get current date
+        run: echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
+      - name: Get snapshot number
+        run: echo "WLIB_SNAPSHOT_NUMBER=$((${{ github.run_number }}+${{ github.run_attempt }}))" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -43,8 +38,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: "**/build/libs/*.jar"
-          name: WLib
+          name: WLib-${{ env.WLIB_BUILD_DATE }}
+          if-no-files-found: error
       - name: Upload to the release
+        if: ${{ github.event_name == 'release' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
