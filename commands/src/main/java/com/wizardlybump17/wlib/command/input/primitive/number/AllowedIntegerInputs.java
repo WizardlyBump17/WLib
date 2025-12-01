@@ -52,6 +52,14 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
             int fourth = (to - from) / 4;
             return List.of(from, from + fourth, from + fourth * 2, from + fourth * 3, to);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Integer> implements AllowedIntegerInputs{
@@ -117,6 +125,11 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
                     100000
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Integer> implements AllowedIntegerInputs {
@@ -152,6 +165,11 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
                     -1
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Integer> implements AllowedIntegerInputs {
@@ -159,12 +177,26 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
         Value(@NotNull Integer value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Value{" +
+                    "value=" + value() +
+                    "}";
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Integer> implements AllowedIntegerInputs {
 
         Values(@NotNull List<Integer> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedIntegerInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

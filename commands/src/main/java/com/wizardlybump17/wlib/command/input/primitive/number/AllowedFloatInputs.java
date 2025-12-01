@@ -61,6 +61,14 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
                     to
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Float> implements AllowedFloatInputs {
@@ -126,6 +134,11 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
                     100000.5F
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Float> implements AllowedFloatInputs {
@@ -161,6 +174,11 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
                     -1.0F
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Float> implements AllowedFloatInputs {
@@ -168,12 +186,26 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
         Value(float value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Value{" +
+                    "value=" + value() +
+                    "}";
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Float> implements AllowedFloatInputs {
 
         Values(@NotNull List<Float> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedFloatInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

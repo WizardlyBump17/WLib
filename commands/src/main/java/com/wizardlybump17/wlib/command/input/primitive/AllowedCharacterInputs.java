@@ -88,7 +88,7 @@ public interface AllowedCharacterInputs extends PrimitiveAllowedInputs<Character
 
         @Override
         public String toString() {
-            return "Value{" +
+            return "AllowedCharacterInputs$Value{" +
                     "value=" + value +
                     ", ignoreCase=" + ignoreCase +
                     '}';
@@ -140,7 +140,7 @@ public interface AllowedCharacterInputs extends PrimitiveAllowedInputs<Character
 
         @Override
         public String toString() {
-            return "Values{" +
+            return "AllowedCharacterInputs$Values{" +
                     "values=" + values +
                     ", ignoreCase=" + ignoreCase +
                     '}';
@@ -182,7 +182,7 @@ public interface AllowedCharacterInputs extends PrimitiveAllowedInputs<Character
 
         @Override
         public String toString() {
-            return "Any{" +
+            return "AllowedCharacterInputs$Any{" +
                     "nullable=" + nullable +
                     '}';
         }

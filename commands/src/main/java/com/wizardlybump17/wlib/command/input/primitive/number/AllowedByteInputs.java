@@ -61,6 +61,14 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
                     to
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Byte> implements AllowedByteInputs {
@@ -120,6 +128,11 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
                     (byte) 127
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Byte> implements AllowedByteInputs {
@@ -153,6 +166,11 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
                     (byte) -1
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Byte> implements AllowedByteInputs {
@@ -160,12 +178,26 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
         Value(byte value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Value{"
+                    + "value=" + value()
+                    + '}';
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Byte> implements AllowedByteInputs {
 
         Values(@NotNull List<Byte> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

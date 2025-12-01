@@ -61,6 +61,14 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
                     to
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Short> implements AllowedShortInputs {
@@ -123,6 +131,11 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
                     (short) 32767
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Short> implements AllowedShortInputs {
@@ -157,6 +170,11 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
                     (short) -1
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Short> implements AllowedShortInputs {
@@ -164,12 +182,26 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
         Value(short value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Value{" +
+                    "value=" + value() +
+                    "}";
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Short> implements AllowedShortInputs {
 
         Values(@NotNull List<Short> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedShortInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

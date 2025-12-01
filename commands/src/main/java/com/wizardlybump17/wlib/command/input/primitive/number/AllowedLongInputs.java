@@ -61,6 +61,14 @@ public interface AllowedLongInputs extends PrimitiveAllowedInputs<Long> {
                     to
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Long> implements AllowedLongInputs {
@@ -126,6 +134,11 @@ public interface AllowedLongInputs extends PrimitiveAllowedInputs<Long> {
                     100000L
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Long> implements AllowedLongInputs {
@@ -161,6 +174,11 @@ public interface AllowedLongInputs extends PrimitiveAllowedInputs<Long> {
                     -1L
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Long> implements AllowedLongInputs {
@@ -168,12 +186,26 @@ public interface AllowedLongInputs extends PrimitiveAllowedInputs<Long> {
         Value(long value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Value{" +
+                    "value=" + value() +
+                    "}";
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Long> implements AllowedLongInputs {
 
         Values(@NotNull List<Long> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedLongInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

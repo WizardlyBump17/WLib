@@ -61,6 +61,14 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
                     to
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedByteInputs$Range{" +
+                    "from=" + from() +
+                    ", to=" + to() +
+                    "}";
+        }
     }
 
     final class Unlimited extends AllowedNumberInputs.Unlimited<Double> implements AllowedDoubleInputs {
@@ -126,6 +134,11 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
                     100000.5
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedDoubleInputs$Positive{}";
+        }
     }
 
     final class Negative extends AllowedNumberInputs.Negative<Double> implements AllowedDoubleInputs {
@@ -161,6 +174,11 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
                     -1.0
             );
         }
+
+        @Override
+        public String toString() {
+            return "AllowedDoubleInputs$Negative{}";
+        }
     }
 
     final class Value extends AllowedNumberInputs.Value<Double> implements AllowedDoubleInputs {
@@ -168,12 +186,26 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
         Value(double value) {
             super(value);
         }
+
+        @Override
+        public String toString() {
+            return "AllowedDoubleInputs$Value{" +
+                    "value=" + value() +
+                    "}";
+        }
     }
 
     final class Values extends AllowedNumberInputs.Values<Double> implements AllowedDoubleInputs {
 
         Values(@NotNull List<Double> values) {
             super(values);
+        }
+
+        @Override
+        public String toString() {
+            return "AllowedDoubleInputs$Values{"
+                    + "values=" + allowedValues()
+                    + '}';
         }
     }
 }

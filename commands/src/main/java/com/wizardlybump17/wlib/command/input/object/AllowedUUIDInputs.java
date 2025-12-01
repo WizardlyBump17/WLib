@@ -60,7 +60,7 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
 
         @Override
         public String toString() {
-            return "Value{" +
+            return "AllowedUUIDInputs$Value{" +
                     "value=" + value +
                     '}';
         }
@@ -94,7 +94,7 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
 
         @Override
         public String toString() {
-            return "Values{" +
+            return "AllowedUUIDInputs$Values{" +
                     "values=" + values +
                     '}';
         }
@@ -131,7 +131,7 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
 
         @Override
         public String toString() {
-            return "Any{" +
+            return "AllowedUUIDInputs$Any{" +
                     "nullable=" + nullable +
                     '}';
         }

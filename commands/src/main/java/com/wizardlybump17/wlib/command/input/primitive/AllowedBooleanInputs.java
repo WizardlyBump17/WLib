@@ -38,7 +38,7 @@ public interface AllowedBooleanInputs extends PrimitiveAllowedInputs<Boolean> {
 
         @Override
         public String toString() {
-            return "True{}";
+            return "AllowedBooleanInputs$True{}";
         }
     }
 
@@ -56,7 +56,7 @@ public interface AllowedBooleanInputs extends PrimitiveAllowedInputs<Boolean> {
 
         @Override
         public String toString() {
-            return "False{}";
+            return "AllowedBooleanInputs$False{}";
         }
     }
 
@@ -95,7 +95,7 @@ public interface AllowedBooleanInputs extends PrimitiveAllowedInputs<Boolean> {
 
         @Override
         public String toString() {
-            return "Any{" +
+            return "AllowedBooleanInputs$Any{" +
                     "nullable=" + nullable +
                     '}';
         }

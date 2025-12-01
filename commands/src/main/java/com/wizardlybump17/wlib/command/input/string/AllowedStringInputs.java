@@ -85,7 +85,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         @Override
         public String toString() {
-            return "Values{" +
+            return "AllowedStringInputs$Values{" +
                     "values=" + values +
                     ", ignoreCase=" + ignoreCase +
                     '}';
@@ -139,7 +139,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         @Override
         public String toString() {
-            return "Value{" +
+            return "AllowedStringInputs$Value{" +
                     "value='" + value + '\'' +
                     ", ignoreCase=" + ignoreCase +
                     '}';
@@ -186,7 +186,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         @Override
         public String toString() {
-            return "Any{" +
+            return "AllowedStringInput$Any{" +
                     "nullable=" + nullable +
                     '}';
         }
