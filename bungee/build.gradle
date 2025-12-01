@@ -8,7 +8,7 @@ dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.32',
             'org.jetbrains:annotations:23.0.0',
-            'net.md-5:bungeecord-api:1.18-R0.1-SNAPSHOT',
+            'net.md-5:bungeecord-api:1.21-R0.3',
     )
     annotationProcessor('org.projectlombok:lombok:1.18.32')
     implementation(
