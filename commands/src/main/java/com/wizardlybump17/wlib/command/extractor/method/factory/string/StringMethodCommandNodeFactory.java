@@ -23,7 +23,7 @@ public class StringMethodCommandNodeFactory extends MethodCommandNodeFactory {
         return new StringCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                AllowedStringInputs.anyNotNull(),
+                parameter.isAnnotationPresent(NotNull.class) ? AllowedStringInputs.anyNotNull() : AllowedStringInputs.anyNullable(),
                 null,
                 null
         );

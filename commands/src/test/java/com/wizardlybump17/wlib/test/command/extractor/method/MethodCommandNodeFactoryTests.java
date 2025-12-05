@@ -471,7 +471,7 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new StringCommandNode(
                                         "arg0",
-                                        AllowedStringInputs.anyNotNull()
+                                        AllowedStringInputs.anyNullable()
                                 )
                         )
                 )
@@ -488,12 +488,12 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new StringCommandNode(
                                                                         "arg1",
-                                                                        AllowedStringInputs.anyNotNull()
+                                                                        AllowedStringInputs.anyNullable()
                                                                 )
                                                         )
                                                 )
                                         ),
-                                        AllowedStringInputs.anyNotNull(),
+                                        AllowedStringInputs.anyNullable(),
                                         null,
                                         null
                                 )
@@ -531,7 +531,7 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new UUIDCommandNode(
                                         "arg0",
-                                        AllowedUUIDInputs.anyNotNull()
+                                        AllowedUUIDInputs.anyNullable()
                                 )
                         )
                 )
@@ -548,12 +548,12 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new UUIDCommandNode(
                                                                         "arg1",
-                                                                        AllowedUUIDInputs.anyNotNull()
+                                                                        AllowedUUIDInputs.anyNullable()
                                                                 )
                                                         )
                                                 )
                                         ),
-                                        AllowedUUIDInputs.anyNotNull(),
+                                        AllowedUUIDInputs.anyNullable(),
                                         null,
                                         null
                                 )
@@ -668,24 +668,24 @@ class MethodCommandNodeFactoryTests {
                                                                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                                                                         new UUIDCommandNode(
                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "uuid1",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNotNull()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNullable()
                                                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                                                 )
                                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                                 ),
-                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNotNull(),
+                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNullable(),
                                                                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                 ),
-                                                                                                                                                                                                                                                                                                                                                                                                                AllowedStringInputs.anyNotNull(),
+                                                                                                                                                                                                                                                                                                                                                                                                                AllowedStringInputs.anyNullable(),
                                                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                 )
                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                 ),
-                                                                                                                                                                                                                                                                                                                                                                                AllowedStringInputs.anyNotNull(),
+                                                                                                                                                                                                                                                                                                                                                                                AllowedStringInputs.anyNullable(),
                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                         )

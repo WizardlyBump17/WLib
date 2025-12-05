@@ -23,7 +23,7 @@ public class UUIDMethodCommandNodeFactory extends MethodCommandNodeFactory {
         return new UUIDCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                AllowedUUIDInputs.anyNotNull(),
+                parameter.isAnnotationPresent(NotNull.class) ? AllowedUUIDInputs.anyNotNull() : AllowedUUIDInputs.anyNullable(),
                 null,
                 null
         );

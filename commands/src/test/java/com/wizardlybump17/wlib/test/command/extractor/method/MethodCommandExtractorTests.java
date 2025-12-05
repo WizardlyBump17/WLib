@@ -1006,7 +1006,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcomeWorld", CommandSender.class, String.class))
                                                 )
                                         ),
-                                        AllowedStringInputs.anyNotNull(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcome", CommandSender.class, String.class)),
                                         null
                                 )
@@ -1025,7 +1025,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassupNice", CommandContext.class, String.class))
                                                 )
                                         ),
-                                        AllowedStringInputs.anyNotNull(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassup", CommandContext.class, String.class)),
                                         null
                                 )
@@ -1044,7 +1044,7 @@ class MethodCommandExtractorTests {
                                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "ayeNice", String.class))
                                                 )
                                         ),
-                                        AllowedStringInputs.anyNotNull(),
+                                        AllowedStringInputs.anyNullable(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "aye", String.class)),
                                         null
                                 )
