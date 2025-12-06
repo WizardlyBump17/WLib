@@ -114,4 +114,9 @@ public class CommandManager {
                 .ofNullable(commandsByFullName.get(name))
                 .or(() -> Optional.ofNullable(commandsByName.get(name)));
     }
+
+    public void clear() {
+        commandsByName.clear();
+        commandsByFullName.clear();
+    }
 }
