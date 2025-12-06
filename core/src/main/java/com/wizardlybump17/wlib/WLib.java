@@ -4,6 +4,9 @@ import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
+import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.manager.CommandManager;
+import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
 import com.wizardlybump17.wlib.config.registry.ConfigHandlerRegistry;
 import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
@@ -35,19 +38,31 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
+    private MethodCommandExtractor methodCommandExtractor;
+    private MethodCommandNodeFactoryRegistry methodCommandNodeFactoryRegistry;
+    private CommandManager commandManager;
 
     @Override
     public void onLoad() {
+        initCommandSystem();
         ItemMetaHandlerModel.initModels();
         initAdapters();
         initSerializables();
-        initCommandSystem();
 
         DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
         databaseRegister.registerDatabaseModel(new MySQLDatabaseModel());
         databaseRegister.registerDatabaseModel(new SQLiteDatabaseModel());
 
         initConfigs();
+    }
+
+    private void initCommandSystem() {
+        methodCommandNodeFactoryRegistry = new MethodCommandNodeFactoryRegistry();
+        methodCommandExtractor = new MethodCommandExtractor(methodCommandNodeFactoryRegistry);
+
+        methodCommandNodeFactoryRegistry.registerDefaults();
+
+        commandManager = new CommandManager();
     }
 
     protected void initConfigs() {
@@ -71,11 +86,21 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        clearCommandSystem();
         HandlerList.unregisterAll(this);
         saveControllersTask.cancel();
     }
 
-    private void initCommandSystem() {
+    private void clearCommandSystem() {
+        if (methodCommandNodeFactoryRegistry != null)
+            methodCommandNodeFactoryRegistry.clear();
+        methodCommandNodeFactoryRegistry = null;
+
+        methodCommandExtractor = null;
+
+        if (commandManager != null)
+            commandManager.clear();
+        commandManager = null;
     }
 
     private void initSerializables() {
@@ -140,5 +165,13 @@ public class WLib extends JavaPlugin {
 
     public static @NonNull String getServerVersion() {
         return Bukkit.getServer().getClass().getName().split("\\.")[3];
+    }
+
+    public MethodCommandExtractor getMethodCommandExtractor() {
+        return methodCommandExtractor;
+    }
+
+    public MethodCommandNodeFactoryRegistry getMethodCommandNodeFactoryRegistry() {
+        return methodCommandNodeFactoryRegistry;
     }
 }
