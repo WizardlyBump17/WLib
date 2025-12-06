@@ -221,4 +221,8 @@ public class Command implements Comparable<Command> {
     public @Nullable CommandNode<?> findNode(@NotNull String name) {
         return root.findChild(name);
     }
+
+    public @NotNull String getName() {
+        return root.getName();
+    }
 }
