@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.WLibCommandExecutor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.listener.BukkitCommandManagerListener;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
@@ -39,10 +40,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
+
     private MethodCommandExtractor methodCommandExtractor;
     private MethodCommandNodeFactoryRegistry methodCommandNodeFactoryRegistry;
     private CommandManager commandManager;
     private WLibCommandExecutor commandExecutor;
+    private BukkitCommandManagerListener commandManagerListener;
 
     @Override
     public void onLoad() {
@@ -67,6 +70,9 @@ public class WLib extends JavaPlugin {
         commandManager = new CommandManager();
 
         commandExecutor = new WLibCommandExecutor(commandManager);
+
+        commandManagerListener = new BukkitCommandManagerListener(commandExecutor);
+        commandManager.addListener(commandManagerListener);
     }
 
     protected void initConfigs() {
@@ -102,11 +108,15 @@ public class WLib extends JavaPlugin {
 
         methodCommandExtractor = null;
 
-        if (commandManager != null)
+        if (commandManager != null) {
             commandManager.clear();
+            commandManager.clearListeners();
+        }
         commandManager = null;
 
         commandExecutor = null;
+
+        commandManagerListener = null;
     }
 
     private void initSerializables() {
