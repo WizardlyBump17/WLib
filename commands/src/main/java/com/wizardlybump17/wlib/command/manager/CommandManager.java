@@ -23,6 +23,16 @@ public class CommandManager {
     private final @NotNull Set<CommandManagerListener> listeners = ConcurrentHashMap.newKeySet();
     private final @NotNull Map<Object, Set<Command>> commandsByHolder = new ConcurrentHashMap<>();
 
+    protected void addCommand(@NotNull String identifier, @NotNull String fullName, @NotNull String name, @NotNull Command command, @Nullable Object holder) {
+        commandsByFullName.put(fullName, command);
+        commandsByName.put(name, command);
+        if (holder != null)
+            commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
+
+        for (CommandManagerListener listener : listeners)
+            listener.onRegister(identifier, command, holder, this);
+    }
+
     public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command, @Nullable Object holder) {
         String commandName = command.getRoot().getName().toLowerCase();
         String fullCommandName = identifier + SEPARATOR + commandName;
@@ -31,20 +41,11 @@ public class CommandManager {
 
         if (existingCommand != null) {
             Command newCommand = mergeCommand(existingCommand, command);
-
-            commandsByFullName.put(fullCommandName, newCommand);
-            commandsByName.put(commandName, newCommand);
-            if (holder != null)
-                commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
-
+            addCommand(identifier, fullCommandName, commandName, newCommand, holder);
             return newCommand;
         }
 
-        commandsByFullName.put(fullCommandName, command);
-        commandsByName.put(commandName, command);
-        if (holder != null)
-            commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
-
+        addCommand(identifier, fullCommandName, commandName, command, holder);
         return command;
     }
 
@@ -139,6 +140,9 @@ public class CommandManager {
 
         commandsByHolder.forEach((holder, commands) -> commands.clear());
         commandsByHolder.clear();
+
+        for (CommandManagerListener listener : listeners)
+            listener.onClear(this);
     }
 
     public @NotNull @UnmodifiableView Map<String, Command> getCommandsByFullName() {
