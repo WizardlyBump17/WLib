@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
+import com.wizardlybump17.wlib.command.WLibCommandExecutor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
@@ -41,6 +42,7 @@ public class WLib extends JavaPlugin {
     private MethodCommandExtractor methodCommandExtractor;
     private MethodCommandNodeFactoryRegistry methodCommandNodeFactoryRegistry;
     private CommandManager commandManager;
+    private WLibCommandExecutor commandExecutor;
 
     @Override
     public void onLoad() {
@@ -63,6 +65,8 @@ public class WLib extends JavaPlugin {
         methodCommandNodeFactoryRegistry.registerDefaults();
 
         commandManager = new CommandManager();
+
+        commandExecutor = new WLibCommandExecutor(commandManager);
     }
 
     protected void initConfigs() {
@@ -101,6 +105,8 @@ public class WLib extends JavaPlugin {
         if (commandManager != null)
             commandManager.clear();
         commandManager = null;
+
+        commandExecutor = null;
     }
 
     private void initSerializables() {
@@ -173,5 +179,9 @@ public class WLib extends JavaPlugin {
 
     public MethodCommandNodeFactoryRegistry getMethodCommandNodeFactoryRegistry() {
         return methodCommandNodeFactoryRegistry;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 }

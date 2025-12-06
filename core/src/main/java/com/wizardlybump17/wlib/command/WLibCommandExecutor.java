@@ -1,0 +1,71 @@
+package com.wizardlybump17.wlib.command;
+
+import com.wizardlybump17.wlib.command.manager.CommandManager;
+import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.result.SuccessResult;
+import com.wizardlybump17.wlib.command.result.error.*;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
+
+    private final @NotNull CommandManager commandManager;
+
+    public WLibCommandExecutor(@NotNull CommandManager commandManager) {
+        this.commandManager = commandManager;
+    }
+
+    public @NotNull CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
+
+        List<String> wlibArgs = new ArrayList<>();
+        wlibArgs.add(command.getName());
+        Collections.addAll(wlibArgs, args);
+
+        CommandResult<?> result = commandManager.execute(wlibSender, wlibArgs);
+        switch (result) {
+            case SuccessResult<?> successResult -> {}
+            case ExceptionResult<?> exceptionResult -> sender.sendMessage("§cAn internal error occurred while executing this command.");
+            case OutOfRangeInputResult<?> outOfRangeInputResult -> sender.sendMessage("§cInvalid input at index " + outOfRangeInputResult.lastInputIndex() + ".");
+            case ExtraArgumentsResult<?> extraArgumentsResult -> sender.sendMessage("§cExtra arguments provided at index " + extraArgumentsResult.lastInputIndex() + ".");
+            case InsufficientArgumentsResult<?> insufficientArgumentsResult -> sender.sendMessage("§cInsufficient arguments provided.");
+            case ParseInputExceptionResult<?> parseInputExceptionResult -> sender.sendMessage("§cInvalid input at index " + parseInputExceptionResult.lastInputIndex() + ": " + parseInputExceptionResult.exception().getMessage());
+            case CommandNodeExecutorNotFoundResult<?> notFoundResult -> sender.sendMessage("§cNo executor found for this command.");
+            case GenericErrorResult<?> genericErrorResult -> sender.sendMessage("§cAn error occurred while executing the command.");
+            case NoPermissionResult<?> noPermissionResult -> sender.sendMessage("§cYou do not have permission to execute this command.");
+            case CommandNotFoundResult<?> notFoundResult -> sender.sendMessage("§cCommand not found.");
+            case InvalidSenderResult<?> invalidSenderResult -> sender.sendMessage("§cYou can not execute this command.");
+            default -> {}
+        }
+
+        return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
+
+        List<String> wlibArgs = new ArrayList<>();
+        wlibArgs.add(command.getName());
+        Collections.addAll(wlibArgs, args);
+
+        return commandManager.getSuggestions(wlibSender, wlibArgs)
+                .stream()
+                .map(Object::toString)
+                .toList();
+    }
+}
