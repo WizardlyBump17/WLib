@@ -8,14 +8,18 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandManager {
 
     private static final char SEPARATOR = ':';
 
-    private final @NotNull Map<String, Command> commandsByFullName = new HashMap<>();
-    private final @NotNull Map<String, Command> commandsByName = new HashMap<>();
+    private final @NotNull Map<String, Command> commandsByFullName = new ConcurrentHashMap<>();
+    private final @NotNull Map<String, Command> commandsByName = new ConcurrentHashMap<>();
 
     public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
         String commandName = command.getRoot().getName().toLowerCase();
