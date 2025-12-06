@@ -172,4 +172,8 @@ public class CommandManager {
     public @NotNull @UnmodifiableView Set<CommandManagerListener> getListeners() {
         return Collections.unmodifiableSet(listeners);
     }
+
+    public boolean isEmpty() {
+        return commandsByFullName.isEmpty();
+    }
 }
