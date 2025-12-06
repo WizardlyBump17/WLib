@@ -124,11 +124,11 @@ public class CommandManager {
         commandsByFullName.clear();
     }
 
-    public @NotNull Map<String, Command> getCommandsByFullName() {
+    public @NotNull @UnmodifiableView Map<String, Command> getCommandsByFullName() {
         return Collections.unmodifiableMap(commandsByFullName);
     }
 
-    public @NotNull Map<String, Command> getCommandsByName() {
+    public @NotNull @UnmodifiableView Map<String, Command> getCommandsByName() {
         return Collections.unmodifiableMap(commandsByName);
     }
 
