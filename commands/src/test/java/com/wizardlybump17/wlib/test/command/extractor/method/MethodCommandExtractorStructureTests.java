@@ -73,7 +73,7 @@ class MethodCommandExtractorStructureTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static class Test0 {
@@ -141,7 +141,7 @@ class MethodCommandExtractorStructureTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static class Test1 {

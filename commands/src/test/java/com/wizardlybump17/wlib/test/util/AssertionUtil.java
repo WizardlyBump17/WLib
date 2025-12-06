@@ -13,7 +13,7 @@ public final class AssertionUtil {
     private AssertionUtil() {
     }
 
-    public static void assertCommandsEquals(@Nullable List<Command> expected, @Nullable List<Command> actual) {
+    public static void assertCommandsEqualsIgnoreExecutor(@Nullable List<Command> expected, @Nullable List<Command> actual) {
         if (expected == null) {
             if (actual != null) {
                 AssertionFailureBuilder.assertionFailure()

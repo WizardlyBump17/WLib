@@ -89,7 +89,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestByte {
@@ -149,7 +149,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestShort {
@@ -209,7 +209,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestInt {
@@ -269,7 +269,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestLong {
@@ -329,7 +329,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestFloat {
@@ -389,7 +389,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestDouble {
@@ -449,7 +449,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestChar {
@@ -509,7 +509,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestString {
@@ -569,7 +569,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestUUID {
@@ -784,7 +784,7 @@ class MethodCommandNodeFactoryTests {
         expected.sort(null);
         actual.sort(null);
 
-        AssertionUtil.assertCommandsEquals(expected, actual);
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
     }
 
     public static final class TestMix {
