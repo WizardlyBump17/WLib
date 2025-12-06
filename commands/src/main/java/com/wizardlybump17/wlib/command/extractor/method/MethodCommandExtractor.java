@@ -116,16 +116,24 @@ public class MethodCommandExtractor implements CommandExtractor {
         }
     }
 
-    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Parameter @NotNull [] parameters, @NotNull Class<?> returnType, @NotNull Method method) {
-        /*
-        If empty -> check the return type
-        If CommandSender only -> pass only the command sender and check the return type
-        If CommandContext only -> pass only the command context and check the return type
-        If CommandSender + more parameters -> pass the command sender and the parameters and check the return type
-        If CommandContext + more parameters -> pass the command context and the parameters and check the return type
-        If only parameters -> pass the parameters and check the return type
-        */
 
+    /**
+     * <ul>
+     *     <li>If empty -> check the return type;</li>
+     *     <li>If CommandSender only -> pass only the command sender and check the return type;</li>
+     *     <li>If CommandContext only -> pass only the command context and check the return type;</li>
+     *     <li>If CommandSender + more parameters -> pass the command sender and the parameters and check the return type;</li>
+     *     <li>If CommandContext + more parameters -> pass the command context and the parameters and check the return type;</li>
+     *     <li>If only parameters -> pass the parameters and check the return type.</li>
+     * </ul>
+     *
+     * @param object     the object containing the method
+     * @param parameters the parameters of the method
+     * @param returnType the return type of the method
+     * @param method     the {@link Method}
+     * @return the appropriate CommandNodeExecutor based on the parameters and return type of the method
+     */
+    private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Parameter @NotNull [] parameters, @NotNull Class<?> returnType, @NotNull Method method) {
         if (parameters.length == 0) { //no parameters
             if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.NoArgumentsCommandResultExecutor<>(object, method);
