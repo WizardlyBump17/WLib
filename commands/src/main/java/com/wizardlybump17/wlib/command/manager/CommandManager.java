@@ -8,10 +8,7 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandManager {
@@ -122,5 +119,13 @@ public class CommandManager {
     public void clear() {
         commandsByName.clear();
         commandsByFullName.clear();
+    }
+
+    public @NotNull Map<String, Command> getCommandsByFullName() {
+        return Collections.unmodifiableMap(commandsByFullName);
+    }
+
+    public @NotNull Map<String, Command> getCommandsByName() {
+        return Collections.unmodifiableMap(commandsByName);
     }
 }
