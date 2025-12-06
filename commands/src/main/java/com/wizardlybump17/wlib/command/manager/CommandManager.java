@@ -8,6 +8,7 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
@@ -20,8 +21,9 @@ public class CommandManager {
     private final @NotNull Map<String, Command> commandsByFullName = new ConcurrentHashMap<>();
     private final @NotNull Map<String, Command> commandsByName = new ConcurrentHashMap<>();
     private final @NotNull Set<CommandManagerListener> listeners = ConcurrentHashMap.newKeySet();
+    private final @NotNull Map<Object, Set<Command>> commandsByHolder = new ConcurrentHashMap<>();
 
-    public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
+    public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command, @Nullable Object holder) {
         String commandName = command.getRoot().getName().toLowerCase();
         String fullCommandName = identifier + SEPARATOR + commandName;
 
@@ -32,21 +34,33 @@ public class CommandManager {
 
             commandsByFullName.put(fullCommandName, newCommand);
             commandsByName.put(commandName, newCommand);
+            if (holder != null)
+                commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
 
             return newCommand;
         }
 
         commandsByFullName.put(fullCommandName, command);
         commandsByName.put(commandName, command);
+        if (holder != null)
+            commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
 
         return command;
     }
 
-    public @NotNull List<Command> registerCommands(@NotNull String identifier, @NotNull List<Command> commands) {
+    public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
+        return registerCommand(identifier, command, null);
+    }
+
+    public @NotNull List<Command> registerCommands(@NotNull String identifier, @NotNull List<Command> commands, @Nullable Object holder) {
         List<Command> newCommands = new ArrayList<>(commands.size());
         for (Command command : commands)
-            newCommands.add(registerCommand(identifier, command));
+            newCommands.add(registerCommand(identifier, command, holder));
         return newCommands;
+    }
+
+    public @NotNull List<Command> registerCommands(@NotNull String identifier, @NotNull List<Command> commands) {
+        return registerCommands(identifier, commands, null);
     }
 
     protected @NotNull Command mergeCommand(@NotNull Command left, @NotNull Command right) {
@@ -122,6 +136,9 @@ public class CommandManager {
     public void clear() {
         commandsByName.clear();
         commandsByFullName.clear();
+
+        commandsByHolder.forEach((holder, commands) -> commands.clear());
+        commandsByHolder.clear();
     }
 
     public @NotNull @UnmodifiableView Map<String, Command> getCommandsByFullName() {
@@ -130,6 +147,14 @@ public class CommandManager {
 
     public @NotNull @UnmodifiableView Map<String, Command> getCommandsByName() {
         return Collections.unmodifiableMap(commandsByName);
+    }
+
+    public @NotNull @UnmodifiableView Map<Object, Set<Command>> getCommandsByHolder() {
+        return Collections.unmodifiableMap(commandsByHolder);
+    }
+
+    public @NotNull @UnmodifiableView Set<Command> getCommandsByHolder(@NotNull Object holder) {
+        return Collections.unmodifiableSet(commandsByHolder.getOrDefault(holder, Set.of()));
     }
 
     public void addListener(@NotNull CommandManagerListener listener) {

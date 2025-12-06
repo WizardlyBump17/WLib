@@ -3,10 +3,11 @@ package com.wizardlybump17.wlib.command.manager.listener;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface CommandManagerListener {
 
-    void onRegister(@NotNull String identifier, @NotNull Command command, @NotNull CommandManager manager);
+    void onRegister(@NotNull String identifier, @NotNull Command command, @Nullable Object holder, @NotNull CommandManager manager);
 
     void onClear(@NotNull CommandManager manager);
 }
