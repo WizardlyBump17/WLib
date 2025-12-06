@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandManager {
 
-    private static final char SEPARATOR = ':';
+    public static final char SEPARATOR = ':';
 
     private final @NotNull Map<String, Command> commandsByFullName = new ConcurrentHashMap<>();
     private final @NotNull Map<String, Command> commandsByName = new ConcurrentHashMap<>();
