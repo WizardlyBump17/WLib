@@ -1,12 +1,14 @@
 package com.wizardlybump17.wlib.command.manager;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +19,7 @@ public class CommandManager {
 
     private final @NotNull Map<String, Command> commandsByFullName = new ConcurrentHashMap<>();
     private final @NotNull Map<String, Command> commandsByName = new ConcurrentHashMap<>();
+    private final @NotNull Set<CommandManagerListener> listeners = ConcurrentHashMap.newKeySet();
 
     public @NotNull Command registerCommand(@NotNull String identifier, @NotNull Command command) {
         String commandName = command.getRoot().getName().toLowerCase();
@@ -127,5 +130,17 @@ public class CommandManager {
 
     public @NotNull Map<String, Command> getCommandsByName() {
         return Collections.unmodifiableMap(commandsByName);
+    }
+
+    public void addListener(@NotNull CommandManagerListener listener) {
+        listeners.add(listener);
+    }
+
+    public void clearListeners() {
+        listeners.clear();
+    }
+
+    public @NotNull @UnmodifiableView Set<CommandManagerListener> getListeners() {
+        return Collections.unmodifiableSet(listeners);
     }
 }
