@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - new-command-system-1.20.6-2
+  workflow_dispatch:
 
 env:
   USERNAME: ${{ github.actor }}
