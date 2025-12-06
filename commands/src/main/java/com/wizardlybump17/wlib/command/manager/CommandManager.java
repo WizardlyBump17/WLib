@@ -22,12 +22,18 @@ public class CommandManager {
     private final @NotNull Map<String, Command> commandsByName = new ConcurrentHashMap<>();
     private final @NotNull Set<CommandManagerListener> listeners = ConcurrentHashMap.newKeySet();
     private final @NotNull Map<Object, Set<Command>> commandsByHolder = new ConcurrentHashMap<>();
+    private final @NotNull Map<String, Object> holdersByFullName = new ConcurrentHashMap<>();
 
-    protected void addCommand(@NotNull String identifier, @NotNull String fullName, @NotNull String name, @NotNull Command command, @Nullable Object holder) {
+    protected void addCommand(@NotNull String identifier, @NotNull String name, @NotNull Command command, @Nullable Object holder) {
+        String fullName = identifier + SEPARATOR + name;
+
         commandsByFullName.put(fullName, command);
         commandsByName.put(name, command);
-        if (holder != null)
+
+        if (holder != null) {
             commandsByHolder.computeIfAbsent(holder, $ -> ConcurrentHashMap.newKeySet()).add(command);
+            holdersByFullName.put(fullName, holder);
+        }
 
         for (CommandManagerListener listener : listeners)
             listener.onRegister(identifier, command, holder, this);
@@ -41,11 +47,11 @@ public class CommandManager {
 
         if (existingCommand != null) {
             Command newCommand = mergeCommand(existingCommand, command);
-            addCommand(identifier, fullCommandName, commandName, newCommand, holder);
+            addCommand(identifier, commandName, newCommand, holder);
             return newCommand;
         }
 
-        addCommand(identifier, fullCommandName, commandName, command, holder);
+        addCommand(identifier, commandName, command, holder);
         return command;
     }
 
@@ -175,5 +181,38 @@ public class CommandManager {
 
     public boolean isEmpty() {
         return commandsByFullName.isEmpty();
+    }
+
+    public void unregister(@NotNull String identifier, @NotNull Command command) {
+        unregister(identifier, command.getName());
+    }
+
+    public void unregister(@NotNull String identifier, @NotNull String name) {
+        String fullName = identifier + SEPARATOR + name;
+
+        Command command = commandsByFullName.remove(fullName);
+        if (command == null)
+            return;
+
+        commandsByName.remove(name);
+
+        Object holder = holdersByFullName.remove(fullName);
+        if (holder != null) {
+            Set<Command> commands = commandsByHolder.get(holder);
+            if (commands != null)
+                commands.remove(command);
+        }
+
+        for (CommandManagerListener listener : listeners)
+            listener.onUnregister(identifier, command, holder, this);
+    }
+
+    public void unregisterByHolder(@NotNull String identifier, @NotNull Object holder) {
+        Set<Command> commands = commandsByHolder.get(holder);
+        if (commands == null)
+            return;
+
+        for (Command command : commands)
+            unregister(identifier, command);
     }
 }

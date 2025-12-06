@@ -1,9 +1,11 @@
 package com.wizardlybump17.wlib.test.util;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AssertionFailureBuilder;
 
+import java.util.Collection;
 import java.util.List;
 
 public final class AssertionUtil {
@@ -53,6 +55,46 @@ public final class AssertionUtil {
                         .buildAndThrow();
                 return;
             }
+        }
+    }
+
+    public static <T> void assertContentEquals(@Nullable Collection<T> expected, @Nullable Collection<T> actual) {
+        if (expected == null) {
+            if (actual != null) {
+                AssertionFailureBuilder.assertionFailure()
+                        .expected(null)
+                        .actual(actual)
+                        .buildAndThrow();
+            }
+            return;
+        }
+
+        if (expected != null) {
+            if (actual == null) {
+                AssertionFailureBuilder.assertionFailure()
+                        .expected(expected)
+                        .actual(null)
+                        .buildAndThrow();
+                return;
+            }
+        }
+
+        if (expected.size() != actual.size()) {
+            AssertionFailureBuilder.assertionFailure()
+                    .expected(expected)
+                    .actual(actual)
+                    .message("Expected and actual collections have different sizes")
+                    .buildAndThrow();
+            return;
+        }
+
+        if (!CollectionUtil.contentEquals(expected, actual)) {
+            AssertionFailureBuilder.assertionFailure()
+                    .expected(expected)
+                    .actual(actual)
+                    .message("Expected and actual collections do not contain the same elements")
+                    .buildAndThrow();
+            return;
         }
     }
 }

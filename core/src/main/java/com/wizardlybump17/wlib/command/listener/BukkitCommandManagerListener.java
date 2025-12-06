@@ -37,6 +37,18 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
     public void onClear(@NotNull CommandManager manager) {
     }
 
+    @Override
+    public void onUnregister(@NotNull String identifier, @NotNull Command command, @Nullable Object holder, @NotNull CommandManager manager) {
+        if (!(holder instanceof JavaPlugin plugin))
+            return;
+
+        PluginCommand pluginCommand = plugin.getCommand(command.getName());
+        if (pluginCommand == null)
+            return;
+
+        pluginCommand.setExecutor(null);
+    }
+
     public @NotNull WLibCommandExecutor getCommandExecutor() {
         return commandExecutor;
     }
