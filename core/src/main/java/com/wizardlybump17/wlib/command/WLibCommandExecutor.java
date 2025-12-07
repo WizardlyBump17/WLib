@@ -15,17 +15,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
 
     private final @NotNull CommandManager commandManager;
+    private final @NotNull Logger logger;
 
-    public WLibCommandExecutor(@NotNull CommandManager commandManager) {
+    public WLibCommandExecutor(@NotNull CommandManager commandManager, @NotNull Logger logger) {
         this.commandManager = commandManager;
+        this.logger = logger;
     }
 
     public @NotNull CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public @NotNull Logger getLogger() {
+        return logger;
     }
 
     @Override
@@ -39,7 +47,10 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
         CommandResult<?> result = commandManager.execute(wlibSender, wlibArgs);
         switch (result) {
             case SuccessResult<?> successResult -> {}
-            case ExceptionResult<?> exceptionResult -> sender.sendMessage("§cAn internal error occurred while executing this command.");
+            case ExceptionResult<?> exceptionResult -> {
+                sender.sendMessage("§cAn internal error occurred while executing this command.");
+                logger.log(Level.SEVERE, "Error while " + sender + " tried to execute " + wlibArgs, exceptionResult.exception());
+            }
             case OutOfRangeInputResult<?> outOfRangeInputResult -> sender.sendMessage("§cInvalid input at index " + outOfRangeInputResult.lastInputIndex() + ".");
             case ExtraArgumentsResult<?> extraArgumentsResult -> sender.sendMessage("§cExtra arguments provided at index " + extraArgumentsResult.lastInputIndex() + ".");
             case InsufficientArgumentsResult<?> insufficientArgumentsResult -> sender.sendMessage("§cInsufficient arguments provided.");

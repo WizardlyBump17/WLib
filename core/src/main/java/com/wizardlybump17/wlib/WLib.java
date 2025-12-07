@@ -71,7 +71,7 @@ public class WLib extends JavaPlugin {
 
         commandManager = new CommandManager();
 
-        commandExecutor = new WLibCommandExecutor(commandManager);
+        commandExecutor = new WLibCommandExecutor(commandManager, getLogger());
 
         commandManagerListener = new BukkitCommandManagerListener(commandExecutor);
         commandManager.addListener(commandManagerListener);
