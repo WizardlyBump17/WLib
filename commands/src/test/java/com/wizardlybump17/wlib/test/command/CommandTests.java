@@ -78,7 +78,7 @@ public class CommandTests {
     @Test
     @DisplayName("Multiple children 1 (hello, hi, world): success")
     void test1() {
-        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello hi world"));
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world0", context -> CommandResult.successful(context, "hello hi world"));
         Command command = new Command(new LiteralCommandNode(
                 "hello",
                 List.of(
@@ -88,7 +88,7 @@ public class CommandTests {
         ));
 
         CommandResult<String> expected = CommandResult.successful(2, hiWorldNode, "hello hi world");
-        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world"));
+        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world0"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -122,7 +122,7 @@ public class CommandTests {
 
     @Test
     void testExtraArguments2() {
-        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello hi world"));
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world0", context -> CommandResult.successful(context, "hello hi world"));
         Command command = new Command(new LiteralCommandNode(
                 "hello",
                 List.of(
@@ -132,7 +132,7 @@ public class CommandTests {
         ));
 
         ExtraArgumentsResult<?> expected = CommandResult.extraArguments(3, hiWorldNode);
-        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world", "extra"));
+        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world0", "extra"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -209,5 +209,39 @@ public class CommandTests {
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello"));
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    /**
+     * <p>
+     * Because we used a Map to represent the arguments and the keys were the node names,
+     * this caused the arguments to be overwritten if the node names were the same.
+     * </p>
+     * <p>
+     * This test will make sure that we wont allow nodes to have the same name.
+     * </p>
+     */
+    @Test
+    void testCommandWithSameNodeName() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Command(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "child0",
+                                                List.of(
+                                                        new IntegerCommandNode(
+                                                                "test",
+                                                                List.of(),
+                                                                AllowedIntegerInputs.unlimited(),
+                                                                context -> CommandResult.successful(context, context.arguments().getArgumentData("test").orElse(null))
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
     }
 }

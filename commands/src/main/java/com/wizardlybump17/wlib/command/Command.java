@@ -12,17 +12,32 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Command implements Comparable<Command> {
 
     private final @NotNull LiteralCommandNode root;
 
     public Command(@NotNull LiteralCommandNode root) {
+        if (hasDuplicateNodeNames(root))
+            throw new IllegalArgumentException("The command tree has duplicate node names");
         this.root = root;
+    }
+
+    public static boolean hasDuplicateNodeNames(@NotNull CommandNode<?> root) {
+        return hasDuplicateNodeNames0(root, new HashSet<>());
+    }
+
+    private static boolean hasDuplicateNodeNames0(@NotNull CommandNode<?> current, @NotNull Set<String> seen) {
+        if (seen.contains(current.getName()))
+            return true;
+
+        seen.add(current.getName());
+        for (CommandNode<?> child : current.getChildren())
+            if (hasDuplicateNodeNames0(child, seen))
+                return true;
+
+        return false;
     }
 
     public @NotNull LiteralCommandNode getRoot() {
