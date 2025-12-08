@@ -16,6 +16,9 @@ import java.util.*;
 
 public class Command implements Comparable<Command> {
 
+    public static final @NotNull Comparator<Command> COMPARATOR = Comparator
+            .comparing(Command::getFullCommand);
+
     private final @NotNull LiteralCommandNode root;
 
     public Command(@NotNull LiteralCommandNode root) {
@@ -224,9 +227,7 @@ public class Command implements Comparable<Command> {
 
     @Override
     public int compareTo(@NotNull Command other) {
-        String fullCommand = getFullCommand();
-        String otherFullCommand = other.getFullCommand();
-        return fullCommand.compareTo(otherFullCommand);
+        return COMPARATOR.compare(this, other);
     }
 
     public @NotNull String getFullCommand() {
