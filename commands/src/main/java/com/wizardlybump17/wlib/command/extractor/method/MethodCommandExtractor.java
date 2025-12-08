@@ -51,12 +51,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
         Class<?> clazz = object.getClass();
 
-        boolean b = false;
-
         for (Method method : clazz.getMethods()) {
-            if (method.getName().toLowerCase().contains("gree"))
-                b = true;
-
             com.wizardlybump17.wlib.command.annotation.Command annotation = method.getAnnotation(com.wizardlybump17.wlib.command.annotation.Command.class);
             if (annotation == null)
                 continue;
