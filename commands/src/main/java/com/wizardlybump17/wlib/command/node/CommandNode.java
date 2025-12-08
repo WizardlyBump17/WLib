@@ -260,4 +260,11 @@ public abstract class CommandNode<T> {
 
         return null;
     }
+
+    public int getTotalNodes() {
+        int total = 1;
+        for (CommandNode<?> child : children)
+            total += child.getTotalNodes();
+        return total;
+    }
 }

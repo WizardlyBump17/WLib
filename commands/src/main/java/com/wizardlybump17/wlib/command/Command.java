@@ -240,4 +240,8 @@ public class Command implements Comparable<Command> {
     public @NotNull String getName() {
         return root.getName();
     }
+
+    public int getTotalNodes() {
+        return root.getTotalNodes();
+    }
 }
