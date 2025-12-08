@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.command.context;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
-import com.wizardlybump17.wlib.util.MapUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -17,14 +16,13 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
 
     public static final class CommandNodeArguments {
 
-        private final @NotNull LinkedHashMap<String, CommandNodeArgument<?>> arguments;
-
-        private CommandNodeArguments(@NotNull LinkedHashMap<String, CommandNodeArgument<?>> arguments) {
-            this.arguments = arguments;
-        }
+        private final @NotNull @Unmodifiable Map<String, CommandNodeArgument<?>> arguments;
 
         public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments) {
-            this((LinkedHashMap<String, CommandNodeArgument<?>>) MapUtils.collectionToMap(LinkedHashMap::new, arguments, argument -> argument.node().getName()));
+            Map<String, CommandNodeArgument<?>> argumentsMap = new HashMap<>();
+            for (CommandNodeArgument<?> argument : arguments)
+                argumentsMap.put(argument.node().getName(), argument);
+            this.arguments = Map.copyOf(argumentsMap);
         }
 
         public boolean hasArgument(@NotNull String key) {
@@ -42,7 +40,7 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
         }
 
         public @NotNull @Unmodifiable Map<String, CommandNodeArgument<?>> getArguments() {
-            return Collections.unmodifiableMap(arguments);
+            return arguments;
         }
 
         @Override
