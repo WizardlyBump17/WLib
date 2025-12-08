@@ -215,40 +215,6 @@ public class CommandTests {
 
     /**
      * <p>
-     * Because we used a Map to represent the arguments and the keys were the node names,
-     * this caused the arguments to be overwritten if the node names were the same.
-     * </p>
-     * <p>
-     * This test will make sure that we wont allow nodes to have the same name.
-     * </p>
-     */
-    @Test
-    void testCommandWithSameNodeName() {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> new Command(
-                        new LiteralCommandNode(
-                                "test",
-                                List.of(
-                                        new LiteralCommandNode(
-                                                "child0",
-                                                List.of(
-                                                        new IntegerCommandNode(
-                                                                "test",
-                                                                List.of(),
-                                                                AllowedIntegerInputs.unlimited(),
-                                                                context -> CommandResult.successful(context, context.arguments().getArgumentData("test").orElse(null))
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
-        );
-    }
-
-    /**
-     * <p>
      * The CommandNode#merge(CommandNode) method wasnt merging the executor and permission.
      * This test will ensure that we have the correct executor and permission after merging.
      * </p>

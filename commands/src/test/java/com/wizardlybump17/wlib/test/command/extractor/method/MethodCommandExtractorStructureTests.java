@@ -94,7 +94,7 @@ class MethodCommandExtractorStructureTests {
                         "test0",
                         List.of(
                                 new IntegerCommandNode(
-                                        "int-arg",
+                                        "int",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "123"
@@ -110,10 +110,10 @@ class MethodCommandExtractorStructureTests {
                         "test1",
                         List.of(
                                 new IntegerCommandNode(
-                                        "int0-arg",
+                                        "int0",
                                         List.of(
                                                 new IntegerCommandNode(
-                                                        "int1-arg",
+                                                        "int1",
                                                         List.of(
                                                                 new LiteralCommandNode(
                                                                         "123",

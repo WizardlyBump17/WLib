@@ -22,18 +22,10 @@ import java.util.List;
 
 public class MethodCommandExtractor implements CommandExtractor {
 
-    public static final @NotNull String DEFAULT_ARGUMENT_SUFFIX = "-arg";
-
     private final @NotNull MethodCommandNodeFactoryRegistry factoryRegistry;
-    private final @NotNull String argumentSuffix;
-
-    public MethodCommandExtractor(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry, @NotNull String argumentSuffix) {
-        this.factoryRegistry = factoryRegistry;
-        this.argumentSuffix = argumentSuffix;
-    }
 
     public MethodCommandExtractor(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry) {
-        this(factoryRegistry, DEFAULT_ARGUMENT_SUFFIX);
+        this.factoryRegistry = factoryRegistry;
     }
 
     @Override
@@ -68,7 +60,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 String part = commandParts[i];
 
                 CommandNode<?> oldRoot = root;
-                root = createNode(factoryRegistry, part, parameters, parameterIndex, root, annotation, object, method, argumentSuffix);
+                root = createNode(factoryRegistry, part, parameters, parameterIndex, root, annotation, object, method);
                 if (!(root instanceof LiteralCommandNode))
                     parameterIndex--;
 
@@ -85,7 +77,7 @@ public class MethodCommandExtractor implements CommandExtractor {
         return commands;
     }
 
-    private static @NotNull CommandNode<?> createNode(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry, @NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method, @NotNull String argumentSuffix) throws MethodCommandNodeFactoryNotFoundException {
+    private static @NotNull CommandNode<?> createNode(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry, @NotNull String part, @NotNull Parameter @NotNull [] parameters, int parameterIndex, @Nullable CommandNode<?> root, @NotNull com.wizardlybump17.wlib.command.annotation.Command annotation, @NotNull Object object, @NotNull Method method) throws MethodCommandNodeFactoryNotFoundException {
         CommandNode<?> newNode;
 
         boolean argument = part.charAt(0) == '<' && part.charAt(part.length() - 1) == '>';
@@ -103,7 +95,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 if (factory == null)
                     throw new MethodCommandNodeFactoryNotFoundException("MethodCommandNodeFactory not found for the parameter " + parameter);
 
-                newNode = factory.create(object, method, annotation, parameter, part + argumentSuffix, root);
+                newNode = factory.create(object, method, annotation, parameter, part, root);
             } else {
                 newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
             }

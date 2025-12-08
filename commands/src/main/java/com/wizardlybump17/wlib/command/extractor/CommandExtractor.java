@@ -15,10 +15,6 @@ public interface CommandExtractor {
     @NotNull List<Command> extract(@NotNull Object object) throws CommandExtractorException;
 
     static @NotNull MethodCommandExtractor method(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry) {
-        return new MethodCommandExtractor(factoryRegistry, MethodCommandExtractor.DEFAULT_ARGUMENT_SUFFIX);
-    }
-
-    static @NotNull MethodCommandExtractor method(@NotNull MethodCommandNodeFactoryRegistry factoryRegistry, @NotNull String argumentSuffix) {
-        return new MethodCommandExtractor(factoryRegistry, argumentSuffix);
+        return new MethodCommandExtractor(factoryRegistry);
     }
 }
