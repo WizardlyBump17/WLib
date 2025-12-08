@@ -191,7 +191,14 @@ public abstract class CommandNode<T> {
 
         newChildrenLeft.addAll(newChildrenRight);
 
-        return withChildren(newChildrenLeft);
+        CommandNode<T> newNode = withChildren(newChildrenLeft);
+
+        if (executor == null && right.getExecutor() != null)
+            newNode = newNode.withExecutor(right.getExecutor());
+        if (permission == null && right.getPermission() != null)
+            newNode = newNode.withPermission(right.getPermission());
+
+        return newNode;
     }
 
     private static @Nullable CommandNodeExecutor<?> getNewExecutor(@NotNull CommandNode<?> left, @NotNull CommandNode<?> right) {
