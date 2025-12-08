@@ -50,7 +50,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new ByteCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedByteInputs.unlimited()
                                 )
                         )
@@ -61,13 +61,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new ByteCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new ByteCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedByteInputs.unlimited()
                                                                 )
                                                         )
@@ -110,7 +110,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new ShortCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedShortInputs.unlimited()
                                 )
                         )
@@ -121,13 +121,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new ShortCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new ShortCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedShortInputs.unlimited()
                                                                 )
                                                         )
@@ -170,7 +170,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new IntegerCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedIntegerInputs.unlimited()
                                 )
                         )
@@ -181,13 +181,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new IntegerCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new IntegerCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedIntegerInputs.unlimited()
                                                                 )
                                                         )
@@ -230,7 +230,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new LongCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedLongInputs.unlimited()
                                 )
                         )
@@ -241,13 +241,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new LongCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new LongCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedLongInputs.unlimited()
                                                                 )
                                                         )
@@ -290,7 +290,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new FloatCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedFloatInputs.unlimited()
                                 )
                         )
@@ -301,13 +301,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new FloatCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new FloatCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedFloatInputs.unlimited()
                                                                 )
                                                         )
@@ -350,7 +350,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new DoubleCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedDoubleInputs.unlimited()
                                 )
                         )
@@ -361,13 +361,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new DoubleCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new DoubleCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedDoubleInputs.unlimited()
                                                                 )
                                                         )
@@ -410,7 +410,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new CharacterCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedCharacterInputs.anyNotNull()
                                 )
                         )
@@ -421,13 +421,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new CharacterCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new CharacterCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedCharacterInputs.anyNotNull()
                                                                 )
                                                         )
@@ -470,7 +470,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new StringCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedStringInputs.anyNullable()
                                 )
                         )
@@ -481,13 +481,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new StringCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new StringCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedStringInputs.anyNullable()
                                                                 )
                                                         )
@@ -530,7 +530,7 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new UUIDCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         AllowedUUIDInputs.anyNullable()
                                 )
                         )
@@ -541,13 +541,13 @@ class MethodCommandNodeFactoryTests {
                         "test",
                         List.of(
                                 new UUIDCommandNode(
-                                        "arg0",
+                                        "arg0-arg",
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "test1",
                                                         List.of(
                                                                 new UUIDCommandNode(
-                                                                        "arg1",
+                                                                        "arg1-arg",
                                                                         AllowedUUIDInputs.anyNullable()
                                                                 )
                                                         )
@@ -589,85 +589,85 @@ class MethodCommandNodeFactoryTests {
                 "test",
                 List.of(
                         new IntegerCommandNode(
-                                "int0",
+                                "int0-arg",
                                 List.of(
                                         new IntegerCommandNode(
-                                                "int1",
+                                                "int1-arg",
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "test1",
                                                                 List.of(
                                                                         new ByteCommandNode(
-                                                                                "byte0",
+                                                                                "byte0-arg",
                                                                                 List.of(
                                                                                         new ByteCommandNode(
-                                                                                                "byte1",
+                                                                                                "byte1-arg",
                                                                                                 List.of(
                                                                                                         new LiteralCommandNode(
                                                                                                                 "test2",
                                                                                                                 List.of(
                                                                                                                         new FloatCommandNode(
-                                                                                                                                "float0",
+                                                                                                                                "float0-arg",
                                                                                                                                 List.of(
                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                 "test3",
                                                                                                                                                 List.of(
                                                                                                                                                         new FloatCommandNode(
-                                                                                                                                                                "float1",
+                                                                                                                                                                "float1-arg",
                                                                                                                                                                 List.of(
                                                                                                                                                                         new LongCommandNode(
-                                                                                                                                                                                "long0",
+                                                                                                                                                                                "long0-arg",
                                                                                                                                                                                 List.of(
                                                                                                                                                                                         new LongCommandNode(
-                                                                                                                                                                                                "long1",
+                                                                                                                                                                                                "long1-arg",
                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                 "test4",
                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                         new ShortCommandNode(
-                                                                                                                                                                                                                                "short0",
+                                                                                                                                                                                                                                "short0-arg",
                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                         new ShortCommandNode(
-                                                                                                                                                                                                                                                "short1",
+                                                                                                                                                                                                                                                "short1-arg",
                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                                                                 "test5",
                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                         new DoubleCommandNode(
-                                                                                                                                                                                                                                                                                "double0",
+                                                                                                                                                                                                                                                                                "double0-arg",
                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                         new DoubleCommandNode(
-                                                                                                                                                                                                                                                                                                "double1",
+                                                                                                                                                                                                                                                                                                "double1-arg",
                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                                                                                                                 "test6",
                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                         new CharacterCommandNode(
-                                                                                                                                                                                                                                                                                                                                "char0",
+                                                                                                                                                                                                                                                                                                                                "char0-arg",
                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                         new CharacterCommandNode(
-                                                                                                                                                                                                                                                                                                                                                "char1",
+                                                                                                                                                                                                                                                                                                                                                "char1-arg",
                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                                                                                                                                                                 "test7",
                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                         new StringCommandNode(
-                                                                                                                                                                                                                                                                                                                                                                                "string0",
+                                                                                                                                                                                                                                                                                                                                                                                "string0-arg",
                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                                                                                                                                                                                                 "test8",
                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                         new StringCommandNode(
-                                                                                                                                                                                                                                                                                                                                                                                                                "string1",
+                                                                                                                                                                                                                                                                                                                                                                                                                "string1-arg",
                                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                                         new UUIDCommandNode(
-                                                                                                                                                                                                                                                                                                                                                                                                                                "uuid0",
+                                                                                                                                                                                                                                                                                                                                                                                                                                "uuid0-arg",
                                                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                                                         new LiteralCommandNode(
                                                                                                                                                                                                                                                                                                                                                                                                                                                 "test9",
                                                                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                                                                         new UUIDCommandNode(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                "uuid1",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                "uuid1-arg",
                                                                                                                                                                                                                                                                                                                                                                                                                                                                 AllowedUUIDInputs.anyNullable()
                                                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                                                 )
