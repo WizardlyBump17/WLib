@@ -2,7 +2,9 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
+import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
@@ -243,5 +245,51 @@ public class CommandTests {
                         )
                 )
         );
+    }
+
+    /**
+     * <p>
+     * The CommandNode#merge(CommandNode) method wasnt merging the executor and permission.
+     * This test will ensure that we have the correct executor and permission after merging.
+     * </p>
+     */
+    @Test
+    void testMerge() {
+        CommandNodeExecutor<Object> test0Executor = context -> CommandResult.successful(context, "It works 0!");
+        CommandNodeExecutor<Object> test1Executor = context -> CommandResult.successful(context, "It works 1!");
+
+        CommandNode<String> expected = new LiteralCommandNode(
+                "test0",
+                List.of(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                test1Executor,
+                                "permission1"
+                        )
+                ),
+                test0Executor,
+                "permission0"
+        );
+        CommandNode<String> actual = new LiteralCommandNode(
+                "test0",
+                List.of(),
+                null,
+                null
+        ).merge(new LiteralCommandNode(
+                "test0",
+                List.of(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                test1Executor,
+                                "permission1"
+                        )
+                ),
+                test0Executor,
+                "permission0"
+        ));
+
+        Assertions.assertEquals(expected, actual);
     }
 }
