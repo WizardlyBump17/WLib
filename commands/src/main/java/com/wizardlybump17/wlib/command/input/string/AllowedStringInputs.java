@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.command.input.string;
 
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.AllowedListInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -57,11 +56,6 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         }
 
         @Override
-        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return values;
-        }
-
-        @Override
         public boolean isAllowed(@Nullable String input) {
             if (input == null)
                 return false;
@@ -108,11 +102,6 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         public boolean ignoreCase() {
             return ignoreCase;
-        }
-
-        @Override
-        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(value);
         }
 
         @Override
@@ -164,11 +153,6 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
         public boolean nullable() {
             return nullable;
-        }
-
-        @Override
-        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(current);
         }
 
         @Override

@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +18,12 @@ public abstract class CommandNode<T> {
     private final @NotNull String name;
     private final @NotNull @Unmodifiable List<CommandNode<?>> children;
     private final @NotNull AllowedInputs<T> allowedInputs;
+    private final @Nullable Suggester<T> suggester;
     private final @Nullable CommandNodeExecutor<?> executor;
     private final @Nullable String permission;
 
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this.name = name.toLowerCase();
-        this.children = List.copyOf(children);
-        this.allowedInputs = allowedInputs;
-        this.executor = executor;
-        this.permission = permission;
+        this(name, children, allowedInputs, null, executor, permission);
     }
 
     public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
@@ -50,6 +48,15 @@ public abstract class CommandNode<T> {
 
     public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs) {
         this(name, List.of(), allowedInputs, null, null);
+    }
+
+    public CommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable Suggester<T> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        this.name = name;
+        this.children = List.copyOf(children);
+        this.allowedInputs = allowedInputs;
+        this.suggester = suggester;
+        this.executor = executor;
+        this.permission = permission;
     }
 
     public @NotNull String getName() {
@@ -78,7 +85,7 @@ public abstract class CommandNode<T> {
     }
 
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
-        return allowedInputs.getSuggestions(sender, args, currentInput);
+        return suggester == null ? List.of() : suggester.getSuggestions(sender, args, currentInput, this);
     }
 
     public @Nullable CommandNodeExecutor<?> getExecutor() {
@@ -95,6 +102,7 @@ public abstract class CommandNode<T> {
                 "name='" + name + '\'' +
                 ", children=" + children +
                 ", allowedInputs=" + allowedInputs +
+                ", suggester=" + suggester +
                 ", executor=" + executor +
                 ", permission='" + permission + '\'' +
                 '}';

@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.AllowedListInputs;
 import com.wizardlybump17.wlib.command.input.RangedAllowedInputs;
 import com.wizardlybump17.wlib.command.input.SingleValueInput;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,11 +126,6 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
 
         @Override
         public @NotNull List<N> allowedValues() {
-            return values;
-        }
-
-        @Override
-        public @NotNull List<N> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
             return values;
         }
 
