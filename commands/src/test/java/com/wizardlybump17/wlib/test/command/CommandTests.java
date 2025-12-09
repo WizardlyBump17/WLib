@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
@@ -17,7 +18,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class CommandTests {
@@ -257,5 +260,77 @@ public class CommandTests {
         ));
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testCommandArguments() {
+        {
+            LiteralCommandNode world = new LiteralCommandNode(
+                    "world",
+                    context -> {
+                        Assertions.assertEquals(Map.of(), context.arguments().getArguments());
+                        return CommandResult.successful(context, "Hello World");
+                    }
+            );
+            CommandResult<?> result = new Command(
+                    new LiteralCommandNode(
+                            "hello",
+                            List.of(world)
+                    )
+            ).execute(CHAD_SENDER, List.of("hello", "world"));
+
+            Assertions.assertEquals(CommandResult.successful(1, world, "Hello World"), result);
+        }
+
+        {
+            AtomicReference<IntegerCommandNode> worldReference = new AtomicReference<>();
+            IntegerCommandNode world = new IntegerCommandNode(
+                    "world",
+                    AllowedIntegerInputs.unlimited(),
+                    context -> {
+                        Assertions.assertEquals(Map.of("world", new CommandContext.CommandNodeArgument<>(worldReference.get(), "10", 10)), context.arguments().getArguments());
+                        return CommandResult.successful(context, context.arguments().getArgumentData("world").orElseThrow());
+                    },
+                    null
+            );
+            worldReference.set(world);
+
+            CommandResult<?> result = new Command(
+                    new LiteralCommandNode(
+                            "hello",
+                            List.of(world)
+                    )
+            ).execute(CHAD_SENDER, List.of("hello", "10"));
+
+            Assertions.assertEquals(CommandResult.successful(1, world, 10), result);
+        }
+
+        {
+            AtomicReference<IntegerCommandNode> worldReference = new AtomicReference<>();
+            LiteralCommandNode test = new LiteralCommandNode(
+                    "test",
+                    context -> {
+                        Assertions.assertEquals(Map.of("world", new CommandContext.CommandNodeArgument<>(worldReference.get(), "10", 10)), context.arguments().getArguments());
+                        return CommandResult.successful(context, "Hello " + context.arguments().getArgumentData("world").orElseThrow() + " world");
+                    }
+            );
+            IntegerCommandNode world = new IntegerCommandNode(
+                    "world",
+                    List.of(test),
+                    AllowedIntegerInputs.unlimited(),
+                    null,
+                    null
+            );
+            worldReference.set(world);
+
+            CommandResult<?> result = new Command(
+                    new LiteralCommandNode(
+                            "hello",
+                            List.of(world)
+                    )
+            ).execute(CHAD_SENDER, List.of("hello", "10", "test"));
+
+            Assertions.assertEquals(CommandResult.successful(2, test, "Hello 10 world"), result);
+        }
     }
 }
