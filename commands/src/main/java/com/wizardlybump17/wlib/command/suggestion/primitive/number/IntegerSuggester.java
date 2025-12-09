@@ -32,7 +32,8 @@ public interface IntegerSuggester extends PrimitiveSuggester<Integer>, NumberSug
         int part = (to - from) / amount;
         List<Integer> values = new ArrayList<>(amount);
         for (int i = 0; i < amount; i++)
-            values.add(from + part * amount);
+            values.add(from + part * i);
+        values.add(to);
         return new Values(List.copyOf(values));
     }
 

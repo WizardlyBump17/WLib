@@ -2,9 +2,11 @@ package com.wizardlybump17.wlib.command.node.primitive.number;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +44,10 @@ public class IntegerCommandNode extends NumberCommandNode<Integer> implements Pr
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs) {
         this(name, List.of(), allowedInputs, null, null);
+    }
+
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<Integer> allowedInputs, @Nullable Suggester<Integer> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
     }
 
     @Override

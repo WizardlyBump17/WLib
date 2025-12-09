@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -110,8 +111,11 @@ class SuggestionTests {
                                 ),
                                 new IntegerCommandNode(
                                         "there",
+                                        List.of(),
                                         AllowedIntegerInputs.range(1, 10),
-                                        context -> CommandResult.successful(context, "hello there")
+                                        IntegerSuggester.range(1, 10),
+                                        context -> CommandResult.successful(context, "hello there"),
+                                        null
                                 )
                         )
                 )

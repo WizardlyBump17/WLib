@@ -8,6 +8,7 @@ import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -205,7 +206,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -223,7 +226,7 @@ class CommandManagerSuggestionTests {
         List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
         List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", ""));
 
-        Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -252,7 +255,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -432,7 +437,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -662,7 +669,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
