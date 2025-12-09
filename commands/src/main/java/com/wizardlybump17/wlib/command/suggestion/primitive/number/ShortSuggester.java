@@ -24,7 +24,64 @@ public interface ShortSuggester extends PrimitiveSuggester<Short>, NumberSuggest
         return new Values(List.copyOf(list));
     }
 
+    static @NotNull Values range(short from, short to, int amount) {
+        if (to - from < amount) {
+            Short[] values = new Short[to - from];
+            for (int i = 0; i < values.length; i++)
+                values[i] = (short) (to - from - i);
+            return new Values(List.of(values));
+        }
+
+        short part = (short) ((to - from) / amount);
+        List<Short> values = new ArrayList<>(amount);
+        for (short i = 0; i < amount; i++)
+            values.add((short) (from + part * amount));
+        return new Values(List.copyOf(values));
+    }
+
+    static @NotNull Values range(short from, short to) {
+        return range(from, to, 4);
+    }
+
+    static @NotNull Values positive() {
+        return Values.POSITIVE;
+    }
+
+    static @NotNull Values negative() {
+        return Values.NEGATIVE;
+    }
+
+    static @NotNull Values unlimited() {
+        return Values.UNLIMITED;
+    }
+
     final class Values extends AbstractValuesSuggester<Short> implements ShortSuggester {
+
+        private static final @NotNull Values POSITIVE = new Values(List.of(
+                (short) 0,
+                (short) 50,
+                (short) 100,
+                (short) 3000,
+                (short) 32767
+        ));
+        private static final @NotNull Values NEGATIVE = new Values(List.of(
+                (short) -32768,
+                (short) -3000,
+                (short) -100,
+                (short) -50,
+                (short) -1
+        ));
+        private static final @NotNull Values UNLIMITED = new Values(List.of(
+                (short) -32768,
+                (short) -3000,
+                (short) -100,
+                (short) -50,
+                (short) 0,
+                (short) 50,
+                (short) 100,
+                (short) 3000,
+                (short) 32767
+        ));
 
         Values(@NotNull List<Short> values) {
             super(values);

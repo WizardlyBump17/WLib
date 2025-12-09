@@ -24,6 +24,56 @@ public interface DoubleSuggester extends PrimitiveSuggester<Double>, NumberSugge
         return new Values(List.copyOf(list));
     }
 
+    static @NotNull Values range(double from, double to, int amount) {
+        double part = (to - from) / amount;
+        List<Double> values = new ArrayList<>(amount);
+        for (double i = 0; i < amount; i++)
+            values.add(from + part * amount);
+        return new Values(List.copyOf(values));
+    }
+
+    static @NotNull Values range(double from, double to) {
+        return range(from, to, 4);
+    }
+
+    static @NotNull Values positive() {
+        return new Values(List.of(
+                0.0,
+                50.5,
+                200.5,
+                3000.5,
+                50000.5,
+                100000.5
+        ));
+    }
+
+    static @NotNull Values negative() {
+        return new Values(List.of(
+                -100000.5,
+                -50000.5,
+                -3000.5,
+                -200.5,
+                -50.5,
+                -1.0
+        ));
+    }
+
+    static @NotNull Values unlimited() {
+        return new Values(List.of(
+                -100000.5,
+                -50000.5,
+                -3000.5,
+                -200.5,
+                -50.5,
+                0.0,
+                50.5,
+                200.5,
+                3000.5,
+                50000.5,
+                100000.5
+        ));
+    }
+
     final class Values extends AbstractValuesSuggester<Double> implements DoubleSuggester {
 
         Values(@NotNull List<Double> values) {

@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,28 +40,6 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
         }
 
         @Override
-        public @NotNull List<Double> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            double to = to();
-            double from = from();
-
-            if (to - from < 5) {
-                Double[] doubles = new Double[(int) (to - from)];
-                for (int i = 0; i < doubles.length; i++)
-                    doubles[i] = to - from - i;
-                return List.of(doubles);
-            }
-
-            double fourth = (to - from) / 4;
-            return List.of(
-                    from,
-                    from + fourth,
-                    from + fourth * 2,
-                    from + fourth * 3,
-                    to
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedByteInputs$Range{" +
                     "from=" + from() +
@@ -76,23 +53,6 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
         static final @NotNull AllowedDoubleInputs.Unlimited INSTANCE = new AllowedDoubleInputs.Unlimited();
 
         private Unlimited() {
-        }
-
-        @Override
-        public @NotNull List<Double> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000.5,
-                    -50000.5,
-                    -3000.5,
-                    -200.5,
-                    -50.5,
-                    0.0,
-                    50.5,
-                    200.5,
-                    3000.5,
-                    50000.5,
-                    100000.5
-            );
         }
 
         @Override
@@ -124,18 +84,6 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
         }
 
         @Override
-        public @NotNull List<Double> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    0.0,
-                    50.5,
-                    200.5,
-                    3000.5,
-                    50000.5,
-                    100000.5
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedDoubleInputs$Positive{}";
         }
@@ -161,18 +109,6 @@ public interface AllowedDoubleInputs extends PrimitiveAllowedInputs<Double> {
         @Override
         public boolean isInRange(@NotNull Double input) {
             return input < 0;
-        }
-
-        @Override
-        public @NotNull List<Double> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000.5,
-                    -50000.5,
-                    -3000.5,
-                    -200.5,
-                    -50.5,
-                    -1.0
-            );
         }
 
         @Override

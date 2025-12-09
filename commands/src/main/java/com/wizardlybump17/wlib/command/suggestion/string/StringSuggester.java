@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.command.suggestion.string;
 
+import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.command.suggestion.AbstractValuesSuggester;
 import com.wizardlybump17.wlib.command.suggestion.primitive.PrimitiveSuggester;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +22,10 @@ public interface StringSuggester extends PrimitiveSuggester<String> {
         return new Values(List.of(values));
     }
 
+    static @NotNull Any any() {
+        return Any.INSTANCE;
+    }
+
     final class Values extends AbstractValuesSuggester<String> implements StringSuggester {
 
         Values(@NotNull List<String> values) {
@@ -31,6 +37,16 @@ public interface StringSuggester extends PrimitiveSuggester<String> {
             return "StringSuggester$Values{" +
                     "values=" + values() +
                     '}';
+        }
+    }
+
+    final class Any implements StringSuggester {
+
+        private static final @NotNull Any INSTANCE = new Any();
+
+        @Override
+        public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {
+            return List.of(current);
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,28 +40,6 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
         }
 
         @Override
-        public @NotNull List<Byte> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            byte to = to();
-            byte from = from();
-
-            if (to - from < 5) {
-                Byte[] bytes = new Byte[to - from];
-                for (int i = 0; i < bytes.length; i++)
-                    bytes[i] = (byte) (to - from - i);
-                return List.of(bytes);
-            }
-
-            byte fourth = (byte) ((to - from) / 4);
-            return List.of(
-                    from,
-                    (byte) (from + fourth),
-                    (byte) (from + fourth * 2),
-                    (byte) (from + fourth * 3),
-                    to
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedByteInputs$Range{" +
                     "from=" + from() +
@@ -76,19 +53,6 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
         static final @NotNull AllowedByteInputs.Unlimited INSTANCE = new AllowedByteInputs.Unlimited();
 
         private Unlimited() {
-        }
-
-        @Override
-        public @NotNull List<Byte> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (byte) -128,
-                    (byte) -100,
-                    (byte) -50,
-                    (byte) 0,
-                    (byte) 50,
-                    (byte) 100,
-                    (byte) 127
-            );
         }
 
         @Override
@@ -120,16 +84,6 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
         }
 
         @Override
-        public @NotNull List<Byte> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (byte) 0,
-                    (byte) 50,
-                    (byte) 100,
-                    (byte) 127
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedByteInputs$Positive{}";
         }
@@ -155,16 +109,6 @@ public interface AllowedByteInputs extends PrimitiveAllowedInputs<Byte> {
         @Override
         public boolean isInRange(@NotNull Byte input) {
             return input < 0;
-        }
-
-        @Override
-        public @NotNull List<Byte> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (byte) -128,
-                    (byte) -100,
-                    (byte) -50,
-                    (byte) -1
-            );
         }
 
         @Override

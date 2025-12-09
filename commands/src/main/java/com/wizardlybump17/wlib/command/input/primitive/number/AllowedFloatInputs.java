@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,28 +40,6 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
         }
 
         @Override
-        public @NotNull List<Float> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            float to = to();
-            float from = from();
-
-            if (to - from < 5) {
-                Float[] floats = new Float[(int) (to - from)];
-                for (int i = 0; i < floats.length; i++)
-                    floats[i] = to - from - i;
-                return List.of(floats);
-            }
-
-            float fourth = (to - from) / 4;
-            return List.of(
-                    from,
-                    from + fourth,
-                    from + fourth * 2,
-                    from + fourth * 3,
-                    to
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedFloatInputs$Range{" +
                     "from=" + from() +
@@ -76,23 +53,6 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
         static final @NotNull AllowedFloatInputs.Unlimited INSTANCE = new AllowedFloatInputs.Unlimited();
 
         private Unlimited() {
-        }
-
-        @Override
-        public @NotNull List<Float> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000.5F,
-                    -50000.5F,
-                    -3000.5F,
-                    -200.5F,
-                    -50.5F,
-                    0.0F,
-                    50.5F,
-                    200.5F,
-                    3000.5F,
-                    50000.5F,
-                    100000.5F
-            );
         }
 
         @Override
@@ -124,18 +84,6 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
         }
 
         @Override
-        public @NotNull List<Float> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    0.0F,
-                    50.5F,
-                    200.5F,
-                    3000.5F,
-                    50000.5F,
-                    100000.5F
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedFloatInputs$Positive{}";
         }
@@ -161,18 +109,6 @@ public interface AllowedFloatInputs extends PrimitiveAllowedInputs<Float> {
         @Override
         public boolean isInRange(@NotNull Float input) {
             return input < 0;
-        }
-
-        @Override
-        public @NotNull List<Float> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000.5F,
-                    -50000.5F,
-                    -3000.5F,
-                    -200.5F,
-                    -50.5F,
-                    -1.0F
-            );
         }
 
         @Override

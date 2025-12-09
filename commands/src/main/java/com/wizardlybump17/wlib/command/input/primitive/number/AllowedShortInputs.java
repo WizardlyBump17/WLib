@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,28 +40,6 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
         }
 
         @Override
-        public @NotNull List<Short> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            short to = to();
-            short from = from();
-
-            if (to - from < 5) {
-                Short[] shorts = new Short[to - from];
-                for (int i = 0; i < shorts.length; i++)
-                    shorts[i] = (short) (to - from - i);
-                return List.of(shorts);
-            }
-
-            short fourth = (short) ((to - from) / 4);
-            return List.of(
-                    from,
-                    (short) (from + fourth),
-                    (short) (from + fourth * 2),
-                    (short) (from + fourth * 3),
-                    to
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedShortInputs$Range{" +
                     "from=" + from() +
@@ -76,21 +53,6 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
         static final @NotNull AllowedShortInputs.Unlimited INSTANCE = new AllowedShortInputs.Unlimited();
 
         private Unlimited() {
-        }
-
-        @Override
-        public @NotNull List<Short> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (short) -32768,
-                    (short) -3000,
-                    (short) -100,
-                    (short) -50,
-                    (short) 0,
-                    (short) 50,
-                    (short) 100,
-                    (short) 3000,
-                    (short) 32767
-            );
         }
 
         @Override
@@ -122,17 +84,6 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
         }
 
         @Override
-        public @NotNull List<Short> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (short) 0,
-                    (short) 50,
-                    (short) 100,
-                    (short) 3000,
-                    (short) 32767
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedShortInputs$Positive{}";
         }
@@ -158,17 +109,6 @@ public interface AllowedShortInputs extends PrimitiveAllowedInputs<Short> {
         @Override
         public boolean isInRange(@NotNull Short input) {
             return input < 0;
-        }
-
-        @Override
-        public @NotNull List<Short> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    (short) -32768,
-                    (short) -3000,
-                    (short) -100,
-                    (short) -50,
-                    (short) -1
-            );
         }
 
         @Override

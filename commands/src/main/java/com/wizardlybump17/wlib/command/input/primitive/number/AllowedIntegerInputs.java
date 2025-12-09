@@ -1,11 +1,9 @@
 package com.wizardlybump17.wlib.command.input.primitive.number;
 
 import com.wizardlybump17.wlib.command.input.primitive.PrimitiveAllowedInputs;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
 
@@ -42,18 +40,6 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
         }
 
         @Override
-        public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            int to = to();
-            int from = from();
-
-            if (to - from < 5)
-                return IntStream.rangeClosed(from, to).boxed().toList();
-
-            int fourth = (to - from) / 4;
-            return List.of(from, from + fourth, from + fourth * 2, from + fourth * 3, to);
-        }
-
-        @Override
         public String toString() {
             return "AllowedIntegerInputs$Range{" +
                     "from=" + from() +
@@ -67,23 +53,6 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
         static final @NotNull AllowedIntegerInputs.Unlimited INSTANCE = new AllowedIntegerInputs.Unlimited();
 
         private Unlimited() {
-        }
-
-        @Override
-        public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000,
-                    -50000,
-                    -3000,
-                    -200,
-                    -50,
-                    0,
-                    50,
-                    200,
-                    3000,
-                    50000,
-                    100000
-            );
         }
 
         @Override
@@ -115,18 +84,6 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
         }
 
         @Override
-        public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    0,
-                    50,
-                    200,
-                    3000,
-                    50000,
-                    100000
-            );
-        }
-
-        @Override
         public String toString() {
             return "AllowedIntegerInputs$Positive{}";
         }
@@ -152,18 +109,6 @@ public interface AllowedIntegerInputs extends PrimitiveAllowedInputs<Integer> {
         @Override
         public boolean isInRange(@NotNull Integer input) {
             return input < 0;
-        }
-
-        @Override
-        public @NotNull List<Integer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current) {
-            return List.of(
-                    -100000,
-                    -50000,
-                    -3000,
-                    -200,
-                    -50,
-                    -1
-            );
         }
 
         @Override
