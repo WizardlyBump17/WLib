@@ -10,5 +10,7 @@ public interface Suggester<T> {
 
     @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode);
 
-    @NotNull String getStringRepresentation(@NotNull T value);
+    default @NotNull String getStringRepresentation(@NotNull T value) {
+        return value.toString();
+    }
 }
