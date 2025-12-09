@@ -152,7 +152,7 @@ public class MethodCommandExtractor implements CommandExtractor {
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderExecutor<>(object, method);
                 }
-            } else if (CommandContext.class.isAssignableFrom(returnType)) { //CommandContext only
+            } else if (CommandContext.class.isAssignableFrom(firstParameterType)) { //CommandContext only
                 if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                     return new AbstractMethodCommandNodeExecutor.CommandContextCommandResultExecutor<>(object, method);
                 } else { //anything else return type
@@ -167,7 +167,7 @@ public class MethodCommandExtractor implements CommandExtractor {
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsExecutor<>(object, method);
             }
-        } else if (CommandContext.class.isAssignableFrom(returnType)) { //CommandContext + more arguments
+        } else if (CommandContext.class.isAssignableFrom(firstParameterType)) { //CommandContext + more arguments
             if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.CommandContextAndArgumentsCommandResultExecutor<>(object, method);
             } else { //anything else return type
