@@ -7,10 +7,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface CommandNodeExecutor<T> {
 
-//    @NotNull CommandExecutor<String> TEST_EXECUTOR = context -> {
-//        System.out.println(context);
-//        return CommandResult.successful("");
-//    };
-
     @Nullable CommandResult<T> execute(@NotNull CommandContext context);
 }
