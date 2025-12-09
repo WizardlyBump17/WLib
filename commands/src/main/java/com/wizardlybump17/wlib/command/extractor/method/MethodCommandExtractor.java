@@ -135,7 +135,7 @@ public class MethodCommandExtractor implements CommandExtractor {
      */
     private static @NotNull CommandNodeExecutor<?> createExecutor(@NotNull Object object, @NotNull Parameter @NotNull [] parameters, @NotNull Class<?> returnType, @NotNull Method method) {
         if (parameters.length == 0) { //no parameters
-            if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+            if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.NoArgumentsCommandResultExecutor<>(object, method);
             } else {
                 return new AbstractMethodCommandNodeExecutor.NoArgumentsExecutor<>(object, method);
@@ -146,14 +146,14 @@ public class MethodCommandExtractor implements CommandExtractor {
         Class<?> firstParameterType = firstParameter.getType();
 
         if (parameters.length == 1) {
-            if (firstParameterType.isAssignableFrom(CommandSender.class)) { //CommandSender only
-                if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+            if (CommandSender.class.isAssignableFrom(firstParameterType)) { //CommandSender only
+                if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderCommandResultExecutor<>(object, method);
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandSenderExecutor<>(object, method);
                 }
-            } else if (firstParameterType.isAssignableFrom(CommandContext.class)) { //CommandContext only
-                if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+            } else if (CommandContext.class.isAssignableFrom(returnType)) { //CommandContext only
+                if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                     return new AbstractMethodCommandNodeExecutor.CommandContextCommandResultExecutor<>(object, method);
                 } else { //anything else return type
                     return new AbstractMethodCommandNodeExecutor.CommandContextExecutor<>(object, method);
@@ -161,20 +161,20 @@ public class MethodCommandExtractor implements CommandExtractor {
             }
         }
 
-        if (firstParameterType.isAssignableFrom(CommandSender.class)) { //CommandSender + more arguments
-            if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+        if (CommandSender.class.isAssignableFrom(firstParameterType)) { //CommandSender + more arguments
+            if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsCommandResultExecutor<>(object, method);
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.CommandSenderAndArgumentsExecutor<>(object, method);
             }
-        } else if (firstParameterType.isAssignableFrom(CommandContext.class)) { //CommandContext + more arguments
-            if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+        } else if (CommandContext.class.isAssignableFrom(returnType)) { //CommandContext + more arguments
+            if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.CommandContextAndArgumentsCommandResultExecutor<>(object, method);
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.CommandContextAndArgumentsExecutor<>(object, method);
             }
         } else {
-            if (returnType.isAssignableFrom(CommandResult.class)) { //CommandResult return type
+            if (CommandResult.class.isAssignableFrom(returnType)) { //CommandResult return type
                 return new AbstractMethodCommandNodeExecutor.ArgumentsCommandResultExecutor<>(object, method);
             } else { //anything else return type
                 return new AbstractMethodCommandNodeExecutor.ArgumentsExecutor<>(object, method);
