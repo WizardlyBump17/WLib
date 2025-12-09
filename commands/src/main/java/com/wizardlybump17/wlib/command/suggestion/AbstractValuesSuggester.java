@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractValuesSuggester<T> implements ValuesSuggester<T> {
 
@@ -22,5 +23,25 @@ public abstract class AbstractValuesSuggester<T> implements ValuesSuggester<T> {
     @Override
     public @NotNull List<T> values() {
         return suggestions;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass())
+            return false;
+        AbstractValuesSuggester<?> that = (AbstractValuesSuggester<?>) object;
+        return Objects.equals(suggestions, that.suggestions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(suggestions);
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractValuesSuggester{" +
+                "suggestions=" + suggestions +
+                '}';
     }
 }
