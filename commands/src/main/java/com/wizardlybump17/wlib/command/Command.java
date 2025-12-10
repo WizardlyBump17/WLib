@@ -40,7 +40,7 @@ public class Command implements Comparable<Command> {
             return CommandResult.insufficientArguments(this);
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
-        Collection<CommandNode<?>> children = List.of(root);
+        List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
         int lastInputIndex = 0;
@@ -120,7 +120,7 @@ public class Command implements Comparable<Command> {
         String currentInput = input.getLast();
 
         List<Object> suggestions = new ArrayList<>();
-        Collection<CommandNode<?>> children = List.of(root);
+        List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
         InputParsingException lastParsingError = null;
