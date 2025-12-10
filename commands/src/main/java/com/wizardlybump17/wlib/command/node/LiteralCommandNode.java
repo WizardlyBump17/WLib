@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.node;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class LiteralCommandNode extends CommandNode<String> {
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, AllowedStringInputs.valueIgnoreCase(name), executor, permission);
+        super(name, children, AllowedStringInputs.valueIgnoreCase(name), StringSuggester.value(name), executor, permission);
     }
 
     public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
