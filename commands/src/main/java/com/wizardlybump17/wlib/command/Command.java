@@ -12,7 +12,10 @@ import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 public class Command implements Comparable<Command> {
 
@@ -135,6 +138,8 @@ public class Command implements Comparable<Command> {
                     if (permission == null || sender.hasPermission(permission))
                         suggestions.addAll(child.getSuggestions(sender, input, ""));
                 }
+                if (!children.isEmpty())
+                    lastNode = children.getLast();
                 break;
             }
 
