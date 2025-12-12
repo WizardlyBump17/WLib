@@ -28,7 +28,7 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, AllowedStringInputs.valueIgnoreCase(name), executor, null);
+        this(name, children, executor, null);
     }
 
     public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor) {
@@ -46,6 +46,11 @@ public class LiteralCommandNode extends CommandNode<String> {
     @Override
     public @NotNull AllowedStringInputs.Value getAllowedInputs() {
         return (AllowedStringInputs.Value) super.getAllowedInputs();
+    }
+
+    @Override
+    public @NotNull StringSuggester.Values getSuggester() {
+        return (StringSuggester.Values) super.getSuggester();
     }
 
     @Override

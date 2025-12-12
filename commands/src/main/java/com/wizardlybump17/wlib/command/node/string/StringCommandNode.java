@@ -4,12 +4,18 @@ import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 public class StringCommandNode extends CommandNode<String> {
+
+    public StringCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedStringInputs allowedInputs, @Nullable StringSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
 
     public StringCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedStringInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

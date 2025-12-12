@@ -42,13 +42,7 @@ public interface CharacterSuggester extends PrimitiveSuggester<Character> {
         return range(from, to, 4);
     }
 
-    static @NotNull Values any() {
-        return Values.ANY;
-    }
-
     final class Values extends AbstractValuesSuggester<Character> implements CharacterSuggester {
-
-        private static final @NotNull Values ANY = new Values(List.of());
 
         Values(@NotNull List<Character> values) {
             super(values);

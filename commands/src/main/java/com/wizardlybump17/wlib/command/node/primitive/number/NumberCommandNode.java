@@ -11,6 +11,10 @@ import java.util.List;
 
 public abstract class NumberCommandNode<N extends Number> extends CommandNode<N> {
 
+    public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable Suggester<N> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
+
     public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);
     }
@@ -37,10 +41,6 @@ public abstract class NumberCommandNode<N extends Number> extends CommandNode<N>
 
     public NumberCommandNode(@NotNull String name, @NotNull AllowedInputs<N> allowedInputs) {
         super(name, allowedInputs);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable Suggester<N> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, suggester, executor, permission);
     }
 
     @Override

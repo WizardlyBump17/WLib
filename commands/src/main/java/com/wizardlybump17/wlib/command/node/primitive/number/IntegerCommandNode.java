@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInpu
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,45 +15,50 @@ import java.util.List;
 
 public class IntegerCommandNode extends NumberCommandNode<Integer> implements PrimitiveCommandNode {
 
+    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<Integer> allowedInputs, @Nullable Suggester<Integer> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
+
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
+        this(name, children, allowedInputs, null, executor, permission);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, executor, permission);
+        this(name, List.of(), allowedInputs, null, executor, permission);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, permission);
+        this(name, children, allowedInputs, null, null, permission);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, permission);
+        this(name, List.of(), allowedInputs, null, null, permission);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, allowedInputs, executor, null);
+        this(name, children, allowedInputs, null, executor, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, executor, null);
+        this(name, List.of(), allowedInputs, null, executor, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null);
+        this(name, children, allowedInputs, null, null, null);
     }
 
     public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<Integer> allowedInputs, @Nullable Suggester<Integer> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, suggester, executor, permission);
+        this(name, List.of(), allowedInputs, null, null, null);
     }
 
     @Override
     public @NotNull AllowedIntegerInputs getAllowedInputs() {
         return (AllowedIntegerInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @Nullable IntegerSuggester getSuggester() {
+        return (IntegerSuggester) super.getSuggester();
     }
 
     @Override
@@ -66,16 +72,16 @@ public class IntegerCommandNode extends NumberCommandNode<Integer> implements Pr
 
     @Override
     public @NotNull IntegerCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new IntegerCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new IntegerCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull IntegerCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull IntegerCommandNode withPermission(@Nullable String permission) {
-        return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new IntegerCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }

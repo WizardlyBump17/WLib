@@ -25,6 +25,7 @@ public class UUIDMethodCommandNodeFactory extends MethodCommandNodeFactory {
                 root == null ? List.of() : List.of(root),
                 parameter.isAnnotationPresent(NotNull.class) ? AllowedUUIDInputs.anyNotNull() : AllowedUUIDInputs.anyNullable(),
                 null,
+                null,
                 null
         );
     }

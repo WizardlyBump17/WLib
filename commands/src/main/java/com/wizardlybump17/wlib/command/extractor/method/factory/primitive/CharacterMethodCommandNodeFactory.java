@@ -25,6 +25,7 @@ public class CharacterMethodCommandNodeFactory extends PrimitiveMethodCommandNod
                 root == null ? List.of() : List.of(root),
                 AllowedCharacterInputs.anyNotNull(),
                 null,
+                null,
                 null
         );
     }

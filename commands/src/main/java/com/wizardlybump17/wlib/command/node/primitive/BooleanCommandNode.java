@@ -4,12 +4,18 @@ import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.AllowedBooleanInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.suggestion.primitive.BooleanSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 public class BooleanCommandNode extends AbstractPrimitiveCommandNode<Boolean> {
+
+    public BooleanCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable BooleanSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
 
     public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

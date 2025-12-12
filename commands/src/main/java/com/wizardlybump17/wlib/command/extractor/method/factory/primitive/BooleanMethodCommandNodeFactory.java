@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.annotation.Command;
 import com.wizardlybump17.wlib.command.input.primitive.AllowedBooleanInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.BooleanCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.primitive.BooleanSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,7 @@ public class BooleanMethodCommandNodeFactory extends PrimitiveMethodCommandNodeF
                 name,
                 root == null ? List.of() : List.of(root),
                 AllowedBooleanInputs.anyNotNull(),
+                BooleanSuggester.any(),
                 null,
                 null
         );

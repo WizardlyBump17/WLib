@@ -22,6 +22,15 @@ public abstract class CommandNode<T> {
     private final @Nullable CommandNodeExecutor<?> executor;
     private final @Nullable String permission;
 
+    public CommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable Suggester<T> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        this.name = name;
+        this.children = List.copyOf(children);
+        this.allowedInputs = allowedInputs;
+        this.suggester = suggester;
+        this.executor = executor;
+        this.permission = permission;
+    }
+
     public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         this(name, children, allowedInputs, null, executor, permission);
     }
@@ -50,15 +59,6 @@ public abstract class CommandNode<T> {
         this(name, List.of(), allowedInputs, null, null);
     }
 
-    public CommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable Suggester<T> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this.name = name;
-        this.children = List.copyOf(children);
-        this.allowedInputs = allowedInputs;
-        this.suggester = suggester;
-        this.executor = executor;
-        this.permission = permission;
-    }
-
     public @NotNull String getName() {
         return name;
     }
@@ -69,6 +69,10 @@ public abstract class CommandNode<T> {
 
     public @NotNull AllowedInputs<T> getAllowedInputs() {
         return allowedInputs;
+    }
+
+    public @Nullable Suggester<T> getSuggester() {
+        return suggester;
     }
 
     public abstract @Nullable T parse(@NotNull String input) throws InputParsingException;

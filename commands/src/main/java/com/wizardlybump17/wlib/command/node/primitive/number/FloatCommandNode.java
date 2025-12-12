@@ -5,12 +5,17 @@ import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedFloatInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.FloatSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class FloatCommandNode extends NumberCommandNode<Float> implements PrimitiveCommandNode {
+
+    public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs, @Nullable FloatSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
 
     public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, executor, permission);

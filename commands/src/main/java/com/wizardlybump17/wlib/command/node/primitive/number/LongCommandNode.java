@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedLongInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.LongSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,41 +13,50 @@ import java.util.List;
 
 public class LongCommandNode extends NumberCommandNode<Long> implements PrimitiveCommandNode {
 
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable LongSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
+    }
+
     public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
+        this(name, children, allowedInputs, null, executor, permission);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, executor, permission);
+        this(name, List.of(), allowedInputs, null, executor, permission);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, permission);
+        this(name, children, allowedInputs, null, null, permission);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, permission);
+        this(name, List.of(), allowedInputs, null, null, permission);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, allowedInputs, executor, null);
+        this(name, children, allowedInputs, null, executor, null);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, executor, null);
+        this(name, List.of(), allowedInputs, null, executor, null);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null);
+        this(name, children, allowedInputs, null, null, null);
     }
 
     public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null);
+        this(name, List.of(), allowedInputs, null, null, null);
     }
 
     @Override
     public @NotNull AllowedLongInputs getAllowedInputs() {
         return (AllowedLongInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @Nullable LongSuggester getSuggester() {
+        return (LongSuggester) super.getSuggester();
     }
 
     @Override
@@ -60,16 +70,16 @@ public class LongCommandNode extends NumberCommandNode<Long> implements Primitiv
 
     @Override
     public @NotNull LongCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new LongCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new LongCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull LongCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull LongCommandNode withPermission(@Nullable String permission) {
-        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new LongCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }

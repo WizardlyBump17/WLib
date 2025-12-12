@@ -5,6 +5,7 @@ import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNod
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +25,7 @@ public class StringMethodCommandNodeFactory extends MethodCommandNodeFactory {
                 name,
                 root == null ? List.of() : List.of(root),
                 parameter.isAnnotationPresent(NotNull.class) ? AllowedStringInputs.anyNotNull() : AllowedStringInputs.anyNullable(),
+                StringSuggester.any(),
                 null,
                 null
         );
