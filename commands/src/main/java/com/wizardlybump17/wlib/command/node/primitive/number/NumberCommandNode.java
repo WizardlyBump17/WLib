@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.NumberSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,32 +16,9 @@ public abstract class NumberCommandNode<N extends Number> extends CommandNode<N>
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull AllowedInputs<N> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, allowedInputs, executor, permission);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable String permission) {
-        super(name, children, allowedInputs, permission);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull AllowedInputs<N> allowedInputs, @Nullable String permission) {
-        super(name, allowedInputs, permission);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull AllowedInputs<N> allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, allowedInputs, executor);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs) {
-        super(name, children, allowedInputs);
-    }
-
-    public NumberCommandNode(@NotNull String name, @NotNull AllowedInputs<N> allowedInputs) {
-        super(name, allowedInputs);
+    @Override
+    public @Nullable NumberSuggester<N> getSuggester() {
+        return (NumberSuggester<N>) super.getSuggester();
     }
 
     @Override

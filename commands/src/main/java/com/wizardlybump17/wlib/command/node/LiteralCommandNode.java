@@ -15,34 +15,6 @@ public class LiteralCommandNode extends CommandNode<String> {
         super(name, children, AllowedStringInputs.valueIgnoreCase(name), StringSuggester.value(name), executor, permission);
     }
 
-    public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), executor, permission);
-    }
-
-    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable String permission) {
-        this(name, children, null, permission);
-    }
-
-    public LiteralCommandNode(@NotNull String name, @Nullable String permission) {
-        this(name, List.of(), null, permission);
-    }
-
-    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, children, executor, null);
-    }
-
-    public LiteralCommandNode(@NotNull String name, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), executor, null);
-    }
-
-    public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children) {
-        this(name, children, null, null);
-    }
-
-    public LiteralCommandNode(@NotNull String name) {
-        this(name, List.of(), null, null);
-    }
-
     @Override
     public @NotNull AllowedStringInputs.Value getAllowedInputs() {
         return (AllowedStringInputs.Value) super.getAllowedInputs();

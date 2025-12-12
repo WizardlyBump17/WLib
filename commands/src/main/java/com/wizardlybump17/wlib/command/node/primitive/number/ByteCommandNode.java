@@ -17,38 +17,6 @@ public class ByteCommandNode extends NumberCommandNode<Byte> implements Primitiv
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, children, allowedInputs, null, executor, permission);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull AllowedByteInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, executor, permission);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, null, permission);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull AllowedByteInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, null, permission);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, children, allowedInputs, null, executor, null);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull AllowedByteInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, null, executor, null);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null, null);
-    }
-
-    public ByteCommandNode(@NotNull String name, @NotNull AllowedByteInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null, null);
-    }
-
     @Override
     public @NotNull AllowedByteInputs getAllowedInputs() {
         return (AllowedByteInputs) super.getAllowedInputs();

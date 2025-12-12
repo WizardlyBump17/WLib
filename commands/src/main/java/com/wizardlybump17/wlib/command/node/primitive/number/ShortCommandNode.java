@@ -19,38 +19,6 @@ public class ShortCommandNode extends NumberCommandNode<Short> implements Primit
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public ShortCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedShortInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, children, allowedInputs, null, executor, permission);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull AllowedShortInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, executor, permission);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedShortInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, null, permission);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull AllowedShortInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, null, permission);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedShortInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, children, allowedInputs, null, executor, null);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull AllowedShortInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, null, executor, null);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedShortInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null, null);
-    }
-
-    public ShortCommandNode(@NotNull String name, @NotNull AllowedShortInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null, null);
-    }
-
     @Override
     public @NotNull AllowedShortInputs getAllowedInputs() {
         return (AllowedShortInputs) super.getAllowedInputs();

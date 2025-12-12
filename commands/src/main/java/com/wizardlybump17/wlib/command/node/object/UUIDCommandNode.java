@@ -18,37 +18,14 @@ public class UUIDCommandNode extends CommandNode<UUID> {
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public UUIDCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedUUIDInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull AllowedUUIDInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, allowedInputs, executor, permission);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedUUIDInputs allowedInputs, @Nullable String permission) {
-        super(name, children, allowedInputs, permission);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull AllowedUUIDInputs allowedInputs, @Nullable String permission) {
-        super(name, allowedInputs, permission);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull AllowedUUIDInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, allowedInputs, executor);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedUUIDInputs allowedInputs) {
-        super(name, children, allowedInputs);
-    }
-
-    public UUIDCommandNode(@NotNull String name, @NotNull AllowedUUIDInputs allowedInputs) {
-        super(name, allowedInputs);
-    }
-
     @Override
     public @NotNull AllowedUUIDInputs getAllowedInputs() {
         return (AllowedUUIDInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @Nullable UUIDSuggester getSuggester() {
+        return (UUIDSuggester) super.getSuggester();
     }
 
     @Override
@@ -62,16 +39,16 @@ public class UUIDCommandNode extends CommandNode<UUID> {
 
     @Override
     public @NotNull UUIDCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new UUIDCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new UUIDCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull UUIDCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new UUIDCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new UUIDCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull UUIDCommandNode withPermission(@Nullable String permission) {
-        return new UUIDCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new UUIDCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }

@@ -31,34 +31,6 @@ public abstract class CommandNode<T> {
         this.permission = permission;
     }
 
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, children, allowedInputs, null, executor, permission);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, executor, permission);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, permission);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, permission);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, executor, null);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<T> allowedInputs) {
-        this(name, children, allowedInputs, null, null);
-    }
-
-    public CommandNode(@NotNull String name, @NotNull AllowedInputs<T> allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null);
-    }
-
     public @NotNull String getName() {
         return name;
     }

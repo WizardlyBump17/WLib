@@ -17,41 +17,14 @@ public class FloatCommandNode extends NumberCommandNode<Float> implements Primit
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull AllowedFloatInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, executor, permission);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, permission);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull AllowedFloatInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, permission);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, children, allowedInputs, executor, null);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull AllowedFloatInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, executor, null);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedFloatInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null);
-    }
-
-    public FloatCommandNode(@NotNull String name, @NotNull AllowedFloatInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null);
-    }
-
     @Override
     public @NotNull AllowedFloatInputs getAllowedInputs() {
         return (AllowedFloatInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @Nullable FloatSuggester getSuggester() {
+        return (FloatSuggester) super.getSuggester();
     }
 
     @Override
@@ -65,16 +38,16 @@ public class FloatCommandNode extends NumberCommandNode<Float> implements Primit
 
     @Override
     public @NotNull FloatCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new FloatCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new FloatCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull FloatCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new FloatCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new FloatCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull FloatCommandNode withPermission(@Nullable String permission) {
-        return new FloatCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new FloatCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }

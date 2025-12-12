@@ -17,38 +17,6 @@ public class LongCommandNode extends NumberCommandNode<Long> implements Primitiv
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, children, allowedInputs, null, executor, permission);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, executor, permission);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, null, permission);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, null, permission);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, children, allowedInputs, null, executor, null);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, null, executor, null);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null, null);
-    }
-
-    public LongCommandNode(@NotNull String name, @NotNull AllowedLongInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null, null);
-    }
-
     @Override
     public @NotNull AllowedLongInputs getAllowedInputs() {
         return (AllowedLongInputs) super.getAllowedInputs();

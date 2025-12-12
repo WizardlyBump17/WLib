@@ -17,37 +17,14 @@ public class BooleanCommandNode extends AbstractPrimitiveCommandNode<Boolean> {
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, allowedInputs, executor, permission);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable String permission) {
-        super(name, children, allowedInputs, permission);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable String permission) {
-        super(name, allowedInputs, permission);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, allowedInputs, executor);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs) {
-        super(name, children, allowedInputs);
-    }
-
-    public BooleanCommandNode(@NotNull String name, @NotNull AllowedBooleanInputs allowedInputs) {
-        super(name, allowedInputs);
-    }
-
     @Override
     public @NotNull AllowedBooleanInputs getAllowedInputs() {
         return (AllowedBooleanInputs) super.getAllowedInputs();
+    }
+
+    @Override
+    public @Nullable BooleanSuggester getSuggester() {
+        return (BooleanSuggester) super.getSuggester();
     }
 
     @Override
@@ -61,16 +38,16 @@ public class BooleanCommandNode extends AbstractPrimitiveCommandNode<Boolean> {
 
     @Override
     public @NotNull BooleanCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new BooleanCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new BooleanCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull BooleanCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new BooleanCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new BooleanCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull BooleanCommandNode withPermission(@Nullable String permission) {
-        return new BooleanCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new BooleanCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }

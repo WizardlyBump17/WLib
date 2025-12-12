@@ -19,38 +19,6 @@ public class IntegerCommandNode extends NumberCommandNode<Integer> implements Pr
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, children, allowedInputs, null, executor, permission);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, executor, permission);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable String permission) {
-        this(name, children, allowedInputs, null, null, permission);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable String permission) {
-        this(name, List.of(), allowedInputs, null, null, permission);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, children, allowedInputs, null, executor, null);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        this(name, List.of(), allowedInputs, null, executor, null);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedIntegerInputs allowedInputs) {
-        this(name, children, allowedInputs, null, null, null);
-    }
-
-    public IntegerCommandNode(@NotNull String name, @NotNull AllowedIntegerInputs allowedInputs) {
-        this(name, List.of(), allowedInputs, null, null, null);
-    }
-
     @Override
     public @NotNull AllowedIntegerInputs getAllowedInputs() {
         return (AllowedIntegerInputs) super.getAllowedInputs();
