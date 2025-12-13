@@ -85,7 +85,7 @@ public class MethodCommandExtractor implements CommandExtractor {
             part = part.substring(1, part.length() - 1);
 
         if (parameterIndex < 0) {
-            newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
+            newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root), null, null);
         } else {
             if (argument) {
                 Parameter parameter = parameters[parameterIndex];
@@ -97,7 +97,7 @@ public class MethodCommandExtractor implements CommandExtractor {
 
                 newNode = factory.create(object, method, annotation, parameter, part, root);
             } else {
-                newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root));
+                newNode = new LiteralCommandNode(part, root == null ? List.of() : List.of(root), null, null);
             }
         }
 

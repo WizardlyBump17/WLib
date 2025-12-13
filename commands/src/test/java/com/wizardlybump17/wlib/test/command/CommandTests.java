@@ -31,7 +31,12 @@ public class CommandTests {
 
     @Test
     void testSuccessHello() {
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful(context, "hello"),
+                null
+        );
         Command command = new Command(helloNode);
 
         CommandResult<String> expected = CommandResult.successful(0, helloNode, "hello");
@@ -42,8 +47,20 @@ public class CommandTests {
 
     @Test
     void testSuccessHelloWorld() {
-        LiteralCommandNode worldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world"));
-        Command command = new Command(new LiteralCommandNode("hello", List.of(worldNode)));
+        LiteralCommandNode worldNode = new LiteralCommandNode(
+                "world",
+                List.of(),
+                context -> CommandResult.successful(context, "hello world"),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(worldNode),
+                        null,
+                        null
+                )
+        );
 
         CommandResult<String> expected = CommandResult.successful(1, worldNode, "hello world");
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world"));
@@ -53,8 +70,27 @@ public class CommandTests {
 
     @Test
     void testSuccessHelloWorldHi() {
-        LiteralCommandNode hiNode = new LiteralCommandNode("hi", context -> CommandResult.successful(context, "hello world hi"));
-        Command command = new Command(new LiteralCommandNode("hello", List.of(new LiteralCommandNode("world", List.of(hiNode)))));
+        LiteralCommandNode hiNode = new LiteralCommandNode(
+                "hi",
+                List.of(),
+                context -> CommandResult.successful(context, "hello world hi"),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(hiNode),
+                                        null,
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
 
         CommandResult<String> expected = CommandResult.successful(2, hiNode, "hello world hi");
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world", "hi"));
@@ -65,13 +101,25 @@ public class CommandTests {
     @Test
     @DisplayName("Multiple children 0 (hello, hi): success")
     void test0() {
-        LiteralCommandNode hiNode = new LiteralCommandNode("hi", context -> CommandResult.successful(context, "hello hi"));
+        LiteralCommandNode hiNode = new LiteralCommandNode(
+                "hi",
+                List.of(),
+                context -> CommandResult.successful(context, "hello hi"),
+                null
+        );
         Command command = new Command(new LiteralCommandNode(
                 "hello",
                 List.of(
-                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful(context, "hello world"),
+                                null
+                        ),
                         hiNode
-                )
+                ),
+                null,
+                null
         ));
 
         CommandResult<String> expected = CommandResult.successful(1, hiNode, "hello hi");
@@ -83,13 +131,30 @@ public class CommandTests {
     @Test
     @DisplayName("Multiple children 1 (hello, hi, world): success")
     void test1() {
-        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world0", context -> CommandResult.successful(context, "hello hi world"));
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
+                "world0",
+                List.of(),
+                context -> CommandResult.successful(context, "hello hi world"),
+                null
+        );
         Command command = new Command(new LiteralCommandNode(
                 "hello",
                 List.of(
-                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
-                        new LiteralCommandNode("hi", List.of(hiWorldNode))
-                )
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful(context, "hello world"),
+                                null
+                        ),
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(hiWorldNode),
+                                null,
+                                null
+                        )
+                ),
+                null,
+                null
         ));
 
         CommandResult<String> expected = CommandResult.successful(2, hiWorldNode, "hello hi world");
@@ -100,7 +165,12 @@ public class CommandTests {
 
     @Test
     void testExtraArguments0() {
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful(context, "hello"),
+                null
+        );
         Command command = new Command(helloNode);
 
         ExtraArgumentsResult<?> expected = CommandResult.extraArguments(1, helloNode);
@@ -111,11 +181,18 @@ public class CommandTests {
 
     @Test
     void testExtraArguments1() {
-        LiteralCommandNode worldNode = new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world"));
+        LiteralCommandNode worldNode = new LiteralCommandNode(
+                "world",
+                List.of(),
+                context -> CommandResult.successful(context, "hello world"),
+                null
+        );
         Command command = new Command(
                 new LiteralCommandNode(
                         "hello",
-                        List.of(worldNode)
+                        List.of(worldNode),
+                        null,
+                        null
                 )
         );
 
@@ -127,13 +204,30 @@ public class CommandTests {
 
     @Test
     void testExtraArguments2() {
-        LiteralCommandNode hiWorldNode = new LiteralCommandNode("world0", context -> CommandResult.successful(context, "hello hi world"));
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
+                "world0",
+                List.of(),
+                context -> CommandResult.successful(context, "hello hi world"),
+                null
+        );
         Command command = new Command(new LiteralCommandNode(
                 "hello",
                 List.of(
-                        new LiteralCommandNode("world", context -> CommandResult.successful(context, "hello world")),
-                        new LiteralCommandNode("hi", List.of(hiWorldNode))
-                )
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful(context, "hello world"),
+                                null
+                        ),
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(hiWorldNode),
+                                null,
+                                null
+                        )
+                ),
+                null,
+                null
         ));
 
         ExtraArgumentsResult<?> expected = CommandResult.extraArguments(3, hiWorldNode);
@@ -145,9 +239,14 @@ public class CommandTests {
     @Test
     void testException() {
         RuntimeException helloException = new RuntimeException("hello");
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> {
-            throw helloException;
-        });
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> {
+                    throw helloException;
+                },
+                null
+        );
         Command command = new Command(helloNode);
 
         ExceptionResult<?> expected = CommandResult.exceptionally(0, helloNode, helloException);
@@ -158,7 +257,14 @@ public class CommandTests {
 
     @Test
     void testInsufficientArguments() {
-        Command command = new Command(new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello")));
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        null
+                )
+        );
 
         InsufficientArgumentsResult<?> expected = CommandResult.insufficientArguments(command);
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of());
@@ -168,7 +274,12 @@ public class CommandTests {
 
     @Test
     void testNoPermission() {
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"), "permission");
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful(context, "hello"),
+                "permission"
+        );
         Command command = new Command(helloNode);
 
         NoPermissionResult<?> expected = CommandResult.noPermission(0, helloNode);
@@ -179,7 +290,12 @@ public class CommandTests {
 
     @Test
     void testOutOfRange() {
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello", context -> CommandResult.successful(context, "hello"));
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful(context, "hello"),
+                null
+        );
         Command command = new Command(helloNode);
 
         OutOfRangeInputResult<?> expected = CommandResult.outOfRangeInput(0, helloNode);
@@ -190,8 +306,22 @@ public class CommandTests {
 
     @Test
     void testParseInputException() {
-        IntegerCommandNode worldNode = new IntegerCommandNode("world", AllowedIntegerInputs.value(10), context -> CommandResult.successful(context, 10));
-        Command command = new Command(new LiteralCommandNode("hello", List.of(worldNode)));
+        IntegerCommandNode worldNode = new IntegerCommandNode(
+                "world",
+                List.of(),
+                AllowedIntegerInputs.value(10),
+                null,
+                context -> CommandResult.successful(context, 10),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(worldNode),
+                        null,
+                        null
+                )
+        );
 
         ParseInputExceptionResult<?> expected = CommandResult.parseInputException(1, worldNode, new InputParsingException("Could not parse as int: world", new NumberFormatException("For input string: \"world\"")));
         CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world"));
@@ -207,7 +337,12 @@ public class CommandTests {
 
     @Test
     void testCommandNodeExecutorNotFound() {
-        LiteralCommandNode helloNode = new LiteralCommandNode("hello");
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                null,
+                null
+        );
         Command command = new Command(helloNode);
 
         CommandNodeExecutorNotFoundResult<?> expected = CommandResult.noCommandNodeExecutor(0, helloNode);
@@ -267,15 +402,19 @@ public class CommandTests {
         {
             LiteralCommandNode world = new LiteralCommandNode(
                     "world",
+                    List.of(),
                     context -> {
                         Assertions.assertEquals(Map.of(), context.arguments().getArguments());
                         return CommandResult.successful(context, "Hello World");
-                    }
+                    },
+                    null
             );
             CommandResult<?> result = new Command(
                     new LiteralCommandNode(
                             "hello",
-                            List.of(world)
+                            List.of(world),
+                            null,
+                            null
                     )
             ).execute(CHAD_SENDER, List.of("hello", "world"));
 
@@ -286,7 +425,9 @@ public class CommandTests {
             AtomicReference<IntegerCommandNode> worldReference = new AtomicReference<>();
             IntegerCommandNode world = new IntegerCommandNode(
                     "world",
+                    List.of(),
                     AllowedIntegerInputs.unlimited(),
+                    null,
                     context -> {
                         Assertions.assertEquals(Map.of("world", new CommandContext.CommandNodeArgument<>(worldReference.get(), "10", 10)), context.arguments().getArguments());
                         return CommandResult.successful(context, context.arguments().getArgumentData("world").orElseThrow());
@@ -298,7 +439,9 @@ public class CommandTests {
             CommandResult<?> result = new Command(
                     new LiteralCommandNode(
                             "hello",
-                            List.of(world)
+                            List.of(world),
+                            null,
+                            null
                     )
             ).execute(CHAD_SENDER, List.of("hello", "10"));
 
@@ -309,15 +452,18 @@ public class CommandTests {
             AtomicReference<IntegerCommandNode> worldReference = new AtomicReference<>();
             LiteralCommandNode test = new LiteralCommandNode(
                     "test",
+                    List.of(),
                     context -> {
                         Assertions.assertEquals(Map.of("world", new CommandContext.CommandNodeArgument<>(worldReference.get(), "10", 10)), context.arguments().getArguments());
                         return CommandResult.successful(context, "Hello " + context.arguments().getArgumentData("world").orElseThrow() + " world");
-                    }
+                    },
+                    null
             );
             IntegerCommandNode world = new IntegerCommandNode(
                     "world",
                     List.of(test),
                     AllowedIntegerInputs.unlimited(),
+                    null,
                     null,
                     null
             );
@@ -326,7 +472,9 @@ public class CommandTests {
             CommandResult<?> result = new Command(
                     new LiteralCommandNode(
                             "hello",
-                            List.of(world)
+                            List.of(world),
+                            null,
+                            null
                     )
             ).execute(CHAD_SENDER, List.of("hello", "10", "test"));
 

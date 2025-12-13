@@ -24,7 +24,7 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
         public static final @NotNull DummyNode INSTANCE = new DummyNode();
 
         private DummyNode() {
-            super("DummyNode", $ -> true);
+            super("DummyNode", List.of(), $ -> true, null, null, null);
         }
 
         @Override
