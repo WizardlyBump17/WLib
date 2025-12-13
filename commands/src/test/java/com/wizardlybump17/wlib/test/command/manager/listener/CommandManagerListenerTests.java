@@ -37,9 +37,39 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test")));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
 
         Assertions.assertEquals(3, counter.get());
     }
@@ -64,9 +94,39 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
 
         Assertions.assertEquals(
                 List.of(
@@ -100,9 +160,39 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                )
+        );
 
         manager.clear();
 
@@ -129,9 +219,36 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")));
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ));
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ));
 
         manager.unregister("test", "test0");
         manager.unregister("test", "test1");
@@ -167,12 +284,78 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")), "test");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test10")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test11")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test12")), "test1");
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test10",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test11",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test12",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
 
         manager.unregisterByHolder("test", "test");
 
@@ -206,12 +389,78 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")), "test");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test10")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test11")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test12")), "test1");
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test10",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test11",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test12",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
 
         manager.unregisterByHolder("test1", "test1");
 
@@ -245,12 +494,78 @@ class CommandManagerListenerTests {
             }
         });
 
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test0")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test1")), "test");
-        manager.registerCommand("test", new Command(new LiteralCommandNode("test2")), "test");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test10")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test11")), "test1");
-        manager.registerCommand("test1", new Command(new LiteralCommandNode("test12")), "test1");
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test0",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test1",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test",
+                new Command(
+                        new LiteralCommandNode(
+                                "test2",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test10",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test11",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
+        manager.registerCommand(
+                "test1",
+                new Command(
+                        new LiteralCommandNode(
+                                "test12",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ),
+                "test1"
+        );
 
         manager.unregisterByHolder("test", "test");
         manager.unregisterByHolder("test1", "test1");
