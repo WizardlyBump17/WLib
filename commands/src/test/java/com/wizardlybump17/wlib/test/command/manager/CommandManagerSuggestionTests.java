@@ -26,27 +26,33 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad0() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
+                        List.of(),
                         context -> CommandResult.successful(context, "welcome"),
                         "permission"
                 )
@@ -65,27 +71,33 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad1() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
+                        List.of(),
                         context -> CommandResult.successful(context, "welcome"),
                         "permission"
                 )
@@ -104,27 +116,33 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad2() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
+                        List.of(),
                         context -> CommandResult.successful(context, "welcome"),
                         "permission"
                 )
@@ -143,27 +161,33 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad3() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
+                        List.of(),
                         context -> CommandResult.successful(context, "welcome"),
                         "permission"
                 )
@@ -182,21 +206,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad4() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -231,21 +260,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessListChad6() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -280,27 +314,33 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsFailListBeta0() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
         Command command2 = new Command(
                 new LiteralCommandNode(
                         "welcome",
+                        List.of(),
                         context -> CommandResult.successful(context, "welcome"),
                         "permission"
                 )
@@ -319,21 +359,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringChad0() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -343,7 +388,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -366,21 +413,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringChad1() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -390,7 +442,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -413,21 +467,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringChad2() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -462,204 +521,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringChad3() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
-                        "permission"
-                )
-        );
-        Command command2 = new Command(
-                new LiteralCommandNode(
-                        "welcome",
-                        List.of(
-                                new IntegerCommandNode(
-                                        "repeat",
-                                        AllowedIntegerInputs.positive(),
-                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
-                                        "permission"
-                                )
-                        ),
-                        context -> CommandResult.successful(context, "welcome"),
-                        "permission"
-                )
-        );
-        Command command3 = new Command(
-                new LiteralCommandNode(
-                        "test",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "spaced string",
-                                        context -> CommandResult.successful(context, "spaced string"),
-                                        "permission"
-                                )
-                        ),
-                        "permission"
-                )
-        );
-
-        CommandManager manager = new CommandManager();
-        manager.registerCommand("test", command0);
-        manager.registerCommand("test", command1);
-        manager.registerCommand("test", command2);
-        manager.registerCommand("test", command3);
-
-        List<Object> expected = List.of("spaced string");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "test \"spaced ");
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testSuggestionsSuccessStringArrayChad0() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
-        Command command1 = new Command(
-                new LiteralCommandNode(
-                        "hi",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "there",
-                                        context -> CommandResult.successful(context, "hi there"),
-                                        "permission"
-                                )
-                        ),
-                        "permission"
-                )
-        );
-        Command command2 = new Command(
-                new LiteralCommandNode(
-                        "welcome",
-                        List.of(
-                                new IntegerCommandNode(
-                                        "repeat",
-                                        AllowedIntegerInputs.positive(),
-                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
-                                        "permission"
-                                )
-                        ),
-                        context -> CommandResult.successful(context, "welcome"),
-                        "permission"
-                )
-        );
-        Command command3 = new Command(
-                new LiteralCommandNode(
-                        "test",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "spaced string",
-                                        context -> CommandResult.successful(context, "spaced string"),
-                                        "permission"
-                                )
-                        ),
-                        "permission"
-                )
-        );
-
-        CommandManager manager = new CommandManager();
-        manager.registerCommand("test", command0);
-        manager.registerCommand("test", command1);
-        manager.registerCommand("test", command2);
-        manager.registerCommand("test", command3);
-
-        List<Object> expected = List.of("hi", "test", "hello", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{});
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testSuggestionsSuccessStringArrayChad1() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
-        Command command1 = new Command(
-                new LiteralCommandNode(
-                        "hi",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "there",
-                                        context -> CommandResult.successful(context, "hi there"),
-                                        "permission"
-                                )
-                        ),
-                        "permission"
-                )
-        );
-        Command command2 = new Command(
-                new LiteralCommandNode(
-                        "welcome",
-                        List.of(
-                                new IntegerCommandNode(
-                                        "repeat",
-                                        AllowedIntegerInputs.positive(),
-                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
-                                        "permission"
-                                )
-                        ),
-                        context -> CommandResult.successful(context, "welcome"),
-                        "permission"
-                )
-        );
-        Command command3 = new Command(
-                new LiteralCommandNode(
-                        "test",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "spaced string",
-                                        context -> CommandResult.successful(context, "spaced string"),
-                                        "permission"
-                                )
-                        ),
-                        "permission"
-                )
-        );
-
-        CommandManager manager = new CommandManager();
-        manager.registerCommand("test", command0);
-        manager.registerCommand("test", command1);
-        manager.registerCommand("test", command2);
-        manager.registerCommand("test", command3);
-
-        List<Object> expected = List.of("hi", "test", "hello", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"he"});
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testSuggestionsSuccessStringArrayChad2() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
-        Command command1 = new Command(
-                new LiteralCommandNode(
-                        "hi",
-                        List.of(
-                                new LiteralCommandNode(
-                                        "there",
-                                        context -> CommandResult.successful(context, "hi there"),
-                                        "permission"
-                                )
-                        ),
+                        null,
                         "permission"
                 )
         );
@@ -686,10 +567,222 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "spaced string",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "spaced string"),
                                         "permission"
                                 )
                         ),
+                        null,
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+        manager.registerCommand("test", command3);
+
+        List<Object> expected = List.of("spaced string");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "test \"spaced ");
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringArrayChad0() {
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        null,
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        List.of(),
+                                        AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+        Command command3 = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "spaced string",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "spaced string"),
+                                        "permission"
+                                )
+                        ),
+                        null,
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+        manager.registerCommand("test", command3);
+
+        List<Object> expected = List.of("hi", "test", "hello", "welcome");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{});
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringArrayChad1() {
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        null,
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        List.of(),
+                                        AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+        Command command3 = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "spaced string",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "spaced string"),
+                                        "permission"
+                                )
+                        ),
+                        null,
+                        "permission"
+                )
+        );
+
+        CommandManager manager = new CommandManager();
+        manager.registerCommand("test", command0);
+        manager.registerCommand("test", command1);
+        manager.registerCommand("test", command2);
+        manager.registerCommand("test", command3);
+
+        List<Object> expected = List.of("hi", "test", "hello", "welcome");
+        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"he"});
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSuggestionsSuccessStringArrayChad2() {
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
+        Command command1 = new Command(
+                new LiteralCommandNode(
+                        "hi",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "there",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hi there"),
+                                        "permission"
+                                )
+                        ),
+                        null,
+                        "permission"
+                )
+        );
+        Command command2 = new Command(
+                new LiteralCommandNode(
+                        "welcome",
+                        List.of(
+                                new IntegerCommandNode(
+                                        "repeat",
+                                        List.of(),
+                                        AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
+                                        context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
+                                        "permission"
+                                )
+                        ),
+                        context -> CommandResult.successful(context, "welcome"),
+                        "permission"
+                )
+        );
+        Command command3 = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "spaced string",
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "spaced string"),
+                                        "permission"
+                                )
+                        ),
+                        null,
                         "permission"
                 )
         );
@@ -708,21 +801,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringArrayChad3() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -732,7 +830,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -747,10 +847,12 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "spaced string",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "spaced string"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -769,21 +871,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringArrayChad4() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -793,7 +900,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -808,10 +917,12 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "spaced string",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "spaced string"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -830,21 +941,26 @@ class CommandManagerSuggestionTests {
 
     @Test
     void testSuggestionsSuccessStringArrayChad5() {
-        Command command0 = new Command(new LiteralCommandNode(
-                "hello",
-                context -> CommandResult.successful(context, "hello"),
-                "permission"
-        ));
+        Command command0 = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful(context, "hello"),
+                        "permission"
+                )
+        );
         Command command1 = new Command(
                 new LiteralCommandNode(
                         "hi",
                         List.of(
                                 new LiteralCommandNode(
                                         "there",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "hi there"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
@@ -854,7 +970,9 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "repeat",
+                                        List.of(),
                                         AllowedIntegerInputs.positive(),
+                                        IntegerSuggester.positive(),
                                         context -> CommandResult.successful(context, "welcome".repeat(context.arguments().<Integer>getArgument("repeat").orElseThrow().data())),
                                         "permission"
                                 )
@@ -869,10 +987,12 @@ class CommandManagerSuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "spaced string",
+                                        List.of(),
                                         context -> CommandResult.successful(context, "spaced string"),
                                         "permission"
                                 )
                         ),
+                        null,
                         "permission"
                 )
         );
