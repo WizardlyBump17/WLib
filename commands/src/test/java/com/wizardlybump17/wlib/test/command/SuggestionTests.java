@@ -41,9 +41,13 @@ class SuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        context -> CommandResult.successful(context, "hello world")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello world"),
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -62,9 +66,13 @@ class SuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        context -> CommandResult.successful(context, "hello world")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello world"),
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -83,17 +91,25 @@ class SuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        context -> CommandResult.successful(context, "hello world")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello world"),
+                                        null
                                 ),
                                 new LiteralCommandNode(
                                         "hi",
-                                        context -> CommandResult.successful(context, "hello hi")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello hi"),
+                                        null
                                 ),
                                 new LiteralCommandNode(
                                         "there",
-                                        context -> CommandResult.successful(context, "hello there")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello there"),
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -112,11 +128,15 @@ class SuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        context -> CommandResult.successful(context, "hello world")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello world"),
+                                        null
                                 ),
                                 new LiteralCommandNode(
                                         "hi",
-                                        context -> CommandResult.successful(context, "hello hi")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello hi"),
+                                        null
                                 ),
                                 new IntegerCommandNode(
                                         "there",
@@ -126,7 +146,9 @@ class SuggestionTests {
                                         context -> CommandResult.successful(context, "hello there"),
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -145,22 +167,33 @@ class SuggestionTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        context -> CommandResult.successful(context, "hello world")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello world"),
+                                        null
                                 ),
                                 new LiteralCommandNode(
                                         "hi",
-                                        context -> CommandResult.successful(context, "hello hi")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello hi"),
+                                        null
                                 ),
                                 new IntegerCommandNode(
                                         "there",
+                                        List.of(),
                                         AllowedIntegerInputs.range(1, 10),
-                                        context -> CommandResult.successful(context, "hello there")
+                                        IntegerSuggester.range(1, 10),
+                                        context -> CommandResult.successful(context, "hello there"),
+                                        null
                                 ),
                                 new LiteralCommandNode(
                                         "happy",
-                                        context -> CommandResult.successful(context, "hello happy")
+                                        List.of(),
+                                        context -> CommandResult.successful(context, "hello happy"),
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -175,18 +208,36 @@ class SuggestionTests {
         //literal
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(new LiteralCommandNode("hello"))
-                        .getSuggestions(CHAD_SENDER, List.of())
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of())
         );
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(new LiteralCommandNode("hello"))
-                        .getSuggestions(CHAD_SENDER, List.of(""))
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of(""))
         );
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(new LiteralCommandNode("hello"))
-                        .getSuggestions(CHAD_SENDER, List.of("hel"))
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hel"))
         );
 
         //byte
@@ -204,7 +255,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
@@ -222,7 +275,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
@@ -240,7 +295,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
         );
@@ -260,7 +317,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
@@ -278,7 +337,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
@@ -296,7 +357,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
         );
@@ -316,7 +379,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
@@ -334,7 +399,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
@@ -352,7 +419,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
         );
@@ -372,7 +441,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
@@ -390,7 +461,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
@@ -408,7 +481,9 @@ class SuggestionTests {
                                                 null,
                                                 null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
         );
