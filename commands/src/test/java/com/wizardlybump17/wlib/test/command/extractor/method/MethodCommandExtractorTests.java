@@ -14,6 +14,8 @@ import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +59,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello")),
+                                null
                         )
                 ),
                 new Command(
@@ -66,9 +70,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld")),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -80,11 +88,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi"))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi")),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -122,7 +136,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello")),
+                                null
                         )
                 ),
                 new Command(
@@ -131,9 +147,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld")),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -145,11 +165,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi"))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi")),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -191,7 +217,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class)),
+                                null
                         )
                 ),
                 new Command(
@@ -200,9 +228,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -214,11 +246,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -253,7 +291,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class)),
+                                null
                         )
                 ),
                 new Command(
@@ -262,9 +302,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -276,11 +320,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -319,7 +369,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class)),
+                                null
                         )
                 ),
                 new Command(
@@ -328,9 +380,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -342,11 +398,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -384,7 +446,9 @@ class MethodCommandExtractorTests {
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
-                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class))
+                                List.of(),
+                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class)),
+                                null
                         )
                 ),
                 new Command(
@@ -393,9 +457,13 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new LiteralCommandNode(
                                                 "world",
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class))
+                                                List.of(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -407,11 +475,17 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new LiteralCommandNode(
                                                                 "hi",
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class))
+                                                                List.of(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -456,10 +530,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class, int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class, int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -471,12 +550,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class, int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class, int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -491,14 +577,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class, int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class, int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -536,10 +631,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class, int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class, int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -551,12 +651,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class, int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class, int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -571,14 +678,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class, int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class, int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -620,10 +736,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class, int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandSender.class, int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -635,12 +756,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class, int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandSender.class, int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -655,14 +783,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class, int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandSender.class, int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -703,10 +840,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class, int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", CommandContext.class, int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -718,12 +860,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class, int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", CommandContext.class, int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -738,14 +887,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class, int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", CommandContext.class, int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -790,10 +948,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -805,12 +968,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -825,14 +995,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -874,10 +1053,15 @@ class MethodCommandExtractorTests {
                                 List.of(
                                         new IntegerCommandNode(
                                                 "int",
+                                                List.of(),
                                                 AllowedIntegerInputs.unlimited(),
-                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class))
+                                                IntegerSuggester.unlimited(),
+                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello", int.class)),
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -889,12 +1073,19 @@ class MethodCommandExtractorTests {
                                                 List.of(
                                                         new IntegerCommandNode(
                                                                 "int",
+                                                                List.of(),
                                                                 AllowedIntegerInputs.unlimited(),
-                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class))
+                                                                IntegerSuggester.unlimited(),
+                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld", int.class)),
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 ),
                 new Command(
@@ -909,14 +1100,23 @@ class MethodCommandExtractorTests {
                                                                 List.of(
                                                                         new IntegerCommandNode(
                                                                                 "int",
+                                                                                List.of(),
                                                                                 AllowedIntegerInputs.unlimited(),
-                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class))
+                                                                                IntegerSuggester.unlimited(),
+                                                                                Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloThereHi", int.class)),
+                                                                                null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
-                                                )
+                                                ),
+                                                null,
+                                                null
                                         )
-                                )
+                                ),
+                                null,
+                                null
                         )
                 )
         ));
@@ -964,10 +1164,13 @@ class MethodCommandExtractorTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld"))
+                                        List.of(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "helloWorld")),
+                                        null
                                 )
                         ),
-                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello"))
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hello")),
+                        null
                 )
         );
         Command hi = new Command(
@@ -976,10 +1179,13 @@ class MethodCommandExtractorTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hiWorld", CommandSender.class))
+                                        List.of(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hiWorld", CommandSender.class)),
+                                        null
                                 )
                         ),
-                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hi", CommandSender.class))
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "hi", CommandSender.class)),
+                        null
                 )
         );
         Command greetings = new Command(
@@ -988,10 +1194,13 @@ class MethodCommandExtractorTests {
                         List.of(
                                 new LiteralCommandNode(
                                         "world",
-                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetingsWorld", CommandContext.class))
+                                        List.of(),
+                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetingsWorld", CommandContext.class)),
+                                        null
                                 )
                         ),
-                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetings", CommandContext.class))
+                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "greetings", CommandContext.class)),
+                        null
                 )
         );
         Command welcome = new Command(
@@ -1003,14 +1212,19 @@ class MethodCommandExtractorTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "world",
-                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcomeWorld", CommandSender.class, String.class))
+                                                        List.of(),
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcomeWorld", CommandSender.class, String.class)),
+                                                        null
                                                 )
                                         ),
                                         AllowedStringInputs.anyNullable(),
+                                        StringSuggester.any(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "welcome", CommandSender.class, String.class)),
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command wassup = new Command(
@@ -1022,14 +1236,19 @@ class MethodCommandExtractorTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "nice",
-                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassupNice", CommandContext.class, String.class))
+                                                        List.of(),
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassupNice", CommandContext.class, String.class)),
+                                                        null
                                                 )
                                         ),
                                         AllowedStringInputs.anyNullable(),
+                                        StringSuggester.any(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "wassup", CommandContext.class, String.class)),
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command aye = new Command(
@@ -1041,14 +1260,19 @@ class MethodCommandExtractorTests {
                                         List.of(
                                                 new LiteralCommandNode(
                                                         "nice",
-                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "ayeNice", String.class))
+                                                        List.of(),
+                                                        Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "ayeNice", String.class)),
+                                                        null
                                                 )
                                         ),
                                         AllowedStringInputs.anyNullable(),
+                                        StringSuggester.any(),
                                         Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(object, "aye", String.class)),
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
