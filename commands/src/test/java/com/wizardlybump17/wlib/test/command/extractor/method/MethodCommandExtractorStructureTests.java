@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInpu
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
 import com.wizardlybump17.wlib.test.util.AssertionUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -44,9 +45,14 @@ class MethodCommandExtractorStructureTests {
                         "test0",
                         List.of(
                                 new LiteralCommandNode(
-                                        "123"
+                                        "123",
+                                        List.of(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -57,11 +63,18 @@ class MethodCommandExtractorStructureTests {
                                         "123",
                                         List.of(
                                                 new LiteralCommandNode(
-                                                        "456"
+                                                        "456",
+                                                        List.of(),
+                                                        null,
+                                                        null
                                                 )
-                                        )
+                                        ),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -97,12 +110,20 @@ class MethodCommandExtractorStructureTests {
                                         "int",
                                         List.of(
                                                 new LiteralCommandNode(
-                                                        "123"
+                                                        "123",
+                                                        List.of(),
+                                                        null,
+                                                        null
                                                 )
                                         ),
-                                        AllowedIntegerInputs.unlimited()
+                                        AllowedIntegerInputs.unlimited(),
+                                        IntegerSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -119,17 +140,30 @@ class MethodCommandExtractorStructureTests {
                                                                         "123",
                                                                         List.of(
                                                                                 new LiteralCommandNode(
-                                                                                        "abc"
+                                                                                        "abc",
+                                                                                        List.of(),
+                                                                                        null,
+                                                                                        null
                                                                                 )
-                                                                        )
+                                                                        ),
+                                                                        null,
+                                                                        null
                                                                 )
                                                         ),
-                                                        AllowedIntegerInputs.unlimited()
+                                                        AllowedIntegerInputs.unlimited(),
+                                                        IntegerSuggester.unlimited(),
+                                                        null,
+                                                        null
                                                 )
                                         ),
-                                        AllowedIntegerInputs.unlimited()
+                                        AllowedIntegerInputs.unlimited(),
+                                        IntegerSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
