@@ -12,6 +12,8 @@ import com.wizardlybump17.wlib.command.node.primitive.CharacterCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.*;
 import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.*;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import com.wizardlybump17.wlib.test.util.AssertionUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -51,9 +53,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new ByteCommandNode(
                                         "arg0",
-                                        AllowedByteInputs.unlimited()
+                                        List.of(),
+                                        AllowedByteInputs.unlimited(),
+                                        ByteSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -68,16 +76,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new ByteCommandNode(
                                                                         "arg1",
-                                                                        AllowedByteInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedByteInputs.unlimited(),
+                                                                        ByteSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedByteInputs.unlimited(),
+                                        ByteSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -111,9 +128,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new ShortCommandNode(
                                         "arg0",
-                                        AllowedShortInputs.unlimited()
+                                        List.of(),
+                                        AllowedShortInputs.unlimited(),
+                                        ShortSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -128,16 +151,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new ShortCommandNode(
                                                                         "arg1",
-                                                                        AllowedShortInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedShortInputs.unlimited(),
+                                                                        ShortSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedShortInputs.unlimited(),
+                                        ShortSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -171,9 +203,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new IntegerCommandNode(
                                         "arg0",
-                                        AllowedIntegerInputs.unlimited()
+                                        List.of(),
+                                        AllowedIntegerInputs.unlimited(),
+                                        IntegerSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -188,16 +226,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new IntegerCommandNode(
                                                                         "arg1",
-                                                                        AllowedIntegerInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedIntegerInputs.unlimited(),
+                                                                        IntegerSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedIntegerInputs.unlimited(),
+                                        IntegerSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -231,9 +278,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new LongCommandNode(
                                         "arg0",
-                                        AllowedLongInputs.unlimited()
+                                        List.of(),
+                                        AllowedLongInputs.unlimited(),
+                                        LongSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -248,16 +301,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new LongCommandNode(
                                                                         "arg1",
-                                                                        AllowedLongInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedLongInputs.unlimited(),
+                                                                        LongSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedLongInputs.unlimited(),
+                                        LongSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -291,9 +353,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new FloatCommandNode(
                                         "arg0",
-                                        AllowedFloatInputs.unlimited()
+                                        List.of(),
+                                        AllowedFloatInputs.unlimited(),
+                                        FloatSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -308,16 +376,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new FloatCommandNode(
                                                                         "arg1",
-                                                                        AllowedFloatInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedFloatInputs.unlimited(),
+                                                                        FloatSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedFloatInputs.unlimited(),
+                                        FloatSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -351,9 +428,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new DoubleCommandNode(
                                         "arg0",
-                                        AllowedDoubleInputs.unlimited()
+                                        List.of(),
+                                        AllowedDoubleInputs.unlimited(),
+                                        DoubleSuggester.unlimited(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -368,16 +451,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new DoubleCommandNode(
                                                                         "arg1",
-                                                                        AllowedDoubleInputs.unlimited()
+                                                                        List.of(),
+                                                                        AllowedDoubleInputs.unlimited(),
+                                                                        DoubleSuggester.unlimited(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedDoubleInputs.unlimited(),
+                                        DoubleSuggester.unlimited(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -411,9 +503,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new CharacterCommandNode(
                                         "arg0",
-                                        AllowedCharacterInputs.anyNotNull()
+                                        List.of(),
+                                        AllowedCharacterInputs.anyNotNull(),
+                                        null,
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -428,16 +526,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new CharacterCommandNode(
                                                                         "arg1",
-                                                                        AllowedCharacterInputs.anyNotNull()
+                                                                        List.of(),
+                                                                        AllowedCharacterInputs.anyNotNull(),
+                                                                        null,
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedCharacterInputs.anyNotNull(),
                                         null,
+                                        null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -471,9 +578,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new StringCommandNode(
                                         "arg0",
-                                        AllowedStringInputs.anyNullable()
+                                        List.of(),
+                                        AllowedStringInputs.anyNullable(),
+                                        StringSuggester.any(),
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -488,16 +601,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new StringCommandNode(
                                                                         "arg1",
-                                                                        AllowedStringInputs.anyNullable()
+                                                                        List.of(),
+                                                                        AllowedStringInputs.anyNullable(),
+                                                                        StringSuggester.any(),
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedStringInputs.anyNullable(),
+                                        StringSuggester.any(),
                                         null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -531,9 +653,15 @@ class MethodCommandNodeFactoryTests {
                         List.of(
                                 new UUIDCommandNode(
                                         "arg0",
-                                        AllowedUUIDInputs.anyNullable()
+                                        List.of(),
+                                        AllowedUUIDInputs.anyNullable(),
+                                        null,
+                                        null,
+                                        null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
         Command test1 = new Command(
@@ -548,16 +676,25 @@ class MethodCommandNodeFactoryTests {
                                                         List.of(
                                                                 new UUIDCommandNode(
                                                                         "arg1",
-                                                                        AllowedUUIDInputs.anyNullable()
+                                                                        List.of(),
+                                                                        AllowedUUIDInputs.anyNullable(),
+                                                                        null,
+                                                                        null,
+                                                                        null
                                                                 )
-                                                        )
+                                                        ),
+                                                        null,
+                                                        null
                                                 )
                                         ),
                                         AllowedUUIDInputs.anyNullable(),
                                         null,
+                                        null,
                                         null
                                 )
-                        )
+                        ),
+                        null,
+                        null
                 )
         );
 
@@ -668,112 +805,153 @@ class MethodCommandNodeFactoryTests {
                                                                                                                                                                                                                                                                                                                                                                                                                                                 List.of(
                                                                                                                                                                                                                                                                                                                                                                                                                                                         new UUIDCommandNode(
                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "uuid1",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNullable()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                List.of(),
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                AllowedUUIDInputs.anyNullable(),
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                                                                                                                                                 AllowedUUIDInputs.anyNullable(),
+                                                                                                                                                                                                                                                                                                                                                                                                                                null,
                                                                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                                                                                                                                 AllowedStringInputs.anyNullable(),
+                                                                                                                                                                                                                                                                                                                                                                                                                StringSuggester.any(),
                                                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                                                                                                 AllowedStringInputs.anyNullable(),
+                                                                                                                                                                                                                                                                                                                                                                                StringSuggester.any(),
                                                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                                                                 AllowedCharacterInputs.anyNotNull(),
+                                                                                                                                                                                                                                                                                                                                                null,
                                                                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                                                 AllowedCharacterInputs.anyNotNull(),
                                                                                                                                                                                                                                                                                                                                 null,
+                                                                                                                                                                                                                                                                                                                                null,
                                                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                                 AllowedDoubleInputs.unlimited(),
+                                                                                                                                                                                                                                                                                                DoubleSuggester.unlimited(),
                                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                                                 AllowedDoubleInputs.unlimited(),
+                                                                                                                                                                                                                                                                                DoubleSuggester.unlimited(),
                                                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                                                                null
                                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                                 AllowedShortInputs.unlimited(),
+                                                                                                                                                                                                                                                ShortSuggester.unlimited(),
                                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                                         )
                                                                                                                                                                                                                                 ),
                                                                                                                                                                                                                                 AllowedShortInputs.unlimited(),
+                                                                                                                                                                                                                                ShortSuggester.unlimited(),
                                                                                                                                                                                                                                 null,
                                                                                                                                                                                                                                 null
                                                                                                                                                                                                                         )
-                                                                                                                                                                                                                )
+                                                                                                                                                                                                                ),
+                                                                                                                                                                                                                null,
+                                                                                                                                                                                                                null
                                                                                                                                                                                                         )
                                                                                                                                                                                                 ),
                                                                                                                                                                                                 AllowedLongInputs.unlimited(),
+                                                                                                                                                                                                LongSuggester.unlimited(),
                                                                                                                                                                                                 null,
                                                                                                                                                                                                 null
                                                                                                                                                                                         )
                                                                                                                                                                                 ),
                                                                                                                                                                                 AllowedLongInputs.unlimited(),
+                                                                                                                                                                                LongSuggester.unlimited(),
                                                                                                                                                                                 null,
                                                                                                                                                                                 null
                                                                                                                                                                         )
                                                                                                                                                                 ),
                                                                                                                                                                 AllowedFloatInputs.unlimited(),
+                                                                                                                                                                FloatSuggester.unlimited(),
                                                                                                                                                                 null,
                                                                                                                                                                 null
                                                                                                                                                         )
-                                                                                                                                                )
+                                                                                                                                                ),
+                                                                                                                                                null,
+                                                                                                                                                null
                                                                                                                                         )
                                                                                                                                 ),
                                                                                                                                 AllowedFloatInputs.unlimited(),
+                                                                                                                                FloatSuggester.unlimited(),
                                                                                                                                 null,
                                                                                                                                 null
                                                                                                                         )
-                                                                                                                )
+                                                                                                                ),
+                                                                                                                null,
+                                                                                                                null
                                                                                                         )
                                                                                                 ),
                                                                                                 AllowedByteInputs.unlimited(),
+                                                                                                ByteSuggester.unlimited(),
                                                                                                 null,
                                                                                                 null
                                                                                         )
                                                                                 ),
                                                                                 AllowedByteInputs.unlimited(),
+                                                                                ByteSuggester.unlimited(),
                                                                                 null,
                                                                                 null
                                                                         )
-                                                                )
+                                                                ),
+                                                                null,
+                                                                null
                                                         )
                                                 ),
                                                 AllowedIntegerInputs.unlimited(),
+                                                IntegerSuggester.unlimited(),
                                                 null,
                                                 null
                                         )
                                 ),
                                 AllowedIntegerInputs.unlimited(),
+                                IntegerSuggester.unlimited(),
                                 null,
                                 null
                         )
-                )
+                ),
+                null,
+                null
         ));
 
         TestMix object = new TestMix();
