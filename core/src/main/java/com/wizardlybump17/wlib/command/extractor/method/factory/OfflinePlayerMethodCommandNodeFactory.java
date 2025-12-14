@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.annotation.Command;
 import com.wizardlybump17.wlib.command.input.AllowedOfflinePlayerInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.OfflinePlayerCommandNode;
+import com.wizardlybump17.wlib.command.suggestion.OfflinePlayerSuggester;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,7 @@ public class OfflinePlayerMethodCommandNodeFactory extends MethodCommandNodeFact
                 name,
                 root == null ? List.of() : List.of(root),
                 parameter.isAnnotationPresent(NotNull.class) ? AllowedOfflinePlayerInputs.anyNotNull() : AllowedOfflinePlayerInputs.anyNullable(),
+                OfflinePlayerSuggester.online(),
                 null,
                 null
         );

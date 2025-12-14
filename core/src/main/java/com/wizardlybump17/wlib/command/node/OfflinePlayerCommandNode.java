@@ -2,43 +2,22 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.AllowedOfflinePlayerInputs;
+import com.wizardlybump17.wlib.command.suggestion.OfflinePlayerSuggester;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 import java.util.UUID;
 
 public class OfflinePlayerCommandNode extends CommandNode<OfflinePlayer> {
 
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, allowedInputs, executor, permission);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, allowedInputs, executor, permission);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable String permission) {
-        super(name, children, allowedInputs, permission);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable String permission) {
-        super(name, allowedInputs, permission);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable CommandNodeExecutor<?> executor) {
-        super(name, allowedInputs, executor);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedOfflinePlayerInputs allowedInputs) {
-        super(name, children, allowedInputs);
-    }
-
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull AllowedOfflinePlayerInputs allowedInputs) {
-        super(name, allowedInputs);
+    public OfflinePlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<OfflinePlayer> allowedInputs, @Nullable OfflinePlayerSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+        super(name, children, allowedInputs, suggester, executor, permission);
     }
 
     @Override
@@ -67,17 +46,22 @@ public class OfflinePlayerCommandNode extends CommandNode<OfflinePlayer> {
     }
 
     @Override
+    public @Nullable OfflinePlayerSuggester getSuggester() {
+        return (OfflinePlayerSuggester) super.getSuggester();
+    }
+
+    @Override
     public @NotNull OfflinePlayerCommandNode withChildren(@NotNull List<CommandNode<?>> children) {
-        return new OfflinePlayerCommandNode(getName(), children, getAllowedInputs(), getExecutor(), getPermission());
+        return new OfflinePlayerCommandNode(getName(), children, getAllowedInputs(), getSuggester(), getExecutor(), getPermission());
     }
 
     @Override
     public @NotNull OfflinePlayerCommandNode withExecutor(@Nullable CommandNodeExecutor<?> executor) {
-        return new OfflinePlayerCommandNode(getName(), getChildren(), getAllowedInputs(), executor, getPermission());
+        return new OfflinePlayerCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), executor, getPermission());
     }
 
     @Override
     public @NotNull OfflinePlayerCommandNode withPermission(@Nullable String permission) {
-        return new OfflinePlayerCommandNode(getName(), getChildren(), getAllowedInputs(), getExecutor(), permission);
+        return new OfflinePlayerCommandNode(getName(), getChildren(), getAllowedInputs(), getSuggester(), getExecutor(), permission);
     }
 }
