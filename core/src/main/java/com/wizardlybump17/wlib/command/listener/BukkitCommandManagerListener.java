@@ -2,13 +2,17 @@ package com.wizardlybump17.wlib.command.listener;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.WLibCommandExecutor;
+import com.wizardlybump17.wlib.command.bukkit.BukkitCommand;
+import com.wizardlybump17.wlib.command.bukkit.InternalBukkitCommand;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.logging.Level;
 
 public class BukkitCommandManagerListener implements CommandManagerListener {
@@ -24,13 +28,20 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
         if (!(holder instanceof JavaPlugin plugin))
             return;
 
-        PluginCommand pluginCommand = plugin.getCommand(command.getName());
-        if (pluginCommand == null) {
-            plugin.getLogger().log(Level.WARNING, "Command not found on plugin.yml while trying to register it to WLib: " + command.getName());
-            return;
-        }
+        if (command instanceof BukkitCommand bukkitCommand) {
+            InternalBukkitCommand internalCommand = bukkitCommand.getInternalCommand();
+            internalCommand.setExecutor(commandExecutor);
 
-        pluginCommand.setExecutor(commandExecutor);
+            Bukkit.getCommandMap().register(command.getName(), identifier, internalCommand);
+        } else {
+            PluginCommand pluginCommand = plugin.getCommand(command.getName());
+            if (pluginCommand == null) {
+                plugin.getLogger().log(Level.WARNING, "Command not found on plugin.yml while trying to register it to WLib: " + command.getName());
+                return;
+            }
+
+            pluginCommand.setExecutor(commandExecutor);
+        }
     }
 
     @Override
@@ -42,11 +53,18 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
         if (!(holder instanceof JavaPlugin plugin))
             return;
 
-        PluginCommand pluginCommand = plugin.getCommand(command.getName());
-        if (pluginCommand == null)
-            return;
+        if (command instanceof BukkitCommand bukkitCommand) {
+            bukkitCommand.getInternalCommand().setExecutor(null);
 
-        pluginCommand.setExecutor(null);
+            Map<String, org.bukkit.command.Command> knownCommands = Bukkit.getCommandMap().getKnownCommands();
+            knownCommands.remove(identifier + CommandManager.SEPARATOR + command.getName());
+        } else {
+            PluginCommand pluginCommand = plugin.getCommand(command.getName());
+            if (pluginCommand == null)
+                return;
+
+            pluginCommand.setExecutor(null);
+        }
     }
 
     public @NotNull WLibCommandExecutor getCommandExecutor() {
