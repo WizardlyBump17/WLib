@@ -158,6 +158,7 @@ public class Command implements Comparable<Command> {
                     }
                 }
 
+                lastError = null;
                 foundNode = true;
 
                 String permission = child.getPermission();
