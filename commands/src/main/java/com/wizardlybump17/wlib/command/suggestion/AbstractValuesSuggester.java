@@ -40,7 +40,7 @@ public abstract class AbstractValuesSuggester<T> implements ValuesSuggester<T> {
 
     @Override
     public String toString() {
-        return "AbstractValuesSuggester{" +
+        return getClass().getSimpleName() + "{" +
                 "suggestions=" + suggestions +
                 '}';
     }
