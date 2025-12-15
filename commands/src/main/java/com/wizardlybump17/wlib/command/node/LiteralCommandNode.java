@@ -49,4 +49,9 @@ public class LiteralCommandNode extends CommandNode<String> {
     public @NotNull CommandNode<String> withPermission(@Nullable String permission) {
         return new LiteralCommandNode(getName(), getChildren(), getExecutor(), permission);
     }
+
+    @Override
+    public @NotNull LiteralCommandNode merge(@NotNull CommandNode<?> right) {
+        return (LiteralCommandNode) super.merge(right);
+    }
 }

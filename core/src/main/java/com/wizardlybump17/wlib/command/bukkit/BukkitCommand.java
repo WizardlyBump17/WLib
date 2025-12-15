@@ -16,4 +16,9 @@ public class BukkitCommand extends Command {
     public @NotNull InternalBukkitCommand getInternalCommand() {
         return internalCommand;
     }
+
+    @Override
+    public @NotNull BukkitCommand merge(@NotNull Command other) {
+        return new BukkitCommand(getRoot().merge(other.getRoot()));
+    }
 }
