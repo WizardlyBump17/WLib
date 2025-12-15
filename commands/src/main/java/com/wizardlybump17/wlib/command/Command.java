@@ -117,7 +117,6 @@ public class Command implements Comparable<Command> {
         return StringUtil.parseQuotedStrings(original);
     }
 
-    @SuppressWarnings("unchecked")
     public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
             return List.of(root.getName());
@@ -128,6 +127,7 @@ public class Command implements Comparable<Command> {
         List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
+        Throwable lastError = null;
 
         inputLoop: for (int i = 0; i < input.size(); i++) {
             String inputString = input.get(i);
@@ -148,6 +148,18 @@ public class Command implements Comparable<Command> {
             for (CommandNode<?> child : children) {
                 lastNode = child;
 
+                if (!isLastInput) {
+                    try {
+                        child.parseOrInvalid(inputString);
+                    } catch (InputParsingException | InvalidInputException e) {
+                        lastError = e;
+                        foundNode = false;
+                        continue;
+                    }
+                }
+
+                foundNode = true;
+
                 String permission = child.getPermission();
                 if (isLastInput && (permission == null || sender.hasPermission(permission)))
                     suggestions.addAll(getSuggestions0(child, sender, input, currentInput));
@@ -156,12 +168,11 @@ public class Command implements Comparable<Command> {
                     continue;
                 } else {
                     children = child.getChildren();
-                    foundNode = !children.isEmpty();
                     continue inputLoop;
                 }
             }
 
-            if (!foundNode)
+            if (lastError != null || !foundNode)
                 return List.of();
         }
 
