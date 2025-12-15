@@ -74,9 +74,12 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
         wlibArgs.add(command.getName());
         Collections.addAll(wlibArgs, args);
 
+        String current = args.length == 1 ? args[0] : args[args.length - 1];
+        String currentLowerCase = current.toLowerCase();
+
         return commandManager.getSuggestions(wlibSender, wlibArgs)
                 .stream()
-                .map(Object::toString)
+                .filter(suggestion -> suggestion.toLowerCase().startsWith(currentLowerCase))
                 .toList();
     }
 }
