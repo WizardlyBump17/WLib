@@ -2,12 +2,15 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.input.primitive.number.*;
+import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.*;
+import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.command.suggestion.primitive.number.*;
+import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -601,6 +604,88 @@ class SuggestionTests {
                                 null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+        );
+
+        //String
+        Assertions.assertEquals(
+                List.of(""),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new StringCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedStringInputs.anyNullable(),
+                                                StringSuggester.any(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+        );
+        Assertions.assertEquals(
+                List.of("wo"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new StringCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedStringInputs.anyNullable(),
+                                                StringSuggester.any(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "wo"))
+        );
+        Assertions.assertEquals(
+                List.of("spaced "),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new StringCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedStringInputs.anyNullable(),
+                                                StringSuggester.any(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced "))
+        );
+        Assertions.assertEquals(
+                List.of("spaced string"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new StringCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedStringInputs.anyNullable(),
+                                                StringSuggester.any(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced string"))
         );
     }
 }
