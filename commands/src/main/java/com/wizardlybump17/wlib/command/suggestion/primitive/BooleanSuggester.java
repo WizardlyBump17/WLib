@@ -25,6 +25,9 @@ public interface BooleanSuggester extends PrimitiveSuggester<Boolean> {
         private static final @NotNull List<Boolean> LIST = List.of(true);
         private static final @NotNull True INSTANCE = new True();
 
+        private True() {
+        }
+
         @Override
         public @NotNull List<Boolean> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {
             return LIST;
@@ -41,6 +44,9 @@ public interface BooleanSuggester extends PrimitiveSuggester<Boolean> {
         private static final @NotNull List<Boolean> LIST = List.of(false);
         private static final @NotNull False INSTANCE = new False();
 
+        private False() {
+        }
+
         @Override
         public @NotNull List<Boolean> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {
             return LIST;
@@ -56,6 +62,9 @@ public interface BooleanSuggester extends PrimitiveSuggester<Boolean> {
 
         private static final @NotNull List<Boolean> LIST = List.of(true, false);
         private static final @NotNull Any INSTANCE = new Any();
+
+        private Any() {
+        }
 
         @Override
         public @NotNull List<Boolean> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {

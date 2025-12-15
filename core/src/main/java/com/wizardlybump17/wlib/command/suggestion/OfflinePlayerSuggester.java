@@ -28,6 +28,9 @@ public interface OfflinePlayerSuggester extends Suggester<OfflinePlayer> {
 
         private static final @NotNull Online INSTANCE = new Online();
 
+        private Online() {
+        }
+
         @Override
         public @NotNull List<OfflinePlayer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {
             return Bukkit.getOnlinePlayers()
@@ -40,6 +43,9 @@ public interface OfflinePlayerSuggester extends Suggester<OfflinePlayer> {
     final class Cached implements OfflinePlayerSuggester {
 
         private static final @NotNull Cached INSTANCE = new Cached();
+
+        private Cached() {
+        }
 
         @Override
         public @NotNull List<OfflinePlayer> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) {
