@@ -128,7 +128,6 @@ public class Command implements Comparable<Command> {
         List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
-        InputParsingException lastParsingError = null;
 
         inputLoop: for (int i = 0; i < input.size(); i++) {
             String inputString = input.get(i);
@@ -145,34 +144,22 @@ public class Command implements Comparable<Command> {
                 break;
             }
 
-            boolean foundNode = false;
+            boolean foundNode = !children.isEmpty();
             for (CommandNode<?> child : children) {
                 lastNode = child;
 
-                try {
-                    foundNode = true;
+                String permission = child.getPermission();
+                if (isLastInput && (permission == null || sender.hasPermission(permission)))
+                    suggestions.addAll(getSuggestions0(child, sender, input, currentInput));
 
-                    child.parse(inputString);
-
-                    String permission = child.getPermission();
-                    if (isLastInput && (permission == null || sender.hasPermission(permission)))
-                        suggestions.addAll(getSuggestions0(child, sender, input, currentInput));
-
-                    lastParsingError = null;
-
-                    if (isLastInput) {
-                        continue;
-                    } else {
-                        children = child.getChildren();
-                        continue inputLoop;
-                    }
-                } catch (InputParsingException e) {
-                    lastParsingError = e;
+                if (isLastInput) {
+                    continue;
+                } else {
+                    children = child.getChildren();
+                    foundNode = !children.isEmpty();
+                    continue inputLoop;
                 }
             }
-
-            if (lastParsingError != null)
-                return List.of();
 
             if (!foundNode)
                 return List.of();

@@ -191,7 +191,7 @@ class SuggestionTests {
                 )
         );
 
-        List<String> expected = List.of("world", "hi", "happy");
+        List<String> expected = List.of("world", "hi", "1", "3", "5", "7", "10", "happy");
         List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
 
         Assertions.assertEquals(expected, actual);
