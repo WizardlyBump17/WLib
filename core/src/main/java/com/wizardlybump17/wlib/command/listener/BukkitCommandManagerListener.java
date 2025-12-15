@@ -45,8 +45,11 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
     }
 
     @Override
-    public void onClear(@NotNull CommandManager manager) {
     public void onPreClear(@NotNull CommandManager manager) {
+        Map<String, Object> holdersByFullName = manager.getHoldersByFullName();
+        manager.getCommandsByFullName().forEach((name, command) -> {
+            Object holder = holdersByFullName.get(name);
+            onUnregister(name.substring(0, name.indexOf(CommandManager.SEPARATOR)), command, holder, manager);
         });
     }
 
