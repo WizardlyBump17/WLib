@@ -1,22 +1,13 @@
 package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedByteInputs;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedLongInputs;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedShortInputs;
+import com.wizardlybump17.wlib.command.input.primitive.number.*;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
-import com.wizardlybump17.wlib.command.node.primitive.number.ByteCommandNode;
-import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
-import com.wizardlybump17.wlib.command.node.primitive.number.LongCommandNode;
-import com.wizardlybump17.wlib.command.node.primitive.number.ShortCommandNode;
+import com.wizardlybump17.wlib.command.node.primitive.number.*;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.ByteSuggester;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.IntegerSuggester;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.LongSuggester;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.ShortSuggester;
+import com.wizardlybump17.wlib.command.suggestion.primitive.number.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -478,6 +469,130 @@ class SuggestionTests {
                                                 List.of(),
                                                 AllowedLongInputs.unlimited(),
                                                 LongSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+        );
+
+        //float
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new FloatCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedFloatInputs.unlimited(),
+                                                FloatSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+        );
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new FloatCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedFloatInputs.unlimited(),
+                                                FloatSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+        );
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new FloatCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedFloatInputs.unlimited(),
+                                                FloatSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+        );
+
+        //double
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new DoubleCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedDoubleInputs.unlimited(),
+                                                DoubleSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+        );
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new DoubleCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedDoubleInputs.unlimited(),
+                                                DoubleSuggester.unlimited(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+        );
+        Assertions.assertEquals(
+                List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new DoubleCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedDoubleInputs.unlimited(),
+                                                DoubleSuggester.unlimited(),
                                                 null,
                                                 null
                                         )
