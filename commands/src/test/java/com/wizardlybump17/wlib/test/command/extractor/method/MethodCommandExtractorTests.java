@@ -1301,7 +1301,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "hello")
         );
         Assertions.assertEquals(
-                CommandResult.successful(1, hello.findNode("world"), null),
+                CommandResult.successful(1, hello.findNode("world"), "Hello World"),
                 manager.execute(CHAD_SENDER, "hello world")
         );
 
@@ -1310,7 +1310,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "hi")
         );
         Assertions.assertEquals(
-                CommandResult.successful(1, hi.findNode("world"), null),
+                CommandResult.successful(1, hi.findNode("world"), "Hi World"),
                 manager.execute(CHAD_SENDER, "hi world")
         );
 
@@ -1328,7 +1328,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "welcome test")
         );
         Assertions.assertEquals(
-                CommandResult.successful(2, welcome.findNode("world"), null),
+                CommandResult.successful(2, welcome.findNode("world"), "Welcome test"),
                 manager.execute(CHAD_SENDER, "welcome test world")
         );
 
@@ -1346,7 +1346,7 @@ class MethodCommandExtractorTests {
                 manager.execute(CHAD_SENDER, "aye test")
         );
         Assertions.assertEquals(
-                CommandResult.successful(2, aye.findNode("nice"), null),
+                CommandResult.successful(2, aye.findNode("nice"), "Aye test"),
                 manager.execute(CHAD_SENDER, "aye test nice")
         );
     }
@@ -1359,7 +1359,16 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hello world")
         public CommandResult<?> helloWorld() {
-            return null;
+            return CommandResult.successful(
+                    1,
+                    new LiteralCommandNode(
+                            "world",
+                            List.of(),
+                            Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(this, "helloWorld")),
+                            null
+                    ),
+                    "Hello World"
+            );
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi")
@@ -1368,7 +1377,16 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("hi world")
         public CommandResult<?> hiWorld(@NotNull CommandSender<?> sender) {
-            return null;
+            return CommandResult.successful(
+                    1,
+                    new LiteralCommandNode(
+                            "world",
+                            List.of(),
+                            Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(this, "hiWorld", CommandSender.class)),
+                            null
+                    ),
+                    "Hi World"
+            );
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("greetings")
@@ -1386,7 +1404,16 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("welcome <name> world")
         public CommandResult<?> welcomeWorld(@NotNull CommandSender<?> sender, @NotNull String name) {
-            return null;
+            return CommandResult.successful(
+                    2,
+                    new LiteralCommandNode(
+                            "world",
+                            List.of(),
+                            Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(this, "welcomeWorld", CommandSender.class, String.class)),
+                            null
+                    ),
+                    "Welcome " + name
+            );
         }
 
         @com.wizardlybump17.wlib.command.annotation.Command("wassup <name>")
@@ -1404,7 +1431,16 @@ class MethodCommandExtractorTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("aye <name> nice")
         public CommandResult<?> ayeNice(@NotNull String name) {
-            return null;
+            return CommandResult.successful(
+                    2,
+                    new LiteralCommandNode(
+                            "nice",
+                            List.of(),
+                            Assertions.assertDoesNotThrow(() -> MethodCommandExtractor.createExecutor(this, "ayeNice", String.class)),
+                            null
+                    ),
+                    "Aye " + name
+            );
         }
     }
 }

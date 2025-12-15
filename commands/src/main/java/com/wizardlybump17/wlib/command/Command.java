@@ -104,9 +104,11 @@ public class Command implements Comparable<Command> {
         try {
             CommandResult<?> result = executor.execute(context);
             if (result == null)
-                return CommandResult.successful(context, null);
-            if (result.lastNode() == null || result.lastInputIndex() < 0)
-                return CommandResult.genericError(context);
+                return CommandResult.exceptionally(lastInputIndex, lastNode, new NullPointerException("The CommandResult can not be null"));
+            if (result.lastNode() == null)
+                return CommandResult.genericError(lastInputIndex, lastNode, "The last node can not be null");
+            if (result.lastInputIndex() < 0)
+                return CommandResult.genericError(lastInputIndex, lastNode, "The last input index can not be less than 0");
             return result;
         } catch (Throwable throwable) {
             return CommandResult.exceptionally(lastInputIndex, lastNode, throwable);
