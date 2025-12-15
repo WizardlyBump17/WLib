@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.OfflinePlayerCommandNode;
 import com.wizardlybump17.wlib.command.suggestion.OfflinePlayerSuggester;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +30,7 @@ public class OfflinePlayerMethodCommandNodeFactory extends MethodCommandNodeFact
 
     @Override
     public @NotNull Class<?> @NotNull [] getSupportedTypes() {
-        return new Class[] {OfflinePlayer.class};
+        return new Class[] {OfflinePlayer.class, Player.class};
     }
 
     @Override
