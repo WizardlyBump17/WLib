@@ -2,7 +2,6 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.AllowedPlayerInputs;
 import com.wizardlybump17.wlib.command.suggestion.PlayerSuggester;
 import org.bukkit.Bukkit;
@@ -16,7 +15,7 @@ import java.util.UUID;
 
 public class PlayerCommandNode extends CommandNode<Player> {
 
-    public PlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<Player> allowedInputs, @Nullable PlayerSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public PlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedPlayerInputs allowedInputs, @Nullable PlayerSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
