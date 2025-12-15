@@ -9,7 +9,9 @@ public interface CommandManagerListener {
 
     void onRegister(@NotNull String identifier, @NotNull Command command, @Nullable Object holder, @NotNull CommandManager manager);
 
-    void onClear(@NotNull CommandManager manager);
+    void onPreClear(@NotNull CommandManager manager);
+
+    void onPostClear(@NotNull CommandManager manager);
 
     void onUnregister(@NotNull String identifier, @NotNull Command command, @Nullable Object holder, @NotNull CommandManager manager);
 }

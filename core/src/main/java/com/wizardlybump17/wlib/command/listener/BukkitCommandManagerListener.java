@@ -46,6 +46,12 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
 
     @Override
     public void onClear(@NotNull CommandManager manager) {
+    public void onPreClear(@NotNull CommandManager manager) {
+        });
+    }
+
+    @Override
+    public void onPostClear(@NotNull CommandManager manager) {
     }
 
     @Override

@@ -29,7 +29,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override
@@ -86,7 +90,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override
@@ -150,7 +158,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
                 Assertions.assertTrue(manager.isEmpty());
                 called.set(true);
             }
@@ -210,7 +222,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override
@@ -275,7 +291,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override
@@ -380,7 +400,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override
@@ -485,7 +509,11 @@ class CommandManagerListenerTests {
             }
 
             @Override
-            public void onClear(@NotNull CommandManager manager) {
+            public void onPreClear(@NotNull CommandManager manager) {
+            }
+
+            @Override
+            public void onPostClear(@NotNull CommandManager manager) {
             }
 
             @Override

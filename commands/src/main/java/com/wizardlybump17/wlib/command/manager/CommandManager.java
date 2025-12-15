@@ -140,6 +140,9 @@ public class CommandManager {
     }
 
     public void clear() {
+        for (CommandManagerListener listener : listeners)
+            listener.onPreClear(this);
+
         commandsByName.clear();
         commandsByFullName.clear();
 
@@ -149,7 +152,7 @@ public class CommandManager {
         holdersByFullName.clear();
 
         for (CommandManagerListener listener : listeners)
-            listener.onClear(this);
+            listener.onPostClear(this);
     }
 
     public @NotNull @UnmodifiableView Map<String, Command> getCommandsByFullName() {
