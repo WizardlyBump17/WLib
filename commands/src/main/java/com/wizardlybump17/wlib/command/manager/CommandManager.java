@@ -146,6 +146,8 @@ public class CommandManager {
         commandsByHolder.forEach((holder, commands) -> commands.clear());
         commandsByHolder.clear();
 
+        holdersByFullName.clear();
+
         for (CommandManagerListener listener : listeners)
             listener.onClear(this);
     }
