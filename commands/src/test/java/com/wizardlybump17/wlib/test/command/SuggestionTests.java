@@ -1,14 +1,17 @@
 package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.input.object.AllowedUUIDInputs;
 import com.wizardlybump17.wlib.command.input.primitive.number.*;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.node.object.UUIDCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.*;
 import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.object.UUIDSuggester;
 import com.wizardlybump17.wlib.command.suggestion.primitive.number.*;
 import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import org.jetbrains.annotations.NotNull;
@@ -686,6 +689,56 @@ class SuggestionTests {
                                 null
                         )
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced string"))
+        );
+
+        //UUID
+        Assertions.assertEquals(
+                List.of("9b07bd8a-a4c0-3681-997f-6b6df78c0abe", "2931e955-084c-3d9e-aea4-8e5c2c1089c1", "2931e955-084c-3d9e-aea4-8e5c2c1089c1"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new UUIDCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedUUIDInputs.anyNullable(),
+                                                UUIDSuggester.values(
+                                                        UUID.nameUUIDFromBytes("WizardlyBump17".getBytes()),
+                                                        UUID.nameUUIDFromBytes("WizardlyBump18".getBytes()),
+                                                        UUID.nameUUIDFromBytes("WizardlyBump18".getBytes())
+                                                ),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+        );
+        Assertions.assertEquals(
+                List.of("9b07bd8a-a4c0-3681-997f-6b6df78c0abe", "2931e955-084c-3d9e-aea4-8e5c2c1089c1", "2931e955-084c-3d9e-aea4-8e5c2c1089c1"),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new UUIDCommandNode(
+                                                "world",
+                                                List.of(),
+                                                AllowedUUIDInputs.anyNullable(),
+                                                UUIDSuggester.values(
+                                                        UUID.nameUUIDFromBytes("WizardlyBump17".getBytes()),
+                                                        UUID.nameUUIDFromBytes("WizardlyBump18".getBytes()),
+                                                        UUID.nameUUIDFromBytes("WizardlyBump18".getBytes())
+                                                ),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "9b07bd8a-a4c0"))
         );
     }
 }
