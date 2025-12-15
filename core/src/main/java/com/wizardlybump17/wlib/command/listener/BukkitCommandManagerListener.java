@@ -58,6 +58,7 @@ public class BukkitCommandManagerListener implements CommandManagerListener {
 
             Map<String, org.bukkit.command.Command> knownCommands = Bukkit.getCommandMap().getKnownCommands();
             knownCommands.remove(identifier + CommandManager.SEPARATOR + command.getName());
+            knownCommands.remove(command.getName());
         } else {
             PluginCommand pluginCommand = plugin.getCommand(command.getName());
             if (pluginCommand == null)
