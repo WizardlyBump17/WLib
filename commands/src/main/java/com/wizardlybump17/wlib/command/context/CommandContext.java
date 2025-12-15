@@ -19,7 +19,7 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
         private final @NotNull @Unmodifiable Map<String, CommandNodeArgument<?>> arguments;
 
         public CommandNodeArguments(@NotNull List<CommandNodeArgument<?>> arguments) {
-            Map<String, CommandNodeArgument<?>> argumentsMap = new HashMap<>();
+            Map<String, CommandNodeArgument<?>> argumentsMap = new LinkedHashMap<>();
             for (CommandNodeArgument<?> argument : arguments)
                 argumentsMap.put(argument.node().getName(), argument);
             this.arguments = Map.copyOf(argumentsMap);
