@@ -22,7 +22,7 @@ public record CommandContext(@NotNull Command command, @NotNull CommandSender<?>
             Map<String, CommandNodeArgument<?>> argumentsMap = new LinkedHashMap<>();
             for (CommandNodeArgument<?> argument : arguments)
                 argumentsMap.put(argument.node().getName(), argument);
-            this.arguments = Map.copyOf(argumentsMap);
+            this.arguments = Collections.unmodifiableMap(argumentsMap);
         }
 
         public boolean hasArgument(@NotNull String key) {
