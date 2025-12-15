@@ -8,6 +8,7 @@ import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import com.wizardlybump17.wlib.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,13 +117,14 @@ public class Command implements Comparable<Command> {
         return StringUtil.parseQuotedStrings(original);
     }
 
-    public @NotNull List<Object> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    @SuppressWarnings("unchecked")
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
             return List.of(root.getName());
 
         String currentInput = input.getLast();
 
-        List<Object> suggestions = new ArrayList<>();
+        List<String> suggestions = new ArrayList<>();
         List<CommandNode<?>> children = List.of(root);
 
         CommandNode<?> lastNode = null;
@@ -136,7 +138,7 @@ public class Command implements Comparable<Command> {
                 for (CommandNode<?> child : children) {
                     String permission = child.getPermission();
                     if (permission == null || sender.hasPermission(permission))
-                        suggestions.addAll(child.getSuggestions(sender, input, ""));
+                        suggestions.addAll(getSuggestions0(child, sender, input, ""));
                 }
                 if (!children.isEmpty())
                     lastNode = children.getLast();
@@ -154,7 +156,7 @@ public class Command implements Comparable<Command> {
 
                     String permission = child.getPermission();
                     if (isLastInput && (permission == null || sender.hasPermission(permission)))
-                        suggestions.addAll(child.getSuggestions(sender, input, currentInput));
+                        suggestions.addAll(getSuggestions0(child, sender, input, currentInput));
 
                     lastParsingError = null;
 
@@ -180,6 +182,24 @@ public class Command implements Comparable<Command> {
             return List.of();
 
         return suggestions;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static @NotNull List<String> getSuggestions0(@NotNull CommandNode<?> node, @NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String currentInput) {
+        List<?> childSuggestions = node.getSuggestions(sender, input, currentInput);
+        Suggester<Object> suggester = (Suggester<Object>) node.getSuggester();
+
+        if (suggester == null) {
+            return childSuggestions
+                    .stream()
+                    .map(Object::toString)
+                    .toList();
+        } else {
+            return childSuggestions
+                            .stream()
+                            .map(suggester::getStringRepresentation)
+                            .toList();
+        }
     }
 
     public @NotNull Command merge(@NotNull Command other) {

@@ -63,8 +63,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("hello", "hi", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of());
+        List<String> expected = List.of("hello", "hi", "welcome");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of());
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -108,8 +108,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("hello", "hi", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("he"));
+        List<String> expected = List.of("hello", "hi", "welcome");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of("he"));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -153,8 +153,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("there");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("hi", ""));
+        List<String> expected = List.of("there");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of("hi", ""));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -198,8 +198,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("there");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("hi", "ther"));
+        List<String> expected = List.of("there");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of("hi", "ther"));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -252,8 +252,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", ""));
+        List<String> expected = List.of("0", "50", "200", "3000", "50000", "100000");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", ""));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -306,8 +306,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", "10"));
+        List<String> expected = List.of("0", "50", "200", "3000", "50000", "100000");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, List.of("welcome", "10"));
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -351,8 +351,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of();
-        List<Object> actual = manager.getSuggestions(BETA_SENDER, List.of());
+        List<String> expected = List.of();
+        List<String> actual = manager.getSuggestions(BETA_SENDER, List.of());
 
         Assertions.assertTrue(CollectionUtil.contentEquals(expected, actual));
     }
@@ -405,8 +405,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("hi", "hello", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "");
+        List<String> expected = List.of("hi", "hello", "welcome");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, "");
 
         Assertions.assertEquals(expected, actual);
     }
@@ -459,8 +459,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of("there");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "hi t");
+        List<String> expected = List.of("there");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, "hi t");
 
         Assertions.assertEquals(expected, actual);
     }
@@ -513,8 +513,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command1);
         manager.registerCommand("test", command2);
 
-        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "welcome 1");
+        List<String> expected = List.of("0", "50", "200", "3000", "50000", "100000");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, "welcome 1");
 
         Assertions.assertEquals(expected, actual);
     }
@@ -583,8 +583,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("spaced string");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, "test \"spaced ");
+        List<String> expected = List.of("spaced string");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, "test \"spaced ");
 
         Assertions.assertEquals(expected, actual);
     }
@@ -653,8 +653,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("hi", "test", "hello", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{});
+        List<String> expected = List.of("hi", "test", "hello", "welcome");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{});
 
         Assertions.assertEquals(expected, actual);
     }
@@ -723,8 +723,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("hi", "test", "hello", "welcome");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"he"});
+        List<String> expected = List.of("hi", "test", "hello", "welcome");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"he"});
 
         Assertions.assertEquals(expected, actual);
     }
@@ -793,8 +793,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of(0, 50, 200, 3000, 50000, 100000);
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"welcome", ""});
+        List<String> expected = List.of("0", "50", "200", "3000", "50000", "100000");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"welcome", ""});
 
         Assertions.assertEquals(expected, actual);
     }
@@ -863,8 +863,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("spaced string");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", ""});
+        List<String> expected = List.of("spaced string");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", ""});
 
         Assertions.assertEquals(expected, actual);
     }
@@ -933,8 +933,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("spaced string");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", "spaced"});
+        List<String> expected = List.of("spaced string");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", "spaced"});
 
         Assertions.assertEquals(expected, actual);
     }
@@ -1003,8 +1003,8 @@ class CommandManagerSuggestionTests {
         manager.registerCommand("test", command2);
         manager.registerCommand("test", command3);
 
-        List<Object> expected = List.of("spaced string");
-        List<Object> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", "\"space"});
+        List<String> expected = List.of("spaced string");
+        List<String> actual = manager.getSuggestions(CHAD_SENDER, new String[]{"test", "\"space"});
 
         Assertions.assertEquals(expected, actual);
     }

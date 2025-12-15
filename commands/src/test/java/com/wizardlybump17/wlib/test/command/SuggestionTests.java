@@ -51,8 +51,8 @@ class SuggestionTests {
                 )
         );
 
-        List<Object> expected = List.of("hello");
-        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of());
+        List<String> expected = List.of("hello");
+        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of());
 
         Assertions.assertEquals(expected, actual);
     }
@@ -76,8 +76,8 @@ class SuggestionTests {
                 )
         );
 
-        List<Object> expected = List.of("hello");
-        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("he"));
+        List<String> expected = List.of("hello");
+        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("he"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -113,8 +113,8 @@ class SuggestionTests {
                 )
         );
 
-        List<Object> expected = List.of("world", "hi", "there");
-        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<String> expected = List.of("world", "hi", "there");
+        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -152,8 +152,8 @@ class SuggestionTests {
                 )
         );
 
-        List<Object> expected = List.of("world", "hi", 1, 3, 5, 7, 10);
-        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<String> expected = List.of("world", "hi", "1", "3", "5", "7", "10");
+        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -197,8 +197,8 @@ class SuggestionTests {
                 )
         );
 
-        List<Object> expected = List.of("world", "hi", "happy");
-        List<Object> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
+        List<String> expected = List.of("world", "hi", "happy");
+        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -242,7 +242,7 @@ class SuggestionTests {
 
         //byte
         Assertions.assertEquals(
-                List.of((byte) -128, (byte) -100, (byte) -50, (byte) 0, (byte) 50, (byte) 100, (byte) 127),
+                List.of("-128", "-100", "-50", "0", "50", "100", "127"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -262,7 +262,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
         Assertions.assertEquals(
-                List.of((byte) -128, (byte) -100, (byte) -50, (byte) 0, (byte) 50, (byte) 100, (byte) 127),
+                List.of("-128", "-100", "-50", "0", "50", "100", "127"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -282,7 +282,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
         Assertions.assertEquals(
-                List.of((byte) -128, (byte) -100, (byte) -50, (byte) 0, (byte) 50, (byte) 100, (byte) 127),
+                List.of("-128", "-100", "-50", "0", "50", "100", "127"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -304,7 +304,7 @@ class SuggestionTests {
 
         //short
         Assertions.assertEquals(
-                List.of((short) -32768, (short) -3000, (short) -100, (short) -50, (short) 0, (short) 50, (short) 100, (short) 3000, (short) 32767),
+                List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -324,7 +324,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
         Assertions.assertEquals(
-                List.of((short) -32768, (short) -3000, (short) -100, (short) -50, (short) 0, (short) 50, (short) 100, (short) 3000, (short) 32767),
+                List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -344,7 +344,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
         Assertions.assertEquals(
-                List.of((short) -32768, (short) -3000, (short) -100, (short) -50, (short) 0, (short) 50, (short) 100, (short) 3000, (short) 32767),
+                List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -366,7 +366,7 @@ class SuggestionTests {
 
         //int
         Assertions.assertEquals(
-                List.of(-100000, -50000, -3000, -200, -50, 0, 50, 200, 3000, 50000, 100000),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -386,7 +386,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
         Assertions.assertEquals(
-                List.of(-100000, -50000, -3000, -200, -50, 0, 50, 200, 3000, 50000, 100000),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -406,7 +406,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
         Assertions.assertEquals(
-                List.of(-100000, -50000, -3000, -200, -50, 0, 50, 200, 3000, 50000, 100000),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -428,7 +428,7 @@ class SuggestionTests {
 
         //long
         Assertions.assertEquals(
-                List.of(-100000L, -50000L, -3000L, -200L, -50L, 0L, 50L, 200L, 3000L, 50000L, 100000L),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -448,7 +448,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
         );
         Assertions.assertEquals(
-                List.of(-100000L, -50000L, -3000L, -200L, -50L, 0L, 50L, 200L, 3000L, 50000L, 100000L),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -468,7 +468,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
         );
         Assertions.assertEquals(
-                List.of(-100000L, -50000L, -3000L, -200L, -50L, 0L, 50L, 200L, 3000L, 50000L, 100000L),
+                List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
                 new Command(
                         new LiteralCommandNode(
                                 "hello",
