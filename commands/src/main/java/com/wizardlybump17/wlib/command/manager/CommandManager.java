@@ -166,6 +166,10 @@ public class CommandManager {
         return Collections.unmodifiableSet(commandsByHolder.getOrDefault(holder, Set.of()));
     }
 
+    public @NotNull @UnmodifiableView Map<String, Object> getHoldersByFullName() {
+        return Collections.unmodifiableMap(holdersByFullName);
+    }
+
     public void addListener(@NotNull CommandManagerListener listener) {
         listeners.add(listener);
     }
