@@ -25,7 +25,7 @@ public class CachingSuggester<T> implements Suggester<T> {
 
     @Override
     public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String current, @NotNull CommandNode<?> currentNode) throws SuggesterException {
-        if (lastUpdateMillis + expirationMillis >= System.currentTimeMillis()) {
+        if (lastUpdateMillis + expirationMillis <= System.currentTimeMillis()) {
             List<T> suggestions = delegate.getSuggestions(sender, input, current, currentNode);
             cache = Collections.unmodifiableList(suggestions);
             lastUpdateMillis = System.currentTimeMillis();
