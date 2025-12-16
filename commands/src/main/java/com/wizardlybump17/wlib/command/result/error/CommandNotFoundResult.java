@@ -19,6 +19,10 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
         return DummyNode.INSTANCE;
     }
 
+    public static @NotNull CommandNode<?> dummyNode() {
+        return DummyNode.INSTANCE;
+    }
+
     private static final class DummyNode extends CommandNode<Object> {
 
         public static final @NotNull DummyNode INSTANCE = new DummyNode();
