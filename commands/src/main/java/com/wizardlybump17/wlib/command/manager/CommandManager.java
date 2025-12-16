@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.manager;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
@@ -98,7 +99,7 @@ public class CommandManager {
         return execute(sender, String.join(" ", input));
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws SuggesterException {
         if (input.isEmpty() || input.size() == 1) {
             return commandsByName.values().stream()
                     .map(Command::getRoot)
@@ -119,7 +120,7 @@ public class CommandManager {
         return command.getSuggestions(sender, input);
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) {
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) throws SuggesterException {
         try {
             if (!input.isEmpty() && !StringUtil.isProperlyQuoted(input))
                 input = input + "\"";
@@ -129,7 +130,7 @@ public class CommandManager {
         }
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) throws SuggesterException {
         return getSuggestions(sender, String.join(" ", input));
     }
 

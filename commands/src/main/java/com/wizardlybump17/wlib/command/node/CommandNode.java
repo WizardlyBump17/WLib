@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.exception.InvalidInputException;
+import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -60,7 +61,7 @@ public abstract class CommandNode<T> {
         return parse;
     }
 
-    public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) {
+    public @NotNull List<T> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> args, @NotNull String currentInput) throws SuggesterException {
         return suggester == null ? List.of() : suggester.getSuggestions(sender, args, currentInput, this);
     }
 

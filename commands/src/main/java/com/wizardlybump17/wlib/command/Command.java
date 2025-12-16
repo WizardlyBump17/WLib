@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.exception.InvalidInputException;
+import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
@@ -119,7 +120,7 @@ public class Command implements Comparable<Command> {
         return StringUtil.parseQuotedStrings(original);
     }
 
-    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws SuggesterException {
         if (input.isEmpty())
             return List.of(root.getName());
 
@@ -186,7 +187,7 @@ public class Command implements Comparable<Command> {
     }
 
     @SuppressWarnings("unchecked")
-    private static @NotNull List<String> getSuggestions0(@NotNull CommandNode<?> node, @NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String currentInput) {
+    private static @NotNull List<String> getSuggestions0(@NotNull CommandNode<?> node, @NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String currentInput) throws SuggesterException {
         List<?> childSuggestions = node.getSuggestions(sender, input, currentInput);
         Suggester<Object> suggester = (Suggester<Object>) node.getSuggester();
 
