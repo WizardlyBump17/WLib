@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command;
 
+import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.result.SuccessResult;
@@ -76,9 +77,14 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
         String current = args.length == 1 ? args[0] : args[args.length - 1];
         String currentLowerCase = current.toLowerCase();
 
-        return commandManager.getSuggestions(wlibSender, wlibArgs)
-                .stream()
-                .filter(suggestion -> suggestion.toLowerCase().startsWith(currentLowerCase))
-                .toList();
+        try {
+            return commandManager.getSuggestions(wlibSender, wlibArgs)
+                    .stream()
+                    .filter(suggestion -> suggestion.toLowerCase().startsWith(currentLowerCase))
+                    .toList();
+        } catch (SuggesterException e) {
+            logger.log(Level.SEVERE, "Error while getting suggestions for " + sender + ": " + wlibArgs, e);
+            return List.of();
+        }
     }
 }

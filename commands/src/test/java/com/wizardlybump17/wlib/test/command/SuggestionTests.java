@@ -49,7 +49,7 @@ class SuggestionTests {
         );
 
         List<String> expected = List.of("hello");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of());
+        List<String> actual = Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of()));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -74,7 +74,7 @@ class SuggestionTests {
         );
 
         List<String> expected = List.of("hello");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("he"));
+        List<String> actual = Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("he")));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -111,7 +111,7 @@ class SuggestionTests {
         );
 
         List<String> expected = List.of("world", "hi", "there");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<String> actual = Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "")));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -150,7 +150,7 @@ class SuggestionTests {
         );
 
         List<String> expected = List.of("world", "hi", "1", "3", "5", "7", "10");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", ""));
+        List<String> actual = Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "")));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -195,7 +195,7 @@ class SuggestionTests {
         );
 
         List<String> expected = List.of("world", "hi", "1", "3", "5", "7", "10", "happy");
-        List<String> actual = command.getSuggestions(CHAD_SENDER, List.of("hello", "h"));
+        List<String> actual = Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "h")));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -205,42 +205,42 @@ class SuggestionTests {
         //literal
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(),
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of())
+                ).getSuggestions(CHAD_SENDER, List.of()))
         );
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(),
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of(""))
+                ).getSuggestions(CHAD_SENDER, List.of("")))
         );
         Assertions.assertEquals(
                 List.of("hello"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(),
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hel"))
+                ).getSuggestions(CHAD_SENDER, List.of("hel")))
         );
 
         //byte
         Assertions.assertEquals(
                 List.of("-128", "-100", "-50", "0", "50", "100", "127"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -256,11 +256,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-128", "-100", "-50", "0", "50", "100", "127"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -276,11 +276,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-128", "-100", "-50", "0", "50", "100", "127"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -296,13 +296,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //short
         Assertions.assertEquals(
                 List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -318,11 +318,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -338,11 +338,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-32768", "-3000", "-100", "-50", "0", "50", "100", "3000", "32767"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -358,13 +358,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //int
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -380,11 +380,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -400,11 +400,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -420,13 +420,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //long
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -442,11 +442,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -462,11 +462,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-100000", "-50000", "-3000", "-200", "-50", "0", "50", "200", "3000", "50000", "100000"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -482,13 +482,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //float
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -504,11 +504,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -524,11 +524,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -544,13 +544,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //double
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -566,11 +566,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -586,11 +586,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "0")))
         );
         Assertions.assertEquals(
                 List.of("-100000.5", "-50000.5", "-3000.5", "-200.5", "-50.5", "0.0", "50.5", "200.5", "3000.5", "50000.5", "100000.5"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -606,13 +606,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "10"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "10")))
         );
 
         //String
         Assertions.assertEquals(
                 List.of(""),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -628,11 +628,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("wo"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -648,11 +648,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "wo"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "wo")))
         );
         Assertions.assertEquals(
                 List.of("spaced "),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -668,11 +668,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced "))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced ")))
         );
         Assertions.assertEquals(
                 List.of("spaced string"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -688,13 +688,13 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced string"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced string")))
         );
 
         //UUID
         Assertions.assertEquals(
                 List.of("9b07bd8a-a4c0-3681-997f-6b6df78c0abe", "2931e955-084c-3d9e-aea4-8e5c2c1089c1", "2931e955-084c-3d9e-aea4-8e5c2c1089c1"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -714,11 +714,11 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", ""))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
                 List.of("9b07bd8a-a4c0-3681-997f-6b6df78c0abe", "2931e955-084c-3d9e-aea4-8e5c2c1089c1", "2931e955-084c-3d9e-aea4-8e5c2c1089c1"),
-                new Command(
+                Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
                                 List.of(
@@ -738,7 +738,7 @@ class SuggestionTests {
                                 null,
                                 null
                         )
-                ).getSuggestions(CHAD_SENDER, List.of("hello", "9b07bd8a-a4c0"))
+                ).getSuggestions(CHAD_SENDER, List.of("hello", "9b07bd8a-a4c0")))
         );
     }
 }
