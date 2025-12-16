@@ -42,7 +42,7 @@ public class Command implements Comparable<Command> {
     @SuppressWarnings("unchecked")
     public @NotNull FullCommandResult execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
-            return new FullCommandResult(sender, List.of(), 0, root, CommandResult.insufficientArguments(this));
+            return new FullCommandResult(sender, List.of(), root, CommandResult.insufficientArguments(this));
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(root);
@@ -52,7 +52,6 @@ public class Command implements Comparable<Command> {
         InputParsingException lastParsingError = null;
         InvalidInputException lastInputError = null;
 
-        CommandResult<?> finalResult = null;
         inputLoop: for (int i = 0; i < input.size(); i++) {
             String inputString = input.get(i);
             lastInputIndex = i;
@@ -79,61 +78,42 @@ public class Command implements Comparable<Command> {
                 }
             }
 
-            if (lastParsingError != null) {
-                finalResult = CommandResult.parseInputException(lastInputIndex, lastNode, lastParsingError);
-                break;
-            }
-            if (lastInputError != null) {
-                finalResult = CommandResult.outOfRangeInput(lastInputIndex, lastNode);
-                break;
-            }
+            if (lastParsingError != null)
+                return new FullCommandResult(sender, input, lastNode, CommandResult.parseInputException(lastInputIndex, lastNode, lastParsingError));
+            if (lastInputError != null)
+                return new FullCommandResult(sender, input, lastNode, CommandResult.outOfRangeInput(lastInputIndex, lastNode));
 
-            finalResult = CommandResult.extraArguments(lastInputIndex, lastNode);
-            break;
+            return new FullCommandResult(sender, input, lastNode, CommandResult.extraArguments(lastInputIndex, lastNode));
         }
 
         CommandNodeExecutor<?> executor = lastNode.getExecutor();
+        if (executor == null)
+            return new FullCommandResult(sender, input, lastNode, CommandResult.noCommandNodeExecutor(lastInputIndex, lastNode));
 
-        if (finalResult == null) {
-            if (executor == null)
-                finalResult = CommandResult.noCommandNodeExecutor(lastInputIndex, lastNode);
+        String nodePermission = lastNode.getPermission();
+        if (nodePermission != null && !sender.hasPermission(nodePermission))
+            return new FullCommandResult(sender, input, lastNode, CommandResult.noPermission(lastInputIndex, lastNode));
+
+        CommandContext context = new CommandContext(
+                this,
+                sender,
+                new CommandContext.CommandNodeArguments(arguments),
+                lastInputIndex,
+                lastNode
+        );
+
+        try {
+            CommandResult<?> result = executor.execute(context);
+            if (result == null)
+                return new FullCommandResult(sender, input, lastNode, CommandResult.exceptionally(lastInputIndex, lastNode, new NullPointerException("The CommandResult can not be null")));
+            if (result.lastNode() == null)
+                return new FullCommandResult(sender, input, lastNode, CommandResult.genericError(lastInputIndex, lastNode, "The last node can not be null"));
+            if (result.lastInputIndex() < 0)
+                return new FullCommandResult(sender, input, lastNode, CommandResult.genericError(lastInputIndex, lastNode, "The last input index can not be less than 0"));
+            return new FullCommandResult(sender, input, lastNode, result);
+        } catch (Throwable throwable) {
+            return new FullCommandResult(sender, input, lastNode, CommandResult.exceptionally(lastInputIndex, lastNode, throwable));
         }
-
-        if (finalResult == null) {
-            String nodePermission = lastNode.getPermission();
-            if (nodePermission != null && !sender.hasPermission(nodePermission))
-                finalResult = CommandResult.noPermission(lastInputIndex, lastNode);
-        }
-
-        if (finalResult == null) {
-            CommandContext context = new CommandContext(
-                    this,
-                    sender,
-                    new CommandContext.CommandNodeArguments(arguments),
-                    lastInputIndex,
-                    lastNode
-            );
-
-            try {
-                CommandResult<?> result = executor.execute(context);
-
-                if (result == null)
-                    finalResult = CommandResult.exceptionally(lastInputIndex, lastNode, new NullPointerException("The CommandResult can not be null"));
-                if (finalResult == null && result.lastNode() == null)
-                    finalResult = CommandResult.genericError(lastInputIndex, lastNode, "The last node can not be null");
-                if (finalResult == null && result.lastInputIndex() < 0)
-                    finalResult = CommandResult.genericError(lastInputIndex, lastNode, "The last input index can not be less than 0");
-
-                if (finalResult == null)
-                    finalResult = result;
-
-                return new FullCommandResult(sender, input, lastInputIndex, lastNode, finalResult);
-            } catch (Throwable throwable) {
-                finalResult = CommandResult.exceptionally(lastInputIndex, lastNode, throwable);
-            }
-        }
-
-        return new FullCommandResult(sender, input, lastInputIndex, lastNode, finalResult);
     }
 
     public @NotNull List<String> getInputList(@NotNull String original) {

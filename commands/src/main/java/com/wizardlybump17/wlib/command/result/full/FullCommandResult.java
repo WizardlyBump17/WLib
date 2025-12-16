@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record FullCommandResult(@NotNull CommandSender<?> sender, @NotNull List<String> input, int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull CommandResult<?> result) {
+public record FullCommandResult(@NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull CommandNode<?> lastNode, @NotNull CommandResult<?> result) {
 }
