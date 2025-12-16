@@ -4,8 +4,6 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
-import com.wizardlybump17.wlib.command.result.error.CommandNotFoundResult;
-import com.wizardlybump17.wlib.command.result.full.FullCommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
@@ -76,9 +74,9 @@ public class CommandManager {
         return left.merge(right);
     }
 
-    public @NotNull FullCommandResult execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
-            return new FullCommandResult(sender, List.of(), CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(""));
+            return CommandResult.commandNotFound("");
 
         String commandName = input.getFirst();
 
@@ -87,16 +85,16 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            return new FullCommandResult(sender, input, CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(commandName));
+            return CommandResult.commandNotFound(commandName);
 
         return command.execute(sender, input);
     }
 
-    public @NotNull FullCommandResult execute(@NotNull CommandSender<?> sender, @NotNull String input) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
         return execute(sender, StringUtil.parseQuotedStrings(input));
     }
 
-    public @NotNull FullCommandResult execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
         return execute(sender, String.join(" ", input));
     }
 
