@@ -7,6 +7,7 @@ import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.result.SuccessResult;
 import com.wizardlybump17.wlib.command.result.error.CommandNotFoundResult;
+import com.wizardlybump17.wlib.command.result.full.FullCommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -321,8 +322,8 @@ class CommandManagerTests {
         CommandManager manager = new CommandManager();
         manager.registerCommand("test", command);
 
-        CommandNotFoundResult<?> expected = CommandResult.commandNotFound("hello0");
-        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hello0"));
+        FullCommandResult expected = new FullCommandResult(CHAD_SENDER, List.of("hello0"), 0, command.getRoot(), CommandResult.commandNotFound("hello0"));
+        FullCommandResult actual = manager.execute(CHAD_SENDER, List.of("hello0"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -341,8 +342,8 @@ class CommandManagerTests {
         CommandManager manager = new CommandManager();
         manager.registerCommand("test", command);
 
-        CommandNotFoundResult<?> expected = CommandResult.commandNotFound("");
-        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of());
+        FullCommandResult expected = new FullCommandResult(CHAD_SENDER, List.of(), 0, CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(""));
+        FullCommandResult actual = manager.execute(CHAD_SENDER, List.of());
 
         Assertions.assertEquals(expected, actual);
     }
@@ -380,7 +381,7 @@ class CommandManagerTests {
         manager.registerCommand("test", command2);
 
         SuccessResult<String> expected = CommandResult.successful(0, helloNode, "hello");
-        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hello"));
+        FullCommandResult actual = manager.execute(CHAD_SENDER, List.of("hello"));
 
         Assertions.assertEquals(expected, actual);
     }
@@ -426,7 +427,7 @@ class CommandManagerTests {
         manager.registerCommand("test", command2);
 
         SuccessResult<String> expected = CommandResult.successful(1, thereNode, "hi there");
-        CommandResult<?> actual = manager.execute(CHAD_SENDER, List.of("hi", "there"));
+        FullCommandResult actual = manager.execute(CHAD_SENDER, List.of("hi", "there"));
 
         Assertions.assertEquals(expected, actual);
     }

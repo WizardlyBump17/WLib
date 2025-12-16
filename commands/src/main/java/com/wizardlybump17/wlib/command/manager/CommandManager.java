@@ -78,7 +78,7 @@ public class CommandManager {
 
     public @NotNull FullCommandResult execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
         if (input.isEmpty())
-            return new FullCommandResult(sender, List.of(), CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(""));
+            return new FullCommandResult(sender, List.of(), 0, CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(""));
 
         String commandName = input.getFirst();
 
@@ -87,7 +87,7 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            return new FullCommandResult(sender, input, CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(commandName));
+            return new FullCommandResult(sender, input, 0, CommandNotFoundResult.dummyNode(), CommandResult.commandNotFound(commandName));
 
         return command.execute(sender, input);
     }
