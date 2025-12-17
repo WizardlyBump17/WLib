@@ -337,6 +337,7 @@ public class StringUtil {
         StringBuilder builder = new StringBuilder();
         boolean escaped = false;
         boolean onQuotes = false;
+        boolean leftQuotes = false;
 
         for (char currentChar : chars) {
             if (currentChar == escape) {
@@ -355,6 +356,7 @@ public class StringUtil {
                     strings.add(builder.toString());
                     builder.setLength(0);
                     onQuotes = false;
+                    leftQuotes = true;
                 } else {
                     onQuotes = true;
                 }
@@ -367,9 +369,11 @@ public class StringUtil {
                     continue;
                 }
 
-                if (!builder.isEmpty()) {
+                if (!leftQuotes) {
                     strings.add(builder.toString());
                     builder.setLength(0);
+                } else {
+                    leftQuotes = false;
                 }
                 continue;
             }

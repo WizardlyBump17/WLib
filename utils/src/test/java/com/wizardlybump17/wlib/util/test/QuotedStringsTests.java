@@ -27,7 +27,7 @@ class QuotedStringsTests {
                 StringUtil.parseQuotedStrings("Hello Beautiful World", QUOTE, ESCAPE, DELIMITER)
         );
         assertEquals(
-                List.of("Hello", "World", "Hi"),
+                List.of("Hello", "World", "", "", "Hi"),
                 StringUtil.parseQuotedStrings("Hello World   Hi", QUOTE, ESCAPE, DELIMITER)
         );
     }
@@ -131,7 +131,7 @@ class QuotedStringsTests {
     @Test
     void testEndingWithSpace0() {
         Assertions.assertEquals(
-                List.of(),
+                List.of(""),
                 StringUtil.parseQuotedStrings(" ", QUOTE, ESCAPE, DELIMITER)
         );
     }
