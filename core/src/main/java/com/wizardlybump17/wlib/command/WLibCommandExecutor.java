@@ -12,8 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,9 +38,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
 
-        List<String> wlibArgs = new ArrayList<>();
-        wlibArgs.add(command.getName());
-        Collections.addAll(wlibArgs, args);
+        String wlibArgs = command.getName() + " " + String.join(" ", args);
 
         CommandResult<?> result = commandManager.execute(wlibSender, wlibArgs);
         switch (result) {
@@ -70,9 +66,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
 
-        List<String> wlibArgs = new ArrayList<>();
-        wlibArgs.add(command.getName());
-        Collections.addAll(wlibArgs, args);
+        String wlibArgs = command.getName() + " " + String.join(" ", args);
 
         String current = args.length == 1 ? args[0] : args[args.length - 1];
         String currentLowerCase = current.toLowerCase();
