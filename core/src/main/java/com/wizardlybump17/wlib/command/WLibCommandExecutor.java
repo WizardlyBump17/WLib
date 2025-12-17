@@ -44,7 +44,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
         switch (result) {
             case SuccessResult<?> successResult -> {}
             case ExceptionResult<?> exceptionResult -> {
-                sender.sendMessage("§cAn internal error occurred while executing this command.");
+                sender.sendMessage("§cAn internal error occurred while executing this command: " + exceptionResult.exception() + ".");
                 logger.log(Level.SEVERE, "Error while " + sender + " tried to execute " + wlibArgs, exceptionResult.exception());
             }
             case OutOfRangeInputResult<?> outOfRangeInputResult -> sender.sendMessage("§cInvalid input at index " + outOfRangeInputResult.lastInputIndex() + ".");
@@ -52,7 +52,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
             case InsufficientArgumentsResult<?> insufficientArgumentsResult -> sender.sendMessage("§cInsufficient arguments provided.");
             case ParseInputExceptionResult<?> parseInputExceptionResult -> sender.sendMessage("§cInvalid input at index " + parseInputExceptionResult.lastInputIndex() + ": " + parseInputExceptionResult.exception().getMessage());
             case CommandNodeExecutorNotFoundResult<?> notFoundResult -> sender.sendMessage("§cNo executor found for this command.");
-            case GenericErrorResult<?> genericErrorResult -> sender.sendMessage("§cAn error occurred while executing the command.");
+            case GenericErrorResult<?> genericErrorResult -> sender.sendMessage("§cAn error occurred while executing the command: " + genericErrorResult.message() + ".");
             case NoPermissionResult<?> noPermissionResult -> sender.sendMessage("§cYou do not have permission to execute this command.");
             case CommandNotFoundResult<?> notFoundResult -> sender.sendMessage("§cCommand not found.");
             case InvalidSenderResult<?> invalidSenderResult -> sender.sendMessage("§cYou can not execute this command.");
