@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,9 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
 
-        String wlibArgs = command.getName() + " " + String.join(" ", args);
+        String[] wlibArgs = new String[args.length + 1];
+        wlibArgs[0] = command.getName();
+        System.arraycopy(args, 0, wlibArgs, 1, args.length);
 
         String current = args.length == 1 ? args[0] : args[args.length - 1];
         String currentLowerCase = current.toLowerCase();
@@ -77,7 +80,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
                     .filter(suggestion -> suggestion.toLowerCase().startsWith(currentLowerCase))
                     .toList();
         } catch (SuggesterException e) {
-            logger.log(Level.SEVERE, "Error while getting suggestions for " + sender + ": " + wlibArgs, e);
+            logger.log(Level.SEVERE, "Error while getting suggestions for " + sender + ": " + Arrays.toString(wlibArgs), e);
             return List.of();
         }
     }
