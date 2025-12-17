@@ -21,6 +21,8 @@ public interface CommandResult<T> {
 
     @NotNull CommandNode<?> lastNode();
 
+    @NotNull String id();
+
     //without context
 
     static <T> @NotNull SuccessResult<T> successful(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable T data) {

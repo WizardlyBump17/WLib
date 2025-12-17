@@ -5,4 +5,11 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public record InvalidSenderResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull CommandSender<?> sender, @NotNull Class<? extends CommandSender<?>> expectedSender) implements UnsuccessResult<T> {
+
+    public static final @NotNull String ID = "WLib:Unsuccess/InvalidSender";
+
+    @Override
+    public @NotNull String id() {
+        return ID;
+    }
 }

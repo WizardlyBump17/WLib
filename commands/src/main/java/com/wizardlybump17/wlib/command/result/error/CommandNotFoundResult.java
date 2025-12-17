@@ -9,6 +9,8 @@ import java.util.List;
 
 public record CommandNotFoundResult<T>(@NotNull String input) implements UnsuccessResult<T> {
 
+    public static final @NotNull String ID = "WLib:Unsuccess/CommandNotFound";
+
     @Override
     public int lastInputIndex() {
         return 0;
@@ -17,6 +19,11 @@ public record CommandNotFoundResult<T>(@NotNull String input) implements Unsucce
     @Override
     public @NotNull CommandNode<?> lastNode() {
         return DummyNode.INSTANCE;
+    }
+
+    @Override
+    public @NotNull String id() {
+        return ID;
     }
 
     private static final class DummyNode extends CommandNode<Object> {

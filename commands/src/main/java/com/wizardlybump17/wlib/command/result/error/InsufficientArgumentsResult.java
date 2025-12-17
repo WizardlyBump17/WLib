@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 public record InsufficientArgumentsResult<T>(@NotNull Command command) implements UnsuccessResult<T> {
 
+    public static final @NotNull String ID = "WLib:Unsuccess/InsufficientArguments";
+
     @Override
     public int lastInputIndex() {
         return -1;
@@ -14,5 +16,10 @@ public record InsufficientArgumentsResult<T>(@NotNull Command command) implement
     @Override
     public @NotNull CommandNode<?> lastNode() {
         return command.getRoot();
+    }
+
+    @Override
+    public @NotNull String id() {
+        return ID;
     }
 }
