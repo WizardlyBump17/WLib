@@ -131,7 +131,22 @@ public class CommandManager {
     }
 
     public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) throws SuggesterException {
-        return getSuggestions(sender, String.join(" ", input));
+        if (input.length == 0)
+            return getSuggestions(sender, List.of());
+
+        String inputString = String.join(" ", input);
+        try {
+            if (!inputString.isEmpty() && !StringUtil.isProperlyQuoted(inputString))
+                inputString = inputString + "\"";
+
+            List<String> inputList = StringUtil.parseQuotedStrings(inputString);
+            if (input[input.length - 1].isEmpty())
+                inputList.add("");
+
+            return getSuggestions(sender, inputList);
+        } catch (QuotedStringException e) {
+            return List.of();
+        }
     }
 
     public @NotNull Optional<Command> getCommand(@NotNull String name) {

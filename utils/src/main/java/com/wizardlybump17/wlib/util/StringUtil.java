@@ -321,8 +321,6 @@ public class StringUtil {
      * @return the {@link List} of {@link String}s
      * @throws QuotedStringException if any of the following situations happen:
      *                               <ul>
-     *                                   <li>A quoted string is started right after a normal (or escaped) {@code char};</li>
-     *                                   <li>A quoted string is ended right before a normal (or escaped) {@code char};</li>
      *                                   <li>A escape {@code char} is found at the end of the input;</li>
      *                                   <li>A quoted string is not closed.</li>
      *                               </ul>
@@ -337,128 +335,78 @@ public class StringUtil {
 
         char[] chars = input.toCharArray();
         StringBuilder builder = new StringBuilder();
-        StringBuilder quoted = new StringBuilder();
         boolean escaped = false;
-        boolean delimited = true;
-        boolean hadQuote = false;
+        boolean onQuotes = false;
 
-        for (char current : chars) {
-            if (current == escape && !escaped) { // start of an escaped char
+        for (char currentChar : chars) {
+            if (currentChar == escape) {
+                builder.append(currentChar);
                 escaped = true;
                 continue;
             }
 
-            if (escaped) { // end of the escaped char
-                (quoted.isEmpty() ? builder : quoted).append(current);
-                escaped = false;
+            escaped = false;
+
+            if (currentChar == quote) {
+                if (onQuotes) {
+                    strings.add(builder.toString());
+                    builder.setLength(0);
+                    onQuotes = false;
+                } else {
+                    onQuotes = true;
+                }
                 continue;
             }
 
-            if (current == quote) {
-                if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
-                    throw new QuotedStringException(QuotedStringException.QUOTED_WITHOUT_DELIMITER);
-
-                if (quoted.isEmpty()) { // begin of quoted string
-                    quoted.append(quote);
+            if (currentChar == delimiter) {
+                if (onQuotes) {
+                    builder.append(currentChar);
                     continue;
                 }
 
-                // end of quoted string
-                strings.add(quoted.substring(1));
-                delimited = false;
-                hadQuote = true;
-                quoted.setLength(0);
-                continue;
-            }
-
-            if (current == delimiter && quoted.isEmpty()) { // delimiter (space)
                 if (!builder.isEmpty()) {
                     strings.add(builder.toString());
                     builder.setLength(0);
                 }
-                delimited = true;
-                hadQuote = false;
                 continue;
             }
 
-            if (hadQuote) // the previous char was a quote. Example case: "quoted"string
-                throw new QuotedStringException(QuotedStringException.NON_QUOTED_AFTER_QUOTED);
-
-            (quoted.isEmpty() ? builder : quoted).append(current); // any char
-            if (quoted.isEmpty())
-                delimited = false;
+            builder.append(currentChar);
         }
 
         if (escaped)
             throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
-        if (!quoted.isEmpty())
+        if (onQuotes)
             throw new QuotedStringException(QuotedStringException.UNCLOSED_QUOTE);
 
         if (!builder.isEmpty())
             strings.add(builder.toString());
 
-        if (input.charAt(input.length() - 1) == delimiter)
-            strings.add("");
-
         return strings;
     }
 
-    public static boolean isProperlyQuoted(@NotNull String input, char quote, char escape, char delimiter) throws QuotedStringException {
+    public static boolean isProperlyQuoted(@NotNull String input, char quote, char escape) throws QuotedStringException {
         char[] chars = input.toCharArray();
-
         boolean escaped = false;
-        boolean delimited = true;
-        boolean hadQuote = false;
-        boolean insideQuotes = false;
+        boolean onQuotes = false;
 
-        for (char current : chars) {
-            if (current == escape && !escaped) { // start of an escaped char
+        for (char currentChar : chars) {
+            if (currentChar == escape) {
                 escaped = true;
                 continue;
             }
 
-            if (escaped) { // end of the escaped char
-                escaped = false;
-                continue;
-            }
+            escaped = false;
 
-            if (current == quote) {
-                if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
-                    throw new QuotedStringException(QuotedStringException.QUOTED_WITHOUT_DELIMITER);
-
-                if (!insideQuotes) { // begin of quoted string
-                    insideQuotes = true;
-                    continue;
-                }
-
-                // end of quoted string
-                delimited = false;
-                hadQuote = true;
-                insideQuotes = false;
-                continue;
-            }
-
-            if (current == delimiter && !insideQuotes) { // delimiter (space)
-                delimited = true;
-                hadQuote = false;
-                continue;
-            }
-
-            if (hadQuote) // the previous char was a quote. Example case: "quoted"string
-                throw new QuotedStringException(QuotedStringException.NON_QUOTED_AFTER_QUOTED);
-
-            if (insideQuotes)
-                delimited = false;
+            if (currentChar == quote)
+                onQuotes = !onQuotes;
         }
 
-        if (escaped)
-            throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
-
-        return !insideQuotes;
+        return !escaped && !onQuotes;
     }
 
     public static boolean isProperlyQuoted(@NotNull String input) throws QuotedStringException {
-        return isProperlyQuoted(input, QUOTE, QUOTE_ESCAPE, QUOTE_DELIMITER);
+        return isProperlyQuoted(input, QUOTE, QUOTE_ESCAPE);
     }
 
     /**

@@ -105,20 +105,18 @@ class QuotedStringsTests {
     }
 
     @Test
-    void testQuotedStringAfterNonQuotedStringException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World\"Hi\"", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.QUOTED_WITHOUT_DELIMITER
+    void testQuotedStringAfterNonQuotedStringSuccess() {
+        Assertions.assertEquals(
+                List.of("Hello", "WorldHi"),
+                StringUtil.parseQuotedStrings("Hello World\"Hi\"", QUOTE, ESCAPE, DELIMITER)
         );
     }
 
     @Test
-    void testNonQuotedStringAfterQuotedStringException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.NON_QUOTED_AFTER_QUOTED
+    void testNonQuotedStringAfterQuotedStringSuccess() {
+        Assertions.assertEquals(
+                List.of("Hello", "World"),
+                StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER)
         );
     }
 
@@ -133,7 +131,7 @@ class QuotedStringsTests {
     @Test
     void testEndingWithSpace0() {
         Assertions.assertEquals(
-                List.of(""),
+                List.of(),
                 StringUtil.parseQuotedStrings(" ", QUOTE, ESCAPE, DELIMITER)
         );
     }
@@ -141,8 +139,39 @@ class QuotedStringsTests {
     @Test
     void testEndingWithSpace1() {
         Assertions.assertEquals(
-                List.of("Hello", "World", ""),
+                List.of("Hello", "World"),
                 StringUtil.parseQuotedStrings("Hello World ", QUOTE, ESCAPE, DELIMITER)
         );
+    }
+
+    @Test
+    void testProperlyQuotedTrue() {
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello World", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\"", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"Hello World\"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World    \"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\" Hi There", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\"Hi There", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\"World\" Hi There", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\"World\"Hi There", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"\"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\\ World", QUOTE, ESCAPE));
+    }
+
+    @Test
+    void testProperlyQuotedFalse() {
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World", QUOTE, ESCAPE));
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World\" Hi \"There", QUOTE, ESCAPE));
+
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("\"", QUOTE, ESCAPE));
+
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World\" \\", QUOTE, ESCAPE));
     }
 }
