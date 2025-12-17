@@ -32,8 +32,10 @@ dependencies {
 
 processResources {
     filesMatching('**/plugin.yml') {
-        expand 'version': project.version
-        expand "gson": gson
+        expand(Map.of(
+                "version", project.version,
+                "gson", gson
+        ))
     }
 }
 
