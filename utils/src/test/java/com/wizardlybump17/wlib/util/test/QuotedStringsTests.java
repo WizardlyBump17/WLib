@@ -145,6 +145,14 @@ class QuotedStringsTests {
     }
 
     @Test
+    void testStringInsideString() {
+        Assertions.assertEquals(
+                List.of("Hello There \"Hi There\" Cool"),
+                StringUtil.parseQuotedStrings("\"Hello There \\\"Hi There\\\" Cool\"")
+        );
+    }
+
+    @Test
     void testProperlyQuotedTrue() {
         Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello World", QUOTE, ESCAPE));
 
@@ -163,6 +171,8 @@ class QuotedStringsTests {
         Assertions.assertTrue(StringUtil.isProperlyQuoted("\"\"", QUOTE, ESCAPE));
 
         Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\\ World", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"Hello There \\\"Hi There\\\" Cool\""));
     }
 
     @Test

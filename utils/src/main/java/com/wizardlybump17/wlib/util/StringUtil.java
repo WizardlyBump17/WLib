@@ -340,12 +340,15 @@ public class StringUtil {
 
         for (char currentChar : chars) {
             if (currentChar == escape) {
-                builder.append(currentChar);
                 escaped = true;
                 continue;
             }
 
-            escaped = false;
+            if (escaped) {
+                builder.append(currentChar);
+                escaped = false;
+                continue;
+            }
 
             if (currentChar == quote) {
                 if (onQuotes) {
