@@ -34,14 +34,11 @@ import com.wizardlybump17.wlib.util.bukkit.config.ConfigSound;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapper;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWrapper;
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
-import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@Getter
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
@@ -192,10 +189,6 @@ public class WLib extends JavaPlugin {
         return getPlugin(WLib.class);
     }
 
-    public static @NonNull String getServerVersion() {
-        return Bukkit.getServer().getClass().getName().split("\\.")[3];
-    }
-
     public MethodCommandExtractor getMethodCommandExtractor() {
         return methodCommandExtractor;
     }
@@ -204,11 +197,23 @@ public class WLib extends JavaPlugin {
         return methodCommandNodeFactoryRegistry;
     }
 
+    public WLibCommandExecutor getCommandExecutor() {
+        return commandExecutor;
+    }
+
+    public BukkitCommandManagerListener getCommandManagerListener() {
+        return commandManagerListener;
+    }
+
     public CommandManager getCommandManager() {
         return commandManager;
     }
 
     public Gson getGson() {
         return gson;
+    }
+
+    public SaveControllersTask getSaveControllersTask() {
+        return saveControllersTask;
     }
 }
