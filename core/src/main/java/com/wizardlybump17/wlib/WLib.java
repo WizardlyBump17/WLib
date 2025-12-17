@@ -1,11 +1,14 @@
 package com.wizardlybump17.wlib;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
 import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.WLibCommandExecutor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.factory.JsonElementMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.OfflinePlayerMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.PlayerMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.listener.BukkitCommandManagerListener;
@@ -48,9 +51,12 @@ public class WLib extends JavaPlugin {
     private CommandManager commandManager;
     private WLibCommandExecutor commandExecutor;
     private BukkitCommandManagerListener commandManagerListener;
+    private Gson gson;
 
     @Override
     public void onLoad() {
+        gson = new GsonBuilder().create();
+
         initCommandSystem();
         ItemMetaHandlerModel.initModels();
         initAdapters();
@@ -70,6 +76,7 @@ public class WLib extends JavaPlugin {
         methodCommandNodeFactoryRegistry.registerDefaults();
         methodCommandNodeFactoryRegistry.addFactory(new OfflinePlayerMethodCommandNodeFactory());
         methodCommandNodeFactoryRegistry.addFactory(new PlayerMethodCommandNodeFactory());
+        methodCommandNodeFactoryRegistry.addFactory(new JsonElementMethodCommandNodeFactory(gson));
 
         commandManager = new CommandManager();
 
@@ -100,6 +107,8 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        gson = null;
+
         clearCommandSystem();
         HandlerList.unregisterAll(this);
         saveControllersTask.cancel();
@@ -197,5 +206,9 @@ public class WLib extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

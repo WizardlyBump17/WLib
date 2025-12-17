@@ -1,3 +1,5 @@
+var gson = "2.13.2"
+
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.32',
@@ -24,11 +26,14 @@ dependencies {
             project(':config'),
             project(':bukkit-utils'),
     )
+
+    compileOnly("com.google.code.gson:gson:${gson}")
 }
 
 processResources {
     filesMatching('**/plugin.yml') {
         expand 'version': project.version
+        expand "gson": gson
     }
 }
 
