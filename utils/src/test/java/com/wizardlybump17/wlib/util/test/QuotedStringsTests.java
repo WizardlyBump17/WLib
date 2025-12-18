@@ -210,4 +210,37 @@ class QuotedStringsTests {
                 StringUtil.parseQuotedStrings("\\\\\\\\", QUOTE, ESCAPE, DELIMITER)
         );
     }
+
+    @Test
+    void testAddEscape() {
+        Assertions.assertEquals(
+                "\"Hello World\"", //"Hello World"
+                StringUtil.escapeString("Hello World", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"Hello World \\\\\"", //"Hello World \\"
+                StringUtil.escapeString("Hello World \\", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"     \"", //"     "
+                StringUtil.escapeString("     ", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\\\"\\\"\\\"\"", //"\"\"\""
+                StringUtil.escapeString("\"\"\"", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\"",
+                StringUtil.escapeString("", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\\\"\"", // "\""
+                StringUtil.escapeString("\"", QUOTE, ESCAPE)
+        );
+    }
 }

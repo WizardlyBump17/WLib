@@ -611,7 +611,7 @@ class SuggestionTests {
 
         //String
         Assertions.assertEquals(
-                List.of(""),
+                List.of("\"\""),
                 Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -631,7 +631,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "")))
         );
         Assertions.assertEquals(
-                List.of("wo"),
+                List.of("\"wo\""),
                 Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -651,7 +651,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "wo")))
         );
         Assertions.assertEquals(
-                List.of("spaced "),
+                List.of("\"spaced \""),
                 Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",
@@ -671,7 +671,7 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "spaced ")))
         );
         Assertions.assertEquals(
-                List.of("spaced string"),
+                List.of("\"spaced string\""),
                 Assertions.assertDoesNotThrow(() -> new Command(
                         new LiteralCommandNode(
                                 "hello",

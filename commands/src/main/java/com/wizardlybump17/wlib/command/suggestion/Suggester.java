@@ -14,4 +14,8 @@ public interface Suggester<T> {
     default @NotNull String getStringRepresentation(@NotNull T value) {
         return value.toString();
     }
+
+    default boolean needsEscape() {
+        return false;
+    }
 }

@@ -468,4 +468,52 @@ public class StringUtil {
 
         return builder.toString();
     }
+
+    /**
+     * <table>
+     *     <tr>
+     *         <th>Input</th>
+     *         <th>Output</th>
+     *     </tr>
+     *     <tr>
+     *         <td>Hello</td>
+     *         <td>"Hello"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>Hello World</td>
+     *         <td>"Hello\ World"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>"Hello World"</td>
+     *         <td>"\"Hello\ World\""</td>
+     *     </tr>
+     *     <tr>
+     *         <td>\</td>
+     *         <td>"\\"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>\Hello World</td>
+     *         <td>"\\Hello\ World"</td>
+     *     </tr>
+     * </table>
+     */
+    public static @NotNull String escapeString(@NotNull String input, char quote, char escape) {
+        StringBuilder result = new StringBuilder(input.length());
+        result.append(quote);
+
+        for (char currentChar : input.toCharArray()) {
+            if (currentChar == quote || currentChar == escape) {
+                result.append(escape).append(currentChar);
+            } else {
+                result.append(currentChar);
+            }
+        }
+
+        result.append(quote);
+        return result.toString();
+    }
+
+    public static @NotNull String escapeString(@NotNull String input) {
+        return escapeString(input, QUOTE, ESCAPE);
+    }
 }

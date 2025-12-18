@@ -14,6 +14,11 @@ public interface JsonElementSuggester extends Suggester<JsonElement> {
 
     @NotNull Gson gson();
 
+    @Override
+    default boolean needsEscape() {
+        return true;
+    }
+
     static @NotNull Values values(@NotNull Gson gson, @NotNull List<JsonElement> elements) {
         return new Values(gson, elements);
     }

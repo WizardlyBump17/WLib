@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Command implements Comparable<Command> {
 
@@ -197,10 +198,12 @@ public class Command implements Comparable<Command> {
                     .map(Object::toString)
                     .toList();
         } else {
-            return childSuggestions
-                            .stream()
-                            .map(suggester::getStringRepresentation)
-                            .toList();
+            Stream<String> stream = childSuggestions
+                    .stream()
+                    .map(suggester::getStringRepresentation);
+            if (suggester.needsEscape())
+                stream = stream.map(StringUtil::escapeString);
+            return stream.toList();
         }
     }
 

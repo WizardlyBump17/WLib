@@ -26,6 +26,11 @@ public interface StringSuggester extends PrimitiveSuggester<String> {
         return Any.INSTANCE;
     }
 
+    @Override
+    default boolean needsEscape() {
+        return true;
+    }
+
     final class Values extends AbstractValuesSuggester<String> implements StringSuggester {
 
         Values(@NotNull List<String> values) {

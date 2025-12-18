@@ -3,7 +3,7 @@ package com.wizardlybump17.wlib.command.node;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
-import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
+import com.wizardlybump17.wlib.command.suggestion.LiteralSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class LiteralCommandNode extends CommandNode<String> {
 
     public LiteralCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
-        super(name, children, AllowedStringInputs.valueIgnoreCase(name), StringSuggester.value(name), executor, permission);
+        super(name, children, AllowedStringInputs.valueIgnoreCase(name), LiteralSuggester.of(name), executor, permission);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class LiteralCommandNode extends CommandNode<String> {
     }
 
     @Override
-    public @NotNull StringSuggester.Values getSuggester() {
-        return (StringSuggester.Values) super.getSuggester();
+    public @NotNull LiteralSuggester getSuggester() {
+        return (LiteralSuggester) super.getSuggester();
     }
 
     @Override
