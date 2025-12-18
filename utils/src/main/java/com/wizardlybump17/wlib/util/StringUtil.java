@@ -339,7 +339,7 @@ public class StringUtil {
         boolean escaped = false;
 
         for (char currentChar : chars) {
-            if (currentChar == escape) {
+            if (!escaped && currentChar == escape) {
                 escaped = true;
                 continue;
             }

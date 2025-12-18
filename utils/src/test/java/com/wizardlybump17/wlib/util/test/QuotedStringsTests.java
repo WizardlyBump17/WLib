@@ -184,4 +184,30 @@ class QuotedStringsTests {
 
         Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World\" \\", QUOTE, ESCAPE));
     }
+
+    @Test
+    void testEscape() {
+        Assertions.assertEquals(
+                List.of("Hello World"),
+                StringUtil.parseQuotedStrings("\"Hello World\"", QUOTE, ESCAPE, DELIMITER)
+        );
+        Assertions.assertEquals(
+                List.of("Hello World"),
+                StringUtil.parseQuotedStrings("Hello\\ World", QUOTE, ESCAPE, DELIMITER)
+        );
+
+        Assertions.assertEquals(
+                List.of("\\Hello", "World"),
+                StringUtil.parseQuotedStrings("\\\\Hello World", QUOTE, ESCAPE, DELIMITER)
+        );
+
+        Assertions.assertEquals(
+                List.of("\\"),
+                StringUtil.parseQuotedStrings("\\\\", QUOTE, ESCAPE, DELIMITER)
+        );
+        Assertions.assertEquals(
+                List.of("\\\\"),
+                StringUtil.parseQuotedStrings("\\\\\\\\", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
 }
