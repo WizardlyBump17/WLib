@@ -115,7 +115,7 @@ class QuotedStringsTests {
     @Test
     void testNonQuotedStringAfterQuotedStringSuccess() {
         Assertions.assertEquals(
-                List.of("Hello", "World"),
+                List.of("HelloWorld"),
                 StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER)
         );
     }

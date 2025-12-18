@@ -335,9 +335,8 @@ public class StringUtil {
 
         char[] chars = input.toCharArray();
         StringBuilder builder = new StringBuilder();
+        StringBuilder quotes = new StringBuilder();
         boolean escaped = false;
-        boolean onQuotes = false;
-        boolean leftQuotes = false;
 
         for (char currentChar : chars) {
             if (currentChar == escape) {
@@ -346,35 +345,30 @@ public class StringUtil {
             }
 
             if (escaped) {
-                builder.append(currentChar);
+                (quotes.isEmpty() ? builder : quotes).append(currentChar);
                 escaped = false;
                 continue;
             }
 
             if (currentChar == quote) {
-                if (onQuotes) {
-                    strings.add(builder.toString());
-                    builder.setLength(0);
-                    onQuotes = false;
-                    leftQuotes = true;
+                if (!quotes.isEmpty()) {
+                    quotes.deleteCharAt(0);
+                    builder.append(quotes);
+                    quotes.setLength(0);
                 } else {
-                    onQuotes = true;
+                    quotes.append(quote);
                 }
                 continue;
             }
 
-            if (currentChar == delimiter) {
-                if (onQuotes) {
-                    builder.append(currentChar);
-                    continue;
-                }
+            if (!quotes.isEmpty()) {
+                quotes.append(currentChar);
+                continue;
+            }
 
-                if (!leftQuotes) {
-                    strings.add(builder.toString());
-                    builder.setLength(0);
-                } else {
-                    leftQuotes = false;
-                }
+            if (currentChar == delimiter) {
+                strings.add(builder.toString());
+                builder.setLength(0);
                 continue;
             }
 
@@ -383,7 +377,7 @@ public class StringUtil {
 
         if (escaped)
             throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
-        if (onQuotes)
+        if (!quotes.isEmpty())
             throw new QuotedStringException(QuotedStringException.UNCLOSED_QUOTE);
 
         if (!builder.isEmpty())
