@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.extractor.method.factory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.wizardlybump17.wlib.command.annotation.Command;
+import com.wizardlybump17.wlib.command.annotation.NonNullInput;
 import com.wizardlybump17.wlib.command.input.AllowedJsonElementInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.JsonElementCommandNode;
@@ -26,7 +27,7 @@ public class JsonElementMethodCommandNodeFactory extends MethodCommandNodeFactor
         return new JsonElementCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                parameter.isAnnotationPresent(NotNull.class) ? AllowedJsonElementInputs.anyNotNull() : AllowedJsonElementInputs.anyNullable(),
+                parameter.isAnnotationPresent(NonNullInput.class) ? AllowedJsonElementInputs.anyNotNull() : AllowedJsonElementInputs.anyNullable(),
                 null,
                 null,
                 null,

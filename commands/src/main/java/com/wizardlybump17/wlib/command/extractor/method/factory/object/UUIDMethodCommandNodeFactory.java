@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.extractor.method.factory.object;
 
 import com.wizardlybump17.wlib.command.annotation.Command;
+import com.wizardlybump17.wlib.command.annotation.NonNullInput;
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.input.object.AllowedUUIDInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
@@ -23,7 +24,7 @@ public class UUIDMethodCommandNodeFactory extends MethodCommandNodeFactory {
         return new UUIDCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                parameter.isAnnotationPresent(NotNull.class) ? AllowedUUIDInputs.anyNotNull() : AllowedUUIDInputs.anyNullable(),
+                parameter.isAnnotationPresent(NonNullInput.class) ? AllowedUUIDInputs.anyNotNull() : AllowedUUIDInputs.anyNullable(),
                 null,
                 null,
                 null

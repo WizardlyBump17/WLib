@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.extractor.method.factory;
 
 import com.wizardlybump17.wlib.command.annotation.Command;
+import com.wizardlybump17.wlib.command.annotation.NonNullInput;
 import com.wizardlybump17.wlib.command.input.AllowedOfflinePlayerInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.OfflinePlayerCommandNode;
@@ -21,7 +22,7 @@ public class OfflinePlayerMethodCommandNodeFactory extends MethodCommandNodeFact
         return new OfflinePlayerCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                parameter.isAnnotationPresent(NotNull.class) ? AllowedOfflinePlayerInputs.anyNotNull() : AllowedOfflinePlayerInputs.anyNullable(),
+                parameter.isAnnotationPresent(NonNullInput.class) ? AllowedOfflinePlayerInputs.anyNotNull() : AllowedOfflinePlayerInputs.anyNullable(),
                 OfflinePlayerSuggester.online(),
                 null,
                 null
