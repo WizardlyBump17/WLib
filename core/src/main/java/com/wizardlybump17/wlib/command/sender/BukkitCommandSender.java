@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.sender;
 import com.wizardlybump17.wlib.util.bukkit.collector.ComponentCollector;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.bukkit.Bukkit;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class BukkitCommandSender implements CommandSender<org.bukkit.command.CommandSender> {
+
+    public static final @NotNull BukkitCommandSender CONSOLE = new BukkitCommandSender(Bukkit.getConsoleSender());
 
     private final @NotNull org.bukkit.command.CommandSender handle;
 
