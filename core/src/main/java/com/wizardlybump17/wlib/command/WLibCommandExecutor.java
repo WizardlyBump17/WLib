@@ -37,7 +37,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
+        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = BukkitCommandSender.from(sender);
 
         String wlibArgs = command.getName() + " " + String.join(" ", args);
 
@@ -65,7 +65,7 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
 
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = new BukkitCommandSender(sender);
+        com.wizardlybump17.wlib.command.sender.CommandSender<?> wlibSender = BukkitCommandSender.from(sender);
 
         String[] wlibArgs = new String[args.length + 1];
         wlibArgs[0] = command.getName();

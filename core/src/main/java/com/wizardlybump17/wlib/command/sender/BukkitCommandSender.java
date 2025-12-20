@@ -8,16 +8,20 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BukkitCommandSender implements CommandSender<org.bukkit.command.CommandSender> {
 
     public static final @NotNull BukkitCommandSender CONSOLE = new BukkitCommandSender(Bukkit.getConsoleSender());
+    private static final @NotNull Map<UUID, BukkitCommandSender> SENDERS_BY_ID = new ConcurrentHashMap<>();
 
     private final @NotNull org.bukkit.command.CommandSender handle;
 
@@ -95,5 +99,23 @@ public class BukkitCommandSender implements CommandSender<org.bukkit.command.Com
     @Override
     public boolean hasId(@NotNull UUID id) {
         return handle instanceof Entity entity && entity.getUniqueId().equals(id);
+    }
+
+    @ApiStatus.Internal
+    public static void clearCache() {
+        SENDERS_BY_ID.clear();
+    }
+
+    public static @NotNull BukkitCommandSender from(@NotNull org.bukkit.command.CommandSender sender) {
+        return switch (sender) {
+            case ConsoleCommandSender ignored -> BukkitCommandSender.CONSOLE;
+            case Entity entity -> SENDERS_BY_ID.computeIfAbsent(entity.getUniqueId(), $ -> new BukkitCommandSender(sender));
+            default -> new BukkitCommandSender(sender);
+        };
+    }
+
+    @ApiStatus.Internal
+    public static void removeFromCache(@NotNull UUID id) {
+        SENDERS_BY_ID.remove(id);
     }
 }

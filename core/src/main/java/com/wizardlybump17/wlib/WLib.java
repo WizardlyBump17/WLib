@@ -14,6 +14,7 @@ import com.wizardlybump17.wlib.command.extractor.method.factory.PlayerMethodComm
 import com.wizardlybump17.wlib.command.listener.BukkitCommandManagerListener;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
 import com.wizardlybump17.wlib.config.registry.ConfigHandlerRegistry;
 import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
@@ -127,6 +128,8 @@ public class WLib extends JavaPlugin {
         commandExecutor = null;
 
         commandManagerListener = null;
+
+        BukkitCommandSender.clearCache();
     }
 
     private void initSerializables() {
