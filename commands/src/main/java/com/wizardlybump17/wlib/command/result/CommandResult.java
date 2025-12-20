@@ -78,6 +78,10 @@ public interface CommandResult<T> {
         return new NoContentResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull NotFoundResult<T> notFound(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new NotFoundResult<>(lastInputIndex, lastNode);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
@@ -106,5 +110,9 @@ public interface CommandResult<T> {
 
     static <T> @NotNull NoContentResult<T> noContent(@NotNull CommandContext context) {
         return noContent(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull NotFoundResult<T> notFound(@NotNull CommandContext context) {
+        return notFound(context.lastInputIndex(), context.lastNode());
     }
 }
