@@ -82,6 +82,10 @@ public interface CommandResult<T> {
         return new NotFoundResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull ConflictResult<T> conflict(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new ConflictResult<>(lastInputIndex, lastNode);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
@@ -114,5 +118,9 @@ public interface CommandResult<T> {
 
     static <T> @NotNull NotFoundResult<T> notFound(@NotNull CommandContext context) {
         return notFound(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull ConflictResult<T> conflict(@NotNull CommandContext context) {
+        return conflict(context.lastInputIndex(), context.lastNode());
     }
 }
