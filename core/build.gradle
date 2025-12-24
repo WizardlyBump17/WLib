@@ -1,4 +1,7 @@
 var gson = "2.13.2"
+var manifold = "2025.1.27"
+
+apply plugin: "systems.manifold.manifold-gradle-plugin"
 
 dependencies {
     compileOnly(
@@ -12,11 +15,6 @@ dependencies {
             project(':utils'),
             project(':versions:adapter'),
 
-            project(':versions:v1_20_R4'),
-            project(':versions:v1_21_R1'),
-            project(':versions:v1_21_R3'),
-            project(':versions:v1_21_R5'),
-
             project(':database'),
 
             project(':objects'),
@@ -27,7 +25,17 @@ dependencies {
             project(':bukkit-utils'),
     )
 
+    if (System.getenv("WLIB_SKIP_NMS") == null) {
+        implementation(project(":versions:v1_20_R4"))
+        implementation(project(":versions:v1_21_R1"))
+        implementation(project(":versions:v1_21_R3"))
+        implementation(project(":versions:v1_21_R5"))
+    }
+
     compileOnly("com.google.code.gson:gson:${gson}")
+
+    annotationProcessor("systems.manifold:manifold-preprocessor:${manifold}")
+    testAnnotationProcessor("systems.manifold:manifold-preprocessor:${manifold}")
 }
 
 processResources {
@@ -43,6 +51,11 @@ tasks {
     shadowJar {
         archiveFileName = 'WLib-' + project.version + '.jar'
         relocate("com.github.sisyphsu", "com.wizardlybump17.wlib.libs.com.github.sisyphsu")
+    }
+
+    tasks.withType(JavaCompile) {
+        if (System.getenv("WLIB_SKIP_NMS") == null)
+            options.compilerArgs += ["-Awlib_include_nms"]
     }
 }
 

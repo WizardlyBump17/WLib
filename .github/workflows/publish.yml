@@ -24,6 +24,9 @@ jobs:
         run: echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
       - name: Get snapshot number
         run: echo "WLIB_SNAPSHOT_NUMBER=$((${{ github.run_number }}+${{ github.run_attempt }}))" >> $GITHUB_ENV
+      - name: "Skip NMS if needed"
+        if: ${{ github.event_name != 'release' }}
+        run: echo "WLIB_SKIP_NMS=true" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
