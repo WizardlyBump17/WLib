@@ -20,6 +20,8 @@ public class InstantCommandNode extends CommandNode<Instant> {
 
     @Override
     public @Nullable Instant parse(@NotNull String input) throws InputParsingException {
+        if (input.equalsIgnoreCase("null"))
+            return null;
         try {
             return Instant.parse(input);
         } catch (DateTimeParseException e) {
