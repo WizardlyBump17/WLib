@@ -33,7 +33,7 @@ public final class MiniMessageUtil {
         return miniMessage.deserialize(message, resolvers);
     }
 
-    public static @NotNull Component getMessage(@NotNull String message, @NotNull String placeholderKey, @NotNull Object placeholderValue, @NotNull Map<String , ?> additionalPlaceholders) {
+    public static @NotNull Component getMessage(@NotNull String message, @NotNull String placeholderKey, @NotNull Object placeholderValue, @NotNull String prefix, @NotNull Map<String , ?> additionalPlaceholders) {
         MiniMessage miniMessage = MiniMessage.miniMessage();
         if (additionalPlaceholders.isEmpty())
             return getMessage(message, Map.of(placeholderKey, placeholderValue));
@@ -45,18 +45,22 @@ public final class MiniMessageUtil {
             Object value = entry.getValue();
             resolvers[resolverIndex++] = TagResolver.builder()
                     .tag(
-                            key,
+                            prefix + key,
                             Tag.inserting(value instanceof Component component ? component : Component.text(String.valueOf(value)))
                     )
                     .build();
         }
         resolvers[resolverIndex] = TagResolver.builder()
                 .tag(
-                        placeholderKey,
+                        prefix + placeholderKey,
                         Tag.inserting(placeholderValue instanceof Component component ? component : Component.text(String.valueOf(placeholderValue)))
                 )
                 .build();
         return miniMessage.deserialize(message, resolvers);
+    }
+
+    public static @NotNull Component getMessage(@NotNull String message, @NotNull String placeholderKey, @NotNull Object placeholderValue, @NotNull Map<String , ?> additionalPlaceholders) {
+        return getMessage(message, placeholderKey, placeholderValue, "", additionalPlaceholders);
     }
 
     public static @NotNull Component getMessage(@NotNull String message) {
