@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.command.input;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 public interface AllowedInputs<T> {
@@ -17,6 +18,10 @@ public interface AllowedInputs<T> {
     @SuppressWarnings("unchecked")
     static <T> @NotNull Any<T> anyNotNull() {
         return (Any<T>) Any.NOT_NULL;
+    }
+
+    static <T> AllowedListInputs.@NotNull Values<T> values(@NotNull List<T> values) {
+        return new AllowedListInputs.Values<>(values);
     }
 
     final class Any<T> implements AllowedInputs<T> {
