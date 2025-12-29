@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Function;
 
 public interface Suggester<T> {
 
@@ -17,5 +18,13 @@ public interface Suggester<T> {
 
     default boolean needsEscape() {
         return false;
+    }
+
+    static <T> ValuesSuggester.@NotNull Values<T> values(@NotNull List<T> values, @NotNull Function<T, String> stringRepresentation) {
+        return new ValuesSuggester.Values<>(values, stringRepresentation);
+    }
+    
+    static <T> ValuesSuggester.@NotNull Values<T> values(@NotNull List<T> values) {
+        return new ValuesSuggester.Values<>(values);
     }
 }
