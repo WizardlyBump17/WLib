@@ -57,7 +57,7 @@ public interface LongSuggester extends PrimitiveSuggester<Long>, NumberSuggester
 
     final class Values extends AbstractValuesSuggester<Long> implements LongSuggester {
 
-        private static final @NotNull Values POSITIVE = new Values(List.of(
+        private static final @NotNull LongSuggester.Values POSITIVE = new LongSuggester.Values(List.of(
                 0L,
                 50L,
                 200L,
@@ -65,7 +65,7 @@ public interface LongSuggester extends PrimitiveSuggester<Long>, NumberSuggester
                 50000L,
                 100000L
         ));
-        private static final @NotNull Values NEGATIVE = new Values(List.of(
+        private static final @NotNull LongSuggester.Values NEGATIVE = new LongSuggester.Values(List.of(
                 -100000L,
                 -50000L,
                 -3000L,
@@ -73,7 +73,7 @@ public interface LongSuggester extends PrimitiveSuggester<Long>, NumberSuggester
                 -50L,
                 -1L
         ));
-        private static final @NotNull Values UNLIMITED = new Values(List.of(
+        private static final @NotNull LongSuggester.Values UNLIMITED = new LongSuggester.Values(List.of(
                 -100000L,
                 -50000L,
                 -3000L,

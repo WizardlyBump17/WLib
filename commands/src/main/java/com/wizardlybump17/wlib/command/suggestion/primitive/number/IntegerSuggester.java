@@ -55,7 +55,7 @@ public interface IntegerSuggester extends PrimitiveSuggester<Integer>, NumberSug
 
     final class Values extends AbstractValuesSuggester<Integer> implements IntegerSuggester {
 
-        private static final @NotNull Values POSITIVE = new Values(List.of(
+        private static final @NotNull IntegerSuggester.Values POSITIVE = new IntegerSuggester.Values(List.of(
                 0,
                 50,
                 200,
@@ -63,7 +63,7 @@ public interface IntegerSuggester extends PrimitiveSuggester<Integer>, NumberSug
                 50000,
                 100000
         ));
-        private static final @NotNull Values NEGATIVE = new Values(List.of(
+        private static final @NotNull IntegerSuggester.Values NEGATIVE = new IntegerSuggester.Values(List.of(
                 -100000,
                 -50000,
                 -3000,
@@ -71,7 +71,7 @@ public interface IntegerSuggester extends PrimitiveSuggester<Integer>, NumberSug
                 -50,
                 -1
         ));
-        private static final @NotNull Values UNLIMITED = new Values(List.of(
+        private static final @NotNull IntegerSuggester.Values UNLIMITED = new IntegerSuggester.Values(List.of(
                 -100000,
                 -50000,
                 -3000,

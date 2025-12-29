@@ -83,7 +83,7 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values values1 = (Values) object;
+            AllowedUUIDInputs.Values values1 = (AllowedUUIDInputs.Values) object;
             return Objects.equals(values, values1.values);
         }
 
@@ -102,8 +102,8 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
 
     final class Any implements AllowedUUIDInputs {
 
-        private static final @NotNull Any NULLABLE = new Any(true);
-        private static final @NotNull Any NOT_NULL = new Any(false);
+        private static final @NotNull AllowedUUIDInputs.Any NULLABLE = new AllowedUUIDInputs.Any(true);
+        private static final @NotNull AllowedUUIDInputs.Any NOT_NULL = new AllowedUUIDInputs.Any(false);
 
         private final boolean nullable;
 
@@ -120,7 +120,7 @@ public interface AllowedUUIDInputs extends AllowedInputs<UUID> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Any any = (Any) object;
+            AllowedUUIDInputs.Any any = (AllowedUUIDInputs.Any) object;
             return nullable == any.nullable;
         }
 

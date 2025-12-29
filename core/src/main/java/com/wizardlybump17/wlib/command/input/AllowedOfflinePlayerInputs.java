@@ -80,7 +80,7 @@ public interface AllowedOfflinePlayerInputs extends AllowedInputs<OfflinePlayer>
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values values1 = (Values) object;
+            AllowedOfflinePlayerInputs.Values values1 = (AllowedOfflinePlayerInputs.Values) object;
             return Objects.equals(values, values1.values);
         }
 
@@ -99,8 +99,8 @@ public interface AllowedOfflinePlayerInputs extends AllowedInputs<OfflinePlayer>
 
     final class Any implements AllowedOfflinePlayerInputs {
 
-        private static final @NotNull Any NULLABLE = new Any(true);
-        private static final @NotNull Any NOT_NULL = new Any(false);
+        private static final @NotNull AllowedOfflinePlayerInputs.Any NULLABLE = new AllowedOfflinePlayerInputs.Any(true);
+        private static final @NotNull AllowedOfflinePlayerInputs.Any NOT_NULL = new AllowedOfflinePlayerInputs.Any(false);
 
         private final boolean nullable;
 
@@ -117,7 +117,7 @@ public interface AllowedOfflinePlayerInputs extends AllowedInputs<OfflinePlayer>
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Any any = (Any) object;
+            AllowedOfflinePlayerInputs.Any any = (AllowedOfflinePlayerInputs.Any) object;
             return nullable == any.nullable;
         }
 

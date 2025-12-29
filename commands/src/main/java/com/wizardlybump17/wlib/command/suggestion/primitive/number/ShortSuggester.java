@@ -57,21 +57,21 @@ public interface ShortSuggester extends PrimitiveSuggester<Short>, NumberSuggest
 
     final class Values extends AbstractValuesSuggester<Short> implements ShortSuggester {
 
-        private static final @NotNull Values POSITIVE = new Values(List.of(
+        private static final @NotNull ShortSuggester.Values POSITIVE = new ShortSuggester.Values(List.of(
                 (short) 0,
                 (short) 50,
                 (short) 100,
                 (short) 3000,
                 (short) 32767
         ));
-        private static final @NotNull Values NEGATIVE = new Values(List.of(
+        private static final @NotNull ShortSuggester.Values NEGATIVE = new ShortSuggester.Values(List.of(
                 (short) -32768,
                 (short) -3000,
                 (short) -100,
                 (short) -50,
                 (short) -1
         ));
-        private static final @NotNull Values UNLIMITED = new Values(List.of(
+        private static final @NotNull ShortSuggester.Values UNLIMITED = new ShortSuggester.Values(List.of(
                 (short) -32768,
                 (short) -3000,
                 (short) -100,

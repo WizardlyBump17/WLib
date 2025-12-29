@@ -58,7 +58,7 @@ public interface JsonElementSuggester extends Suggester<JsonElement> {
             if (o == null || getClass() != o.getClass())
                 return false;
             if (!super.equals(o)) return false;
-            Values values = (Values) o;
+            JsonElementSuggester.Values values = (JsonElementSuggester.Values) o;
             return Objects.equals(gson, values.gson);
         }
 

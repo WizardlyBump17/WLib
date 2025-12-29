@@ -80,7 +80,7 @@ public interface AllowedPlayerInputs extends AllowedInputs<Player> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values values1 = (Values) object;
+            AllowedPlayerInputs.Values values1 = (AllowedPlayerInputs.Values) object;
             return Objects.equals(values, values1.values);
         }
 
@@ -99,8 +99,8 @@ public interface AllowedPlayerInputs extends AllowedInputs<Player> {
 
     final class Any implements AllowedPlayerInputs {
 
-        private static final @NotNull Any NULLABLE = new Any(true);
-        private static final @NotNull Any NOT_NULL = new Any(false);
+        private static final @NotNull AllowedPlayerInputs.Any NULLABLE = new AllowedPlayerInputs.Any(true);
+        private static final @NotNull AllowedPlayerInputs.Any NOT_NULL = new AllowedPlayerInputs.Any(false);
 
         private final boolean nullable;
 
@@ -117,7 +117,7 @@ public interface AllowedPlayerInputs extends AllowedInputs<Player> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Any any = (Any) object;
+            AllowedPlayerInputs.Any any = (AllowedPlayerInputs.Any) object;
             return nullable == any.nullable;
         }
 

@@ -57,19 +57,19 @@ public interface ByteSuggester extends PrimitiveSuggester<Byte>, NumberSuggester
 
     final class Values extends AbstractValuesSuggester<Byte> implements ByteSuggester {
 
-        private static final @NotNull Values POSITIVE = new Values(List.of(
+        private static final @NotNull ByteSuggester.Values POSITIVE = new ByteSuggester.Values(List.of(
                 (byte) 0,
                 (byte) 50,
                 (byte) 100,
                 (byte) 127
         ));
-        private static final @NotNull Values NEGATIVE = new Values(List.of(
+        private static final @NotNull ByteSuggester.Values NEGATIVE = new ByteSuggester.Values(List.of(
                 (byte) -128,
                 (byte) -100,
                 (byte) -50,
                 (byte) -1
         ));
-        private static final @NotNull Values UNLIMITED = new Values(List.of(
+        private static final @NotNull ByteSuggester.Values UNLIMITED = new ByteSuggester.Values(List.of(
                 (byte) -128,
                 (byte) -100,
                 (byte) -50,

@@ -68,7 +68,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values values1 = (Values) object;
+            AllowedStringInputs.Values values1 = (AllowedStringInputs.Values) object;
             return ignoreCase == values1.ignoreCase && Objects.equals(values, values1.values) && Objects.equals(toCheck, values1.toCheck);
         }
 
@@ -137,8 +137,8 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
 
     final class Any implements AllowedStringInputs {
 
-        private static final @NotNull Any NULLABLE = new Any(true);
-        private static final @NotNull Any NOT_NULL = new Any(false);
+        private static final @NotNull AllowedStringInputs.Any NULLABLE = new AllowedStringInputs.Any(true);
+        private static final @NotNull AllowedStringInputs.Any NOT_NULL = new AllowedStringInputs.Any(false);
 
         private final boolean nullable;
 
@@ -159,7 +159,7 @@ public interface AllowedStringInputs extends AllowedInputs<String> {
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Any any = (Any) object;
+            AllowedStringInputs.Any any = (AllowedStringInputs.Any) object;
             return nullable == any.nullable;
         }
 

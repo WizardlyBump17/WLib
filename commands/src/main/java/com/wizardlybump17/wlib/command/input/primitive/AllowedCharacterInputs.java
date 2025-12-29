@@ -129,7 +129,7 @@ public interface AllowedCharacterInputs extends PrimitiveAllowedInputs<Character
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values values1 = (Values) object;
+            AllowedCharacterInputs.Values values1 = (AllowedCharacterInputs.Values) object;
             return ignoreCase == values1.ignoreCase && Objects.equals(values, values1.values) && Objects.equals(toCheck, values1.toCheck);
         }
 

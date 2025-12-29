@@ -133,7 +133,7 @@ public interface AllowedNumberInputs<N extends Number> extends AllowedInputs<N> 
         public boolean equals(Object object) {
             if (object == null || getClass() != object.getClass())
                 return false;
-            Values<?> values1 = (Values<?>) object;
+            AllowedNumberInputs.Values<?> values1 = (AllowedNumberInputs.Values<?>) object;
             return Objects.equals(values, values1.values);
         }
 
