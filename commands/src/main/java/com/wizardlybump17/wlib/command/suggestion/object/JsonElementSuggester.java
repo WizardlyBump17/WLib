@@ -1,9 +1,11 @@
-package com.wizardlybump17.wlib.command.suggestion;
+package com.wizardlybump17.wlib.command.suggestion.object;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.AbstractValuesSuggester;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 

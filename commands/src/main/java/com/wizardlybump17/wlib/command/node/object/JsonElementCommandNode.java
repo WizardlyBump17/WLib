@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.node;
+package com.wizardlybump17.wlib.command.node.object;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -6,12 +6,14 @@ import com.google.gson.JsonSyntaxException;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+//TODO: test
 public class JsonElementCommandNode extends CommandNode<JsonElement> {
 
     private final @NotNull Gson gson;

@@ -1,12 +1,13 @@
-package com.wizardlybump17.wlib.command.extractor.method.factory;
+package com.wizardlybump17.wlib.command.extractor.method.factory.object;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.wizardlybump17.wlib.command.annotation.Command;
 import com.wizardlybump17.wlib.command.annotation.NonNullInput;
-import com.wizardlybump17.wlib.command.input.AllowedJsonElementInputs;
+import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.node.JsonElementCommandNode;
+import com.wizardlybump17.wlib.command.node.object.JsonElementCommandNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,7 @@ public class JsonElementMethodCommandNodeFactory extends MethodCommandNodeFactor
         return new JsonElementCommandNode(
                 name,
                 root == null ? List.of() : List.of(root),
-                parameter.isAnnotationPresent(NonNullInput.class) ? AllowedJsonElementInputs.anyNotNull() : AllowedJsonElementInputs.anyNullable(),
+                parameter.isAnnotationPresent(NonNullInput.class) ? AllowedInputs.anyNotNull() : AllowedInputs.anyNullable(),
                 null,
                 null,
                 null,
