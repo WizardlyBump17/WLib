@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public interface ValuesSuggester<T> extends Suggester<T> {
@@ -46,6 +47,27 @@ public interface ValuesSuggester<T> extends Suggester<T> {
         @Override
         public @NotNull String getStringRepresentation(@NotNull T value) {
             return stringRepresentationFunction == null ? ValuesSuggester.super.getStringRepresentation(value) : stringRepresentationFunction.apply(value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Values<?> values1 = (Values<?>) o;
+            return Objects.equals(values, values1.values) && Objects.equals(stringRepresentationFunction, values1.stringRepresentationFunction);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(values, stringRepresentationFunction);
+        }
+
+        @Override
+        public String toString() {
+            return "ValuesSuggester$Values{" +
+                    "values=" + values +
+                    ", stringRepresentationFunction=" + stringRepresentationFunction +
+                    '}';
         }
     }
 }
