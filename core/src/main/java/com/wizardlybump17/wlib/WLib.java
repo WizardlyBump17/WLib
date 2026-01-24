@@ -2,6 +2,10 @@ package com.wizardlybump17.wlib;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wizardlybump17.wlib.adapter.AttributeAdapter;
+import com.wizardlybump17.wlib.adapter.ItemAdapter;
+import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
+import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
 import com.wizardlybump17.wlib.command.WLibCommandExecutor;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
 import com.wizardlybump17.wlib.command.extractor.method.factory.OfflinePlayerMethodCommandNodeFactory;
@@ -154,7 +158,13 @@ public class WLib extends JavaPlugin {
     }
 
     private void setupAdapters() {
-        #if WLIB_INCLUDE_NMS
+        //keep IntelliJ from removing the import
+        ItemAdapter.class.toString();
+        PlayerAdapter.class.toString();
+        AttributeAdapter.class.toString();
+        CommandMapAdapter.class.toString();
+
+        #if WLIB_INCLUDE_NMS == 1
         String version = Bukkit.getMinecraftVersion();
         switch (version) {
             case "1.20.5", "1.20.6" -> {
@@ -183,6 +193,8 @@ public class WLib extends JavaPlugin {
             }
             default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }
+        #else
+        getLogger().severe("The NMS integration was disabled during compile, probably because of the presence of the \"skip_nms\" property and it was set to \"true\". The following systems are expected to not work: ItemAdapter, PlayerAdapter, AttributeAdapter, CommandMapAdapter.");
         #endif
     }
 

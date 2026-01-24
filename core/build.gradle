@@ -25,7 +25,7 @@ dependencies {
             project(':bukkit-utils'),
     )
 
-    if (System.getenv("WLIB_SKIP_NMS") == null) {
+    if (!"true".equals(properties.get("skip_nms"))) {
         implementation(project(":versions:v1_20_R4"))
         implementation(project(":versions:v1_21_R1"))
         implementation(project(":versions:v1_21_R3"))
@@ -52,10 +52,18 @@ tasks {
         archiveFileName = 'WLib-' + project.version + '.jar'
         relocate("com.github.sisyphsu", "com.wizardlybump17.wlib.libs.com.github.sisyphsu")
     }
-
-    tasks.withType(JavaCompile) {
-        if (System.getenv("WLIB_SKIP_NMS") == null)
-            options.compilerArgs += ["-Awlib_include_nms"]
-    }
 }
 
+def preprocessors() {
+    StringBuilder preprocessors = new StringBuilder()
+
+    if ("true".equals(properties.get("skip_nms"))) {
+        preprocessors.append("WLIB_INCLUDE_NMS=0")
+    } else {
+        preprocessors.append("WLIB_INCLUDE_NMS=1")
+    }
+
+    new File(rootProject.projectDir, "build.properties").text = preprocessors.toString()
+}
+
+preprocessors()
