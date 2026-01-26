@@ -11,7 +11,7 @@ import java.util.*;
 
 public record CommandContext(@NotNull Command command, @NotNull CommandSender<?> sender, @NotNull CommandNodeArguments arguments, int lastInputIndex, @NotNull CommandNode<?> lastNode) {
 
-    public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @NotNull String input, @Nullable T data) {
+    public record CommandNodeArgument<T>(@NotNull CommandNode<T> node, @Nullable String input, @Nullable T data) {
     }
 
     public static final class CommandNodeArguments {

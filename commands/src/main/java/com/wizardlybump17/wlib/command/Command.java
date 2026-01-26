@@ -61,7 +61,15 @@ public class Command implements Comparable<Command> {
                 lastNode = child;
 
                 try {
-                    Object result = child.parseOrInvalid(inputString);
+                    Object result;
+                    if (inputString == null) {
+                        if (child.isValidInput(null))
+                            result = null;
+                        else
+                            throw new InvalidInputException("Null inputs not accepted by " + child);
+                    } else {
+                        result = child.parseOrInvalid(inputString);
+                    }
 
                     if (!(child instanceof LiteralCommandNode))
                         arguments.add(new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, result));
