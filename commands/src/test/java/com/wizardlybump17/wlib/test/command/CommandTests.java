@@ -5,13 +5,16 @@ import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
+import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
+import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.result.error.*;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -480,5 +483,65 @@ public class CommandTests {
 
             Assertions.assertEquals(CommandResult.successful(2, test, "Hello 10 world"), result);
         }
+    }
+
+    @Test
+    void testNullArgumentsSuccess() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new StringCommandNode(
+                                        "nullable0",
+                                        List.of(),
+                                        AllowedStringInputs.anyNullable(),
+                                        null,
+                                        context -> CommandResult.successful(context, context.arguments().getArgumentData("nullable0").orElse(null)),
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(1, command.findNode("nullable0"), "Hello World"),
+                command.execute(CHAD_SENDER, List.of("test", "Hello World"))
+        );
+        Assertions.assertEquals(
+                CommandResult.successful(1, command.findNode("nullable0"), null),
+                command.execute(CHAD_SENDER, CollectionUtil.listOf("test", null))
+        );
+    }
+
+    @Test
+    void testNullArgumentsError() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new StringCommandNode(
+                                        "nullable0",
+                                        List.of(),
+                                        AllowedStringInputs.anyNotNull(),
+                                        null,
+                                        context -> CommandResult.successful(context, context.arguments().getArgumentData("nullable0").orElse(null)),
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+
+        Assertions.assertEquals(
+                CommandResult.successful(1, command.findNode("nullable0"), "Hello World"),
+                command.execute(CHAD_SENDER, List.of("test", "Hello World"))
+        );
+        Assertions.assertEquals(
+                CommandResult.outOfRangeInput(1, command.findNode("nullable0")),
+                command.execute(CHAD_SENDER, CollectionUtil.listOf("test", null))
+        );
     }
 }
