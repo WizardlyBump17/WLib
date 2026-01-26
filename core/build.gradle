@@ -19,11 +19,14 @@ dependencies {
 
             project(':objects'),
 
-            project(':commands'),
 
             project(':config'),
-            project(':bukkit-utils'),
+            project(':bukkit-utils')
     )
+
+    implementation(project(':commands')) {
+        exclude group: "com.google.code.gson", module: "gson"
+    }
 
     if (!"true".equals(properties.get("skip_nms"))) {
         implementation(project(":versions:v1_20_R4"))
