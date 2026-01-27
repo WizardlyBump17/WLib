@@ -42,6 +42,14 @@ jobs:
           path: "**/build/libs/*.jar"
           name: WLib-${{ env.WLIB_BUILD_DATE }}
           if-no-files-found: error
+      - name: Upload to the release
+        if: ${{ github.event_name == 'release' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for file in */build/libs/*.jar; do
+            gh release upload ${{ github.event.release.tag_name }} $file
+          done
   publish:
     runs-on: ubuntu-latest
     permissions:
@@ -63,16 +71,6 @@ jobs:
           distribution: temurin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build this shit again
-        run: ./gradlew clean build
       - name: Clean, Build and Publish
         run: ./gradle -Pskip_nms=true clean build publish
-      - name: Upload to the release
-        if: ${{ github.event_name == 'release' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for file in */build/libs/*.jar; do
-            gh release upload ${{ github.event.release.tag_name }} $file
-          done
-      
+
