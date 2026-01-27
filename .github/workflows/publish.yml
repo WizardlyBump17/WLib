@@ -32,13 +32,14 @@ jobs:
           distribution: temurin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build
-        run: |
-          if [ "${{ github.event_name }}" != "release" ]; then
-            ./gradlew build -Pskip_nms=true
-          else
-            ./gradlew build
-          fi
+
+      - name: Build without NMS
+        if: ${{ github.event_name != 'release' }}
+        run: ./gradlew build -Pskip_nms=true
+      - name: Build with NMS
+        if: ${{ github.event_name == 'release' }}
+        run: ./gradlew build -Pskip_nms=false
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:

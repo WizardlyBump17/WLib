@@ -66,6 +66,8 @@ def preprocessors() {
         preprocessors.append("WLIB_INCLUDE_NMS=1")
     }
 
+    println("Preprocessors: ${preprocessors}")
+
     new File(rootProject.projectDir, "build.properties").text = preprocessors.toString()
 }
 
