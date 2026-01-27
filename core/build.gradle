@@ -33,6 +33,8 @@ dependencies {
         implementation(project(":versions:v1_21_R1"))
         implementation(project(":versions:v1_21_R3"))
         implementation(project(":versions:v1_21_R5"))
+    } else {
+        println("Ignoring NMS")
     }
 
     compileOnly("com.google.code.gson:gson:${gson}")
