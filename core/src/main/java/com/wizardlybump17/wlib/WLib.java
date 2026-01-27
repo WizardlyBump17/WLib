@@ -158,13 +158,6 @@ public class WLib extends JavaPlugin {
     }
 
     private void setupAdapters() {
-        //keep IntelliJ from removing the import
-        ItemAdapter.class.toString();
-        PlayerAdapter.class.toString();
-        AttributeAdapter.class.toString();
-        CommandMapAdapter.class.toString();
-
-        #if WLIB_INCLUDE_NMS == 1
         String version = Bukkit.getMinecraftVersion();
         switch (version) {
             case "1.20.5", "1.20.6" -> {
@@ -193,9 +186,6 @@ public class WLib extends JavaPlugin {
             }
             default -> getLogger().severe("The server version (" + version + ") is not supported by WLib yet.");
         }
-        #else
-        getLogger().severe("The NMS integration was disabled during compile, probably because of the presence of the \"skip_nms\" property and it was set to \"true\". The following systems are expected to not work: ItemAdapter, PlayerAdapter, AttributeAdapter, CommandMapAdapter.");
-        #endif
     }
 
     public static WLib getInstance() {

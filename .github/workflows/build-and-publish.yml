@@ -72,5 +72,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Clean, Build and Publish
-        run: ./gradlew -Pskip_nms=true clean build publish
+        run: ./gradlew publish
 

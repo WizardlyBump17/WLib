@@ -1,7 +1,4 @@
 var gson = "2.13.2"
-var manifold = "2025.1.27"
-
-apply plugin: "systems.manifold.manifold-gradle-plugin"
 
 dependencies {
     compileOnly(
@@ -28,19 +25,12 @@ dependencies {
         exclude group: "com.google.code.gson", module: "gson"
     }
 
-    if (!"true".equals(rootProject.properties.get("skip_nms"))) {
-        implementation(project(":versions:v1_20_R4"))
-        implementation(project(":versions:v1_21_R1"))
-        implementation(project(":versions:v1_21_R3"))
-        implementation(project(":versions:v1_21_R5"))
-    } else {
-        println("Ignoring NMS")
-    }
+    implementation(project(":versions:v1_20_R4"))
+    implementation(project(":versions:v1_21_R1"))
+    implementation(project(":versions:v1_21_R3"))
+    implementation(project(":versions:v1_21_R5"))
 
     compileOnly("com.google.code.gson:gson:${gson}")
-
-    annotationProcessor("systems.manifold:manifold-preprocessor:${manifold}")
-    testAnnotationProcessor("systems.manifold:manifold-preprocessor:${manifold}")
 }
 
 processResources {
@@ -59,18 +49,3 @@ tasks {
     }
 }
 
-def preprocessors() {
-    StringBuilder preprocessors = new StringBuilder()
-
-    if ("true".equals(rootProject.properties.get("skip_nms"))) {
-        preprocessors.append("WLIB_INCLUDE_NMS=0")
-    } else {
-        preprocessors.append("WLIB_INCLUDE_NMS=1")
-    }
-
-    println("Preprocessors: ${preprocessors}")
-
-    new File(rootProject.projectDir, "build.properties").text = preprocessors.toString()
-}
-
-preprocessors()
