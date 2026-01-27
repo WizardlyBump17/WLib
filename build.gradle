@@ -74,6 +74,12 @@ subprojects {
             gpr(MavenPublication) {
                 from(components.java)
                 pom.withXml {
+                    asNode().dependencies.dependency.each { dep ->
+                        if (dep.artifactId.last().value().last().matches('v\\d_\\d+_R\\d+'))
+                            dep.parent().remove(dep)
+                    }
+                }
+                pom.withXml {
                     def deps = asNode().dependencies?.dependency
                     deps?.findAll {
                         it.groupId.text() == "com.wizardlybump17.wlib" && it.artifactId.text().matches("v\\d_\\d+_R\\d+")
