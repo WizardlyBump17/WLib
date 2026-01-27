@@ -66,6 +66,7 @@ jobs:
       - name: Build this shit again
         run: ./gradlew clean build
       - name: Upload to the release
+        if: ${{ github.event_name == 'release' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
