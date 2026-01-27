@@ -79,14 +79,6 @@ subprojects {
                             dep.parent().remove(dep)
                     }
                 }
-                pom.withXml {
-                    def deps = asNode().dependencies?.dependency
-                    deps?.findAll {
-                        it.groupId.text() == "com.wizardlybump17.wlib" && it.artifactId.text().matches("v\\d_\\d+_R\\d+")
-                    }?.each {
-                        it.parent().remove(it)
-                    }
-                }
             }
         }
     }
