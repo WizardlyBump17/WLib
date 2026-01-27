@@ -28,7 +28,7 @@ dependencies {
         exclude group: "com.google.code.gson", module: "gson"
     }
 
-    if (!"true".equals(properties.get("skip_nms"))) {
+    if (!"true".equals(rootProject.properties.get("skip_nms"))) {
         implementation(project(":versions:v1_20_R4"))
         implementation(project(":versions:v1_21_R1"))
         implementation(project(":versions:v1_21_R3"))
@@ -60,7 +60,7 @@ tasks {
 def preprocessors() {
     StringBuilder preprocessors = new StringBuilder()
 
-    if ("true".equals(properties.get("skip_nms"))) {
+    if ("true".equals(rootProject.properties.get("skip_nms"))) {
         preprocessors.append("WLIB_INCLUDE_NMS=0")
     } else {
         preprocessors.append("WLIB_INCLUDE_NMS=1")
