@@ -48,6 +48,8 @@ jobs:
       contents: write
       packages: write
     if: ${{ github.event_name != 'pull_request' }}
+    needs:
+      - build
     steps:
       - name: Get current date
         run: echo "WLIB_BUILD_DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_ENV"
@@ -69,4 +71,4 @@ jobs:
             gh release upload ${{ github.event.release.tag_name }} $file
           done
       - name: Publish
-        run: ./gradlew -Pskip_nms=true clean build publish
+        run: ./gradlew -Pskip_nms=true publish
