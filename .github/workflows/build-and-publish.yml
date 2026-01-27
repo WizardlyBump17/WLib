@@ -65,6 +65,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Build this shit again
         run: ./gradlew clean build
+      - name: Clean, Build and Publish
+        run: ./gradle -Pskip_nms=true clean build publish
       - name: Upload to the release
         if: ${{ github.event_name == 'release' }}
         env:
@@ -73,5 +75,4 @@ jobs:
           for file in */build/libs/*.jar; do
             gh release upload ${{ github.event.release.tag_name }} $file
           done
-      - name: Clean, Build and Publish
-        run: ./gradle -Pskip_nms=true publish clean build publish
+      
