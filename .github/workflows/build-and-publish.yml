@@ -63,8 +63,8 @@ jobs:
           distribution: temurin
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build and publish
-        run: ./gradlew clean build -Pskip_nms=true publish
+      - name: Build this shit again
+        run: ./gradlew clean build
       - name: Upload to the release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -72,3 +72,5 @@ jobs:
           for file in */build/libs/*.jar; do
             gh release upload ${{ github.event.release.tag_name }} $file
           done
+      - name: Clean, Build and Publish
+        run: ./gradle -Pskip_nms=true publish clean build publish
