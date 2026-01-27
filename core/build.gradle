@@ -29,13 +29,15 @@ dependencies {
     }
 
     if (!"true".equals(rootProject.properties.get("skip_nms"))) {
-        println("Including the NMS stuff")
         implementation(project(":versions:v1_20_R4"))
         implementation(project(":versions:v1_21_R1"))
         implementation(project(":versions:v1_21_R3"))
         implementation(project(":versions:v1_21_R5"))
     } else {
-        println("Excluding the NMS stuff")
+        compileOnly(project(":versions:v1_20_R4"))
+        compileOnly(project(":versions:v1_21_R1"))
+        compileOnly(project(":versions:v1_21_R3"))
+        compileOnly(project(":versions:v1_21_R5"))
     }
 
     compileOnly("com.google.code.gson:gson:${gson}")
