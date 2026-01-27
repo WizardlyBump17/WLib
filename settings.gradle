@@ -22,7 +22,6 @@ include 'versions:adapter'
 findProject(':versions:adapter')?.name = 'adapter'
 
 if (!"true".equals(properties.get("skip_nms"))) {
-    println("Ignoring NMS at settings.gradle")
     include 'versions:v1_20_R4'
     findProject(':versions:v1_20_R4')?.name = 'v1_20_R4'
     include 'versions:v1_21_R1'
