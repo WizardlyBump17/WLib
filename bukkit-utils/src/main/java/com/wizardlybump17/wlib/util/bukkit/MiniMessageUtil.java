@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.util.bukkit;
 
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 import com.wizardlybump17.wlib.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -70,6 +72,8 @@ public final class MiniMessageUtil {
 
         return switch (object) {
             case Component component -> component;
+            case JsonPrimitive jsonPrimitive -> Component.text(jsonPrimitive.getAsString());
+            case JsonNull ignored -> NULL;
             default -> Component.text(String.valueOf(object));
         };
     }
