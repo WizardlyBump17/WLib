@@ -19,15 +19,12 @@ public interface ValuesSuggester<T> extends Suggester<T> {
 
         private final @NotNull List<T> values;
         private final @Nullable Function<T, String> stringRepresentationFunction;
+        private final boolean needsEscape;
 
-        Values(@NotNull List<T> values, @NotNull Function<T, String> stringRepresentationFunction) {
+        Values(@NotNull List<T> values, @Nullable Function<T, String> stringRepresentationFunction, boolean needsEscape) {
             this.values = List.copyOf(values);
             this.stringRepresentationFunction = stringRepresentationFunction;
-        }
-
-        Values(@NotNull List<T> values) {
-            this.values = List.copyOf(values);
-            stringRepresentationFunction = null;
+            this.needsEscape = needsEscape;
         }
 
         @Override
@@ -37,6 +34,11 @@ public interface ValuesSuggester<T> extends Suggester<T> {
 
         public @Nullable Function<T, String> stringRepresentation() {
             return stringRepresentationFunction;
+        }
+
+        @Override
+        public boolean needsEscape() {
+            return needsEscape;
         }
 
         @Override
@@ -54,12 +56,14 @@ public interface ValuesSuggester<T> extends Suggester<T> {
             if (o == null || getClass() != o.getClass())
                 return false;
             Values<?> values1 = (Values<?>) o;
-            return Objects.equals(values, values1.values) && Objects.equals(stringRepresentationFunction, values1.stringRepresentationFunction);
+            return Objects.equals(values, values1.values)
+                    && Objects.equals(stringRepresentationFunction, values1.stringRepresentationFunction)
+                    && needsEscape == values1.needsEscape;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(values, stringRepresentationFunction);
+            return Objects.hash(values, stringRepresentationFunction, needsEscape);
         }
 
         @Override
@@ -67,6 +71,7 @@ public interface ValuesSuggester<T> extends Suggester<T> {
             return "ValuesSuggester$Values{" +
                     "values=" + values +
                     ", stringRepresentationFunction=" + stringRepresentationFunction +
+                    ", needsEscape=" + needsEscape +
                     '}';
         }
     }
