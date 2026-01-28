@@ -2,14 +2,18 @@ package com.wizardlybump17.wlib.util.bukkit;
 
 import com.wizardlybump17.wlib.util.StringUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public final class MiniMessageUtil {
+
+    private static final @NotNull TextComponent NULL = Component.text("null");
 
     private MiniMessageUtil() {
     }
@@ -27,7 +31,7 @@ public final class MiniMessageUtil {
             resolvers[resolverIndex++] = TagResolver.builder()
                     .tag(
                             key,
-                            Tag.inserting(value instanceof Component component ? component : Component.text(String.valueOf(value)))
+                            Tag.inserting(getInsertion(value))
                     )
                     .build();
         }
@@ -47,17 +51,27 @@ public final class MiniMessageUtil {
             resolvers[resolverIndex++] = TagResolver.builder()
                     .tag(
                             prefix + key,
-                            Tag.inserting(value instanceof Component component ? component : Component.text(String.valueOf(value)))
+                            Tag.inserting(getInsertion(value))
                     )
                     .build();
         }
         resolvers[resolverIndex] = TagResolver.builder()
                 .tag(
                         prefix + placeholderKey,
-                        Tag.inserting(placeholderValue instanceof Component component ? component : Component.text(String.valueOf(placeholderValue)))
+                        Tag.inserting(getInsertion(placeholderValue))
                 )
                 .build();
         return miniMessage.deserialize(message, resolvers);
+    }
+
+    private static @NotNull Component getInsertion(@Nullable Object object) {
+        if (object == null)
+            return NULL;
+
+        return switch (object) {
+            case Component component -> component;
+            default -> Component.text(String.valueOf(object));
+        };
     }
 
     public static @NotNull Component getMessage(@NotNull String message, @NotNull String placeholderKey, @NotNull Object placeholderValue, @NotNull Map<String , ?> additionalPlaceholders) {
