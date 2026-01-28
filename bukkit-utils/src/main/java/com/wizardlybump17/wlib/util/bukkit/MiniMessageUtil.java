@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.util.bukkit;
 
+import com.wizardlybump17.wlib.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -21,7 +22,7 @@ public final class MiniMessageUtil {
         TagResolver[] resolvers = new TagResolver[placeholders.size()];
         int resolverIndex = 0;
         for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
-            String key = entry.getKey();
+            String key = StringUtil.pascalToCamel(entry.getKey());
             Object value = entry.getValue();
             resolvers[resolverIndex++] = TagResolver.builder()
                     .tag(
@@ -41,7 +42,7 @@ public final class MiniMessageUtil {
         TagResolver[] resolvers = new TagResolver[additionalPlaceholders.size() + 1];
         int resolverIndex = 0;
         for (Map.Entry<String, ?> entry : additionalPlaceholders.entrySet()) {
-            String key = entry.getKey();
+            String key = StringUtil.pascalToCamel(entry.getKey());
             Object value = entry.getValue();
             resolvers[resolverIndex++] = TagResolver.builder()
                     .tag(
