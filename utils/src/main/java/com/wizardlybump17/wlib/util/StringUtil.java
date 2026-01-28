@@ -516,4 +516,18 @@ public class StringUtil {
     public static @NotNull String escapeString(@NotNull String input) {
         return escapeString(input, QUOTE, ESCAPE);
     }
+
+    public static @NotNull String pascalToCamel(@NotNull String input) {
+        StringBuilder builder = new StringBuilder(input.length());
+        for (char currentChar : input.toCharArray()) {
+            if (currentChar >= 'A' && currentChar <= 'Z') {
+                if (!builder.isEmpty())
+                    builder.append('_');
+                builder.append(Character.toLowerCase(currentChar));
+                continue;
+            }
+            builder.append(currentChar);
+        }
+        return builder.toString();
+    }
 }
