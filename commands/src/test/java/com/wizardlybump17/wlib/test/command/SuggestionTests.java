@@ -741,4 +741,57 @@ class SuggestionTests {
                 ).getSuggestions(CHAD_SENDER, List.of("hello", "9b07bd8a-a4c0")))
         );
     }
+
+    @Test
+    void testEmptyStrings0() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(),
+                                        null,
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+
+        Assertions.assertEquals(List.of("world"), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", ""))));
+        Assertions.assertEquals(List.of(), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "", ""))));
+    }
+
+    @Test
+    void testEmptyStrings1() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "test0",
+                                                        List.of(),
+                                                        null,
+                                                        null
+                                                )
+                                        ),
+                                        null,
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+
+        Assertions.assertEquals(List.of("world"), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", ""))));
+        Assertions.assertEquals(List.of(), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "", ""))));
+        Assertions.assertEquals(List.of("test0"), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "world", ""))));
+        Assertions.assertEquals(List.of(), Assertions.assertDoesNotThrow(() -> command.getSuggestions(CHAD_SENDER, List.of("hello", "world", "test0", ""))));
+    }
 }

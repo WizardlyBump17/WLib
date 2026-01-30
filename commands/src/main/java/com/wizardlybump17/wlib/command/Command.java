@@ -145,7 +145,7 @@ public class Command implements Comparable<Command> {
             String inputString = input.get(i);
             boolean isLastInput = i == input.size() - 1;
 
-            if (inputString != null && inputString.isEmpty()) {
+            if (isLastInput && inputString != null && inputString.isEmpty()) {
                 for (CommandNode<?> child : children) {
                     String permission = child.getPermission();
                     if (permission == null || sender.hasPermission(permission))
