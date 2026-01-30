@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.util.bukkit.collector;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -24,25 +25,33 @@ public class ComponentCollector implements Collector<Component, Component[], Com
 
     @Override
     public @NotNull Supplier<Component[]> supplier() {
-        return () -> new Component[] {Component.empty()};
+        return () -> new Component[1];
     }
 
     @Override
     public @NotNull BiConsumer<Component[], Component> accumulator() {
-        return (array, component) -> array[0] = array[0].append(separator).append(component);
+        return (array, component) -> {
+            if (array[0] == null)
+                array[0] = component;
+            else
+                array[0] = array[0].append(separator).append(component);
+        };
     }
 
     @Override
     public @NotNull BinaryOperator<Component[]> combiner() {
         return (left, right) -> {
-            left[0] = left[0].append(separator).append(right[0]);
+            if (left[0] == null)
+                left[0] = right[0];
+            else
+                left[0] = left[0].append(separator).append(right[0]);
             return left;
         };
     }
 
     @Override
     public @NotNull Function<Component[], Component> finisher() {
-        return array -> array[0];
+        return array -> Objects.requireNonNullElseGet(array[0], Component::empty);
     }
 
     @Override
