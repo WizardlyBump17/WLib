@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.inventory.paginated;
 
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
+import com.wizardlybump17.wlib.inventory.item.ClickAction;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
@@ -101,6 +102,14 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
     public PaginatedInventoryBuilder shapeReplacements(@NonNull Map<Character, ItemButton> shapeReplacements) {
         this.shapeReplacements.clear();
         this.shapeReplacements.putAll(shapeReplacements);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementActionByCustomData(@NotNull String key, @Nullable Object value, @NotNull ClickAction action) {
+        for (ItemButton button : shapeReplacements.values()) {
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setClickAction(action);
+        }
         return this;
     }
 
