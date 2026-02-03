@@ -90,6 +90,10 @@ public interface CommandResult<T> {
         return new BadRequestResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull UnprocessableContentResult<T> unprocessableContent(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new UnprocessableContentResult<>(lastInputIndex, lastNode);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
@@ -130,5 +134,9 @@ public interface CommandResult<T> {
 
     static <T> @NotNull BadRequestResult<T> badRequest(@NotNull CommandContext context) {
         return badRequest(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull UnprocessableContentResult<T> unprocessableContent(@NotNull CommandContext context) {
+        return unprocessableContent(context.lastInputIndex(), context.lastNode());
     }
 }
