@@ -223,7 +223,7 @@ public class Command implements Comparable<Command> {
 
     public @NotNull Command merge(@NotNull Command other) {
         if (other.getClass() != getClass())
-            throw new IllegalArgumentException("Can not merge different kinds of Commands");
+            return other.merge(this);
         return new Command(root.merge(other.getRoot()));
     }
 

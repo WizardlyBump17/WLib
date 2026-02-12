@@ -398,6 +398,156 @@ public class CommandTests {
         ));
 
         Assertions.assertEquals(expected, actual);
+
+        Assertions.assertEquals(
+                new TestMerge0(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "world",
+                                                List.of(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hello",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).merge(
+                        new TestMerge0(
+                                new LiteralCommandNode(
+                                        "hello",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "world",
+                                                        List.of(),
+                                                        null,
+                                                        null
+                                                )
+                                        ),
+                                        null,
+                                        null
+                                )
+                        )
+                )
+        );
+
+        Assertions.assertEquals(
+                new TestMerge1(
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "there",
+                                                List.of(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ),
+                new Command(
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).merge(
+                        new TestMerge1(
+                                new LiteralCommandNode(
+                                        "hi",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "there",
+                                                        List.of(),
+                                                        null,
+                                                        null
+                                                )
+                                        ),
+                                        null,
+                                        null
+                                )
+                        )
+                )
+        );
+
+        Assertions.assertEquals(
+                new TestMerge0(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(
+                                        new LiteralCommandNode(
+                                                "test0",
+                                                List.of(),
+                                                null,
+                                                null
+                                        )
+                                ),
+                                null,
+                                null
+                        )
+                ),
+                new TestMerge0(
+                        new LiteralCommandNode(
+                                "test",
+                                List.of(),
+                                null,
+                                null
+                        )
+                ).merge(
+                        new TestMerge1(
+                                new LiteralCommandNode(
+                                        "test",
+                                        List.of(
+                                                new LiteralCommandNode(
+                                                        "test0",
+                                                        List.of(),
+                                                        null,
+                                                        null
+                                                )
+                                        ),
+                                        null,
+                                        null
+                                )
+                        )
+                )
+        );
+    }
+
+    static class TestMerge0 extends Command {
+
+        public TestMerge0(@NotNull LiteralCommandNode root) {
+            super(root);
+        }
+
+        @Override
+        public @NotNull Command merge(@NotNull Command other) {
+            return new TestMerge0(getRoot().merge(other.getRoot()));
+        }
+    }
+
+    static class TestMerge1 extends Command {
+
+        public TestMerge1(@NotNull LiteralCommandNode root) {
+            super(root);
+        }
+
+        @Override
+        public @NotNull Command merge(@NotNull Command other) {
+            return new TestMerge1(getRoot().merge(other.getRoot()));
+        }
     }
 
     @Test
