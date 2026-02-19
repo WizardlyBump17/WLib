@@ -2,9 +2,9 @@ package com.wizardlybump17.wlib.command.node.primitive;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.primitive.AllowedBooleanInputs;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.suggestion.primitive.BooleanSuggester;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -13,18 +13,8 @@ import java.util.List;
 
 public class BooleanCommandNode extends AbstractPrimitiveCommandNode<Boolean> {
 
-    public BooleanCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedBooleanInputs allowedInputs, @Nullable BooleanSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public BooleanCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<Boolean> allowedInputs, @Nullable Suggester<Boolean> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
-    }
-
-    @Override
-    public @NotNull AllowedBooleanInputs getAllowedInputs() {
-        return (AllowedBooleanInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable BooleanSuggester getSuggester() {
-        return (BooleanSuggester) super.getSuggester();
     }
 
     @Override

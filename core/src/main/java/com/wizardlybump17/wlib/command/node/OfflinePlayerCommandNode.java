@@ -2,8 +2,8 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.AllowedOfflinePlayerInputs;
-import com.wizardlybump17.wlib.command.suggestion.OfflinePlayerSuggester;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class OfflinePlayerCommandNode extends CommandNode<OfflinePlayer> {
 
-    public OfflinePlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedOfflinePlayerInputs allowedInputs, @Nullable OfflinePlayerSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public OfflinePlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<OfflinePlayer> allowedInputs, @Nullable Suggester<OfflinePlayer> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
@@ -37,16 +37,6 @@ public class OfflinePlayerCommandNode extends CommandNode<OfflinePlayer> {
         }
 
         return null;
-    }
-
-    @Override
-    public @NotNull AllowedOfflinePlayerInputs getAllowedInputs() {
-        return (AllowedOfflinePlayerInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable OfflinePlayerSuggester getSuggester() {
-        return (OfflinePlayerSuggester) super.getSuggester();
     }
 
     @Override

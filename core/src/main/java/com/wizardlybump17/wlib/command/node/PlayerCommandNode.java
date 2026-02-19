@@ -2,8 +2,8 @@ package com.wizardlybump17.wlib.command.node;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.AllowedPlayerInputs;
-import com.wizardlybump17.wlib.command.suggestion.PlayerSuggester;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class PlayerCommandNode extends CommandNode<Player> {
 
-    public PlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedPlayerInputs allowedInputs, @Nullable PlayerSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public PlayerCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<Player> allowedInputs, @Nullable Suggester<Player> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
     }
 
@@ -37,16 +37,6 @@ public class PlayerCommandNode extends CommandNode<Player> {
         }
 
         return null;
-    }
-
-    @Override
-    public @NotNull AllowedPlayerInputs getAllowedInputs() {
-        return (AllowedPlayerInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable PlayerSuggester getSuggester() {
-        return (PlayerSuggester) super.getSuggester();
     }
 
     @Override

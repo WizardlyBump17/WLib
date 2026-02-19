@@ -2,9 +2,9 @@ package com.wizardlybump17.wlib.command.node.object;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.object.AllowedUUIDInputs;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.suggestion.object.UUIDSuggester;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -14,18 +14,8 @@ import java.util.UUID;
 
 public class UUIDCommandNode extends CommandNode<UUID> {
 
-    public UUIDCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedUUIDInputs allowedInputs, @Nullable UUIDSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public UUIDCommandNode(@NotNull String name, @NotNull @Unmodifiable List<CommandNode<?>> children, @NotNull AllowedInputs<UUID> allowedInputs, @Nullable Suggester<UUID> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
-    }
-
-    @Override
-    public @NotNull AllowedUUIDInputs getAllowedInputs() {
-        return (AllowedUUIDInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable UUIDSuggester getSuggester() {
-        return (UUIDSuggester) super.getSuggester();
     }
 
     @Override

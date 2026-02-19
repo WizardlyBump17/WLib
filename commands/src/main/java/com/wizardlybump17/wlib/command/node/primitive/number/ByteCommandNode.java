@@ -2,10 +2,10 @@ package com.wizardlybump17.wlib.command.node.primitive.number;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedByteInputs;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.ByteSuggester;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,18 +13,8 @@ import java.util.List;
 
 public class ByteCommandNode extends NumberCommandNode<Byte> implements PrimitiveCommandNode {
 
-    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedByteInputs allowedInputs, @Nullable ByteSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public ByteCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<Byte> allowedInputs, @Nullable Suggester<Byte> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
-    }
-
-    @Override
-    public @NotNull AllowedByteInputs getAllowedInputs() {
-        return (AllowedByteInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable ByteSuggester getSuggester() {
-        return (ByteSuggester) super.getSuggester();
     }
 
     @Override

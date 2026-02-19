@@ -2,10 +2,10 @@ package com.wizardlybump17.wlib.command.node.primitive.number;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
-import com.wizardlybump17.wlib.command.input.primitive.number.AllowedLongInputs;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.PrimitiveCommandNode;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.LongSuggester;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,18 +13,8 @@ import java.util.List;
 
 public class LongCommandNode extends NumberCommandNode<Long> implements PrimitiveCommandNode {
 
-    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedLongInputs allowedInputs, @Nullable LongSuggester suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
+    public LongCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<Long> allowedInputs, @Nullable Suggester<Long> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
-    }
-
-    @Override
-    public @NotNull AllowedLongInputs getAllowedInputs() {
-        return (AllowedLongInputs) super.getAllowedInputs();
-    }
-
-    @Override
-    public @Nullable LongSuggester getSuggester() {
-        return (LongSuggester) super.getSuggester();
     }
 
     @Override

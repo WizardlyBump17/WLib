@@ -4,7 +4,6 @@ import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
-import com.wizardlybump17.wlib.command.suggestion.primitive.number.NumberSuggester;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,11 +13,6 @@ public abstract class NumberCommandNode<N extends Number> extends CommandNode<N>
 
     public NumberCommandNode(@NotNull String name, @NotNull List<CommandNode<?>> children, @NotNull AllowedInputs<N> allowedInputs, @Nullable Suggester<N> suggester, @Nullable CommandNodeExecutor<?> executor, @Nullable String permission) {
         super(name, children, allowedInputs, suggester, executor, permission);
-    }
-
-    @Override
-    public @Nullable NumberSuggester<N> getSuggester() {
-        return (NumberSuggester<N>) super.getSuggester();
     }
 
     @Override
