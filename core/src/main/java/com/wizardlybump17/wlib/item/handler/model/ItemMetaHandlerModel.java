@@ -4,6 +4,8 @@ import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import lombok.Data;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -25,6 +27,8 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
     }
 
     public abstract H createHandler(ItemBuilder builder);
+
+    public abstract @NotNull H createHandler(@NotNull ItemMeta itemMeta);
 
     public boolean isApplicable(Material material) {
         return applicableMaterials.contains(material);
