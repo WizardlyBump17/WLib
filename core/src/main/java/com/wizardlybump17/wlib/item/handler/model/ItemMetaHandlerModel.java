@@ -26,6 +26,10 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
         registerModel(this);
     }
 
+    /**
+     * @deprecated use {@link #createHandler(ItemMeta)} instead
+     */
+    @Deprecated(forRemoval = true)
     public abstract H createHandler(ItemBuilder builder);
 
     public abstract @NotNull H createHandler(@NotNull ItemMeta itemMeta);
