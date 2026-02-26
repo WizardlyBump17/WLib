@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -32,6 +33,10 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
     @Nullable
     public static ItemMetaHandlerModel<?> getApplicableModel(Material material) {
         return MODELS.get(material);
+    }
+
+    public static @NotNull Optional<ItemMetaHandlerModel<?>> getApplicableModelOptional(@NotNull Material material) {
+        return Optional.ofNullable(getApplicableModel(material));
     }
 
     public static void registerModel(ItemMetaHandlerModel<?> model) {
