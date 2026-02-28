@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.inventory.item.ClickAction;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.ObjectUtil;
 import lombok.AccessLevel;
@@ -110,6 +111,37 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
             if (Objects.equals(button.getCustomData().get(key), value))
                 button.setClickAction(action);
         }
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemStack> itemSupplier) {
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemStack item) {
+        Supplier<ItemStack> itemSupplier = () -> item;
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemBuilder> itemSupplier) {
+        Supplier<ItemStack> itemStackSupplier = () -> itemSupplier.get().build();
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemStackSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemBuilder item) {
+        Supplier<ItemStack> itemSupplier = item::build;
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
         return this;
     }
 
