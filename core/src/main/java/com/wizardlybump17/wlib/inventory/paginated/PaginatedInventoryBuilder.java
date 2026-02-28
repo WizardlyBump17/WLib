@@ -105,7 +105,7 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
         return this;
     }
 
-    public @NotNull PaginatedInventoryBuilder setReplacementActionByCustomData(@NotNull String key, @Nullable Object value, @NotNull ClickAction action) {
+    public @NotNull PaginatedInventoryBuilder setReplacementActionByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ClickAction action) {
         for (ItemButton button : shapeReplacements.values()) {
             if (Objects.equals(button.getCustomData().get(key), value))
                 button.setClickAction(action);
