@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -114,6 +115,8 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
         return this;
     }
 
+    //ItemStack
+
     public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemStack> itemSupplier) {
         for (ItemButton button : shapeReplacements.values())
             if (Objects.equals(button.getCustomData().get(key), value))
@@ -128,6 +131,15 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
                 button.setItem(itemSupplier);
         return this;
     }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemStack, ItemStack> replacer) {
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(() -> replacer.apply(button.getItem().get()));
+        return this;
+    }
+
+    //ItemBuilder
 
     public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemBuilder> itemSupplier) {
         Supplier<ItemStack> itemStackSupplier = () -> itemSupplier.get().build();
@@ -144,6 +156,15 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
                 button.setItem(itemSupplier);
         return this;
     }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemBuilder, ItemBuilder> replacer) {
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(() -> replacer.apply(ItemBuilder.fromItemStack(button.getItem().get())).build());
+        return this;
+    }
+
+    //rest of the code
 
     public PaginatedInventoryBuilder content(@Nullable List<ItemButton> content) {
         this.content = content == null ? new ArrayList<>() : content;
