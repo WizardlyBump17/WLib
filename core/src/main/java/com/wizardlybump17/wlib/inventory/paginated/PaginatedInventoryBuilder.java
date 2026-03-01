@@ -170,6 +170,36 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
         return this;
     }
 
+    //ItemButton
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemButton> itemSupplier) {
+        ItemButton newButton = itemSupplier.get();
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(newButton);
+        }
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemButton item) {
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(item);
+        }
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemButton, ItemButton> replacer) {
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(replacer.apply(button));
+        }
+        return this;
+    }
+
     //rest of the code
 
     public PaginatedInventoryBuilder content(@Nullable List<ItemButton> content) {
