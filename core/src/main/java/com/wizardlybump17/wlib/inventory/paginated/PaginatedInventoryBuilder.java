@@ -133,9 +133,12 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
     }
 
     public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemStack, ItemStack> replacer) {
-        for (ItemButton button : shapeReplacements.values())
-            if (Objects.equals(button.getCustomData().get(key), value))
-                button.setItem(() -> replacer.apply(button.getItem().get()));
+        for (ItemButton button : shapeReplacements.values()) {
+            ItemStack originalItem = button.getItem().get();
+            if (Objects.equals(button.getCustomData().get(key), value)) {
+                button.setItem(() -> replacer.apply(originalItem));
+            }
+        }
         return this;
     }
 
@@ -158,9 +161,12 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
     }
 
     public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemBuilder, ItemBuilder> replacer) {
-        for (ItemButton button : shapeReplacements.values())
-            if (Objects.equals(button.getCustomData().get(key), value))
-                button.setItem(() -> replacer.apply(ItemBuilder.fromItemStack(button.getItem().get())).build());
+        for (ItemButton button : shapeReplacements.values()) {
+            ItemStack originalItem = button.getItem().get();
+            if (Objects.equals(button.getCustomData().get(key), value)) {
+                button.setItem(() -> replacer.apply(ItemBuilder.fromItemStack(originalItem)).build());
+            }
+        }
         return this;
     }
 
