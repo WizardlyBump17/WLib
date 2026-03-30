@@ -28,3 +28,5 @@ include 'versions:v1_21_R3'
 findProject(':versions:v1_21_R3')?.name = 'v1_21_R3'
 include 'versions:v1_21_R5'
 findProject(':versions:v1_21_R5')?.name = 'v1_21_R5'
+
+include 'versions:v1_21_r7'
