@@ -1,6 +1,8 @@
-package com.wizardlybump17.wlib.command.result;
+package com.wizardlybump17.wlib.command.result.success;
 
 import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.result.error.ErrorDetails;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,5 +18,10 @@ public record SuccessResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastN
     @Override
     public @NotNull String id() {
         return ID;
+    }
+
+    @Override
+    public @Nullable ErrorDetails errorDetails() {
+        return null;
     }
 }

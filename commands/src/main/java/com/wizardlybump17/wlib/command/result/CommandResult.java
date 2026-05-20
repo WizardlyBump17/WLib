@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.error.*;
 import com.wizardlybump17.wlib.command.result.success.NoContentResult;
+import com.wizardlybump17.wlib.command.result.success.SuccessResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,9 +25,7 @@ public interface CommandResult<T> {
 
     @NotNull String id();
 
-    default @Nullable String message() {
-        return null;
-    }
+    @Nullable ErrorDetails errorDetails();
 
     //without context
 

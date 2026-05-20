@@ -2,10 +2,11 @@ package com.wizardlybump17.wlib.command.result.success;
 
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.result.error.ErrorDetails;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record NoContentResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastNode) implements CommandResult<T> {
+public record NoContentResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull ErrorDetails errorDetails) implements CommandResult<T> {
 
     private static final @NotNull String ID = "WLib:Success/NoContent";
 

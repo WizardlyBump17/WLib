@@ -4,7 +4,7 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 
-public record InsufficientArgumentsResult<T>(@NotNull Command command) implements UnsuccessResult<T> {
+public record InsufficientArgumentsResult<T>(@NotNull Command command, @NotNull ErrorDetails errorDetails) implements UnsuccessResult<T> {
 
     public static final @NotNull String ID = "WLib:Unsuccess/InsufficientArguments";
 

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record CommandNotFoundResult<T>(@NotNull String input) implements UnsuccessResult<T> {
+public record CommandNotFoundResult<T>(@NotNull String input, @NotNull ErrorDetails errorDetails) implements UnsuccessResult<T> {
 
     public static final @NotNull String ID = "WLib:Unsuccess/CommandNotFound";
 
