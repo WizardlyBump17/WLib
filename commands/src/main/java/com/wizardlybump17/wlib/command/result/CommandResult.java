@@ -10,18 +10,12 @@ import com.wizardlybump17.wlib.command.result.success.SuccessResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 
 public interface CommandResult<T> {
 
     boolean success();
 
     @Nullable T data();
-
-    @Range(from = 0, to = Integer.MAX_VALUE)
-    int lastInputIndex();
-
-    @NotNull CommandNode<?> lastNode();
 
     @NotNull String id();
 

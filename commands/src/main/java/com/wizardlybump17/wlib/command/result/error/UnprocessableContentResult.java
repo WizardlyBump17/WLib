@@ -1,9 +1,8 @@
 package com.wizardlybump17.wlib.command.result.error;
 
-import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
 
-public record UnprocessableContentResult<T>(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull ErrorDetails errorDetails) implements UnsuccessResult<T> {
+public record UnprocessableContentResult<T>(@NotNull ErrorDetails errorDetails) implements UnsuccessResult<T> {
 
     public static final @NotNull String ID = "WLib:Error/UnprocessableContent";
 
