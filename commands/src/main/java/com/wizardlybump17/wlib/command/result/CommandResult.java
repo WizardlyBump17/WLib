@@ -24,6 +24,10 @@ public interface CommandResult<T> {
 
     @NotNull String id();
 
+    default @Nullable String message() {
+        return null;
+    }
+
     //without context
 
     static <T> @NotNull SuccessResult<T> successful(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable T data) {
@@ -94,12 +98,12 @@ public interface CommandResult<T> {
         return new UnprocessableContentResult<>(lastInputIndex, lastNode);
     }
 
-    static <T> @NotNull UnauthorizedResult<T> unauthorized(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new UnauthorizedResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull UnauthorizedResult<T> unauthorized(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable String message) {
+        return new UnauthorizedResult<>(lastInputIndex, lastNode, message);
     }
 
-    static <T> @NotNull ForbiddenResult<T> forbidden(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new ForbiddenResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull ForbiddenResult<T> forbidden(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable String message) {
+        return new ForbiddenResult<>(lastInputIndex, lastNode, message);
     }
 
     //with context
@@ -148,11 +152,11 @@ public interface CommandResult<T> {
         return unprocessableContent(context.lastInputIndex(), context.lastNode());
     }
 
-    static <T> @NotNull UnauthorizedResult<T> unauthorized(@NotNull CommandContext context) {
-        return unauthorized(context.lastInputIndex(), context.lastNode());
+    static <T> @NotNull UnauthorizedResult<T> unauthorized(@NotNull CommandContext context, @Nullable String message) {
+        return unauthorized(context.lastInputIndex(), context.lastNode(), message);
     }
 
-    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context) {
-        return forbidden(context.lastInputIndex(), context.lastNode());
+    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context, @Nullable String message) {
+        return forbidden(context.lastInputIndex(), context.lastNode(), message);
     }
 }
