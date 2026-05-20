@@ -94,6 +94,14 @@ public interface CommandResult<T> {
         return new UnprocessableContentResult<>(lastInputIndex, lastNode);
     }
 
+    static <T> @NotNull UnauthorizedResult<T> unauthorized(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new UnauthorizedResult<>(lastInputIndex, lastNode);
+    }
+
+    static <T> @NotNull ForbiddenResult<T> forbidden(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
+        return new ForbiddenResult<>(lastInputIndex, lastNode);
+    }
+
     //with context
 
     static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
@@ -138,5 +146,13 @@ public interface CommandResult<T> {
 
     static <T> @NotNull UnprocessableContentResult<T> unprocessableContent(@NotNull CommandContext context) {
         return unprocessableContent(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull UnauthorizedResult<T> unauthorized(@NotNull CommandContext context) {
+        return unauthorized(context.lastInputIndex(), context.lastNode());
+    }
+
+    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context) {
+        return forbidden(context.lastInputIndex(), context.lastNode());
     }
 }
