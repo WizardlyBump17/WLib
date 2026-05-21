@@ -78,15 +78,11 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context.sender());
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 
@@ -99,15 +95,11 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable{
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context.sender());
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -120,15 +112,11 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context);
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context);
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 
@@ -141,15 +129,11 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context);
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context);
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -162,19 +146,15 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context.sender());
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 
@@ -187,19 +167,15 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context.sender());
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context.sender());
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -212,18 +188,15 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context);
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context);
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 
@@ -236,19 +209,15 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                parameters.add(context);
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            parameters.add(context);
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -261,18 +230,14 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 
@@ -285,18 +250,14 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                context.arguments().getArguments().forEach((nodeName, argument) -> {
-                    if (!(argument.node() instanceof LiteralCommandNode))
-                        parameters.add(argument.data());
-                });
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            context.arguments().getArguments().forEach((nodeName, argument) -> {
+                if (!(argument.node() instanceof LiteralCommandNode))
+                    parameters.add(argument.data());
+            });
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -309,14 +270,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                return (CommandResult<T>) CommandResult.successful(context, methodHandle().invokeWithArguments(parameters));
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            return (CommandResult<T>) CommandResult.successful(methodHandle().invokeWithArguments(parameters));
         }
     }
 
@@ -329,14 +286,10 @@ public abstract sealed class AbstractMethodCommandNodeExecutor<T> implements Met
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) {
-            try {
-                List<Object> parameters = new ArrayList<>();
-                parameters.add(object());
-                return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
-            } catch (Throwable throwable) {
-                return CommandResult.exceptionally(context, throwable);
-            }
+        public @NotNull CommandResult<T> execute(@NotNull CommandContext context) throws Throwable {
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(object());
+            return (CommandResult<T>) methodHandle().invokeWithArguments(parameters);
         }
     }
 }

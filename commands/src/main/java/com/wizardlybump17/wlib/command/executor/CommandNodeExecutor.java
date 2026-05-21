@@ -7,5 +7,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface CommandNodeExecutor<T> {
 
-    @Nullable CommandResult<T> execute(@NotNull CommandContext context);
+    @Nullable CommandResult<T> execute(@NotNull CommandContext context) throws Throwable;
 }
