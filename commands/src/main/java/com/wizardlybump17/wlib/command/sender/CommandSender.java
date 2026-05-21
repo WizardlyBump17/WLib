@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.sender;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -19,6 +20,10 @@ public interface CommandSender<S> {
     void sendMessage(String message);
 
     void sendMessage(String... messages);
+
+    void sendMessage(@Nullable Object message);
+
+    void sendMessage(@Nullable Object @Nullable ... messages);
 
     String getName();
 

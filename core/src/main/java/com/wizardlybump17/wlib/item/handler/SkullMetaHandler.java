@@ -1,79 +1,102 @@
 package com.wizardlybump17.wlib.item.handler;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.model.SkullMetaHandlerModel;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerTextures;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SkullMetaHandler extends ItemMetaHandler<SkullMetaHandlerModel> {
 
-    private final @NonNull Map<String, PlayerProfile> profileCache = new ConcurrentHashMap<>();
+    public SkullMetaHandler(@NotNull SkullMetaHandlerModel model, @NotNull SkullMeta itemMeta) {
+        super(model, itemMeta);
+    }
 
-    public SkullMetaHandler(SkullMetaHandlerModel model, ItemBuilder builder) {
-        super(model, builder);
+    @Override
+    public @NotNull SkullMeta getItemMeta() {
+        return (SkullMeta) super.getItemMeta();
     }
 
     @Override
     public void serialize(Map<String, Object> map) {
-        if (skullUrl() != null)
-            map.put("skull", skullUrl());
-        if (skullOwner() != null)
-            map.put("owner", skullOwner().getUniqueId().toString());
+        String skullUrl = skullUrl();
+        if (skullUrl != null)
+            map.put("skull", skullUrl);
+
+        OfflinePlayer skullOwner = skullOwner();
+        if (skullOwner != null)
+            map.put("owner", skullOwner.getUniqueId().toString());
     }
 
     @Override
     public void deserialize(Map<String, Object> map) {
         String skull = (String) map.get("skull");
-        if (skull == null)
+        if (skull != null) {
+            skull(skull);
             return;
+        }
+
+        String owner = (String) map.get("owner");
+        if (owner != null)
+            skull(Bukkit.getOfflinePlayer(UUID.fromString(owner)));
+    }
+
+    public @Nullable String skullUrl() {
+        PlayerProfile profile = getItemMeta().getPlayerProfile();
+        if (profile == null)
+            return null;
+
+        URL skin = profile.getTextures().getSkin();
+        return skin == null ? null : skin.toString();
+    }
+
+    public @NotNull SkullMetaHandler skull(@Nullable String url) {
+        SkullMeta itemMeta = getItemMeta();
+
+        if (url == null) {
+            PlayerProfile profile = itemMeta.getPlayerProfile();
+            if (profile == null)
+                return this;
+
+            PlayerTextures textures = profile.getTextures();
+
+            textures.setSkin(null);
+            profile.setTextures(textures);
+
+            itemMeta.setPlayerProfile(profile);
+            return this;
+        }
 
         try {
-            skull(Bukkit.getOfflinePlayer(UUID.fromString(skull)));
-        } catch (IllegalArgumentException ignored) {
-            skull(skull);
+            PlayerProfile profile = Bukkit.createProfile(UUID.nameUUIDFromBytes(url.getBytes()));
+
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(URI.create(url).toURL());
+
+            profile.setTextures(textures);
+
+            itemMeta.setPlayerProfile(profile);
+            return this;
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid URL " + url, e);
         }
     }
 
-    public String skullUrl() {
-        return getBuilder().<String, SkullMeta>getFromMeta(meta -> {
-            PlayerProfile profile = meta.getPlayerProfile();
-            if (profile == null)
-                return null;
-
-            URL skin = profile.getTextures().getSkin();
-            return skin == null ? null : skin.toString();
-        }, () -> null);
+    public @Nullable OfflinePlayer skullOwner() {
+        return getItemMeta().getOwningPlayer();
     }
 
-    public SkullMetaHandler skull(String url) {
-        getBuilder().<SkullMeta>consumeMeta(meta -> meta.setPlayerProfile(profileCache.computeIfAbsent(url, $ -> {
-            try {
-                PlayerProfile profile = Bukkit.createProfile(UUID.nameUUIDFromBytes(url.getBytes()));
-                profile.getTextures().setSkin(URI.create(url).toURL());
-                return profile;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("Invalid URL " + url, e);
-            }
-        })));
-        return this;
-    }
-
-    public OfflinePlayer skullOwner() {
-        return getBuilder().getFromMeta(SkullMeta::getOwningPlayer, (OfflinePlayer) null);
-    }
-
-    public SkullMetaHandler skull(OfflinePlayer owner) {
-       getBuilder().<SkullMeta>consumeMeta(meta -> meta.setOwningPlayer(owner));
+    public @NotNull SkullMetaHandler skull(@Nullable OfflinePlayer owner) {
+       getItemMeta().setOwningPlayer(owner);
        return this;
     }
 }

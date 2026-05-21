@@ -1,5 +1,7 @@
 package com.wizardlybump17.wlib.listener;
 
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import com.wizardlybump17.wlib.inventory.CustomInventory;
 import com.wizardlybump17.wlib.inventory.CustomInventoryHolder;
 import com.wizardlybump17.wlib.inventory.item.ClickAction;
@@ -15,6 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class EntityListener implements Listener {
@@ -62,5 +65,10 @@ public class EntityListener implements Listener {
             return;
 
         paginatedInventory.stopListeners();
+    }
+
+    @EventHandler
+    public void onRemove(@NotNull EntityRemoveFromWorldEvent event) {
+        BukkitCommandSender.removeFromCache(event.getEntity().getUniqueId());
     }
 }

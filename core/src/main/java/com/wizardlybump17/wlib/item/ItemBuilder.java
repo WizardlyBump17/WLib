@@ -41,61 +41,79 @@ import java.util.stream.Collectors;
 @SerializableAs("item-builder")
 public class ItemBuilder implements ConfigurationSerializable, Cloneable {
 
-    private @NotNull Material type;
-    private int amount;
-    private final @NotNull Map<Object, Object> customData;
+    private @NotNull Material type = Material.AIR;
+    private int amount = 1;
+    private final @NotNull Map<Object, Object> customData = new TreeMap<>();
     private @Nullable ItemMetaHandler<?> metaHandler;
     private @Nullable ItemMeta itemMeta;
+
+    public ItemBuilder() {
+    }
+
+    public ItemBuilder(@NotNull Material type) {
+        this.type = type;
+        itemMeta = Bukkit.getItemFactory().getItemMeta(type);
+        metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                .map(model -> model.createHandler(itemMeta))
+                .orElse(null);
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount) {
+        this.type = type;
+        this.amount = amount;
+        itemMeta = Bukkit.getItemFactory().getItemMeta(type);
+        metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                .map(model -> model.createHandler(itemMeta))
+                .orElse(null);
+    }
+
+    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData) {
+        this.type = type;
+        this.amount = amount;
+        itemMeta = Bukkit.getItemFactory().getItemMeta(type);
+        metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                .map(model -> model.createHandler(itemMeta))
+                .orElse(null);
+        this.customData.putAll(customData);
+    }
 
     public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData, @Nullable ItemMeta itemMeta) {
         this.type = type;
         this.amount = amount;
-        this.customData = customData;
-
-        ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(type);
-        if (metaHandlerModel != null)
-            this.metaHandler = metaHandlerModel.createHandler(this);
-
         this.itemMeta = itemMeta;
+        if (itemMeta != null) {
+            metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                    .map(model -> model.createHandler(itemMeta))
+                    .orElse(null);
+        }
+        this.customData.putAll(customData);
     }
 
-    public ItemBuilder(@NotNull Material type, int amount, @NotNull Map<Object, Object> customData) {
-        this(type, amount, customData, null);
+    /**
+     * @deprecated use {@link #fromItemStack(ItemStack)} instead
+     */
+    @Deprecated(forRemoval = true)
+    public ItemBuilder(@NotNull ItemStack item) {
+        type = item.getType();
+        amount = item.getAmount();
+        itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                    .map(model -> model.createHandler(itemMeta))
+                    .orElse(null);
+        }
     }
 
-    public ItemBuilder(@NotNull Material type, int amount) {
-        this(type, amount, new HashMap<>());
-    }
-
-    public ItemBuilder(@NotNull Material type) {
-        this(type, 1);
-    }
-
-    public ItemBuilder(@Nullable ItemStack item, @NotNull Map<Object, Object> customData) {
-        this(
-                item == null ? Material.AIR : item.getType(),
-                item == null ? 1 : item.getAmount(),
-                customData,
-                item == null ? null : item.getItemMeta()
-        );
-    }
-
-    public ItemBuilder(@Nullable ItemStack item) {
-        this(
-                item == null ? Material.AIR : item.getType(),
-                item == null ? 1 : item.getAmount(),
-                new HashMap<>(),
-                item == null ? null : item.getItemMeta()
-        );
-    }
-
-    public ItemBuilder() {
-        this(
-                Material.AIR,
-                1,
-                new HashMap<>(),
-                null
-        );
+    public ItemBuilder(@NotNull ItemStack item, @NotNull Map<Object, Object> customData) {
+        type = item.getType();
+        amount = item.getAmount();
+        itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            metaHandler = ItemMetaHandlerModel.getApplicableModelOptional(type)
+                    .map(model -> model.createHandler(itemMeta))
+                    .orElse(null);
+        }
+        this.customData.putAll(customData);
     }
 
     @SuppressWarnings("unchecked")
@@ -145,7 +163,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         itemMeta = itemMeta == null ? itemFactory.getItemMeta(type) : itemFactory.asMetaFor(itemMeta, type);
 
         ItemMetaHandlerModel<?> model = ItemMetaHandlerModel.getApplicableModel(type);
-        metaHandler = model == null ? null : model.createHandler(this);
+        metaHandler = model == null || itemMeta == null ? null : model.createHandler(itemMeta);
 
         return this;
     }
@@ -495,7 +513,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
         return new ItemBuilder(
                 type,
                 amount,
-                new HashMap<>(customData),
+                customData,
                 itemMeta == null ? null : itemMeta.clone()
         );
     }
@@ -521,7 +539,13 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
      * @return a new builder with the data from the given item
      */
     public static ItemBuilder fromItemStack(@Nullable ItemStack item) {
-        return new ItemBuilder(item, new HashMap<>());
+        if (item == null)
+            return empty();
+        return new ItemBuilder(item.getType(), item.getAmount(), Map.of(), item.getItemMeta());
+    }
+
+    public static @NotNull ItemBuilder empty() {
+        return new ItemBuilder();
     }
 
     public static ItemBuilder deserialize(Map<String, Object> map) {
@@ -559,7 +583,7 @@ public class ItemBuilder implements ConfigurationSerializable, Cloneable {
                 .ifPresent(result::itemCustomData);
 
         ItemMetaHandlerModel<?> metaHandlerModel = ItemMetaHandlerModel.getApplicableModel(result.type());
-        result.metaHandler(metaHandlerModel == null ? null : metaHandlerModel.createHandler(result));
+        result.metaHandler(metaHandlerModel == null || result.itemMeta == null ? null : metaHandlerModel.createHandler(result.itemMeta));
 
         if (result.metaHandler != null)
             result.metaHandler.deserialize(map);

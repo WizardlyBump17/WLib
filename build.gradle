@@ -1,6 +1,7 @@
 plugins {
-    id("com.gradleup.shadow") version "8.3.2"
+    id("com.gradleup.shadow") version "9.2.2"
     id 'maven-publish'
+    id("systems.manifold.manifold-gradle-plugin") version "0.0.2-alpha" apply false
 }
 
 subprojects {
@@ -9,7 +10,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     group = 'com.wizardlybump17.wlib'
-    version = "1.6.8-ncs-1.20.6+" + ("true".equalsIgnoreCase(System.getenv("WLIB_SNAPSHOT")) ? "-SNAPSHOT." + System.getenv("WLIB_SNAPSHOT_NUMBER") : "")
+    version = "1.6.8-ncs-2-1.20.6+" + ("true".equalsIgnoreCase(System.getenv("WLIB_SNAPSHOT")) ? "-SNAPSHOT." + System.getenv("WLIB_SNAPSHOT_NUMBER") : "")
 
     repositories {
         mavenLocal()
@@ -19,9 +20,6 @@ subprojects {
             url("https://repo.papermc.io/repository/maven-public/")
         }
     }
-
-    sourceCompatibility = '21'
-    targetCompatibility = '21'
 
     tasks {
         compileJava {
@@ -38,24 +36,20 @@ subprojects {
 
     java {
         withSourcesJar()
+        sourceCompatibility = 21
+        targetCompatibility = 21
     }
 }
 
 subprojects {
     dependencies {
-        testImplementation(platform("org.junit:junit-bom:5.10.3"))
-        testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+        testImplementation(platform("org.junit:junit-bom:6.0.0"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation("org.junit.platform:junit-platform-launcher")
     }
 
     test {
         useJUnitPlatform()
-    }
-
-    if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
-        tasks.withType(PublishToMavenRepository).configureEach {
-            it.enabled = false
-        }
-        return
     }
 
     publishing {
@@ -72,21 +66,8 @@ subprojects {
         publications {
             gpr(MavenPublication) {
                 from(components.java)
-                pom.withXml {
-                    asNode().dependencies.dependency.each { dep ->
-                        if (dep.artifactId.last().value().last().matches('v\\d_\\d+_R\\d+'))
-                            dep.parent().remove(dep)
-                    }
-                }
             }
         }
-    }
-
-    dependencies {
-        testImplementation(
-                platform('org.junit:junit-bom:5.10.2'),
-                'org.junit.jupiter:junit-jupiter:5.10.2'
-        )
     }
 
     test {

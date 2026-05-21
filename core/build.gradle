@@ -1,8 +1,10 @@
+var gson = "2.13.2"
+
 dependencies {
     compileOnly(
             'org.projectlombok:lombok:1.18.32',
             'org.jetbrains:annotations:23.1.0',
-            "io.papermc.paper:paper-api:1.20.6-R0.1-20240702.153951-124",
+            "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT",
     )
     annotationProcessor('org.projectlombok:lombok:1.18.32')
 
@@ -10,25 +12,33 @@ dependencies {
             project(':utils'),
             project(':versions:adapter'),
 
-            project(':versions:v1_20_R4'),
-            project(':versions:v1_21_R1'),
-            project(':versions:v1_21_R3'),
-            project(':versions:v1_21_R5'),
-
             project(':database'),
 
             project(':objects'),
 
-            project(':commands'),
 
             project(':config'),
-            project(':bukkit-utils'),
+            project(':bukkit-utils')
     )
+
+    implementation(project(':commands')) {
+        exclude group: "com.google.code.gson", module: "gson"
+    }
+
+    implementation(project(":versions:v1_20_r4"))
+    implementation(project(":versions:v1_21_r1"))
+    implementation(project(":versions:v1_21_r3"))
+    implementation(project(":versions:v1_21_r5"))
+
+    compileOnly("com.google.code.gson:gson:${gson}")
 }
 
 processResources {
     filesMatching('**/plugin.yml') {
-        expand 'version': project.version
+        expand(Map.of(
+                "version", project.version,
+                "gson", gson
+        ))
     }
 }
 
