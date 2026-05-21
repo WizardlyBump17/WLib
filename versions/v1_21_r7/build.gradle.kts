@@ -4,15 +4,12 @@ plugins {
 
 apply(plugin = "io.papermc.paperweight.userdev")
 
-val paper = "1.21.1-R0.1-SNAPSHOT"
-val lombok = "1.18.32"
-val jetbrainsAnnotations = "24.1.0"
+val paper = "1.21.11-R0.1-SNAPSHOT"
+val jetbrainsAnnotations = "26.0.2"
 
 dependencies {
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:${paper}")
 
-    compileOnly("org.projectlombok:lombok:${lombok}")
-    annotationProcessor("org.projectlombok:lombok:${lombok}")
     compileOnly("org.jetbrains:annotations:${jetbrainsAnnotations}")
 
     implementation(project(":versions:adapter"))

@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":versions:v1_21_r1"))
     implementation(project(":versions:v1_21_r3"))
     implementation(project(":versions:v1_21_r5"))
+    implementation(project(":versions:v1_21_r7"))
 
     compileOnly("com.google.code.gson:gson:${gson}")
 }
