@@ -1,66 +1,23 @@
 package com.wizardlybump17.wlib.command.exception;
 
-import com.wizardlybump17.wlib.command.node.CommandNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CommandExecutionException extends RuntimeException {
 
-    public static final @NotNull String EMPTY_INPUT_MESSAGE = "The input can not be empty";
-    public static final @NotNull String COMMAND_NOT_FOUND_MESSAGE = "Could not find command %s";
+    public static final @NotNull String MESSAGE = "Error while executing the command %s, index %s, node %s";
 
-    private final int lastInputIndex;
-    private final @Nullable CommandNode<?> lastNode;
-    private final @NotNull Reason reason;
-
-    public CommandExecutionException(int lastInputIndex, @Nullable CommandNode<?> lastNode, @NotNull Reason reason) {
-        this.lastInputIndex = lastInputIndex;
-        this.lastNode = lastNode;
-        this.reason = reason;
+    public CommandExecutionException() {
     }
 
-    public CommandExecutionException(@NotNull String message, int lastInputIndex, @Nullable CommandNode<?> lastNode, @NotNull Reason reason) {
+    public CommandExecutionException(@NotNull String message) {
         super(message);
-        this.lastInputIndex = lastInputIndex;
-        this.lastNode = lastNode;
-        this.reason = reason;
     }
 
-    public CommandExecutionException(@NotNull String message, @NotNull Throwable cause, int lastInputIndex, @Nullable CommandNode<?> lastNode, @NotNull Reason reason) {
+    public CommandExecutionException(@NotNull String message, @NotNull Throwable cause) {
         super(message, cause);
-        this.lastInputIndex = lastInputIndex;
-        this.lastNode = lastNode;
-        this.reason = reason;
     }
 
-    public CommandExecutionException(@NotNull Throwable cause, int lastInputIndex, @Nullable CommandNode<?> lastNode, @NotNull Reason reason) {
+    public CommandExecutionException(@NotNull Throwable cause) {
         super(cause);
-        this.lastInputIndex = lastInputIndex;
-        this.lastNode = lastNode;
-        this.reason = reason;
-    }
-
-    public @NotNull Reason getReason() {
-        return reason;
-    }
-
-    public @Nullable CommandNode<?> getLastNode() {
-        return lastNode;
-    }
-
-    public int getLastInputIndex() {
-        return lastInputIndex;
-    }
-
-    public enum Reason {
-
-        EMPTY_INPUT,
-        PARSING_ERROR,
-        INVALID_INPUT,
-        EXTRA_INPUT,
-        NO_COMMAND_EXECUTOR,
-        COMMAND_NOT_FOUND,
-        INVALID_COMMAND_RESULT,
-        GENERIC
     }
 }

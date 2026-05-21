@@ -11,7 +11,6 @@ import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
-import com.wizardlybump17.wlib.command.result.ErrorCodes;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import com.wizardlybump17.wlib.util.StringUtil;
@@ -87,7 +86,7 @@ public class CommandManager {
     @SuppressWarnings("unchecked")
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws CommandExecutionException {
         if (input.isEmpty())
-            throw new CommandExecutionException(CommandExecutionException.EMPTY_INPUT_MESSAGE, -1, null, CommandExecutionException.Reason.EMPTY_INPUT);
+            return CommandResult.badRequest(CommandResult.ErrorDetails.emptyInput());
 
         String commandName = input.getFirst();
 
@@ -96,7 +95,7 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            return CommandResult.notFound(CommandResult.ErrorDetails.commandNotFound(commandName));
+            return CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(0, commandName));
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(command.getRoot());
@@ -143,9 +142,9 @@ public class CommandManager {
             if (lastParsingError != null)
                 return CommandResult.badRequest(CommandResult.ErrorDetails.parseError(command.getName(), lastNode.getName(), lastParsingError));
             if (lastInputError != null)
-                throw new CommandExecutionException("Input " + lastInputIndex + " not accepted by the node " + lastNode.getName(), lastInputError, lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_INPUT);
+                return CommandResult.unprocessableContent(CommandResult.ErrorDetails.inputError(command.getName(), lastNode.getName(), inputString, lastInputError));
 
-            throw new CommandExecutionException("Extra input after the last node", lastInputIndex, lastNode, CommandExecutionException.Reason.EXTRA_INPUT);
+            return CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(lastInputIndex, inputString));
         }
 
         CommandNodeExecutor<?> executor = lastNode.getExecutor();
@@ -162,7 +161,7 @@ public class CommandManager {
 
         String nodePermission = lastNode.getPermission();
         if (!lastNode.canExecute(sender))
-            return CommandResult.forbidden(new CommandResult.ErrorDetails(ErrorCodes.FORBIDDEN_NO_PERMISSION, "Not enough permissions", sender.getName() + " does not have the " + nodePermission + " permission"));
+            return CommandResult.forbidden(CommandResult.ErrorDetails.noPermission(sender.getName(), nodePermission));
 
         try {
             CommandResult<?> result = executor.execute(context);
@@ -170,7 +169,7 @@ public class CommandManager {
                 throw new CommandExecutionException("The returned CommandResult can not be null", lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_COMMAND_RESULT);
             return result;
         } catch (Throwable throwable) {
-            throw new CommandExecutionException("Error while executing the command", throwable, lastInputIndex, lastNode, CommandExecutionException.Reason.GENERIC);
+            throw new CommandExecutionException(CommandExecutionException.MESSAGE.formatted(input, lastInputIndex, lastNode.getName()), throwable);
         }
     }
 

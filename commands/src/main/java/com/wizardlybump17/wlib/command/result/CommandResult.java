@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.result;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.exception.InvalidInputException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -175,9 +176,7 @@ public final class CommandResult<T> {
 
     public record ErrorDetails(@NotNull String code, @NotNull String message, @NotNull String detail) {
 
-        public static @NotNull ErrorDetails commandNotFound(@NotNull String command) {
-            return new ErrorDetails(ErrorCodes.NOT_FOUND_COMMAND_NOT_FOUND, "Command not found", "Could not find the command \"" + command + "\"");
-        }
+        private static final @NotNull ErrorDetails EMPTY_INPUT = new ErrorDetails(ErrorCodes.BAD_REQUEST_EMPTY_INPUT, "The input can not be empty", "The input can not be empty");
 
         public static @NotNull ErrorDetails noCommandExecutor(@NotNull String command, @NotNull String node) {
             return new ErrorDetails(ErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR, "No executor found for this command", "The command \"" + command + "\" does not have an executor at the node \"" + node + "\"");
@@ -185,6 +184,22 @@ public final class CommandResult<T> {
 
         public static @NotNull ErrorDetails parseError(@NotNull String command, @NotNull String node, @NotNull InputParsingException exception) {
             return new ErrorDetails(ErrorCodes.BAD_REQUEST_PARSE_ERROR, "Error while parsing the input", "Error while parsing the input at the command \"" + command + "\", node \"" + node + "\": " + exception.getMessage());
+        }
+
+        public static @NotNull ErrorDetails inputError(@NotNull String command, @NotNull String node, @Nullable String input, @NotNull InvalidInputException exception) {
+            return new ErrorDetails(ErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT, "Input not accepted", "The input \"" + input + "\" is not accepted by \"" + node + "\" at \"" + command + "\": " + exception.getMessage());
+        }
+
+        public static @NotNull ErrorDetails noPermission(@NotNull String sender, @NotNull String permission) {
+            return new ErrorDetails(ErrorCodes.FORBIDDEN_NO_PERMISSION, "Not enough permissions", sender + " does not have the permission \"" + permission + "\"");
+        }
+
+        public static @NotNull ErrorDetails emptyInput() {
+            return EMPTY_INPUT;
+        }
+
+        public static @NotNull ErrorDetails nodeNotFound(int index, @Nullable String node) {
+            return new ErrorDetails(ErrorCodes.NOT_FOUND_NODE_NOT_FOUND, "Node not found", "Could not find a node for \"" + node + "\" at index " + index);
         }
     }
 }
