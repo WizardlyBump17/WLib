@@ -37,6 +37,18 @@ public class CommandExecutionException extends RuntimeException {
         this.reason = reason;
     }
 
+    public @NotNull Reason getReason() {
+        return reason;
+    }
+
+    public @Nullable CommandNode<?> getLastNode() {
+        return lastNode;
+    }
+
+    public int getLastInputIndex() {
+        return lastInputIndex;
+    }
+
     public enum Reason {
 
         EMPTY_INPUT,
@@ -45,7 +57,6 @@ public class CommandExecutionException extends RuntimeException {
         EXTRA_INPUT,
         NO_COMMAND_EXECUTOR,
         COMMAND_NOT_FOUND,
-        NULL_INPUT_NOT_ACCEPTED,
         INVALID_COMMAND_RESULT,
         GENERIC
     }

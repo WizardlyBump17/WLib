@@ -174,11 +174,11 @@ public class CommandManager {
         }
     }
 
-    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) throws CommandExecutionException {
         return execute(sender, StringUtil.parseQuotedStrings(input));
     }
 
-    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) {
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String @NotNull [] input) throws CommandExecutionException {
         return execute(sender, String.join(" ", input));
     }
 

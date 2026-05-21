@@ -1,10 +1,9 @@
 package com.wizardlybump17.wlib.command;
 
+import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
 import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.result.CommandResult;
-import com.wizardlybump17.wlib.command.result.error.*;
-import com.wizardlybump17.wlib.command.result.success.SuccessResult;
 import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,24 +40,34 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
 
         String wlibArgs = command.getName() + " " + String.join(" ", args);
 
-        CommandResult<?> result = commandManager.execute(wlibSender, wlibArgs);
-        switch (result) {
-            case SuccessResult<?> successResult -> {}
-            case ExceptionResult<?> exceptionResult -> {
-                sender.sendMessage("§cAn internal error occurred while executing this command: " + exceptionResult.exception() + ".");
-                logger.log(Level.SEVERE, "Error while " + sender + " tried to execute " + wlibArgs, exceptionResult.exception());
+        CommandResult<?> result;
+        try {
+            result = commandManager.execute(wlibSender, wlibArgs);
+        } catch (CommandExecutionException e) {
+            switch (e.getReason()) {
+                case EMPTY_INPUT -> sender.sendMessage("§cHow did you manage to send an empty string?");
+                case PARSING_ERROR -> sender.sendMessage("§cError while parsing input at index " + e.getLastInputIndex() + ".");
+                case INVALID_INPUT -> sender.sendMessage("§cThe input at index " + e.getLastInputIndex() + " is invalid.");
+                case EXTRA_INPUT -> sender.sendMessage("§cReceived extra input after index " + e.getLastInputIndex() + ".");
+                case NO_COMMAND_EXECUTOR -> {
+                    sender.sendMessage("§cThere are no executors for the node at index " + e.getLastInputIndex() + ".");
+                    getLogger().log(Level.SEVERE, sender.getName() + " tried to execute \"" + wlibArgs + "\", but the node " + e.getLastNode().getName() + " does not have an executor");
+                }
+                case COMMAND_NOT_FOUND -> sender.sendMessage("§cCommand not found.");
+                case INVALID_COMMAND_RESULT -> {
+                    sender.sendMessage("§cThe command returned an invalid CommandResult.");
+                    getLogger().log(Level.SEVERE, sender.getName() + " tried to execute \"" + wlibArgs + "\", but it returned an invalid CommandResult (probably null)");
+                }
+                case GENERIC -> {
+                    sender.sendMessage("§cAn internal error occurred while executing this command.");
+                    getLogger().log(Level.SEVERE, "Error while " + sender.getName() + " tried to execute \"" + wlibArgs + "\"", e);
+                }
             }
-            case OutOfRangeInputResult<?> outOfRangeInputResult -> sender.sendMessage("§cInvalid input at index " + outOfRangeInputResult.lastInputIndex() + ".");
-            case ExtraArgumentsResult<?> extraArgumentsResult -> sender.sendMessage("§cExtra arguments provided at index " + extraArgumentsResult.lastInputIndex() + ".");
-            case InsufficientArgumentsResult<?> insufficientArgumentsResult -> sender.sendMessage("§cInsufficient arguments provided.");
-            case ParseInputExceptionResult<?> parseInputExceptionResult -> sender.sendMessage("§cInvalid input at index " + parseInputExceptionResult.lastInputIndex() + ": " + parseInputExceptionResult.exception().getMessage());
-            case CommandNodeExecutorNotFoundResult<?> notFoundResult -> sender.sendMessage("§cNo executor found for this command.");
-            case GenericErrorResult<?> genericErrorResult -> sender.sendMessage("§cAn error occurred while executing the command: " + genericErrorResult.message() + ".");
-            case NoPermissionResult<?> noPermissionResult -> sender.sendMessage("§cYou do not have permission to execute this command.");
-            case CommandNotFoundResult<?> notFoundResult -> sender.sendMessage("§cCommand not found.");
-            case InvalidSenderResult<?> invalidSenderResult -> sender.sendMessage("§cYou can not execute this command.");
-            default -> {}
+            return false;
         }
+
+        if (!result.success())
+            sender.sendMessage("§c" + result.errorDetails().message());
 
         return false;
     }
