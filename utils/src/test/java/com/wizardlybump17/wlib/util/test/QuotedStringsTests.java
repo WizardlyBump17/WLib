@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuotedStringsTests {
 
@@ -78,29 +77,37 @@ class QuotedStringsTests {
 
     @Test
     void testNotEndedQuotes() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello \"World", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello \"World", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \"Hi", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \"Hi", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \"Hi there, nice\" \"string", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \"Hi there, nice\" \"string", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
     }
 
     @Test
     void testEscapeInTheEndException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \\", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.INVALID_ESCAPE
+        Assertions.assertEquals(
+                QuotedStringException.INVALID_ESCAPE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \\", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
     }
 
