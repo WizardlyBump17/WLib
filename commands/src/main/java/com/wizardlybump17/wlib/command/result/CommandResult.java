@@ -1,153 +1,168 @@
 package com.wizardlybump17.wlib.command.result;
 
-import com.wizardlybump17.wlib.command.context.CommandContext;
-import com.wizardlybump17.wlib.command.node.CommandNode;
-import com.wizardlybump17.wlib.command.result.error.*;
-import com.wizardlybump17.wlib.command.result.success.NoContentResult;
-import com.wizardlybump17.wlib.command.result.success.SuccessResult;
-import com.wizardlybump17.wlib.command.sender.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CommandResult<T> {
+import java.util.Objects;
 
-    boolean success();
+public final class CommandResult<T> {
 
-    @Nullable T data();
+    private final boolean success;
+    private final @Nullable T data;
+    private final @NotNull Type type;
+    private final @Nullable ErrorDetails errorDetails;
 
-    @NotNull String id();
-
-    @Nullable ErrorDetails errorDetails();
-
-    //without context
-
-    static <T> @NotNull SuccessResult<T> successful(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable T data) {
-        return new SuccessResult<>(lastInputIndex, lastNode, data);
+    private CommandResult(boolean success, @Nullable T data, @NotNull Type type, @Nullable ErrorDetails errorDetails) {
+        this.success = success;
+        this.data = data;
+        this.type = type;
+        this.errorDetails = errorDetails;
     }
 
-    static <T> @NotNull ExceptionResult<T> exceptionally(@NotNull ErrorDetails errorDetails) {
-        return new ExceptionResult<>(errorDetails);
+    public boolean success() {
+        return success;
     }
 
-    static <T> @NotNull OutOfRangeInputResult<T> outOfRangeInput(@NotNull ErrorDetails errorDetails) {
-        return new OutOfRangeInputResult<>(errorDetails);
+    public @Nullable T data() {
+        return data;
     }
 
-    static <T> @NotNull ExtraArgumentsResult<T> extraArguments(@NotNull ErrorDetails errorDetails) {
-        return new ExtraArgumentsResult<>(errorDetails);
+    public @NotNull Type type() {
+        return type;
     }
 
-    static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(@NotNull ErrorDetails errorDetails) {
-        return new InsufficientArgumentsResult<>(errorDetails);
+    public @Nullable ErrorDetails errorDetails() {
+        return errorDetails;
     }
 
-    static <T> @NotNull ParseInputExceptionResult<T> parseInputException(@NotNull ErrorDetails errorDetails) {
-        return new ParseInputExceptionResult<>(errorDetails);
+    @Override
+    public boolean equals(@Nullable Object other) {
+        if (other == null || getClass() != other.getClass())
+            return false;
+        CommandResult<?> that = (CommandResult<?>) other;
+        return success == that.success && Objects.equals(data, that.data) && Objects.equals(type, that.type) && Objects.equals(errorDetails, that.errorDetails);
     }
 
-    static <T> @NotNull CommandNodeExecutorNotFoundResult<T> noCommandNodeExecutor(@NotNull ErrorDetails errorDetails) {
-        return new CommandNodeExecutorNotFoundResult<>(errorDetails);
+    @Override
+    public int hashCode() {
+        return Objects.hash(success, data, type, errorDetails);
     }
 
-    static <T> @NotNull GenericErrorResult<T> genericError(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull String message) {
-        return new GenericErrorResult<>(lastInputIndex, lastNode, message);
+    @Override
+    public String toString() {
+        return "CommandResult{" +
+                "success=" + success +
+                ", data=" + data +
+                ", type='" + type + '\'' +
+                ", errorDetails=" + errorDetails +
+                '}';
     }
 
-    static <T> @NotNull GenericErrorResult<T> genericError(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new GenericErrorResult<>(lastInputIndex, lastNode);
+    //SUCCESS
+
+    public static <T> @NotNull CommandResult<T> successful() {
+        return new CommandResult<>(true, null, Type.SUCCESS, null);
     }
 
-    static <T> @NotNull NoPermissionResult<T> noPermission(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new NoPermissionResult<>(lastInputIndex, lastNode);
+    public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
+        return new CommandResult<>(true, data, Type.SUCCESS, null);
     }
 
-    static <T> @NotNull CommandNotFoundResult<T> commandNotFound(@NotNull String input) {
-        return new CommandNotFoundResult<>(input);
+    public static <T> @NotNull CommandResult<T> noContent() {
+        return new CommandResult<>(true, null, Type.NO_CONTENT, null);
     }
 
-    static <T> @NotNull InvalidSenderResult<T> invalidSender(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull CommandSender<?> sender, @NotNull Class<? extends CommandSender<?>> expectedSender) {
-        return new InvalidSenderResult<>(lastInputIndex, lastNode, sender, expectedSender);
+    public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
+        return new CommandResult<>(true, data, Type.NO_CONTENT, null);
     }
 
-    static <T> @NotNull NoContentResult<T> noContent(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new NoContentResult<>(lastInputIndex, lastNode);
+    //ERROR
+
+    public static <T> @NotNull CommandResult<T> badRequest() {
+        return new CommandResult<>(true, null, Type.BAD_REQUEST, null);
     }
 
-    static <T> @NotNull NotFoundResult<T> notFound(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new NotFoundResult<>(lastInputIndex, lastNode);
+    public static <T> @NotNull CommandResult<T> badRequest(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.BAD_REQUEST, errorDetails);
     }
 
-    static <T> @NotNull ConflictResult<T> conflict(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new ConflictResult<>(lastInputIndex, lastNode);
+    public static <T> @NotNull CommandResult<T> conflict() {
+        return new CommandResult<>(true, null, Type.CONFLICT, null);
     }
 
-    static <T> @NotNull BadRequestResult<T> badRequest(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new BadRequestResult<>(lastInputIndex, lastNode);
+    public static <T> @NotNull CommandResult<T> conflict(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.CONFLICT, errorDetails);
     }
 
-    static <T> @NotNull UnprocessableContentResult<T> unprocessableContent(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new UnprocessableContentResult<>(lastInputIndex, lastNode);
+    public static <T> @NotNull CommandResult<T> forbidden() {
+        return new CommandResult<>(true, null, Type.FORBIDDEN, null);
     }
 
-    static <T> @NotNull UnauthorizedResult<T> unauthorized(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable String message) {
-        return new UnauthorizedResult<>(lastInputIndex, lastNode, message);
+    public static <T> @NotNull CommandResult<T> forbidden(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.FORBIDDEN, errorDetails);
     }
 
-    static <T> @NotNull ForbiddenResult<T> forbidden(int lastInputIndex, @NotNull CommandNode<?> lastNode, @Nullable String message) {
-        return new ForbiddenResult<>(lastInputIndex, lastNode, message);
+    public static <T> @NotNull CommandResult<T> genericError() {
+        return new CommandResult<>(true, null, Type.GENERIC_ERROR, null);
     }
 
-    //with context
-
-    static <T> @NotNull SuccessResult<T> successful(@NotNull CommandContext context, @Nullable T data) {
-        return successful(context.lastInputIndex(), context.lastNode(), data);
+    public static <T> @NotNull CommandResult<T> genericError(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.GENERIC_ERROR, errorDetails);
     }
 
-    static <T> @NotNull ExceptionResult<T> exceptionally(@NotNull CommandContext context, @NotNull Throwable exception) {
-        return exceptionally(context.lastInputIndex(), context.lastNode(), exception);
+    public static <T> @NotNull CommandResult<T> invalidSender() {
+        return new CommandResult<>(true, null, Type.INVALID_SENDER, null);
     }
 
-    static <T> @NotNull GenericErrorResult<T> genericError(@NotNull CommandContext context, @NotNull String message) {
-        return genericError(context.lastInputIndex(), context.lastNode(), message);
+    public static <T> @NotNull CommandResult<T> invalidSender(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.INVALID_SENDER, errorDetails);
     }
 
-    static <T> @NotNull GenericErrorResult<T> genericError(@NotNull CommandContext context) {
-        return genericError(context.lastInputIndex(), context.lastNode());
+    public static <T> @NotNull CommandResult<T> notFound() {
+        return new CommandResult<>(true, null, Type.NOT_FOUND, null);
     }
 
-    static <T> @NotNull NoPermissionResult<T> noPermission(@NotNull ErrorDetails errorDetails) {
-        return new NoPermissionResult<>(errorDetails);
+    public static <T> @NotNull CommandResult<T> notFound(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.NOT_FOUND, errorDetails);
     }
 
-    static <T> @NotNull InvalidSenderResult<T> invalidSender(@NotNull CommandContext context, @NotNull Class<? extends CommandSender<?>> expectedSender) {
-        return invalidSender(context.lastInputIndex(), context.lastNode(), context.sender(), expectedSender);
+    public static <T> @NotNull CommandResult<T> unauthorized() {
+        return new CommandResult<>(true, null, Type.UNAUTHORIZED, null);
     }
 
-    static <T> @NotNull NoContentResult<T> noContent(@NotNull CommandContext context) {
-        return noContent(context.lastInputIndex(), context.lastNode());
+    public static <T> @NotNull CommandResult<T> unauthorized(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.UNAUTHORIZED, errorDetails);
     }
 
-    static <T> @NotNull NotFoundResult<T> notFound(@NotNull CommandContext context) {
-        return notFound(context.lastInputIndex(), context.lastNode());
+    public static <T> @NotNull CommandResult<T> unprocessableContent() {
+        return new CommandResult<>(true, null, Type.UNPROCESSABLE_CONTENT, null);
     }
 
-    static <T> @NotNull ConflictResult<T> conflict(@NotNull CommandContext context) {
-        return conflict(context.lastInputIndex(), context.lastNode());
+    public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.UNPROCESSABLE_CONTENT, errorDetails);
     }
 
-    static <T> @NotNull BadRequestResult<T> badRequest(@NotNull CommandContext context) {
-        return badRequest(context.lastInputIndex(), context.lastNode());
+    public enum Type {
+
+        SUCCESS,
+        NO_CONTENT,
+        BAD_REQUEST,
+        CONFLICT,
+        FORBIDDEN,
+        GENERIC_ERROR,
+        INVALID_SENDER,
+        NOT_FOUND,
+        UNAUTHORIZED,
+        UNPROCESSABLE_CONTENT;
+
+        public boolean isSuccess() {
+            return switch (this) {
+                case SUCCESS, NO_CONTENT -> true;
+                default -> false;
+            };
+        }
     }
 
-    static <T> @NotNull UnprocessableContentResult<T> unprocessableContent(@NotNull CommandContext context) {
-        return unprocessableContent(context.lastInputIndex(), context.lastNode());
-    }
-
-    static <T> @NotNull UnauthorizedResult<T> unauthorized(@NotNull CommandContext context, @Nullable String message) {
-        return unauthorized(context.lastInputIndex(), context.lastNode(), message);
-    }
-
-    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context, @NotNull ErrorDetails errorDetails) {
-        return forbidden(context.lastInputIndex(), context.lastNode(), message);
+    public record ErrorDetails(@NotNull String code, @NotNull String message, @NotNull String detail) {
     }
 }
