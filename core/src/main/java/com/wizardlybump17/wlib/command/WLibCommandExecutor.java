@@ -44,25 +44,8 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
         try {
             result = commandManager.execute(wlibSender, wlibArgs);
         } catch (CommandExecutionException e) {
-            switch (e.getReason()) {
-                case EMPTY_INPUT -> sender.sendMessage("§cHow did you manage to send an empty string?");
-                case PARSING_ERROR -> sender.sendMessage("§cError while parsing input at index " + e.getLastInputIndex() + ".");
-                case INVALID_INPUT -> sender.sendMessage("§cThe input at index " + e.getLastInputIndex() + " is invalid.");
-                case EXTRA_INPUT -> sender.sendMessage("§cReceived extra input after index " + e.getLastInputIndex() + ".");
-                case NO_COMMAND_EXECUTOR -> {
-                    sender.sendMessage("§cThere are no executors for the node at index " + e.getLastInputIndex() + ".");
-                    getLogger().log(Level.SEVERE, sender.getName() + " tried to execute \"" + wlibArgs + "\", but the node " + e.getLastNode().getName() + " does not have an executor");
-                }
-                case COMMAND_NOT_FOUND -> sender.sendMessage("§cCommand not found.");
-                case INVALID_COMMAND_RESULT -> {
-                    sender.sendMessage("§cThe command returned an invalid CommandResult.");
-                    getLogger().log(Level.SEVERE, sender.getName() + " tried to execute \"" + wlibArgs + "\", but it returned an invalid CommandResult (probably null)");
-                }
-                case GENERIC -> {
-                    sender.sendMessage("§cAn internal error occurred while executing this command.");
-                    getLogger().log(Level.SEVERE, "Error while " + sender.getName() + " tried to execute \"" + wlibArgs + "\"", e);
-                }
-            }
+            sender.sendMessage("§cAn internal error occurred while executing this command.");
+            getLogger().log(Level.SEVERE, "Error while " + sender.getName() + " tried to execute \"" + wlibArgs + "\"", e);
             return false;
         }
 

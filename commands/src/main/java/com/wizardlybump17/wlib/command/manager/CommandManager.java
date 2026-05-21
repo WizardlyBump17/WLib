@@ -166,7 +166,7 @@ public class CommandManager {
         try {
             CommandResult<?> result = executor.execute(context);
             if (result == null)
-                throw new CommandExecutionException("The returned CommandResult can not be null", lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_COMMAND_RESULT);
+                throw new CommandExecutionException(CommandExecutionException.MESSAGE.formatted(input, lastInputIndex, lastNode.getName()), new NullPointerException("The returned CommandResult can not be null"));
             return result;
         } catch (Throwable throwable) {
             throw new CommandExecutionException(CommandExecutionException.MESSAGE.formatted(input, lastInputIndex, lastNode.getName()), throwable);
