@@ -9,20 +9,18 @@ import java.util.Objects;
 
 public final class CommandResult<T> {
 
-    private final boolean success;
     private final @Nullable T data;
     private final @NotNull Type type;
     private final @Nullable ErrorDetails errorDetails;
 
-    private CommandResult(boolean success, @Nullable T data, @NotNull Type type, @Nullable ErrorDetails errorDetails) {
-        this.success = success;
+    private CommandResult(@Nullable T data, @NotNull Type type, @Nullable ErrorDetails errorDetails) {
         this.data = data;
         this.type = type;
         this.errorDetails = errorDetails;
     }
 
     public boolean success() {
-        return success;
+        return type.isSuccess();
     }
 
     public @Nullable T data() {
@@ -42,19 +40,18 @@ public final class CommandResult<T> {
         if (other == null || getClass() != other.getClass())
             return false;
         CommandResult<?> that = (CommandResult<?>) other;
-        return success == that.success && Objects.equals(data, that.data) && Objects.equals(type, that.type) && Objects.equals(errorDetails, that.errorDetails);
+        return Objects.equals(data, that.data) && Objects.equals(type, that.type) && Objects.equals(errorDetails, that.errorDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(success, data, type, errorDetails);
+        return Objects.hash(data, type, errorDetails);
     }
 
     @Override
     public String toString() {
         return "CommandResult{" +
-                "success=" + success +
-                ", data=" + data +
+                "data=" + data +
                 ", type='" + type + '\'' +
                 ", errorDetails=" + errorDetails +
                 '}';
@@ -63,93 +60,93 @@ public final class CommandResult<T> {
     //SUCCESS
 
     public static <T> @NotNull CommandResult<T> successful() {
-        return new CommandResult<>(true, null, Type.SUCCESS, null);
+        return new CommandResult<>(null, Type.SUCCESS, null);
     }
 
     public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
-        return new CommandResult<>(true, data, Type.SUCCESS, null);
+        return new CommandResult<>(data, Type.SUCCESS, null);
     }
 
     public static <T> @NotNull CommandResult<T> noContent() {
-        return new CommandResult<>(true, null, Type.NO_CONTENT, null);
+        return new CommandResult<>(null, Type.NO_CONTENT, null);
     }
 
     public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
-        return new CommandResult<>(true, data, Type.NO_CONTENT, null);
+        return new CommandResult<>(data, Type.NO_CONTENT, null);
     }
 
     //ERROR
 
     public static <T> @NotNull CommandResult<T> badRequest() {
-        return new CommandResult<>(false, null, Type.BAD_REQUEST, null);
+        return new CommandResult<>(null, Type.BAD_REQUEST, null);
     }
 
     public static <T> @NotNull CommandResult<T> badRequest(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.BAD_REQUEST, errorDetails);
+        return new CommandResult<>(null, Type.BAD_REQUEST, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> conflict() {
-        return new CommandResult<>(false, null, Type.CONFLICT, null);
+        return new CommandResult<>(null, Type.CONFLICT, null);
     }
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.CONFLICT, errorDetails);
+        return new CommandResult<>(null, Type.CONFLICT, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> forbidden() {
-        return new CommandResult<>(false, null, Type.FORBIDDEN, null);
+        return new CommandResult<>(null, Type.FORBIDDEN, null);
     }
 
     public static <T> @NotNull CommandResult<T> forbidden(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.FORBIDDEN, errorDetails);
+        return new CommandResult<>(null, Type.FORBIDDEN, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> genericError() {
-        return new CommandResult<>(false, null, Type.GENERIC_ERROR, null);
+        return new CommandResult<>(null, Type.GENERIC_ERROR, null);
     }
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.GENERIC_ERROR, errorDetails);
+        return new CommandResult<>(null, Type.GENERIC_ERROR, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender() {
-        return new CommandResult<>(false, null, Type.INVALID_SENDER, null);
+        return new CommandResult<>(null, Type.INVALID_SENDER, null);
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.INVALID_SENDER, errorDetails);
+        return new CommandResult<>(null, Type.INVALID_SENDER, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> notFound() {
-        return new CommandResult<>(false, null, Type.NOT_FOUND, null);
+        return new CommandResult<>(null, Type.NOT_FOUND, null);
     }
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.NOT_FOUND, errorDetails);
+        return new CommandResult<>(null, Type.NOT_FOUND, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized() {
-        return new CommandResult<>(false, null, Type.UNAUTHORIZED, null);
+        return new CommandResult<>(null, Type.UNAUTHORIZED, null);
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.UNAUTHORIZED, errorDetails);
+        return new CommandResult<>(null, Type.UNAUTHORIZED, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent() {
-        return new CommandResult<>(false, null, Type.UNPROCESSABLE_CONTENT, null);
+        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, null);
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.UNPROCESSABLE_CONTENT, errorDetails);
+        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, errorDetails);
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented() {
-        return new CommandResult<>(false, null, Type.NOT_IMPLEMENTED, null);
+        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, null);
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull ErrorDetails errorDetails) {
-        return new CommandResult<>(false, null, Type.NOT_IMPLEMENTED, errorDetails);
+        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, errorDetails);
     }
 
     public enum Type {
