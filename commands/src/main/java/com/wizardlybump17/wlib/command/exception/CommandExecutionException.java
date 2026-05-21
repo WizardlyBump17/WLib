@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class CommandExecutionException extends RuntimeException {
 
+    public static final @NotNull String EMPTY_INPUT_MESSAGE = "The input can not be empty";
+    public static final @NotNull String COMMAND_NOT_FOUND_MESSAGE = "Could not find command %s";
+
     private final int lastInputIndex;
     private final @Nullable CommandNode<?> lastNode;
     private final @NotNull Reason reason;

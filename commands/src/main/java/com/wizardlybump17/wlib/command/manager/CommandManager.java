@@ -87,7 +87,7 @@ public class CommandManager {
     @SuppressWarnings("unchecked")
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws CommandExecutionException {
         if (input.isEmpty())
-            throw new CommandExecutionException("The input can not be empty", -1, null, CommandExecutionException.Reason.EMPTY_INPUT);
+            throw new CommandExecutionException(CommandExecutionException.EMPTY_INPUT_MESSAGE, -1, null, CommandExecutionException.Reason.EMPTY_INPUT);
 
         String commandName = input.getFirst();
 
@@ -96,7 +96,7 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            throw new CommandExecutionException("Could not find command " + commandName, -1, null, CommandExecutionException.Reason.COMMAND_NOT_FOUND);
+            throw new CommandExecutionException(CommandExecutionException.COMMAND_NOT_FOUND_MESSAGE.formatted(commandName), -1, null, CommandExecutionException.Reason.COMMAND_NOT_FOUND);
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(command.getRoot());
