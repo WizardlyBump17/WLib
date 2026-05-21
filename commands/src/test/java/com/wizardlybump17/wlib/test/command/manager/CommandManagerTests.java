@@ -320,10 +320,9 @@ class CommandManagerTests {
         CommandManager manager = new CommandManager();
         manager.registerCommand("test", command);
 
-        Assertions.assertThrows(
-                CommandExecutionException.class,
-                () -> manager.execute(CHAD_SENDER, List.of("hello0")),
-                CommandExecutionException.COMMAND_NOT_FOUND_MESSAGE.formatted("hello0")
+        Assertions.assertEquals(
+                CommandResult.notFound(CommandResult.ErrorDetails.commandNotFound("hello0")),
+                manager.execute(CHAD_SENDER, List.of("hello0"))
         );
     }
 
