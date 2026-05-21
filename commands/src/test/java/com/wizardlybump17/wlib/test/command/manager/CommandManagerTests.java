@@ -1,7 +1,6 @@
 package com.wizardlybump17.wlib.test.command.manager;
 
 import com.wizardlybump17.wlib.command.Command;
-import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
@@ -321,29 +320,8 @@ class CommandManagerTests {
         manager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.commandNotFound("hello0")),
+                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(0, "hello0")),
                 manager.execute(CHAD_SENDER, List.of("hello0"))
-        );
-    }
-
-    @Test
-    void testCommandNotFound1() {
-        Command command = new Command(
-                new LiteralCommandNode(
-                        "hello",
-                        List.of(),
-                        context -> CommandResult.successful("hello"),
-                        "permission"
-                )
-        );
-
-        CommandManager manager = new CommandManager();
-        manager.registerCommand("test", command);
-
-        Assertions.assertThrows(
-                CommandExecutionException.class,
-                () -> manager.execute(CHAD_SENDER, List.of()),
-                ""
         );
     }
 

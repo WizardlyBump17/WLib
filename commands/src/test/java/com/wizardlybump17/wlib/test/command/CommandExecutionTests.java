@@ -2,6 +2,7 @@ package com.wizardlybump17.wlib.test.command;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
+import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
@@ -17,6 +18,7 @@ import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -31,280 +33,328 @@ public class CommandExecutionTests {
     static final @NotNull CommandSender<Object> CHAD_SENDER = new BasicCommandSender<>(new Object(), "Chad", UUID.nameUUIDFromBytes("Chad".getBytes()), SENDER_MESSAGE_CONSUMER, $ -> true);
     static final @NotNull CommandSender<Object> BETA_SENDER = new BasicCommandSender<>(new Object(), "Beta", UUID.nameUUIDFromBytes("Beta".getBytes()), SENDER_MESSAGE_CONSUMER, $ -> false);
 
-//    @Test
-//    void testSuccessHello() {
-//        LiteralCommandNode helloNode = new LiteralCommandNode(
-//                "hello",
-//                List.of(),
-//                context -> CommandResult.successful("hello"),
-//                null
-//        );
-//        Command command = new Command(helloNode);
-//
-//        CommandResult<String> expected = CommandResult.successful(0, helloNode, "hello");
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testSuccessHelloWorld() {
-//        LiteralCommandNode worldNode = new LiteralCommandNode(
-//                "world",
-//                List.of(),
-//                context -> CommandResult.successful("hello world"),
-//                null
-//        );
-//        Command command = new Command(
-//                new LiteralCommandNode(
-//                        "hello",
-//                        List.of(worldNode),
-//                        null,
-//                        null
-//                )
-//        );
-//
-//        CommandResult<String> expected = CommandResult.successful(worldNode, "hello world");
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testSuccessHelloWorldHi() {
-//        LiteralCommandNode hiNode = new LiteralCommandNode(
-//                "hi",
-//                List.of(),
-//                context -> CommandResult.successful("hello world hi"),
-//                null
-//        );
-//        Command command = new Command(
-//                new LiteralCommandNode(
-//                        "hello",
-//                        List.of(
-//                                new LiteralCommandNode(
-//                                        "world",
-//                                        List.of(hiNode),
-//                                        null,
-//                                        null
-//                                )
-//                        ),
-//                        null,
-//                        null
-//                )
-//        );
-//
-//        CommandResult<String> expected = CommandResult.successful(hiNode, "hello world hi");
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world", "hi"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    @DisplayName("Multiple children 0 (hello, hi): success")
-//    void test0() {
-//        LiteralCommandNode hiNode = new LiteralCommandNode(
-//                "hi",
-//                List.of(),
-//                context -> CommandResult.successful("hello hi"),
-//                null
-//        );
-//        Command command = new Command(new LiteralCommandNode(
-//                "hello",
-//                List.of(
-//                        new LiteralCommandNode(
-//                                "world",
-//                                List.of(),
-//                                context -> CommandResult.successful("hello world"),
-//                                null
-//                        ),
-//                        hiNode
-//                ),
-//                null,
-//                null
-//        ));
-//
-//        CommandResult<String> expected = CommandResult.successful(hiNode, "hello hi");
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    @DisplayName("Multiple children 1 (hello, hi, world): success")
-//    void test1() {
-//        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
-//                "world0",
-//                List.of(),
-//                context -> CommandResult.successful("hello hi world"),
-//                null
-//        );
-//        Command command = new Command(new LiteralCommandNode(
-//                "hello",
-//                List.of(
-//                        new LiteralCommandNode(
-//                                "world",
-//                                List.of(),
-//                                context -> CommandResult.successful("hello world"),
-//                                null
-//                        ),
-//                        new LiteralCommandNode(
-//                                "hi",
-//                                List.of(hiWorldNode),
-//                                null,
-//                                null
-//                        )
-//                ),
-//                null,
-//                null
-//        ));
-//
-//        CommandResult<String> expected = CommandResult.successful(hiWorldNode, "hello hi world");
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world0"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testExtraArguments0() {
-//        LiteralCommandNode helloNode = new LiteralCommandNode(
-//                "hello",
-//                List.of(),
-//                context -> CommandResult.successful("hello"),
-//                null
-//        );
-//        Command command = new Command(helloNode);
-//
-//        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(1, helloNode);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testExtraArguments1() {
-//        LiteralCommandNode worldNode = new LiteralCommandNode(
-//                "world",
-//                List.of(),
-//                context -> CommandResult.successful("hello world"),
-//                null
-//        );
-//        Command command = new Command(
-//                new LiteralCommandNode(
-//                        "hello",
-//                        List.of(worldNode),
-//                        null,
-//                        null
-//                )
-//        );
-//
-//        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(2, worldNode);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "world", "hi"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testExtraArguments2() {
-//        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
-//                "world0",
-//                List.of(),
-//                context -> CommandResult.successful("hello hi world"),
-//                null
-//        );
-//        Command command = new Command(new LiteralCommandNode(
-//                "hello",
-//                List.of(
-//                        new LiteralCommandNode(
-//                                "world",
-//                                List.of(),
-//                                context -> CommandResult.successful("hello world"),
-//                                null
-//                        ),
-//                        new LiteralCommandNode(
-//                                "hi",
-//                                List.of(hiWorldNode),
-//                                null,
-//                                null
-//                        )
-//                ),
-//                null,
-//                null
-//        ));
-//
-//        ExtraArgumentsResult<?> expected = CommandResult.extraArguments(3, hiWorldNode);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello", "hi", "world0", "extra"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testException() {
-//        RuntimeException helloException = new RuntimeException("hello");
-//        LiteralCommandNode helloNode = new LiteralCommandNode(
-//                "hello",
-//                List.of(),
-//                context -> {
-//                    throw helloException;
-//                },
-//                null
-//        );
-//        Command command = new Command(helloNode);
-//
-//        ExceptionResult<?> expected = CommandResult.exceptionally(0, helloNode, helloException);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testInsufficientArguments() {
-//        Command command = new Command(
-//                new LiteralCommandNode(
-//                        "hello",
-//                        List.of(),
-//                        context -> CommandResult.successful("hello"),
-//                        null
-//                )
-//        );
-//
-//        InsufficientArgumentsResult<?> expected = CommandResult.insufficientArguments(command);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of());
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testNoPermission() {
-//        LiteralCommandNode helloNode = new LiteralCommandNode(
-//                "hello",
-//                List.of(),
-//                context -> CommandResult.successful("hello"),
-//                "permission"
-//        );
-//        Command command = new Command(helloNode);
-//
-//        NoPermissionResult<?> expected = CommandResult.noPermission(0, helloNode);
-//        CommandResult<?> actual = command.execute(BETA_SENDER, List.of("hello"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void testOutOfRange() {
-//        LiteralCommandNode helloNode = new LiteralCommandNode(
-//                "hello",
-//                List.of(),
-//                context -> CommandResult.successful("hello"),
-//                null
-//        );
-//        Command command = new Command(helloNode);
-//
-//        OutOfRangeInputResult<?> expected = CommandResult.outOfRangeInput(0, helloNode);
-//        CommandResult<?> actual = command.execute(CHAD_SENDER, List.of("hello0"));
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    void testSuccessHello() {
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful("hello"),
+                null
+        );
+        Command command = new Command(helloNode);
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.successful("hello"),
+                commandManager.execute(CHAD_SENDER, List.of("hello"))
+        );
+    }
+
+    @Test
+    void testSuccessHelloWorld() {
+        LiteralCommandNode worldNode = new LiteralCommandNode(
+                "world",
+                List.of(),
+                context -> CommandResult.successful("hello world"),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(worldNode),
+                        null,
+                        null
+                )
+        );
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.successful("hello world"),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "world"))
+        );
+    }
+
+    @Test
+    void testSuccessHelloWorldHi() {
+        LiteralCommandNode hiNode = new LiteralCommandNode(
+                "hi",
+                List.of(),
+                context -> CommandResult.successful("hello world hi"),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(
+                                new LiteralCommandNode(
+                                        "world",
+                                        List.of(hiNode),
+                                        null,
+                                        null
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.successful("hello world hi"),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "world", "hi"))
+        );
+    }
+
+    @Test
+    @DisplayName("Multiple children 0 (hello, hi): success")
+    void test0() {
+        LiteralCommandNode hiNode = new LiteralCommandNode(
+                "hi",
+                List.of(),
+                context -> CommandResult.successful("hello hi"),
+                null
+        );
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful("hello world"),
+                                null
+                        ),
+                        hiNode
+                ),
+                null,
+                null
+        ));
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.successful("hello hi"),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "hi"))
+        );
+    }
+
+    @Test
+    @DisplayName("Multiple children 1 (hello, hi, world): success")
+    void test1() {
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
+                "world0",
+                List.of(),
+                context -> CommandResult.successful("hello hi world"),
+                null
+        );
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful("hello world"),
+                                null
+                        ),
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(hiWorldNode),
+                                null,
+                                null
+                        )
+                ),
+                null,
+                null
+        ));
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.successful("hello hi world"),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "hi", "world0"))
+        );
+    }
+
+    @Test
+    void testExtraArguments0() {
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful("hello"),
+                null
+        );
+        Command command = new Command(helloNode);
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(1, "world")),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "world", "hi", "there"))
+        );
+    }
+
+    @Test
+    void testExtraArguments1() {
+        LiteralCommandNode worldNode = new LiteralCommandNode(
+                "world",
+                List.of(),
+                context -> CommandResult.successful("hello world"),
+                null
+        );
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(worldNode),
+                        null,
+                        null
+                )
+        );
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(2, "hi")),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "world", "hi", "there"))
+        );
+    }
+
+    @Test
+    void testExtraArguments2() {
+        LiteralCommandNode hiWorldNode = new LiteralCommandNode(
+                "world0",
+                List.of(),
+                context -> CommandResult.successful("hello hi world"),
+                null
+        );
+        Command command = new Command(new LiteralCommandNode(
+                "hello",
+                List.of(
+                        new LiteralCommandNode(
+                                "world",
+                                List.of(),
+                                context -> CommandResult.successful("hello world"),
+                                null
+                        ),
+                        new LiteralCommandNode(
+                                "hi",
+                                List.of(hiWorldNode),
+                                null,
+                                null
+                        )
+                ),
+                null,
+                null
+        ));
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(3, "extra")),
+                commandManager.execute(CHAD_SENDER, List.of("hello", "hi", "world0", "extra"))
+        );
+    }
+
+    @Test
+    void testException() {
+        RuntimeException helloException = new RuntimeException("hello");
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> {
+                    throw helloException;
+                },
+                null
+        );
+
+        Command command = new Command(helloNode);
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        CommandExecutionException actual = Assertions.assertThrowsExactly(
+                CommandExecutionException.class,
+                () -> commandManager.execute(CHAD_SENDER, List.of("hello"))
+        );
+        Assertions.assertEquals(
+                CommandExecutionException.MESSAGE.formatted("[hello]", "0", "hello"),
+                actual.getMessage()
+        );
+        Assertions.assertEquals(
+                helloException.getMessage(),
+                Assertions.assertInstanceOf(
+                        helloException.getClass(),
+                        actual.getCause()
+                ).getMessage()
+        );
+    }
+
+    @Test
+    void testInsufficientArguments() {
+        Command command = new Command(
+                new LiteralCommandNode(
+                        "hello",
+                        List.of(),
+                        context -> CommandResult.successful("hello"),
+                        null
+                )
+        );
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.badRequest(CommandResult.ErrorDetails.emptyInput()),
+                commandManager.execute(CHAD_SENDER, List.of())
+        );
+    }
+
+    @Test
+    void testNoPermission() {
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful("hello"),
+                "permission"
+        );
+        Command command = new Command(helloNode);
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.forbidden(CommandResult.ErrorDetails.noPermission(BETA_SENDER.getName(), "permission")),
+                commandManager.execute(BETA_SENDER, List.of("hello"))
+        );
+    }
+
+    @Test
+    void testOutOfRange() {
+        LiteralCommandNode helloNode = new LiteralCommandNode(
+                "hello",
+                List.of(),
+                context -> CommandResult.successful("hello"),
+                null
+        );
+        Command command = new Command(helloNode);
+
+        CommandManager commandManager = new CommandManager();
+        commandManager.registerCommand("test", command);
+
+        Assertions.assertEquals(
+                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(0, "hello0")),
+                commandManager.execute(CHAD_SENDER, List.of("hello0"))
+        );
+    }
 
     @Test
     void testParseInputException() {
