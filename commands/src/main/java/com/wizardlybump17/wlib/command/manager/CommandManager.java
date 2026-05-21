@@ -1,11 +1,20 @@
 package com.wizardlybump17.wlib.command.manager;
 
 import com.wizardlybump17.wlib.command.Command;
+import com.wizardlybump17.wlib.command.context.CommandContext;
+import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
+import com.wizardlybump17.wlib.command.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.exception.InvalidInputException;
 import com.wizardlybump17.wlib.command.exception.SuggesterException;
+import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
+import com.wizardlybump17.wlib.command.result.error.ErrorDetails;
+import com.wizardlybump17.wlib.command.result.error.ForbiddenResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
+import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +23,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class CommandManager {
 
@@ -75,9 +85,10 @@ public class CommandManager {
         return left.merge(right);
     }
 
-    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) {
+    @SuppressWarnings("unchecked")
+    public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws CommandExecutionException {
         if (input.isEmpty())
-            return CommandResult.commandNotFound("");
+            throw new CommandExecutionException("The input can not be empty", -1, null, CommandExecutionException.Reason.EMPTY_INPUT);
 
         String commandName = input.getFirst();
 
@@ -86,9 +97,82 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            return CommandResult.commandNotFound(commandName);
+            throw new CommandExecutionException("Could not find command " + commandName, -1, null, CommandExecutionException.Reason.COMMAND_NOT_FOUND);
 
-        return command.execute(sender, input);
+        List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
+        List<CommandNode<?>> children = List.of(command.getRoot());
+
+        CommandNode<?> lastNode = null;
+        int lastInputIndex = 0;
+        InputParsingException lastParsingError = null;
+        InvalidInputException lastInputError = null;
+
+        inputLoop: for (int i = 0; i < input.size(); i++) {
+            String inputString = input.get(i);
+            lastInputIndex = i;
+
+            for (CommandNode<?> child : children) {
+                lastNode = child;
+
+                try {
+                    Object result;
+                    if (inputString == null) {
+                        if (child.isValidInput(null))
+                            result = null;
+                        else
+                            throw new InvalidInputException("Null inputs are not accepted by " + child.getName());
+                    } else {
+                        result = child.parseOrInvalid(inputString);
+                    }
+
+                    if (!(child instanceof LiteralCommandNode))
+                        arguments.add(new CommandContext.CommandNodeArgument<>((CommandNode<Object>) child, inputString, result));
+
+                    children = child.getChildren();
+
+                    lastParsingError = null;
+                    lastInputError = null;
+
+                    continue inputLoop;
+                } catch (InputParsingException e) {
+                    lastParsingError = e;
+                } catch (InvalidInputException e) {
+                    lastInputError = e;
+                }
+            }
+
+            if (lastParsingError != null)
+                throw new CommandExecutionException("Could not properly parse the input", lastParsingError, lastInputIndex, lastNode, CommandExecutionException.Reason.PARSING_ERROR);
+            if (lastInputError != null)
+                throw new CommandExecutionException("Input " + lastInputIndex + "not accepted by the node " + lastNode.getName(), lastInputError, lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_INPUT);
+
+            throw new CommandExecutionException("Extra input after the last node", lastInputIndex, lastNode, CommandExecutionException.Reason.EXTRA_INPUT);
+        }
+
+        CommandNodeExecutor<?> executor = lastNode.getExecutor();
+        if (executor == null)
+            throw new CommandExecutionException("The node " + lastNode.getName() + " does not have a CommandNodeExecutor", lastInputIndex, lastNode, CommandExecutionException.Reason.NO_COMMAND_EXECUTOR);
+
+        CommandContext context = new CommandContext(
+                command,
+                sender,
+                new CommandContext.CommandNodeArguments(arguments),
+                lastInputIndex,
+                lastNode
+        );
+
+        String nodePermission = lastNode.getPermission();
+        if (!lastNode.canExecute(sender))
+            return CommandResult.forbidden(context, new ErrorDetails(ForbiddenResult.NODE_NO_PERMISSION, "Not enough permissions", sender.getName() + " does not have the " + nodePermission + " permission"));
+
+        try {
+            CommandResult<?> result = executor.execute(context);
+            if (result == null)
+                throw new CommandExecutionException("The returned CommandResult can not be null", lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_COMMAND_RESULT);
+            return result;
+        } catch (Throwable throwable) {
+            throw new CommandExecutionException("Error while executing the command", throwable, lastInputIndex, lastNode, CommandExecutionException.Reason.GENERIC);
+        }
     }
 
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull String input) {
@@ -117,7 +201,92 @@ public class CommandManager {
         if (command == null)
             return List.of();
 
-        return command.getSuggestions(sender, input);
+        String currentInput = input.getLast();
+
+        List<String> suggestions = new ArrayList<>();
+        List<CommandNode<?>> children = List.of(command.getRoot());
+
+        CommandNode<?> lastNode = null;
+        Throwable lastError = null;
+
+        inputLoop: for (int i = 0; i < input.size(); i++) {
+            String inputString = input.get(i);
+            boolean isLastInput = i == input.size() - 1;
+
+            if (isLastInput && inputString != null && inputString.isEmpty()) {
+                for (CommandNode<?> child : children) {
+                    String permission = child.getPermission();
+                    if (permission == null || sender.hasPermission(permission))
+                        suggestions.addAll(getSuggestions0(child, sender, input, ""));
+                }
+                if (!children.isEmpty())
+                    lastNode = children.getLast();
+                break;
+            }
+
+            boolean foundNode = !children.isEmpty();
+            for (CommandNode<?> child : children) {
+                lastNode = child;
+
+                if (!isLastInput) {
+                    try {
+                        if (inputString == null) {
+                            if (!child.isValidInput(null))
+                                throw new InvalidInputException("Null inputs not accepted by " + child);
+                            continue;
+                        }
+
+                        child.parseOrInvalid(inputString);
+                    } catch (InputParsingException | InvalidInputException e) {
+                        lastError = e;
+                        foundNode = false;
+                        continue;
+                    }
+                }
+
+                lastError = null;
+                foundNode = true;
+
+                String permission = child.getPermission();
+                if (isLastInput && (permission == null || sender.hasPermission(permission)))
+                    suggestions.addAll(getSuggestions0(child, sender, input, currentInput));
+
+                if (isLastInput) {
+                    continue;
+                } else {
+                    children = child.getChildren();
+                    continue inputLoop;
+                }
+            }
+
+            if (lastError != null || !foundNode)
+                return List.of();
+        }
+
+        if (lastNode == null)
+            return List.of();
+
+        return suggestions;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static @NotNull List<String> getSuggestions0(@NotNull CommandNode<?> node, @NotNull CommandSender<?> sender, @NotNull List<String> input, @NotNull String currentInput) throws SuggesterException {
+        List<?> childSuggestions = node.getSuggestions(sender, input, currentInput);
+        Suggester<Object> suggester = (Suggester<Object>) node.getSuggester();
+
+        if (suggester == null) {
+            return childSuggestions
+                    .stream()
+                    .map(Object::toString)
+                    .toList();
+        } else {
+            Stream<String> stream = childSuggestions
+                    .stream()
+                    .map(suggester::getStringRepresentation);
+            if (suggester.needsEscape())
+                stream = stream.map(StringUtil::escapeString);
+            return stream.toList();
+        }
     }
 
     public @NotNull List<String> getSuggestions(@NotNull CommandSender<?> sender, @NotNull String input) throws SuggesterException {

@@ -1,8 +1,6 @@
 package com.wizardlybump17.wlib.command.result;
 
-import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
-import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.result.error.*;
 import com.wizardlybump17.wlib.command.result.success.NoContentResult;
@@ -27,28 +25,28 @@ public interface CommandResult<T> {
         return new SuccessResult<>(lastInputIndex, lastNode, data);
     }
 
-    static <T> @NotNull ExceptionResult<T> exceptionally( int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull Throwable throwable) {
-        return new ExceptionResult<>(lastInputIndex, lastNode, throwable);
+    static <T> @NotNull ExceptionResult<T> exceptionally(@NotNull ErrorDetails errorDetails) {
+        return new ExceptionResult<>(errorDetails);
     }
 
-    static <T> @NotNull OutOfRangeInputResult<T> outOfRangeInput(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new OutOfRangeInputResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull OutOfRangeInputResult<T> outOfRangeInput(@NotNull ErrorDetails errorDetails) {
+        return new OutOfRangeInputResult<>(errorDetails);
     }
 
-    static <T> @NotNull ExtraArgumentsResult<T> extraArguments(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new ExtraArgumentsResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull ExtraArgumentsResult<T> extraArguments(@NotNull ErrorDetails errorDetails) {
+        return new ExtraArgumentsResult<>(errorDetails);
     }
 
-    static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(@NotNull Command command) {
-        return new InsufficientArgumentsResult<>(command);
+    static <T> @NotNull InsufficientArgumentsResult<T> insufficientArguments(@NotNull ErrorDetails errorDetails) {
+        return new InsufficientArgumentsResult<>(errorDetails);
     }
 
-    static <T> @NotNull ParseInputExceptionResult<T> parseInputException(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull InputParsingException exception) {
-        return new ParseInputExceptionResult<>(lastInputIndex, lastNode, exception);
+    static <T> @NotNull ParseInputExceptionResult<T> parseInputException(@NotNull ErrorDetails errorDetails) {
+        return new ParseInputExceptionResult<>(errorDetails);
     }
 
-    static <T> @NotNull CommandNodeExecutorNotFoundResult<T> noCommandNodeExecutor(int lastInputIndex, @NotNull CommandNode<?> lastNode) {
-        return new CommandNodeExecutorNotFoundResult<>(lastInputIndex, lastNode);
+    static <T> @NotNull CommandNodeExecutorNotFoundResult<T> noCommandNodeExecutor(@NotNull ErrorDetails errorDetails) {
+        return new CommandNodeExecutorNotFoundResult<>(errorDetails);
     }
 
     static <T> @NotNull GenericErrorResult<T> genericError(int lastInputIndex, @NotNull CommandNode<?> lastNode, @NotNull String message) {
@@ -117,8 +115,8 @@ public interface CommandResult<T> {
         return genericError(context.lastInputIndex(), context.lastNode());
     }
 
-    static <T> @NotNull NoPermissionResult<T> noPermission(@NotNull CommandContext context) {
-        return noPermission(context.lastInputIndex(), context.lastNode());
+    static <T> @NotNull NoPermissionResult<T> noPermission(@NotNull ErrorDetails errorDetails) {
+        return new NoPermissionResult<>(errorDetails);
     }
 
     static <T> @NotNull InvalidSenderResult<T> invalidSender(@NotNull CommandContext context, @NotNull Class<? extends CommandSender<?>> expectedSender) {
@@ -149,7 +147,7 @@ public interface CommandResult<T> {
         return unauthorized(context.lastInputIndex(), context.lastNode(), message);
     }
 
-    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context, @Nullable String message) {
+    static <T> @NotNull ForbiddenResult<T> forbidden(@NotNull CommandContext context, @NotNull ErrorDetails errorDetails) {
         return forbidden(context.lastInputIndex(), context.lastNode(), message);
     }
 }

@@ -6,6 +6,8 @@ public record ForbiddenResult<T>(@NotNull ErrorDetails errorDetails) implements 
 
     public static final @NotNull String ID = "WLib:Error/Forbidden";
 
+    public static final @NotNull String NODE_NO_PERMISSION = "WLib:Forbidden/NodeNoPermission";
+
     @Override
     public @NotNull String id() {
         return ID;
