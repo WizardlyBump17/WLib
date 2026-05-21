@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.command.result;
 
+import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -142,6 +143,14 @@ public final class CommandResult<T> {
         return new CommandResult<>(true, null, Type.UNPROCESSABLE_CONTENT, errorDetails);
     }
 
+    public static <T> @NotNull CommandResult<T> notImplemented() {
+        return new CommandResult<>(true, null, Type.NOT_IMPLEMENTED, null);
+    }
+
+    public static <T> @NotNull CommandResult<T> notImplemented(@NotNull ErrorDetails errorDetails) {
+        return new CommandResult<>(true, null, Type.NOT_IMPLEMENTED, errorDetails);
+    }
+
     public enum Type {
 
         SUCCESS,
@@ -153,7 +162,8 @@ public final class CommandResult<T> {
         INVALID_SENDER,
         NOT_FOUND,
         UNAUTHORIZED,
-        UNPROCESSABLE_CONTENT;
+        UNPROCESSABLE_CONTENT,
+        NOT_IMPLEMENTED;
 
         public boolean isSuccess() {
             return switch (this) {
@@ -164,5 +174,17 @@ public final class CommandResult<T> {
     }
 
     public record ErrorDetails(@NotNull String code, @NotNull String message, @NotNull String detail) {
+
+        public static @NotNull ErrorDetails commandNotFound(@NotNull String command) {
+            return new ErrorDetails(ErrorCodes.NOT_FOUND_COMMAND_NOT_FOUND, "Command not found", "Could not find the command \"" + command + "\"");
+        }
+
+        public static @NotNull ErrorDetails noCommandExecutor(@NotNull String command, @NotNull String node) {
+            return new ErrorDetails(ErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR, "No executor found for this command", "The command \"" + command + "\" does not have an executor at the node \"" + node + "\"");
+        }
+
+        public static @NotNull ErrorDetails parseError(@NotNull String command, @NotNull String node, @NotNull InputParsingException exception) {
+            return new ErrorDetails(ErrorCodes.BAD_REQUEST_PARSE_ERROR, "Error while parsing the input", "Error while parsing the input at the command \"" + command + "\", node \"" + node + "\": " + exception.getMessage());
+        }
     }
 }

@@ -96,7 +96,7 @@ public class CommandManager {
         if (command == null)
             command = commandsByName.get(commandName);
         if (command == null)
-            throw new CommandExecutionException(CommandExecutionException.COMMAND_NOT_FOUND_MESSAGE.formatted(commandName), -1, null, CommandExecutionException.Reason.COMMAND_NOT_FOUND);
+            return CommandResult.notFound(CommandResult.ErrorDetails.commandNotFound(commandName));
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(command.getRoot());
@@ -141,16 +141,16 @@ public class CommandManager {
             }
 
             if (lastParsingError != null)
-                throw new CommandExecutionException("Could not properly parse the input", lastParsingError, lastInputIndex, lastNode, CommandExecutionException.Reason.PARSING_ERROR);
+                return CommandResult.badRequest(CommandResult.ErrorDetails.parseError(command.getName(), lastNode.getName(), lastParsingError));
             if (lastInputError != null)
-                throw new CommandExecutionException("Input " + lastInputIndex + "not accepted by the node " + lastNode.getName(), lastInputError, lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_INPUT);
+                throw new CommandExecutionException("Input " + lastInputIndex + " not accepted by the node " + lastNode.getName(), lastInputError, lastInputIndex, lastNode, CommandExecutionException.Reason.INVALID_INPUT);
 
             throw new CommandExecutionException("Extra input after the last node", lastInputIndex, lastNode, CommandExecutionException.Reason.EXTRA_INPUT);
         }
 
         CommandNodeExecutor<?> executor = lastNode.getExecutor();
         if (executor == null)
-            throw new CommandExecutionException("The node " + lastNode.getName() + " does not have a CommandNodeExecutor", lastInputIndex, lastNode, CommandExecutionException.Reason.NO_COMMAND_EXECUTOR);
+            return CommandResult.notImplemented(CommandResult.ErrorDetails.noCommandExecutor(command.getName(), lastNode.getName()));
 
         CommandContext context = new CommandContext(
                 command,
