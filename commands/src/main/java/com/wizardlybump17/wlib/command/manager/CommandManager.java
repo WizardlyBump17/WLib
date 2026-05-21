@@ -11,8 +11,7 @@ import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.result.CommandResult;
-import com.wizardlybump17.wlib.command.result.error.ErrorDetails;
-import com.wizardlybump17.wlib.command.result.error.ForbiddenResult;
+import com.wizardlybump17.wlib.command.result.ErrorCodes;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
 import com.wizardlybump17.wlib.util.StringUtil;
@@ -163,7 +162,7 @@ public class CommandManager {
 
         String nodePermission = lastNode.getPermission();
         if (!lastNode.canExecute(sender))
-            return CommandResult.forbidden(context, new ErrorDetails(ForbiddenResult.NODE_NO_PERMISSION, "Not enough permissions", sender.getName() + " does not have the " + nodePermission + " permission"));
+            return CommandResult.forbidden(new CommandResult.ErrorDetails(ErrorCodes.FORBIDDEN_NO_PERMISSION, "Not enough permissions", sender.getName() + " does not have the " + nodePermission + " permission"));
 
         try {
             CommandResult<?> result = executor.execute(context);
