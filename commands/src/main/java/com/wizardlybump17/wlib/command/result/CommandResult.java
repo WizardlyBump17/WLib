@@ -78,7 +78,7 @@ public final class CommandResult<T> {
     //ERROR
 
     public static <T> @NotNull CommandResult<T> badRequest() {
-        return new CommandResult<>(null, Type.BAD_REQUEST, null);
+        return new CommandResult<>(null, Type.BAD_REQUEST, ErrorDetails.BAD_REQUEST);
     }
 
     public static <T> @NotNull CommandResult<T> badRequest(@NotNull ErrorDetails errorDetails) {
@@ -86,7 +86,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> conflict() {
-        return new CommandResult<>(null, Type.CONFLICT, null);
+        return new CommandResult<>(null, Type.CONFLICT, ErrorDetails.CONFLICT);
     }
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull ErrorDetails errorDetails) {
@@ -94,7 +94,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> forbidden() {
-        return new CommandResult<>(null, Type.FORBIDDEN, null);
+        return new CommandResult<>(null, Type.FORBIDDEN, ErrorDetails.FORBIDDEN);
     }
 
     public static <T> @NotNull CommandResult<T> forbidden(@NotNull ErrorDetails errorDetails) {
@@ -102,7 +102,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> genericError() {
-        return new CommandResult<>(null, Type.GENERIC_ERROR, null);
+        return new CommandResult<>(null, Type.GENERIC_ERROR, ErrorDetails.GENERIC_ERROR);
     }
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull ErrorDetails errorDetails) {
@@ -110,7 +110,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender() {
-        return new CommandResult<>(null, Type.INVALID_SENDER, null);
+        return new CommandResult<>(null, Type.INVALID_SENDER, ErrorDetails.INVALID_SENDER);
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender(@NotNull ErrorDetails errorDetails) {
@@ -118,7 +118,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> notFound() {
-        return new CommandResult<>(null, Type.NOT_FOUND, null);
+        return new CommandResult<>(null, Type.NOT_FOUND, ErrorDetails.NOT_FOUND);
     }
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull ErrorDetails errorDetails) {
@@ -126,7 +126,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized() {
-        return new CommandResult<>(null, Type.UNAUTHORIZED, null);
+        return new CommandResult<>(null, Type.UNAUTHORIZED, ErrorDetails.UNAUTHORIZED);
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized(@NotNull ErrorDetails errorDetails) {
@@ -134,7 +134,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent() {
-        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, null);
+        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, ErrorDetails.UNPROCESSABLE_CONTENT);
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull ErrorDetails errorDetails) {
@@ -142,7 +142,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented() {
-        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, null);
+        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, ErrorDetails.NOT_IMPLEMENTED);
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull ErrorDetails errorDetails) {
@@ -172,6 +172,16 @@ public final class CommandResult<T> {
     }
 
     public record ErrorDetails(@NotNull String code, @NotNull String message, @NotNull String detail) {
+
+        public static final @NotNull ErrorDetails BAD_REQUEST = new ErrorDetails(CommandErrorCodes.BAD_REQUEST_GENERIC, "Bad request", "Bad request");
+        public static final @NotNull ErrorDetails CONFLICT = new ErrorDetails(CommandErrorCodes.CONFLICT_GENERIC, "Conflict", "The request could not be completed due to a conflict with the current state of the target resource");
+        public static final @NotNull ErrorDetails FORBIDDEN = new ErrorDetails(CommandErrorCodes.FORBIDDEN_GENERIC, "Forbidden", "Access to the requested resource is forbidden");
+        public static final @NotNull ErrorDetails GENERIC_ERROR = new ErrorDetails(CommandErrorCodes.GENERIC_ERROR_GENERIC, "Internal server error", "An unexpected error occurred while processing the request");
+        public static final @NotNull ErrorDetails INVALID_SENDER = new ErrorDetails(CommandErrorCodes.INVALID_SENDER_GENERIC, "Invalid sender", "The sender of the command is invalid or not permitted");
+        public static final @NotNull ErrorDetails NOT_FOUND = new ErrorDetails(CommandErrorCodes.NOT_FOUND_GENERIC, "Not found", "The requested resource could not be found");
+        public static final @NotNull ErrorDetails UNAUTHORIZED = new ErrorDetails(CommandErrorCodes.UNAUTHORIZED_GENERIC, "Unauthorized", "Authentication is required and has failed or has not been provided");
+        public static final @NotNull ErrorDetails UNPROCESSABLE_CONTENT = new ErrorDetails(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT, "Unprocessable content", "The request was well-formed but contained semantic errors");
+        public static final @NotNull ErrorDetails NOT_IMPLEMENTED = new ErrorDetails(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR, "Not implemented", "The requested functionality is not implemented");
 
         private static final @NotNull ErrorDetails EMPTY_INPUT = new ErrorDetails(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT, "The input can not be empty", "The input can not be empty");
 
