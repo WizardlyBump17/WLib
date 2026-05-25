@@ -101,6 +101,13 @@ public class BukkitCommandSender implements CommandSender<org.bukkit.command.Com
         return handle instanceof Entity entity && entity.getUniqueId().equals(id);
     }
 
+    @Override
+    public @NotNull UUID getId() throws IllegalStateException {
+        if (handle instanceof Entity entity)
+            return entity.getUniqueId();
+        throw new IllegalStateException(handle + " does not have an ID");
+    }
+
     @ApiStatus.Internal
     public static void clearCache() {
         SENDERS_BY_ID.clear();

@@ -30,4 +30,9 @@ public interface CommandSender<S> {
     boolean hasPermission(String permission);
 
     boolean hasId(@NotNull UUID id);
+
+    /**
+     * @throws IllegalStateException if the sender does not have an ID
+     */
+    @NotNull UUID getId() throws IllegalStateException;
 }

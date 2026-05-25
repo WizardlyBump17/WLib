@@ -69,6 +69,7 @@ public class BasicCommandSender<S> implements CommandSender<S> {
         return id.equals(this.id);
     }
 
+    @Override
     public @NotNull UUID getId() {
         return id;
     }
