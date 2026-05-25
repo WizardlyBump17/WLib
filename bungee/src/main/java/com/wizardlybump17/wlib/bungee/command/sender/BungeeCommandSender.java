@@ -84,4 +84,11 @@ public class BungeeCommandSender implements com.wizardlybump17.wlib.command.send
     public boolean hasId(@NotNull UUID id) {
         return handle instanceof ProxiedPlayer player && player.getUniqueId().equals(id);
     }
+
+    @Override
+    public @NotNull UUID getId() throws IllegalStateException {
+        if (handle instanceof ProxiedPlayer player)
+            return player.getUniqueId();
+        throw new IllegalStateException(handle + " does not have an ID");
+    }
 }
