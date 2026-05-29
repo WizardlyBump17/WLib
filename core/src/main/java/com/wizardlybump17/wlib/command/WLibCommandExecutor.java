@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.command;
 import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
 import com.wizardlybump17.wlib.command.exception.SuggesterException;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
-import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,17 +39,13 @@ public class WLibCommandExecutor implements CommandExecutor, TabCompleter {
 
         String wlibArgs = command.getName() + " " + String.join(" ", args);
 
-        CommandResult<?> result;
         try {
-            result = commandManager.execute(wlibSender, wlibArgs);
+            commandManager.execute(wlibSender, wlibArgs);
         } catch (CommandExecutionException e) {
             sender.sendMessage("§cAn internal error occurred while executing this command.");
             getLogger().log(Level.SEVERE, "Error while " + sender.getName() + " tried to execute \"" + wlibArgs + "\"", e);
             return false;
         }
-
-        if (!result.success())
-            sender.sendMessage("§c" + result.errorDetails().message());
 
         return false;
     }
