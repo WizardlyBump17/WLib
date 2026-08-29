@@ -98,6 +98,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(null, Type.BAD_REQUEST, resultCode);
     }
 
+    public static <T> @NotNull CommandResult<T> badRequest(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.BAD_REQUEST, resultCode);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> conflict() {
         return (CommandResult<T>) CONFLICT_RESULT;
@@ -105,6 +109,10 @@ public final class CommandResult<T> {
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.CONFLICT, resultCode);
+    }
+
+    public static <T> @NotNull CommandResult<T> conflict(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.CONFLICT, resultCode);
     }
 
     @SuppressWarnings("unchecked")
@@ -116,6 +124,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(null, Type.FORBIDDEN, resultCode);
     }
 
+    public static <T> @NotNull CommandResult<T> forbidden(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.FORBIDDEN, resultCode);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> genericError() {
         return (CommandResult<T>) GENERIC_ERROR_RESULT;
@@ -123,6 +135,10 @@ public final class CommandResult<T> {
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.GENERIC_ERROR, resultCode);
+    }
+
+    public static <T> @NotNull CommandResult<T> genericError(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.GENERIC_ERROR, resultCode);
     }
 
     @SuppressWarnings("unchecked")
@@ -134,6 +150,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(null, Type.INVALID_SENDER, resultCode);
     }
 
+    public static <T> @NotNull CommandResult<T> invalidSender(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.INVALID_SENDER, resultCode);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> notFound() {
         return (CommandResult<T>) NOT_FOUND_RESULT;
@@ -141,6 +161,10 @@ public final class CommandResult<T> {
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.NOT_FOUND, resultCode);
+    }
+
+    public static <T> @NotNull CommandResult<T> notFound(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.NOT_FOUND, resultCode);
     }
 
     @SuppressWarnings("unchecked")
@@ -152,6 +176,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(null, Type.UNAUTHORIZED, resultCode);
     }
 
+    public static <T> @NotNull CommandResult<T> unauthorized(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.UNAUTHORIZED, resultCode);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> unprocessableContent() {
         return (CommandResult<T>) UNPROCESSABLE_CONTENT_RESULT;
@@ -161,6 +189,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, resultCode);
     }
 
+    public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.UNPROCESSABLE_CONTENT, resultCode);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> notImplemented() {
         return (CommandResult<T>) NOT_IMPLEMENTED_RESULT;
@@ -168,6 +200,10 @@ public final class CommandResult<T> {
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.NOT_IMPLEMENTED, resultCode);
+    }
+
+    public static <T> @NotNull CommandResult<T> notImplemented(@NotNull String resultCode, @Nullable T data) {
+        return new CommandResult<>(data, Type.NOT_IMPLEMENTED, resultCode);
     }
 
     public enum Type {
