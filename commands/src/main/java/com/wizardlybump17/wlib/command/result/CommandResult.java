@@ -1,5 +1,8 @@
 package com.wizardlybump17.wlib.command.result;
 
+import com.wizardlybump17.wlib.command.exception.InputParsingException;
+import com.wizardlybump17.wlib.command.exception.InvalidInputException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -274,6 +277,76 @@ public final class CommandResult<T> {
                     Objects.requireNonNull(type, "The type can not be null"),
                     Objects.requireNonNull(resultCode, "The resultCode can not be null")
             );
+        }
+    }
+
+    public static final class Errors {
+
+        private static final @NotNull CommandResult<String> EMPTY_INPUT = CommandResult.<String>builder()
+                .type(Type.BAD_REQUEST)
+                .resultCode(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT)
+                .data("The input can not be empty")
+                .build();
+
+        private Errors() {
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> emptyInput() {
+            return EMPTY_INPUT;
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> commandNotFound(@NotNull String command) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.NOT_FOUND)
+                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .data("Command \"" + command + "\" not found")
+                    .build();
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> parseError(@NotNull String input, @NotNull String node, int position, @NotNull InputParsingException exception) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.BAD_REQUEST)
+                    .resultCode(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR)
+                    .data("Error while parsing the input \"" + input + "\" (" + position + ") node \"" + node + "\": " + exception.getMessage())
+                    .build();
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> inputError(@Nullable String input, @NotNull String node, int position, @NotNull InvalidInputException exception) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.UNPROCESSABLE_CONTENT)
+                    .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
+                    .data("Input \"" + input + "\" (" + position + ") not accepted by " + node + ": " + exception.getMessage())
+                    .build();
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> nodeNotFound(@NotNull String input, int position) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.NOT_FOUND)
+                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .data("Could not find a node for \"" + input + "\" (" + position + ")")
+                    .build();
+        }
+
+        @ApiStatus.Internal
+        public static @NotNull CommandResult<String> noCommandExecutor(@NotNull String node, int position) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.NOT_IMPLEMENTED)
+                    .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
+                    .data("The node \"" + node + "\" (" + position + ") does not have a command executor")
+                    .build();
+        }
+
+        public static @NotNull CommandResult<String> noPermission(@Nullable String permission) {
+            return CommandResult.<String>builder()
+                    .type(CommandResult.Type.FORBIDDEN)
+                    .resultCode(CommandErrorCodes.FORBIDDEN_NO_PERMISSION)
+                    .data("Permission required: " + permission)
+                    .build();
         }
     }
 }

@@ -10,7 +10,6 @@ import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.manager.listener.CommandManagerListener;
 import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
-import com.wizardlybump17.wlib.command.result.CommandErrorCodes;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
 import com.wizardlybump17.wlib.command.suggestion.Suggester;
@@ -86,13 +85,8 @@ public class CommandManager {
 
     @SuppressWarnings("unchecked")
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws CommandExecutionException {
-        if (input.isEmpty()) {
-            return CommandResult.builder()
-                    .type(CommandResult.Type.BAD_REQUEST)
-                    .resultCode(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT)
-                    .data("The input can not be empty")
-                    .build();
-        }
+        if (input.isEmpty())
+            return CommandResult.Errors.emptyInput();
 
         String commandName = input.getFirst();
 
@@ -100,13 +94,8 @@ public class CommandManager {
 
         if (command == null)
             command = commandsByName.get(commandName);
-        if (command == null) {
-            return CommandResult.builder()
-                    .type(CommandResult.Type.NOT_FOUND)
-                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
-                    .data("Command \"" + commandName + "\" not found")
-                    .build();
-        }
+        if (command == null)
+            return CommandResult.Errors.commandNotFound(commandName);
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(command.getRoot());
@@ -150,36 +139,17 @@ public class CommandManager {
                 }
             }
 
-            if (lastParsingError != null) {
-                return CommandResult.builder()
-                        .type(CommandResult.Type.BAD_REQUEST)
-                        .resultCode(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR)
-                        .data("Error while parsing the node \"" + lastNode.getName() + "\": " + lastParsingError.getMessage())
-                        .build();
-            }
-            if (lastInputError != null) {
-                return CommandResult.builder()
-                        .type(CommandResult.Type.UNPROCESSABLE_CONTENT)
-                        .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
-                        .data("Input \"" + inputString + "\" (" + i + ") not accepted by " + lastNode.getName() + ": " + lastInputError.getMessage())
-                        .build();
-            }
+            if (lastParsingError != null)
+                return CommandResult.Errors.parseError(inputString, lastNode.getName(), i, lastParsingError);
+            if (lastInputError != null)
+                return CommandResult.Errors.inputError(inputString, lastNode.getName(), i, lastInputError);
 
-            return CommandResult.builder()
-                    .type(CommandResult.Type.NOT_FOUND)
-                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
-                    .data("Could not find a node for " + inputString)
-                    .build();
+            return CommandResult.Errors.nodeNotFound(inputString, i);
         }
 
         CommandNodeExecutor<?> executor = lastNode.getExecutor();
-        if (executor == null) {
-            return CommandResult.builder()
-                    .type(CommandResult.Type.NOT_IMPLEMENTED)
-                    .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
-                    .data("The node \"" + lastNode.getName() + "\" does not have a command executor")
-                    .build();
-        }
+        if (executor == null)
+            return CommandResult.Errors.noCommandExecutor(lastNode.getName(), lastInputIndex);
 
         CommandContext context = new CommandContext(
                 command,
@@ -190,13 +160,8 @@ public class CommandManager {
         );
 
         String nodePermission = lastNode.getPermission();
-        if (!lastNode.canExecute(sender)) {
-            return CommandResult.builder()
-                    .type(CommandResult.Type.FORBIDDEN)
-                    .resultCode(CommandErrorCodes.FORBIDDEN_NO_PERMISSION)
-                    .data("The command sender needs the permission: " + nodePermission)
-                    .build();
-        }
+        if (!lastNode.canExecute(sender))
+            return CommandResult.Errors.noPermission(nodePermission);
 
         try {
             CommandResult<?> result = executor.execute(context);
