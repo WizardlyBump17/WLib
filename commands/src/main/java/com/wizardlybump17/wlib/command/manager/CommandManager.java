@@ -86,8 +86,13 @@ public class CommandManager {
 
     @SuppressWarnings("unchecked")
     public @NotNull CommandResult<?> execute(@NotNull CommandSender<?> sender, @NotNull List<String> input) throws CommandExecutionException {
-        if (input.isEmpty())
-            return CommandResult.badRequest(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT);
+        if (input.isEmpty()) {
+            return CommandResult.builder()
+                    .type(CommandResult.Type.BAD_REQUEST)
+                    .resultCode(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT)
+                    .data("The input can not be empty")
+                    .build();
+        }
 
         String commandName = input.getFirst();
 
@@ -95,8 +100,13 @@ public class CommandManager {
 
         if (command == null)
             command = commandsByName.get(commandName);
-        if (command == null)
-            return CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND);
+        if (command == null) {
+            return CommandResult.builder()
+                    .type(CommandResult.Type.NOT_FOUND)
+                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .data("Command \"" + commandName + "\" not found")
+                    .build();
+        }
 
         List<CommandContext.CommandNodeArgument<?>> arguments = new ArrayList<>();
         List<CommandNode<?>> children = List.of(command.getRoot());
@@ -140,17 +150,36 @@ public class CommandManager {
                 }
             }
 
-            if (lastParsingError != null)
-                return CommandResult.badRequest(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR);
-            if (lastInputError != null)
-                return CommandResult.unprocessableContent(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT);
+            if (lastParsingError != null) {
+                return CommandResult.builder()
+                        .type(CommandResult.Type.BAD_REQUEST)
+                        .resultCode(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR)
+                        .data("Error while parsing the node \"" + lastNode.getName() + "\": " + lastParsingError.getMessage())
+                        .build();
+            }
+            if (lastInputError != null) {
+                return CommandResult.builder()
+                        .type(CommandResult.Type.UNPROCESSABLE_CONTENT)
+                        .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
+                        .data("Input \"" + inputString + "\" (" + i + ") not accepted by " + lastNode.getName() + ": " + lastInputError.getMessage())
+                        .build();
+            }
 
-            return CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND);
+            return CommandResult.builder()
+                    .type(CommandResult.Type.NOT_FOUND)
+                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .data("Could not find a node for " + inputString)
+                    .build();
         }
 
         CommandNodeExecutor<?> executor = lastNode.getExecutor();
-        if (executor == null)
-            return CommandResult.notImplemented(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR);
+        if (executor == null) {
+            return CommandResult.builder()
+                    .type(CommandResult.Type.NOT_IMPLEMENTED)
+                    .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
+                    .data("The node \"" + lastNode.getName() + "\" does not have a command executor")
+                    .build();
+        }
 
         CommandContext context = new CommandContext(
                 command,
@@ -161,8 +190,13 @@ public class CommandManager {
         );
 
         String nodePermission = lastNode.getPermission();
-        if (!lastNode.canExecute(sender))
-            return CommandResult.forbidden(CommandErrorCodes.FORBIDDEN_NO_PERMISSION);
+        if (!lastNode.canExecute(sender)) {
+            return CommandResult.builder()
+                    .type(CommandResult.Type.FORBIDDEN)
+                    .resultCode(CommandErrorCodes.FORBIDDEN_NO_PERMISSION)
+                    .data("The command sender needs the permission: " + nodePermission)
+                    .build();
+        }
 
         try {
             CommandResult<?> result = executor.execute(context);
