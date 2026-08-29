@@ -4,6 +4,7 @@ import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.manager.CommandManager;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.result.CommandErrorCodes;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -320,7 +321,7 @@ class CommandManagerTests {
         manager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(0, "hello0")),
+                CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND),
                 manager.execute(CHAD_SENDER, List.of("hello0"))
         );
     }

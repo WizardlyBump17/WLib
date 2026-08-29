@@ -3,7 +3,6 @@ package com.wizardlybump17.wlib.test.command;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.context.CommandContext;
 import com.wizardlybump17.wlib.command.exception.CommandExecutionException;
-import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
 import com.wizardlybump17.wlib.command.input.primitive.number.AllowedIntegerInputs;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
@@ -12,6 +11,7 @@ import com.wizardlybump17.wlib.command.node.CommandNode;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.IntegerCommandNode;
 import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
+import com.wizardlybump17.wlib.command.result.CommandErrorCodes;
 import com.wizardlybump17.wlib.command.result.CommandResult;
 import com.wizardlybump17.wlib.command.sender.BasicCommandSender;
 import com.wizardlybump17.wlib.command.sender.CommandSender;
@@ -196,7 +196,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(1, "world")),
+                CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND),
                 commandManager.execute(CHAD_SENDER, List.of("hello", "world", "hi", "there"))
         );
     }
@@ -222,7 +222,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(2, "hi")),
+                CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND),
                 commandManager.execute(CHAD_SENDER, List.of("hello", "world", "hi", "there"))
         );
     }
@@ -259,7 +259,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(3, "extra")),
+                CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND),
                 commandManager.execute(CHAD_SENDER, List.of("hello", "hi", "world0", "extra"))
         );
     }
@@ -313,7 +313,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.badRequest(CommandResult.ErrorDetails.emptyInput()),
+                CommandResult.badRequest(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT),
                 commandManager.execute(CHAD_SENDER, List.of())
         );
     }
@@ -332,7 +332,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.forbidden(CommandResult.ErrorDetails.noPermission(BETA_SENDER.getName(), "permission")),
+                CommandResult.forbidden(CommandErrorCodes.FORBIDDEN_NO_PERMISSION),
                 commandManager.execute(BETA_SENDER, List.of("hello"))
         );
     }
@@ -351,7 +351,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notFound(CommandResult.ErrorDetails.nodeNotFound(0, "hello0")),
+                CommandResult.notFound(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND),
                 commandManager.execute(CHAD_SENDER, List.of("hello0"))
         );
     }
@@ -379,7 +379,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.badRequest(CommandResult.ErrorDetails.parseError("hello", "world", new InputParsingException("Could not parse as int: world", new NumberFormatException("For input string: \"world\"")))),
+                CommandResult.badRequest(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR),
                 commandManager.execute(CHAD_SENDER, List.of("hello", "world"))
         );
     }
@@ -398,7 +398,7 @@ public class CommandExecutionTests {
         commandManager.registerCommand("test", command);
 
         Assertions.assertEquals(
-                CommandResult.notImplemented(CommandResult.ErrorDetails.noCommandExecutor("hello", "hello")),
+                CommandResult.notImplemented(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR),
                 commandManager.execute(CHAD_SENDER, List.of("hello"))
         );
     }
