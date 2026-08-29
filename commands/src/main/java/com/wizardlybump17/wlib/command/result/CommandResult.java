@@ -11,6 +11,18 @@ public final class CommandResult<T> {
     private final @NotNull Type type;
     private final @NotNull String resultCode;
 
+    private static final @NotNull CommandResult<?> SUCCESSFUL = new CommandResult<>(null, Type.SUCCESS, CommandErrorCodes.SUCCESS);
+    private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = new CommandResult<>(null, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT);
+    private static final @NotNull CommandResult<?> BAD_REQUEST_RESULT = new CommandResult<>(null, Type.BAD_REQUEST, CommandErrorCodes.BAD_REQUEST_GENERIC);
+    private static final @NotNull CommandResult<?> CONFLICT_RESULT = new CommandResult<>(null, Type.CONFLICT, CommandErrorCodes.CONFLICT_GENERIC);
+    private static final @NotNull CommandResult<?> FORBIDDEN_RESULT = new CommandResult<>(null, Type.FORBIDDEN, CommandErrorCodes.FORBIDDEN_GENERIC);
+    private static final @NotNull CommandResult<?> GENERIC_ERROR_RESULT = new CommandResult<>(null, Type.GENERIC_ERROR, CommandErrorCodes.GENERIC_ERROR_GENERIC);
+    private static final @NotNull CommandResult<?> INVALID_SENDER_RESULT = new CommandResult<>(null, Type.INVALID_SENDER, CommandErrorCodes.INVALID_SENDER_GENERIC);
+    private static final @NotNull CommandResult<?> NOT_FOUND_RESULT = new CommandResult<>(null, Type.NOT_FOUND, CommandErrorCodes.NOT_FOUND_GENERIC);
+    private static final @NotNull CommandResult<?> UNAUTHORIZED_RESULT = new CommandResult<>(null, Type.UNAUTHORIZED, CommandErrorCodes.UNAUTHORIZED_GENERIC);
+    private static final @NotNull CommandResult<?> UNPROCESSABLE_CONTENT_RESULT = new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC);
+    private static final @NotNull CommandResult<?> NOT_IMPLEMENTED_RESULT = new CommandResult<>(null, Type.NOT_IMPLEMENTED, CommandErrorCodes.NOT_IMPLEMENTED_GENERIC);
+
     private CommandResult(@Nullable T data, @NotNull Type type, @NotNull String resultCode) {
         this.data = data;
         this.type = type;
@@ -57,16 +69,18 @@ public final class CommandResult<T> {
 
     //SUCCESS
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> successful() {
-        return new CommandResult<>(null, Type.SUCCESS, CommandErrorCodes.SUCCESS);
+        return (CommandResult<T>) SUCCESSFUL;
     }
 
     public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
         return new CommandResult<>(data, Type.SUCCESS, CommandErrorCodes.SUCCESS);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> noContent() {
-        return new CommandResult<>(null, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT);
+        return (CommandResult<T>) NO_CONTENT_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
@@ -75,72 +89,81 @@ public final class CommandResult<T> {
 
     //ERROR
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> badRequest() {
-        return new CommandResult<>(null, Type.BAD_REQUEST, CommandErrorCodes.BAD_REQUEST_GENERIC);
+        return (CommandResult<T>) BAD_REQUEST_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> badRequest(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.BAD_REQUEST, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> conflict() {
-        return new CommandResult<>(null, Type.CONFLICT, CommandErrorCodes.CONFLICT_GENERIC);
+        return (CommandResult<T>) CONFLICT_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.CONFLICT, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> forbidden() {
-        return new CommandResult<>(null, Type.FORBIDDEN, CommandErrorCodes.FORBIDDEN_GENERIC);
+        return (CommandResult<T>) FORBIDDEN_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> forbidden(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.FORBIDDEN, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> genericError() {
-        return new CommandResult<>(null, Type.GENERIC_ERROR, CommandErrorCodes.GENERIC_ERROR_GENERIC);
+        return (CommandResult<T>) GENERIC_ERROR_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.GENERIC_ERROR, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> invalidSender() {
-        return new CommandResult<>(null, Type.INVALID_SENDER, CommandErrorCodes.INVALID_SENDER_GENERIC);
+        return (CommandResult<T>) INVALID_SENDER_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.INVALID_SENDER, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> notFound() {
-        return new CommandResult<>(null, Type.NOT_FOUND, CommandErrorCodes.NOT_FOUND_GENERIC);
+        return (CommandResult<T>) NOT_FOUND_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.NOT_FOUND, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> unauthorized() {
-        return new CommandResult<>(null, Type.UNAUTHORIZED, CommandErrorCodes.UNAUTHORIZED_GENERIC);
+        return (CommandResult<T>) UNAUTHORIZED_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.UNAUTHORIZED, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> unprocessableContent() {
-        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC);
+        return (CommandResult<T>) UNPROCESSABLE_CONTENT_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull String resultCode) {
         return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, resultCode);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> @NotNull CommandResult<T> notImplemented() {
-        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, CommandErrorCodes.NOT_IMPLEMENTED_GENERIC);
+        return (CommandResult<T>) NOT_IMPLEMENTED_RESULT;
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull String resultCode) {
