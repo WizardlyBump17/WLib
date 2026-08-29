@@ -206,6 +206,10 @@ public final class CommandResult<T> {
         return new CommandResult<>(data, Type.NOT_IMPLEMENTED, resultCode);
     }
 
+    public static <T> @NotNull Builder<T> builder() {
+        return new Builder<>();
+    }
+
     public enum Type {
 
         SUCCESS,
@@ -225,6 +229,51 @@ public final class CommandResult<T> {
                 case SUCCESS, NO_CONTENT -> true;
                 default -> false;
             };
+        }
+    }
+
+    public static final class Builder<T> {
+
+        private @Nullable T data;
+        private @Nullable Type type;
+        private @Nullable String resultCode;
+
+        private Builder() {
+        }
+
+        public @Nullable T data() {
+            return data;
+        }
+
+        public @NotNull Builder<T> data(T data) {
+            this.data = data;
+            return this;
+        }
+
+        public @Nullable Type type() {
+            return type;
+        }
+
+        public @NotNull Builder<T> type(@Nullable Type type) {
+            this.type = type;
+            return this;
+        }
+
+        public @Nullable String resultCode() {
+            return resultCode;
+        }
+
+        public @NotNull Builder<T> resultCode(@Nullable String resultCode) {
+            this.resultCode = resultCode;
+            return this;
+        }
+
+        public @NotNull CommandResult<T> build() {
+            return new CommandResult<>(
+                    data,
+                    Objects.requireNonNull(type, "The type can not be null"),
+                    Objects.requireNonNull(resultCode, "The resultCode can not be null")
+            );
         }
     }
 }
