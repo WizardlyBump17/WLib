@@ -13,9 +13,10 @@ public final class CommandResult<T> {
     private final @Nullable T data;
     private final @NotNull Type type;
     private final @NotNull String resultCode;
+    private final @Nullable String message;
 
-    private static final @NotNull CommandResult<?> SUCCESSFUL = new CommandResult<>(null, Type.SUCCESS, CommandErrorCodes.SUCCESS);
-    private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = new CommandResult<>(null, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT);
+    private static final @NotNull CommandResult<?> SUCCESSFUL = new CommandResult<>(null, Type.SUCCESS, CommandErrorCodes.SUCCESS, null);
+    private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = new CommandResult<>(null, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT, null);
     private static final @NotNull CommandResult<?> BAD_REQUEST_RESULT = new CommandResult<>(null, Type.BAD_REQUEST, CommandErrorCodes.BAD_REQUEST_GENERIC);
     private static final @NotNull CommandResult<?> CONFLICT_RESULT = new CommandResult<>(null, Type.CONFLICT, CommandErrorCodes.CONFLICT_GENERIC);
     private static final @NotNull CommandResult<?> FORBIDDEN_RESULT = new CommandResult<>(null, Type.FORBIDDEN, CommandErrorCodes.FORBIDDEN_GENERIC);
@@ -26,10 +27,11 @@ public final class CommandResult<T> {
     private static final @NotNull CommandResult<?> UNPROCESSABLE_CONTENT_RESULT = new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC);
     private static final @NotNull CommandResult<?> NOT_IMPLEMENTED_RESULT = new CommandResult<>(null, Type.NOT_IMPLEMENTED, CommandErrorCodes.NOT_IMPLEMENTED_GENERIC);
 
-    private CommandResult(@Nullable T data, @NotNull Type type, @NotNull String resultCode) {
+    private CommandResult(@Nullable T data, @NotNull Type type, @NotNull String resultCode, @Nullable String message) {
         this.data = data;
         this.type = type;
         this.resultCode = resultCode;
+        this.message = message;
     }
 
     public boolean success() {
@@ -48,25 +50,33 @@ public final class CommandResult<T> {
         return resultCode;
     }
 
+    public @Nullable String message() {
+        return message;
+    }
+
     @Override
     public boolean equals(@Nullable Object other) {
         if (other == null || getClass() != other.getClass())
             return false;
         CommandResult<?> that = (CommandResult<?>) other;
-        return Objects.equals(data, that.data) && Objects.equals(type, that.type) && Objects.equals(resultCode, that.resultCode);
+        return Objects.equals(data, that.data)
+                && Objects.equals(type, that.type)
+                && Objects.equals(resultCode, that.resultCode)
+                && Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(data, type, resultCode);
+        return Objects.hash(data, type, resultCode, message);
     }
 
     @Override
     public String toString() {
         return "CommandResult{" +
                 "data=" + data +
-                ", type='" + type + '\'' +
-                ", resultCode=" + resultCode +
+                ", type=" + type +
+                ", resultCode='" + resultCode + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 
@@ -78,7 +88,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
-        return new CommandResult<>(data, Type.SUCCESS, CommandErrorCodes.SUCCESS);
+        return new CommandResult<>(data, Type.SUCCESS, CommandErrorCodes.SUCCESS, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -87,7 +97,7 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
-        return new CommandResult<>(data, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT);
+        return new CommandResult<>(data, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT, null);
     }
 
     //ERROR
@@ -240,6 +250,7 @@ public final class CommandResult<T> {
         private @Nullable T data;
         private @Nullable Type type;
         private @Nullable String resultCode;
+        private @Nullable String message;
 
         private Builder() {
         }
@@ -271,11 +282,21 @@ public final class CommandResult<T> {
             return this;
         }
 
+        public @Nullable String message() {
+            return message;
+        }
+
+        public @NotNull Builder<T> message(@Nullable String message) {
+            this.message = message;
+            return this;
+        }
+
         public @NotNull CommandResult<T> build() {
             return new CommandResult<>(
                     data,
                     Objects.requireNonNull(type, "The type can not be null"),
-                    Objects.requireNonNull(resultCode, "The resultCode can not be null")
+                    Objects.requireNonNull(resultCode, "The resultCode can not be null"),
+                    message
             );
         }
     }
