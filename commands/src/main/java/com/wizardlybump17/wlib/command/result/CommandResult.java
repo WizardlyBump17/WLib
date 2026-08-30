@@ -15,17 +15,60 @@ public final class CommandResult<T> {
     private final @NotNull String resultCode;
     private final @Nullable String message;
 
-    private static final @NotNull CommandResult<?> SUCCESSFUL = new CommandResult<>(null, Type.SUCCESS, CommandErrorCodes.SUCCESS, null);
-    private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = new CommandResult<>(null, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT, null);
-    private static final @NotNull CommandResult<?> BAD_REQUEST_RESULT = new CommandResult<>(null, Type.BAD_REQUEST, CommandErrorCodes.BAD_REQUEST_GENERIC);
-    private static final @NotNull CommandResult<?> CONFLICT_RESULT = new CommandResult<>(null, Type.CONFLICT, CommandErrorCodes.CONFLICT_GENERIC);
-    private static final @NotNull CommandResult<?> FORBIDDEN_RESULT = new CommandResult<>(null, Type.FORBIDDEN, CommandErrorCodes.FORBIDDEN_GENERIC);
-    private static final @NotNull CommandResult<?> GENERIC_ERROR_RESULT = new CommandResult<>(null, Type.GENERIC_ERROR, CommandErrorCodes.GENERIC_ERROR_GENERIC);
-    private static final @NotNull CommandResult<?> INVALID_SENDER_RESULT = new CommandResult<>(null, Type.INVALID_SENDER, CommandErrorCodes.INVALID_SENDER_GENERIC);
-    private static final @NotNull CommandResult<?> NOT_FOUND_RESULT = new CommandResult<>(null, Type.NOT_FOUND, CommandErrorCodes.NOT_FOUND_GENERIC);
-    private static final @NotNull CommandResult<?> UNAUTHORIZED_RESULT = new CommandResult<>(null, Type.UNAUTHORIZED, CommandErrorCodes.UNAUTHORIZED_GENERIC);
-    private static final @NotNull CommandResult<?> UNPROCESSABLE_CONTENT_RESULT = new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC);
-    private static final @NotNull CommandResult<?> NOT_IMPLEMENTED_RESULT = new CommandResult<>(null, Type.NOT_IMPLEMENTED, CommandErrorCodes.NOT_IMPLEMENTED_GENERIC);
+    private static final @NotNull CommandResult<?> SUCCESSFUL = builder()
+            .type(Type.SUCCESS)
+            .resultCode(CommandErrorCodes.SUCCESS)
+            .build();
+    private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = builder()
+            .type(Type.NO_CONTENT)
+            .resultCode(CommandErrorCodes.NO_CONTENT)
+            .build();
+
+    private static final @NotNull CommandResult<?> BAD_REQUEST_RESULT = builder()
+            .type(Type.BAD_REQUEST)
+            .resultCode(CommandErrorCodes.BAD_REQUEST_GENERIC)
+            .message("Bad request")
+            .build();
+    private static final @NotNull CommandResult<?> CONFLICT_RESULT = builder()
+            .type(Type.CONFLICT)
+            .resultCode(CommandErrorCodes.CONFLICT_GENERIC)
+            .message("Conflict")
+            .build();
+    private static final @NotNull CommandResult<?> FORBIDDEN_RESULT = builder()
+            .type(Type.FORBIDDEN)
+            .resultCode(CommandErrorCodes.FORBIDDEN_GENERIC)
+            .message("Forbidden")
+            .build();
+    private static final @NotNull CommandResult<?> GENERIC_ERROR_RESULT = builder()
+            .type(Type.GENERIC_ERROR)
+            .resultCode(CommandErrorCodes.GENERIC_ERROR_GENERIC)
+            .message("Internal error")
+            .build();
+    private static final @NotNull CommandResult<?> INVALID_SENDER_RESULT = builder()
+            .type(Type.INVALID_SENDER)
+            .resultCode(CommandErrorCodes.INVALID_SENDER_GENERIC)
+            .message("Invalid command sender")
+            .build();
+    private static final @NotNull CommandResult<?> NOT_FOUND_RESULT = builder()
+            .type(Type.NOT_FOUND)
+            .resultCode(CommandErrorCodes.NOT_FOUND_GENERIC)
+            .message("Not found")
+            .build();
+    private static final @NotNull CommandResult<?> UNAUTHORIZED_RESULT = builder()
+            .type(Type.UNAUTHORIZED)
+            .resultCode(CommandErrorCodes.UNAUTHORIZED_GENERIC)
+            .message("Unauthorized")
+            .build();
+    private static final @NotNull CommandResult<?> UNPROCESSABLE_CONTENT_RESULT = builder()
+            .type(Type.UNPROCESSABLE_CONTENT)
+            .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC)
+            .message("Unprocessable content")
+            .build();
+    private static final @NotNull CommandResult<?> NOT_IMPLEMENTED_RESULT = builder()
+            .type(Type.NOT_IMPLEMENTED)
+            .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_GENERIC)
+            .message("Not implemented")
+            .build();
 
     private CommandResult(@Nullable T data, @NotNull Type type, @NotNull String resultCode, @Nullable String message) {
         this.data = data;
@@ -88,7 +131,11 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
-        return new CommandResult<>(data, Type.SUCCESS, CommandErrorCodes.SUCCESS, null);
+        return CommandResult.<T>builder()
+                .type(Type.SUCCESS)
+                .resultCode(CommandErrorCodes.SUCCESS)
+                .data(data)
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -97,7 +144,11 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
-        return new CommandResult<>(data, Type.NO_CONTENT, CommandErrorCodes.NO_CONTENT, null);
+        return CommandResult.<T>builder()
+                .type(Type.NO_CONTENT)
+                .resultCode(CommandErrorCodes.NO_CONTENT)
+                .data(data)
+                .build();
     }
 
     //ERROR
@@ -108,11 +159,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> badRequest(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.BAD_REQUEST, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.BAD_REQUEST)
+                .resultCode(resultCode)
+                .message("Bad request")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> badRequest(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.BAD_REQUEST, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.BAD_REQUEST)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Bad request")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -121,11 +181,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.CONFLICT, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.CONFLICT)
+                .resultCode(resultCode)
+                .message("Conflict")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> conflict(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.CONFLICT, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.CONFLICT)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Conflict")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -134,11 +203,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> forbidden(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.FORBIDDEN, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.FORBIDDEN)
+                .resultCode(resultCode)
+                .message("Forbidden")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> forbidden(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.FORBIDDEN, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.FORBIDDEN)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Forbidden")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -147,11 +225,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.GENERIC_ERROR, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.GENERIC_ERROR)
+                .resultCode(resultCode)
+                .message("Internal error")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> genericError(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.GENERIC_ERROR, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.GENERIC_ERROR)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Internal error")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -160,11 +247,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.INVALID_SENDER, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.INVALID_SENDER)
+                .resultCode(resultCode)
+                .message("Invalid command sender")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> invalidSender(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.INVALID_SENDER, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.INVALID_SENDER)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Invalid command sender")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -173,11 +269,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.NOT_FOUND, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.NOT_FOUND)
+                .resultCode(resultCode)
+                .message("Not found")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> notFound(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.NOT_FOUND, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.NOT_FOUND)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Not found")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -186,11 +291,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.UNAUTHORIZED, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.UNAUTHORIZED)
+                .resultCode(resultCode)
+                .message("Unauthorized")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> unauthorized(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.UNAUTHORIZED, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.UNAUTHORIZED)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Unauthorized")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -199,11 +313,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.UNPROCESSABLE_CONTENT, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.UNPROCESSABLE_CONTENT)
+                .resultCode(resultCode)
+                .message("Unprocessable content")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> unprocessableContent(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.UNPROCESSABLE_CONTENT, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.UNPROCESSABLE_CONTENT)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Unprocessable content")
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -212,11 +335,20 @@ public final class CommandResult<T> {
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull String resultCode) {
-        return new CommandResult<>(null, Type.NOT_IMPLEMENTED, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.NOT_IMPLEMENTED)
+                .resultCode(resultCode)
+                .message("Not implemented")
+                .build();
     }
 
     public static <T> @NotNull CommandResult<T> notImplemented(@NotNull String resultCode, @Nullable T data) {
-        return new CommandResult<>(data, Type.NOT_IMPLEMENTED, resultCode);
+        return CommandResult.<T>builder()
+                .type(Type.NOT_IMPLEMENTED)
+                .resultCode(resultCode)
+                .data(data)
+                .message("Not implemented")
+                .build();
     }
 
     public static <T> @NotNull Builder<T> builder() {
@@ -306,7 +438,7 @@ public final class CommandResult<T> {
         private static final @NotNull CommandResult<String> EMPTY_INPUT = CommandResult.<String>builder()
                 .type(Type.BAD_REQUEST)
                 .resultCode(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT)
-                .data("The input can not be empty")
+                .message("The input can not be empty")
                 .build();
 
         private Errors() {
@@ -322,7 +454,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_FOUND)
                     .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
-                    .data("Command \"" + command + "\" not found")
+                    .message("Command \"" + command + "\" not found")
                     .build();
         }
 
@@ -331,7 +463,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.BAD_REQUEST)
                     .resultCode(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR)
-                    .data("Error while parsing the input \"" + input + "\" (" + position + ") node \"" + node + "\": " + exception.getMessage())
+                    .message("Error while parsing the input \"" + input + "\" (" + position + ") node \"" + node + "\": " + exception.getMessage())
                     .build();
         }
 
@@ -340,7 +472,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.UNPROCESSABLE_CONTENT)
                     .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
-                    .data("Input \"" + input + "\" (" + position + ") not accepted by " + node + ": " + exception.getMessage())
+                    .message("Input \"" + input + "\" (" + position + ") not accepted by " + node + ": " + exception.getMessage())
                     .build();
         }
 
@@ -349,7 +481,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_FOUND)
                     .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
-                    .data("Could not find a node for \"" + input + "\" (" + position + ")")
+                    .message("Could not find a node for \"" + input + "\" (" + position + ")")
                     .build();
         }
 
@@ -358,7 +490,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_IMPLEMENTED)
                     .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
-                    .data("The node \"" + node + "\" (" + position + ") does not have a command executor")
+                    .message("The node \"" + node + "\" (" + position + ") does not have a command executor")
                     .build();
         }
 
@@ -366,7 +498,7 @@ public final class CommandResult<T> {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.FORBIDDEN)
                     .resultCode(CommandErrorCodes.FORBIDDEN_NO_PERMISSION)
-                    .data("Permission required: " + permission)
+                    .message("Permission required: " + permission)
                     .build();
         }
     }
