@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.adapter.player;
 
+import com.wizardlybump17.wlib.adapter.Adapter;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.conversations.Conversation;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class PlayerAdapter {
+public abstract class PlayerAdapter implements Adapter {
 
     @Getter
     private static PlayerAdapter instance;
@@ -23,6 +24,7 @@ public abstract class PlayerAdapter {
     public static void setInstance(PlayerAdapter instance) {
         if (PlayerAdapter.instance != null)
             throw new IllegalStateException("The PlayerAdapter instance is already set");
+        instance.checkIsOnRightVersion();
         PlayerAdapter.instance = instance;
     }
 }

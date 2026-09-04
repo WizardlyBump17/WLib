@@ -1,10 +1,20 @@
 package com.wizardlybump17.wlib;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wizardlybump17.wlib.adapter.AttributeAdapter;
 import com.wizardlybump17.wlib.adapter.ItemAdapter;
+import com.wizardlybump17.wlib.adapter.command.CommandMapAdapter;
 import com.wizardlybump17.wlib.adapter.player.PlayerAdapter;
-import com.wizardlybump17.wlib.command.args.ArgsReaderRegistry;
-import com.wizardlybump17.wlib.command.reader.*;
+import com.wizardlybump17.wlib.command.WLibCommandExecutor;
+import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.extractor.method.factory.OfflinePlayerMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.PlayerMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.object.JsonElementMethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.listener.BukkitCommandManagerListener;
+import com.wizardlybump17.wlib.command.manager.CommandManager;
+import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
+import com.wizardlybump17.wlib.command.sender.BukkitCommandSender;
 import com.wizardlybump17.wlib.config.holder.BukkitConfigHolderFactory;
 import com.wizardlybump17.wlib.config.registry.ConfigHandlerRegistry;
 import com.wizardlybump17.wlib.config.registry.ConfigHolderFactoryRegistry;
@@ -25,29 +35,53 @@ import com.wizardlybump17.wlib.util.bukkit.config.ConfigSound;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapper;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionEffectWrapper;
 import com.wizardlybump17.wlib.util.bukkit.particle.*;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@Getter
 public class WLib extends JavaPlugin {
 
     private final SaveControllersTask saveControllersTask = new SaveControllersTask(getLogger());
 
+    private MethodCommandExtractor methodCommandExtractor;
+    private MethodCommandNodeFactoryRegistry methodCommandNodeFactoryRegistry;
+    private CommandManager commandManager;
+    private WLibCommandExecutor commandExecutor;
+    private BukkitCommandManagerListener commandManagerListener;
+    private Gson gson;
+
     @Override
     public void onLoad() {
+        gson = new GsonBuilder().create();
+
+        initCommandSystem();
         ItemMetaHandlerModel.initModels();
         initAdapters();
         initSerializables();
-        initCommandSystem();
 
         DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
         databaseRegister.registerDatabaseModel(new MySQLDatabaseModel());
         databaseRegister.registerDatabaseModel(new SQLiteDatabaseModel());
 
         initConfigs();
+    }
+
+    private void initCommandSystem() {
+        methodCommandNodeFactoryRegistry = new MethodCommandNodeFactoryRegistry();
+        methodCommandExtractor = new MethodCommandExtractor(methodCommandNodeFactoryRegistry);
+
+        methodCommandNodeFactoryRegistry.registerDefaults();
+        methodCommandNodeFactoryRegistry.addFactory(new OfflinePlayerMethodCommandNodeFactory());
+        methodCommandNodeFactoryRegistry.addFactory(new PlayerMethodCommandNodeFactory());
+        methodCommandNodeFactoryRegistry.addFactory(new JsonElementMethodCommandNodeFactory(gson));
+
+        commandManager = new CommandManager();
+
+        commandExecutor = new WLibCommandExecutor(commandManager, getLogger());
+
+        commandManagerListener = new BukkitCommandManagerListener(commandExecutor);
+        commandManager.addListener(commandManagerListener);
     }
 
     protected void initConfigs() {
@@ -71,20 +105,31 @@ public class WLib extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        gson = null;
+
+        clearCommandSystem();
         HandlerList.unregisterAll(this);
         saveControllersTask.cancel();
     }
 
-    private void initCommandSystem() {
-        ArgsReaderRegistry.INSTANCE.add(new PlayerReader());
-        ArgsReaderRegistry.INSTANCE.add(new OfflinePlayerReader());
-        ArgsReaderRegistry.INSTANCE.add(new EntityTypeArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new MaterialReader());
-        ArgsReaderRegistry.INSTANCE.add(new BlockDataArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new MapJsonArgsReader());
-        ArgsReaderRegistry.INSTANCE.add(new PotionEffectTypeReader());
-        ArgsReaderRegistry.INSTANCE.add(new EnchantmentReader());
-        ArgsReaderRegistry.INSTANCE.add(new NamespacedKeyReader());
+    private void clearCommandSystem() {
+        if (methodCommandNodeFactoryRegistry != null)
+            methodCommandNodeFactoryRegistry.clear();
+        methodCommandNodeFactoryRegistry = null;
+
+        methodCommandExtractor = null;
+
+        if (commandManager != null) {
+            commandManager.clear();
+            commandManager.clearListeners();
+        }
+        commandManager = null;
+
+        commandExecutor = null;
+
+        commandManagerListener = null;
+
+        BukkitCommandSender.clearCache();
     }
 
     private void initSerializables() {
@@ -119,21 +164,25 @@ public class WLib extends JavaPlugin {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_20_R4.command.CommandMapAdapter());
             }
             case "1.21", "1.21.1" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R1.command.CommandMapAdapter());
             }
             case "1.21.4" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R3.command.CommandMapAdapter());
             }
-            case "1.21.6", "1.21.7", "1.21.8" -> {
+            case "1.21.6", "1.21.7" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.ItemAdapter());
                 PlayerAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.player.PlayerAdapter());
                 AttributeAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.AttributeAdapter());
+                CommandMapAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_R5.command.CommandMapAdapter());
             }
             case "1.21.11" -> {
                 ItemAdapter.setInstance(new com.wizardlybump17.wlib.adapter.v1_21_r7.ItemAdapter());
@@ -152,5 +201,33 @@ public class WLib extends JavaPlugin {
 
     public static WLib getInstance() {
         return getPlugin(WLib.class);
+    }
+
+    public MethodCommandExtractor getMethodCommandExtractor() {
+        return methodCommandExtractor;
+    }
+
+    public MethodCommandNodeFactoryRegistry getMethodCommandNodeFactoryRegistry() {
+        return methodCommandNodeFactoryRegistry;
+    }
+
+    public WLibCommandExecutor getCommandExecutor() {
+        return commandExecutor;
+    }
+
+    public BukkitCommandManagerListener getCommandManagerListener() {
+        return commandManagerListener;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public SaveControllersTask getSaveControllersTask() {
+        return saveControllersTask;
     }
 }
