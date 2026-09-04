@@ -97,6 +97,10 @@ public final class CommandResult<T> {
         return message;
     }
 
+    public @NotNull Builder<T> toBuilder() {
+        return new Builder<>(data, type, resultCode, message);
+    }
+
     @Override
     public boolean equals(@Nullable Object other) {
         if (other == null || getClass() != other.getClass())
@@ -293,6 +297,13 @@ public final class CommandResult<T> {
         private @Nullable Type type;
         private @Nullable String resultCode;
         private @Nullable String message;
+
+        private Builder(@Nullable T data, @Nullable Type type, @Nullable String resultCode, @Nullable String message) {
+            this.data = data;
+            this.type = type;
+            this.resultCode = resultCode;
+            this.message = message;
+        }
 
         private Builder() {
         }
