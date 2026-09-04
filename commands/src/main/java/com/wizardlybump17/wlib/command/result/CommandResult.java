@@ -85,16 +85,32 @@ public final class CommandResult<T> {
         return data;
     }
 
+    public @NotNull CommandResult<T> data(@Nullable T data) {
+        return new CommandResult<>(data, type, resultCode, message);
+    }
+
     public @NotNull Type type() {
         return type;
+    }
+
+    public @NotNull CommandResult<T> type(@NotNull Type type) {
+        return new CommandResult<>(data, type, resultCode, message);
     }
 
     public @NotNull String resultCode() {
         return resultCode;
     }
 
+    public @NotNull CommandResult<T> resultCode(@NotNull String resultCode) {
+        return new CommandResult<>(data, type, resultCode, message);
+    }
+
     public @Nullable String message() {
         return message;
+    }
+
+    public @NotNull CommandResult<T> message(@Nullable String message) {
+        return new CommandResult<>(data, type, resultCode, message);
     }
 
     public @NotNull Builder<T> toBuilder() {
