@@ -4,10 +4,13 @@ import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.ItemMetaHandler;
 import lombok.Data;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -23,7 +26,13 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
         registerModel(this);
     }
 
+    /**
+     * @deprecated use {@link #createHandler(ItemMeta)} instead
+     */
+    @Deprecated(forRemoval = true)
     public abstract H createHandler(ItemBuilder builder);
+
+    public abstract @NotNull H createHandler(@NotNull ItemMeta itemMeta);
 
     public boolean isApplicable(Material material) {
         return applicableMaterials.contains(material);
@@ -32,6 +41,10 @@ public abstract class ItemMetaHandlerModel<H extends ItemMetaHandler<?>> {
     @Nullable
     public static ItemMetaHandlerModel<?> getApplicableModel(Material material) {
         return MODELS.get(material);
+    }
+
+    public static @NotNull Optional<ItemMetaHandlerModel<?>> getApplicableModelOptional(@NotNull Material material) {
+        return Optional.ofNullable(getApplicableModel(material));
     }
 
     public static void registerModel(ItemMetaHandlerModel<?> model) {
