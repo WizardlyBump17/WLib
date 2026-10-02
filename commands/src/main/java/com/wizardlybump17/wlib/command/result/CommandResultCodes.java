@@ -2,9 +2,9 @@ package com.wizardlybump17.wlib.command.result;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class CommandErrorCodes {
+public final class CommandResultCodes {
 
-    private CommandErrorCodes() {
+    private CommandResultCodes() {
     }
 
     public static final @NotNull String SUCCESS = "WLib:Success";

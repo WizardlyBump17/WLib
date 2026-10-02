@@ -17,56 +17,56 @@ public final class CommandResult<T> {
 
     private static final @NotNull CommandResult<?> SUCCESSFUL = builder()
             .type(Type.SUCCESS)
-            .resultCode(CommandErrorCodes.SUCCESS)
+            .resultCode(CommandResultCodes.SUCCESS)
             .build();
     private static final @NotNull CommandResult<?> NO_CONTENT_RESULT = builder()
             .type(Type.NO_CONTENT)
-            .resultCode(CommandErrorCodes.NO_CONTENT)
+            .resultCode(CommandResultCodes.NO_CONTENT)
             .build();
 
     private static final @NotNull CommandResult<?> BAD_REQUEST_RESULT = builder()
             .type(Type.BAD_REQUEST)
-            .resultCode(CommandErrorCodes.BAD_REQUEST_GENERIC)
+            .resultCode(CommandResultCodes.BAD_REQUEST_GENERIC)
             .message("Bad request")
             .build();
     private static final @NotNull CommandResult<?> CONFLICT_RESULT = builder()
             .type(Type.CONFLICT)
-            .resultCode(CommandErrorCodes.CONFLICT_GENERIC)
+            .resultCode(CommandResultCodes.CONFLICT_GENERIC)
             .message("Conflict")
             .build();
     private static final @NotNull CommandResult<?> FORBIDDEN_RESULT = builder()
             .type(Type.FORBIDDEN)
-            .resultCode(CommandErrorCodes.FORBIDDEN_GENERIC)
+            .resultCode(CommandResultCodes.FORBIDDEN_GENERIC)
             .message("Forbidden")
             .build();
     private static final @NotNull CommandResult<?> GENERIC_ERROR_RESULT = builder()
             .type(Type.GENERIC_ERROR)
-            .resultCode(CommandErrorCodes.GENERIC_ERROR_GENERIC)
+            .resultCode(CommandResultCodes.GENERIC_ERROR_GENERIC)
             .message("Internal error")
             .build();
     private static final @NotNull CommandResult<?> INVALID_SENDER_RESULT = builder()
             .type(Type.INVALID_SENDER)
-            .resultCode(CommandErrorCodes.INVALID_SENDER_GENERIC)
+            .resultCode(CommandResultCodes.INVALID_SENDER_GENERIC)
             .message("Invalid command sender")
             .build();
     private static final @NotNull CommandResult<?> NOT_FOUND_RESULT = builder()
             .type(Type.NOT_FOUND)
-            .resultCode(CommandErrorCodes.NOT_FOUND_GENERIC)
+            .resultCode(CommandResultCodes.NOT_FOUND_GENERIC)
             .message("Not found")
             .build();
     private static final @NotNull CommandResult<?> UNAUTHORIZED_RESULT = builder()
             .type(Type.UNAUTHORIZED)
-            .resultCode(CommandErrorCodes.UNAUTHORIZED_GENERIC)
+            .resultCode(CommandResultCodes.UNAUTHORIZED_GENERIC)
             .message("Unauthorized")
             .build();
     private static final @NotNull CommandResult<?> UNPROCESSABLE_CONTENT_RESULT = builder()
             .type(Type.UNPROCESSABLE_CONTENT)
-            .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_GENERIC)
+            .resultCode(CommandResultCodes.UNPROCESSABLE_CONTENT_GENERIC)
             .message("Unprocessable content")
             .build();
     private static final @NotNull CommandResult<?> NOT_IMPLEMENTED_RESULT = builder()
             .type(Type.NOT_IMPLEMENTED)
-            .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_GENERIC)
+            .resultCode(CommandResultCodes.NOT_IMPLEMENTED_GENERIC)
             .message("Not implemented")
             .build();
 
@@ -153,7 +153,7 @@ public final class CommandResult<T> {
     public static <T> @NotNull CommandResult<T> successful(@Nullable T data) {
         return CommandResult.<T>builder()
                 .type(Type.SUCCESS)
-                .resultCode(CommandErrorCodes.SUCCESS)
+                .resultCode(CommandResultCodes.SUCCESS)
                 .data(data)
                 .build();
     }
@@ -166,7 +166,7 @@ public final class CommandResult<T> {
     public static <T> @NotNull CommandResult<T> noContent(@Nullable T data) {
         return CommandResult.<T>builder()
                 .type(Type.NO_CONTENT)
-                .resultCode(CommandErrorCodes.NO_CONTENT)
+                .resultCode(CommandResultCodes.NO_CONTENT)
                 .data(data)
                 .build();
     }
@@ -374,7 +374,7 @@ public final class CommandResult<T> {
 
         private static final @NotNull CommandResult<String> EMPTY_INPUT = CommandResult.<String>builder()
                 .type(Type.BAD_REQUEST)
-                .resultCode(CommandErrorCodes.BAD_REQUEST_EMPTY_INPUT)
+                .resultCode(CommandResultCodes.BAD_REQUEST_EMPTY_INPUT)
                 .message("The input can not be empty")
                 .build();
 
@@ -390,7 +390,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> commandNotFound(@NotNull String command) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_FOUND)
-                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .resultCode(CommandResultCodes.NOT_FOUND_NODE_NOT_FOUND)
                     .message("Command \"" + command + "\" not found")
                     .build();
         }
@@ -399,7 +399,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> parseError(@NotNull String input, @NotNull String node, int position, @NotNull InputParsingException exception) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.BAD_REQUEST)
-                    .resultCode(CommandErrorCodes.BAD_REQUEST_PARSE_ERROR)
+                    .resultCode(CommandResultCodes.BAD_REQUEST_PARSE_ERROR)
                     .message("Error while parsing the input \"" + input + "\" (" + position + ") node \"" + node + "\": " + exception.getMessage())
                     .build();
         }
@@ -408,7 +408,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> inputError(@Nullable String input, @NotNull String node, int position, @NotNull InvalidInputException exception) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.UNPROCESSABLE_CONTENT)
-                    .resultCode(CommandErrorCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
+                    .resultCode(CommandResultCodes.UNPROCESSABLE_CONTENT_INVALID_INPUT)
                     .message("Input \"" + input + "\" (" + position + ") not accepted by " + node + ": " + exception.getMessage())
                     .build();
         }
@@ -417,7 +417,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> nodeNotFound(@NotNull String input, int position) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_FOUND)
-                    .resultCode(CommandErrorCodes.NOT_FOUND_NODE_NOT_FOUND)
+                    .resultCode(CommandResultCodes.NOT_FOUND_NODE_NOT_FOUND)
                     .message("Could not find a node for \"" + input + "\" (" + position + ")")
                     .build();
         }
@@ -426,7 +426,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> noCommandExecutor(@NotNull String node, int position) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.NOT_IMPLEMENTED)
-                    .resultCode(CommandErrorCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
+                    .resultCode(CommandResultCodes.NOT_IMPLEMENTED_NO_COMMAND_EXECUTOR)
                     .message("The node \"" + node + "\" (" + position + ") does not have a command executor")
                     .build();
         }
@@ -434,7 +434,7 @@ public final class CommandResult<T> {
         public static @NotNull CommandResult<String> noPermission(@Nullable String permission) {
             return CommandResult.<String>builder()
                     .type(CommandResult.Type.FORBIDDEN)
-                    .resultCode(CommandErrorCodes.FORBIDDEN_NO_PERMISSION)
+                    .resultCode(CommandResultCodes.FORBIDDEN_NO_PERMISSION)
                     .message("Permission required: " + permission)
                     .build();
         }
