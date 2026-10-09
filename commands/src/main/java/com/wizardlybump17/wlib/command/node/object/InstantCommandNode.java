@@ -1,4 +1,4 @@
-package com.wizardlybump17.wlib.command.extractor.method.factory.object;
+package com.wizardlybump17.wlib.command.node.object;
 
 import com.wizardlybump17.wlib.command.exception.InputParsingException;
 import com.wizardlybump17.wlib.command.executor.CommandNodeExecutor;
