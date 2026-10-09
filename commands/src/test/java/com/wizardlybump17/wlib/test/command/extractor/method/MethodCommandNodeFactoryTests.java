@@ -2,16 +2,19 @@ package com.wizardlybump17.wlib.test.command.extractor.method;
 
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.extractor.method.MethodCommandExtractor;
+import com.wizardlybump17.wlib.command.input.AllowedInputs;
 import com.wizardlybump17.wlib.command.input.object.AllowedUUIDInputs;
 import com.wizardlybump17.wlib.command.input.primitive.AllowedCharacterInputs;
 import com.wizardlybump17.wlib.command.input.primitive.number.*;
 import com.wizardlybump17.wlib.command.input.string.AllowedStringInputs;
 import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import com.wizardlybump17.wlib.command.node.object.EnumCommandNode;
 import com.wizardlybump17.wlib.command.node.object.UUIDCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.CharacterCommandNode;
 import com.wizardlybump17.wlib.command.node.primitive.number.*;
 import com.wizardlybump17.wlib.command.node.string.StringCommandNode;
 import com.wizardlybump17.wlib.command.registry.MethodCommandNodeFactoryRegistry;
+import com.wizardlybump17.wlib.command.suggestion.object.EnumSuggester;
 import com.wizardlybump17.wlib.command.suggestion.primitive.number.*;
 import com.wizardlybump17.wlib.command.suggestion.string.StringSuggester;
 import com.wizardlybump17.wlib.test.util.AssertionUtil;
@@ -969,6 +972,46 @@ class MethodCommandNodeFactoryTests {
 
         @com.wizardlybump17.wlib.command.annotation.Command("test <int0> <int1> test1 <byte0> <byte1> test2 <float0> test3 <float1> <long0> <long1> test4 <short0> <short1> test5 <double0> <double1> test6 <char0> <char1> test7 <string0> test8 <string1> <uuid0> test9 <uuid1>")
         public void test(int int0, int int1, byte byte0, byte byte1, float float0, float float1, long long0, long log1, short short0, short short1, double double0, double double1, char char0, char char1, String string0, String string1, UUID uuid0, UUID uuid1) {
+        }
+    }
+
+    @Test
+    void testEnum() {
+        List<Command> expected = new ArrayList<>(List.of(new Command(
+                new LiteralCommandNode(
+                        "test",
+                        List.of(
+                                new EnumCommandNode<>(
+                                        "test",
+                                        List.of(),
+                                        AllowedInputs.anyNotNull(),
+                                        EnumSuggester.any(TestEnum.Test.class),
+                                        null,
+                                        null,
+                                        TestEnum.Test.class
+                                )
+                        ),
+                        null,
+                        null
+                )
+        )));
+        List<Command> actual = Assertions.assertDoesNotThrow(() -> commandExtractor.extract(new TestEnum()));
+
+        expected.sort(null);
+        actual.sort(null);
+
+        AssertionUtil.assertCommandsEqualsIgnoreExecutor(expected, actual);
+    }
+
+    public static final class TestEnum {
+
+        @com.wizardlybump17.wlib.command.annotation.Command("test <test>")
+        public void test(Test test) {
+        }
+
+        public enum Test {
+
+            A, B, C, D
         }
     }
 }

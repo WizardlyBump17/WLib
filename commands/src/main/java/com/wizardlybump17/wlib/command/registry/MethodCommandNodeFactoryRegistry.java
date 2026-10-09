@@ -1,6 +1,7 @@
 package com.wizardlybump17.wlib.command.registry;
 
 import com.wizardlybump17.wlib.command.extractor.method.factory.MethodCommandNodeFactory;
+import com.wizardlybump17.wlib.command.extractor.method.factory.object.EnumMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.object.UUIDMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.BooleanMethodCommandNodeFactory;
 import com.wizardlybump17.wlib.command.extractor.method.factory.primitive.CharacterMethodCommandNodeFactory;
@@ -36,7 +37,14 @@ public final class MethodCommandNodeFactoryRegistry {
     }
 
     public @Nullable MethodCommandNodeFactory getFactory(@NotNull Class<?> clazz) {
-        return factories.get(clazz);
+        MethodCommandNodeFactory direct = factories.get(clazz);
+        if (direct != null)
+            return direct;
+
+        for (MethodCommandNodeFactory factory : factories.values())
+            if (factory.isSupported(clazz))
+                return factory;
+        return null;
     }
 
     public void removeFactory(@NotNull Class<?> clazz) {
@@ -69,6 +77,7 @@ public final class MethodCommandNodeFactoryRegistry {
         addFactory(new NumberMethodCommandNodeFactory());
         addFactory(new StringMethodCommandNodeFactory());
         addFactory(new UUIDMethodCommandNodeFactory());
+        addFactory(new EnumMethodCommandNodeFactory());
     }
 
     @ApiStatus.Internal
@@ -91,7 +100,8 @@ public final class MethodCommandNodeFactoryRegistry {
                 double.class,
                 Double.class,
                 String.class,
-                UUID.class
+                UUID.class,
+                Enum.class
         );
     }
 }
