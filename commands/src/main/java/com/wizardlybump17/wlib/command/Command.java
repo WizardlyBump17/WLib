@@ -1,84 +1,78 @@
 package com.wizardlybump17.wlib.command;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.wizardlybump17.wlib.command.node.CommandNode;
+import com.wizardlybump17.wlib.command.node.LiteralCommandNode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * <p>An annotation that describes a command.</p>
- * <p>For a command to be valid the first parameter of the method must implements {@link CommandSender}</p>
- */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Command {
+import java.util.Comparator;
+import java.util.Objects;
 
-    /**
-     * <p>How the sender must type the command in order for it to be triggered.
-     * Example: <pre>command hello world</pre>
-     * In the example above, the sender must type /command hello world, so it can be triggered.
-     * To add parameters that depends on the sender input, just put the parameter between <>.
-     * <br>
-     * Example: <pre>command &lt;hello&gt; world</pre></p>
-     * <p>The type of each parameter is defined in the method that have this annotation.
-     * An example for the command above:
-     * <pre>
-     *  &#64;Command(execution = "command &lt;hello&gt; world")
-     *  public void commandHelloWorld(GenericSender sender, String hello) {
-     *      System.out.println(sender.getName() + " executed the hello world command with the argument " + hello);
-     *  }
-     * </pre></p>
-     *
-     * @return how the command must be sent to be triggered
-     * @see com.wizardlybump17.wlib.command.args.reader.ArgsReader
-     */
-    String execution();
+public class Command implements Comparable<Command> {
 
-    /**
-     * @return which permission the sender must have to trigger this command
-     */
-    String permission() default "";
+    public static final @NotNull Comparator<Command> COMPARATOR = Comparator.comparing(Command::getFullCommand);
 
-    /**
-     * <p>Used when the {@link CommandSender} does not have the required {@link #permission()}.</p>
-     * @return the message to be sent when the {@link CommandSender} does not have the required {@link #permission()}
-     */
-    String permissionMessage() default "";
+    private final @NotNull LiteralCommandNode root;
 
-    /**
-     * @return if the {@link #permissionMessage()} is a field in the class that have this annotation
-     */
-    boolean permissionMessageIsField() default false;
+    public Command(@NotNull LiteralCommandNode root) {
+        this.root = root;
+    }
 
-    /**
-     * Sets the priority of this command. If the priority is -1, then the priority check is the same as
-     * <pre>{@code this.execution().split(" ").length}</pre>
-     *
-     * @return the priority of this command
-     */
-    int priority() default -1;
+    public @NotNull LiteralCommandNode getRoot() {
+        return root;
+    }
 
-    /**
-     * Sets the options of this command.
-     * The Bukkit implementation does nothing with this
-     *
-     * @return the options of this command
-     */
-    String[] options() default {};
+    public @NotNull Command merge(@NotNull Command other) {
+        if (other.getClass() != getClass())
+            return other.merge(this);
+        return new Command(root.merge(other.getRoot()));
+    }
 
-    /**
-     * @return the description of this command
-     */
-    String description() default "";
+    @Override
+    public String toString() {
+        return "Command{" +
+                "root=" + root +
+                '}';
+    }
 
-    /**
-     * <p>Used when the {@link CommandSender} is not valid for this command.</p>
-     * @return the message to be sent when the {@link CommandSender} is not valid for this command
-     */
-    String invalidSenderMessage() default "";
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Command command = (Command) o;
+        return Objects.equals(root, command.root);
+    }
 
-    /**
-     * @return if the {@link #invalidSenderMessage()} is a field in the class that have this annotation
-     */
-    boolean invalidSenderMessageIsField() default false;
+    public boolean equalsIgnoreExecutor(@Nullable Object other) {
+        if (other == null || getClass() != other.getClass())
+            return false;
+        Command command = (Command) other;
+        return root.equalsIgnoreExecutor(command.root);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(root);
+    }
+
+    @Override
+    public int compareTo(@NotNull Command other) {
+        return COMPARATOR.compare(this, other);
+    }
+
+    public @NotNull String getFullCommand() {
+        return root.getFullCommand();
+    }
+
+    public @Nullable CommandNode<?> findNode(@NotNull String name) {
+        return root.findChild(name);
+    }
+
+    public @NotNull String getName() {
+        return root.getName();
+    }
+
+    public int getTotalNodes() {
+        return root.getTotalNodes();
+    }
 }

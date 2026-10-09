@@ -2,12 +2,12 @@ package com.wizardlybump17.wlib.util.test;
 
 import com.wizardlybump17.wlib.util.StringUtil;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuotedStringsTests {
 
@@ -26,7 +26,7 @@ class QuotedStringsTests {
                 StringUtil.parseQuotedStrings("Hello Beautiful World", QUOTE, ESCAPE, DELIMITER)
         );
         assertEquals(
-                List.of("Hello", "World", "Hi"),
+                List.of("Hello", "World", "", "", "Hi"),
                 StringUtil.parseQuotedStrings("Hello World   Hi", QUOTE, ESCAPE, DELIMITER)
         );
     }
@@ -77,47 +77,177 @@ class QuotedStringsTests {
 
     @Test
     void testNotEndedQuotes() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello \"World", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello \"World", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \"Hi", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \"Hi", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \"Hi there, nice\" \"string", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.UNCLOSED_QUOTE
+        Assertions.assertEquals(
+                QuotedStringException.UNCLOSED_QUOTE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \"Hi there, nice\" \"string", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
     }
 
     @Test
     void testEscapeInTheEndException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World \\", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.INVALID_ESCAPE
+        Assertions.assertEquals(
+                QuotedStringException.INVALID_ESCAPE,
+                Assertions.assertThrowsExactly(
+                        QuotedStringException.class,
+                        () -> StringUtil.parseQuotedStrings("Hello World \\", QUOTE, ESCAPE, DELIMITER)
+                ).getMessage()
         );
     }
 
     @Test
-    void testQuotedStringAfterNonQuotedStringException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("Hello World\"Hi\"", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.QUOTED_WITHOUT_DELIMITER
+    void testQuotedStringAfterNonQuotedStringSuccess() {
+        Assertions.assertEquals(
+                List.of("Hello", "WorldHi"),
+                StringUtil.parseQuotedStrings("Hello World\"Hi\"", QUOTE, ESCAPE, DELIMITER)
         );
     }
 
     @Test
-    void testNonQuotedStringAfterQuotedStringException() {
-        assertThrows(
-                QuotedStringException.class,
-                () -> StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER),
-                QuotedStringException.NON_QUOTED_AFTER_QUOTED
+    void testNonQuotedStringAfterQuotedStringSuccess() {
+        Assertions.assertEquals(
+                List.of("HelloWorld"),
+                StringUtil.parseQuotedStrings("\"Hello\"World", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testEmpty() {
+        Assertions.assertEquals(
+                List.of(),
+                StringUtil.parseQuotedStrings("", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testEndingWithSpace0() {
+        Assertions.assertEquals(
+                List.of(""),
+                StringUtil.parseQuotedStrings(" ", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testEndingWithSpace1() {
+        Assertions.assertEquals(
+                List.of("Hello", "World"),
+                StringUtil.parseQuotedStrings("Hello World ", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testStringInsideString() {
+        Assertions.assertEquals(
+                List.of("Hello There \"Hi There\" Cool"),
+                StringUtil.parseQuotedStrings("\"Hello There \\\"Hi There\\\" Cool\"")
+        );
+    }
+
+    @Test
+    void testProperlyQuotedTrue() {
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello World", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\"", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"Hello World\"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World    \"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\" Hi There", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello \"World\"Hi There", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\"World\" Hi There", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\"World\"Hi There", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("", QUOTE, ESCAPE));
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"\"", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("Hello\\ World", QUOTE, ESCAPE));
+
+        Assertions.assertTrue(StringUtil.isProperlyQuoted("\"Hello There \\\"Hi There\\\" Cool\""));
+    }
+
+    @Test
+    void testProperlyQuotedFalse() {
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World", QUOTE, ESCAPE));
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World\" Hi \"There", QUOTE, ESCAPE));
+
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("\"", QUOTE, ESCAPE));
+
+        Assertions.assertFalse(StringUtil.isProperlyQuoted("Hello \"World\" \\", QUOTE, ESCAPE));
+    }
+
+    @Test
+    void testEscape() {
+        Assertions.assertEquals(
+                List.of("Hello World"),
+                StringUtil.parseQuotedStrings("\"Hello World\"", QUOTE, ESCAPE, DELIMITER)
+        );
+        Assertions.assertEquals(
+                List.of("Hello World"),
+                StringUtil.parseQuotedStrings("Hello\\ World", QUOTE, ESCAPE, DELIMITER)
+        );
+
+        Assertions.assertEquals(
+                List.of("\\Hello", "World"),
+                StringUtil.parseQuotedStrings("\\\\Hello World", QUOTE, ESCAPE, DELIMITER)
+        );
+
+        Assertions.assertEquals(
+                List.of("\\"),
+                StringUtil.parseQuotedStrings("\\\\", QUOTE, ESCAPE, DELIMITER)
+        );
+        Assertions.assertEquals(
+                List.of("\\\\"),
+                StringUtil.parseQuotedStrings("\\\\\\\\", QUOTE, ESCAPE, DELIMITER)
+        );
+    }
+
+    @Test
+    void testAddEscape() {
+        Assertions.assertEquals(
+                "\"Hello World\"", //"Hello World"
+                StringUtil.escapeString("Hello World", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"Hello World \\\\\"", //"Hello World \\"
+                StringUtil.escapeString("Hello World \\", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"     \"", //"     "
+                StringUtil.escapeString("     ", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\\\"\\\"\\\"\"", //"\"\"\""
+                StringUtil.escapeString("\"\"\"", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\"",
+                StringUtil.escapeString("", QUOTE, ESCAPE)
+        );
+
+        Assertions.assertEquals(
+                "\"\\\"\"", // "\""
+                StringUtil.escapeString("\"", QUOTE, ESCAPE)
         );
     }
 }

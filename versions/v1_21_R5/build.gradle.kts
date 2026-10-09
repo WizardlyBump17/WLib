@@ -4,7 +4,7 @@ plugins {
 
 apply(plugin = "io.papermc.paperweight.userdev")
 
-val paper = "1.21.7-R0.1-SNAPSHOT"
+val paper = "1.21.8-R0.1-SNAPSHOT"
 val jetbrainsAnnotations = "26.0.2"
 
 dependencies {

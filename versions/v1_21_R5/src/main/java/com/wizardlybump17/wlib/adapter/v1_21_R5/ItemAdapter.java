@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter {
+public class ItemAdapter extends com.wizardlybump17.wlib.adapter.ItemAdapter implements BaseAdapter {
 
     public static final @NotNull Class<?> CRAFT_META_ITEM = ReflectionUtil.getClass("org.bukkit.craftbukkit.inventory.CraftMetaItem");
     public static final @NotNull Field CUSTOM_TAG = ReflectionUtil.getField("customTag", CRAFT_META_ITEM);
