@@ -6,6 +6,7 @@ import com.wizardlybump17.wlib.inventory.item.ClickAction;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.util.MapUtils;
 import com.wizardlybump17.wlib.util.ObjectUtil;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -105,13 +107,100 @@ public class PaginatedInventoryBuilder implements ConfigurationSerializable, Clo
         return this;
     }
 
-    public @NotNull PaginatedInventoryBuilder setReplacementActionByCustomData(@NotNull String key, @Nullable Object value, @NotNull ClickAction action) {
+    public @NotNull PaginatedInventoryBuilder setReplacementActionByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ClickAction action) {
         for (ItemButton button : shapeReplacements.values()) {
             if (Objects.equals(button.getCustomData().get(key), value))
                 button.setClickAction(action);
         }
         return this;
     }
+
+    //ItemStack
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemStack> itemSupplier) {
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemStack item) {
+        Supplier<ItemStack> itemSupplier = () -> item;
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemStackByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemStack, ItemStack> replacer) {
+        for (ItemButton button : shapeReplacements.values()) {
+            ItemStack originalItem = button.getItem().get();
+            if (Objects.equals(button.getCustomData().get(key), value)) {
+                button.setItem(() -> replacer.apply(originalItem));
+            }
+        }
+        return this;
+    }
+
+    //ItemBuilder
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemBuilder> itemSupplier) {
+        Supplier<ItemStack> itemStackSupplier = () -> itemSupplier.get().build();
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemStackSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemBuilder item) {
+        Supplier<ItemStack> itemSupplier = item::build;
+        for (ItemButton button : shapeReplacements.values())
+            if (Objects.equals(button.getCustomData().get(key), value))
+                button.setItem(itemSupplier);
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemBuilder, ItemBuilder> replacer) {
+        for (ItemButton button : shapeReplacements.values()) {
+            ItemStack originalItem = button.getItem().get();
+            if (Objects.equals(button.getCustomData().get(key), value)) {
+                button.setItem(() -> replacer.apply(ItemBuilder.fromItemStack(originalItem)).build());
+            }
+        }
+        return this;
+    }
+
+    //ItemButton
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Supplier<ItemButton> itemSupplier) {
+        ItemButton newButton = itemSupplier.get();
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(newButton);
+        }
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull ItemButton item) {
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(item);
+        }
+        return this;
+    }
+
+    public @NotNull PaginatedInventoryBuilder setReplacementItemButtonByCustomData(@NotNull Object key, @Nullable Object value, @NotNull Function<ItemButton, ItemButton> replacer) {
+        for (Map.Entry<Character, ItemButton> entry : shapeReplacements.entrySet()) {
+            ItemButton button = entry.getValue();
+            if (Objects.equals(button.getCustomData().get(key), value))
+                entry.setValue(replacer.apply(button));
+        }
+        return this;
+    }
+
+    //rest of the code
 
     public PaginatedInventoryBuilder content(@Nullable List<ItemButton> content) {
         this.content = content == null ? new ArrayList<>() : content;

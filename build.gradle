@@ -1,6 +1,7 @@
 plugins {
     id("com.gradleup.shadow") version "9.2.2"
     id 'maven-publish'
+    id("systems.manifold.manifold-gradle-plugin") version "0.0.2-alpha" apply false
 }
 
 subprojects {
@@ -9,7 +10,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     group = 'com.wizardlybump17.wlib'
-    version = "1.6.8+1.20.6" + ("true".equalsIgnoreCase(System.getenv("WLIB_SNAPSHOT")) ? "-SNAPSHOT." + System.getenv("WLIB_SNAPSHOT_NUMBER") : "")
+    version = "1.6.8-ncs-2-1.20.6+" + ("true".equalsIgnoreCase(System.getenv("WLIB_SNAPSHOT")) ? "-SNAPSHOT." + System.getenv("WLIB_SNAPSHOT_NUMBER") : "")
 
     repositories {
         mavenLocal()
@@ -51,13 +52,6 @@ subprojects {
         useJUnitPlatform()
     }
 
-    if (project.name == 'versions' || project.name.matches('v\\d_\\d+_R\\d+')) {
-        tasks.withType(PublishToMavenRepository).configureEach {
-            it.enabled = false
-        }
-        return
-    }
-
     publishing {
         repositories {
             maven {
@@ -72,13 +66,14 @@ subprojects {
         publications {
             gpr(MavenPublication) {
                 from(components.java)
-                pom.withXml {
-                    asNode().dependencies.dependency.each { dep ->
-                        if (dep.artifactId.last().value().last().matches('v\\d_\\d+_R\\d+'))
-                            dep.parent().remove(dep)
-                    }
-                }
             }
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed", "standardOut", "standardError"
         }
     }
 }

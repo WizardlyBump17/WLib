@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public abstract class AttributeAdapter {
+public abstract class AttributeAdapter implements Adapter {
 
     private static AttributeAdapter instance;
 
@@ -24,6 +24,7 @@ public abstract class AttributeAdapter {
     public static void setInstance(@NotNull AttributeAdapter instance) {
         if (AttributeAdapter.instance != null)
             throw new IllegalStateException("The AttributeAdapter is already set");
+        instance.checkIsOnRightVersion();
         AttributeAdapter.instance = instance;
     }
 }

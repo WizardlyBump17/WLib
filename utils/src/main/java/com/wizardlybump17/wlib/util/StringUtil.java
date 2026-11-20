@@ -3,6 +3,7 @@ package com.wizardlybump17.wlib.util;
 import com.wizardlybump17.wlib.util.exception.PlaceholderException;
 import com.wizardlybump17.wlib.util.exception.QuotedStringException;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -301,7 +302,15 @@ public class StringUtil {
      *         <tr>
      *             <td>{@code Hello "Beautiful World"}</td>
      *             <td>{@code [Hello, Beautiful World]}</td>
-     *          </tr>
+     *         </tr>
+     *         <tr>
+     *             <td>{@code Hello World } (there is an extra space at the end)</td>
+     *             <td>{@code [Hello, World, ]}</td>
+     *         </tr>
+     *         <tr>
+     *             <td>Empty String</td>
+     *             <td>{@code []}</td>
+     *         </tr>
      *     </table>
      * </p>
      *
@@ -312,8 +321,6 @@ public class StringUtil {
      * @return the {@link List} of {@link String}s
      * @throws QuotedStringException if any of the following situations happen:
      *                               <ul>
-     *                                   <li>A quoted string is started right after a normal (or escaped) {@code char};</li>
-     *                                   <li>A quoted string is ended right before a normal (or escaped) {@code char};</li>
      *                                   <li>A escape {@code char} is found at the end of the input;</li>
      *                                   <li>A quoted string is not closed.</li>
      *                               </ul>
@@ -323,68 +330,84 @@ public class StringUtil {
     public static @NonNull List<String> parseQuotedStrings(@NonNull String input, char quote, char escape, char delimiter) throws QuotedStringException {
         List<String> strings = new ArrayList<>();
 
+        if (input.isEmpty())
+            return strings;
+
         char[] chars = input.toCharArray();
         StringBuilder builder = new StringBuilder();
-        StringBuilder quoted = new StringBuilder();
+        StringBuilder quotes = new StringBuilder();
         boolean escaped = false;
-        boolean delimited = true;
-        boolean hadQuote = false;
 
-        for (char current : chars) {
-            if (current == escape && !escaped) { // start of an escaped char
+        for (char currentChar : chars) {
+            if (!escaped && currentChar == escape) {
                 escaped = true;
                 continue;
             }
 
-            if (escaped) { // end of the escaped char
-                (quoted.isEmpty() ? builder : quoted).append(current);
+            if (escaped) {
+                (quotes.isEmpty() ? builder : quotes).append(currentChar);
                 escaped = false;
                 continue;
             }
 
-            if (current == quote) {
-                if (!delimited) // the previous char was not the delimiter. Example case: string"quoted"
-                    throw new QuotedStringException(QuotedStringException.QUOTED_WITHOUT_DELIMITER);
-
-                if (quoted.isEmpty()) { // begin of quoted string
-                    quoted.append(quote);
-                    continue;
+            if (currentChar == quote) {
+                if (!quotes.isEmpty()) {
+                    quotes.deleteCharAt(0);
+                    builder.append(quotes);
+                    quotes.setLength(0);
+                } else {
+                    quotes.append(quote);
                 }
-
-                // end of quoted string
-                strings.add(quoted.substring(1));
-                delimited = false;
-                hadQuote = true;
-                quoted.setLength(0);
                 continue;
             }
 
-            if (current == delimiter && quoted.isEmpty()) { // delimiter (space)
-                if (!builder.isEmpty()) {
-                    strings.add(builder.toString());
-                    builder.setLength(0);
-                }
-                delimited = true;
-                hadQuote = false;
+            if (!quotes.isEmpty()) {
+                quotes.append(currentChar);
                 continue;
             }
 
-            if (hadQuote) // the previous char was a quote. Example case: "quoted"string
-                throw new QuotedStringException(QuotedStringException.NON_QUOTED_AFTER_QUOTED);
+            if (currentChar == delimiter) {
+                strings.add(builder.toString());
+                builder.setLength(0);
+                continue;
+            }
 
-            (quoted.isEmpty() ? builder : quoted).append(current); // any char
-            if (quoted.isEmpty())
-                delimited = false;
+            builder.append(currentChar);
         }
 
         if (escaped)
             throw new QuotedStringException(QuotedStringException.INVALID_ESCAPE);
-        if (!quoted.isEmpty())
+        if (!quotes.isEmpty())
             throw new QuotedStringException(QuotedStringException.UNCLOSED_QUOTE);
 
         if (!builder.isEmpty())
             strings.add(builder.toString());
+
         return strings;
+    }
+
+    public static boolean isProperlyQuoted(@NotNull String input, char quote, char escape) throws QuotedStringException {
+        char[] chars = input.toCharArray();
+        boolean escaped = false;
+        boolean onQuotes = false;
+
+        for (char currentChar : chars) {
+            if (currentChar == escape) {
+                escaped = true;
+                continue;
+            }
+
+            escaped = false;
+
+            if (currentChar == quote)
+                onQuotes = !onQuotes;
+        }
+
+        return !escaped && !onQuotes;
+    }
+
+    public static boolean isProperlyQuoted(@NotNull String input) throws QuotedStringException {
+        return isProperlyQuoted(input, QUOTE, QUOTE_ESCAPE);
     }
 
     /**
@@ -443,6 +466,68 @@ public class StringUtil {
         if (length > 0 && builder.charAt(length - 1) == character)
             builder.deleteCharAt(length - 1);
 
+        return builder.toString();
+    }
+
+    /**
+     * <table>
+     *     <tr>
+     *         <th>Input</th>
+     *         <th>Output</th>
+     *     </tr>
+     *     <tr>
+     *         <td>Hello</td>
+     *         <td>"Hello"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>Hello World</td>
+     *         <td>"Hello\ World"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>"Hello World"</td>
+     *         <td>"\"Hello\ World\""</td>
+     *     </tr>
+     *     <tr>
+     *         <td>\</td>
+     *         <td>"\\"</td>
+     *     </tr>
+     *     <tr>
+     *         <td>\Hello World</td>
+     *         <td>"\\Hello\ World"</td>
+     *     </tr>
+     * </table>
+     */
+    public static @NotNull String escapeString(@NotNull String input, char quote, char escape) {
+        StringBuilder result = new StringBuilder(input.length());
+        result.append(quote);
+
+        for (char currentChar : input.toCharArray()) {
+            if (currentChar == quote || currentChar == escape) {
+                result.append(escape).append(currentChar);
+            } else {
+                result.append(currentChar);
+            }
+        }
+
+        result.append(quote);
+        return result.toString();
+    }
+
+    public static @NotNull String escapeString(@NotNull String input) {
+        return escapeString(input, QUOTE, ESCAPE);
+    }
+
+    public static @NotNull String pascalToCamel(@NotNull String input) {
+        StringBuilder builder = new StringBuilder(input.length());
+        for (char currentChar : input.toCharArray()) {
+            if (currentChar >= 'A' && currentChar <= 'Z') {
+                if (!builder.isEmpty())
+                    builder.append('_');
+                builder.append(Character.toLowerCase(currentChar));
+                continue;
+            }
+            builder.append(currentChar);
+        }
         return builder.toString();
     }
 }

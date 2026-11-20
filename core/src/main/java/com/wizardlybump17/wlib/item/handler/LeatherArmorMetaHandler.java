@@ -1,35 +1,44 @@
 package com.wizardlybump17.wlib.item.handler;
 
-import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.model.LeatherArmorMetaHandlerModel;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class LeatherArmorMetaHandler extends ItemMetaHandler<LeatherArmorMetaHandlerModel> {
 
-    public LeatherArmorMetaHandler(LeatherArmorMetaHandlerModel model, ItemBuilder builder) {
-        super(model, builder);
+    public LeatherArmorMetaHandler(LeatherArmorMetaHandlerModel model, LeatherArmorMeta itemMeta) {
+        super(model, itemMeta);
     }
 
     @Override
-    public void serialize(Map<String, Object> map) {
-        map.put("color", getBuilder().getFromMeta(LeatherArmorMeta::getColor, (Color) null));
+    public @NotNull LeatherArmorMeta getItemMeta() {
+        return (LeatherArmorMeta) super.getItemMeta();
     }
 
     @Override
-    public void deserialize(Map<String, Object> map) {
-        getBuilder().<LeatherArmorMeta>consumeMeta(meta -> meta.setColor(getColor(map.get("color"))));
+    public void serialize(@NotNull Map<String, Object> map) {
+        LeatherArmorMeta itemMeta = getItemMeta();
+
+        map.put("color", itemMeta.getColor());
     }
 
-    public LeatherArmorMetaHandler color(Color color) {
-        getBuilder().<LeatherArmorMeta>consumeMeta(meta -> meta.setColor(color));
+    @Override
+    public void deserialize(@NotNull Map<String, Object> map) {
+        LeatherArmorMeta itemMeta = getItemMeta();
+
+        itemMeta.setColor(getColor(map.get("color")));
+    }
+
+    public @NotNull LeatherArmorMetaHandler color(@NotNull Color color) {
+        getItemMeta().setColor(color);
         return this;
     }
 
-    public Color color() {
-        return getBuilder().getFromMeta(LeatherArmorMeta::getColor, (Color) null);
+    public @NotNull Color color() {
+        return getItemMeta().getColor();
     }
 
     private static Color getColor(Object object) {

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public abstract class ItemAdapter {
+public abstract class ItemAdapter implements Adapter {
 
     public static final PersistentDataAdapterContext PERSISTENT_DATA_ADAPTER_CONTEXT = new ItemStack(Material.BOW).getItemMeta().getPersistentDataContainer().getAdapterContext();
     private static ItemAdapter instance;
@@ -21,6 +21,7 @@ public abstract class ItemAdapter {
     }
 
     public static void setInstance(ItemAdapter instance) {
+        instance.checkIsOnRightVersion();
         if (ItemAdapter.instance == null)
             ItemAdapter.instance = instance;
     }

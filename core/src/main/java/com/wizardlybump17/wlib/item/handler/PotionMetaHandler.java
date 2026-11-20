@@ -1,6 +1,5 @@
 package com.wizardlybump17.wlib.item.handler;
 
-import com.wizardlybump17.wlib.item.ItemBuilder;
 import com.wizardlybump17.wlib.item.handler.model.PotionMetaHandlerModel;
 import com.wizardlybump17.wlib.util.bukkit.config.wrapper.potion.PotionDataWrapper;
 import lombok.NonNull;
@@ -9,6 +8,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -17,8 +17,13 @@ import java.util.Map;
 
 public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
 
-    public PotionMetaHandler(PotionMetaHandlerModel model, ItemBuilder builder) {
-        super(model, builder);
+    public PotionMetaHandler(@NotNull PotionMetaHandlerModel model, @NotNull PotionMeta itemMeta) {
+        super(model, itemMeta);
+    }
+
+    @Override
+    public @NotNull PotionMeta getItemMeta() {
+        return (PotionMeta) super.getItemMeta();
     }
 
     @Override
@@ -40,48 +45,48 @@ public class PotionMetaHandler extends ItemMetaHandler<PotionMetaHandlerModel> {
     }
 
     public PotionMetaHandler basePotionData(@NonNull PotionData data) {
-        getBuilder().<PotionMeta>consumeMeta(meta -> meta.setBasePotionData(data));
+        getItemMeta().setBasePotionData(data);
         return this;
     }
 
     public PotionData basePotionData() {
-        return getBuilder().getFromMeta(PotionMeta::getBasePotionData, (PotionData) null);
+        return getItemMeta().getBasePotionData();
     }
 
     public boolean hasCustomEffects() {
-        return getBuilder().getFromMeta(PotionMeta::hasCustomEffects, false);
+        return getItemMeta().hasCustomEffects();
     }
 
     public @NonNull List<PotionEffect> customEffects() {
-        return getBuilder().getFromMeta(PotionMeta::getCustomEffects, Collections.emptyList());
+        return getItemMeta().getCustomEffects();
     }
 
     public boolean customEffect(@NonNull PotionEffect effect, boolean overwrite) {
-        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(meta -> meta.addCustomEffect(effect, overwrite), false);
+        return getItemMeta().addCustomEffect(effect, overwrite);
     }
 
     public boolean removeCustomEffect(@NonNull PotionEffectType type) {
-        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(meta -> meta.removeCustomEffect(type), false);
+        return getItemMeta().removeCustomEffect(type);
     }
 
     public boolean hasCustomEffect(@NonNull PotionEffectType type) {
-        return getBuilder().<Boolean, PotionMeta>getFromMeta(meta -> meta.hasCustomEffect(type), false);
+        return getItemMeta().hasCustomEffect(type);
     }
 
     public boolean clearCustomEffects() {
-        return getBuilder().<PotionMeta, Boolean>consumeMetaAndReturn(PotionMeta::clearCustomEffects, false);
+        return getItemMeta().clearCustomEffects();
     }
 
     public boolean hasColor() {
-        return getBuilder().getFromMeta(PotionMeta::hasColor, false);
+        return getItemMeta().hasColor();
     }
 
     public @Nullable Color color() {
-        return getBuilder().getFromMeta(PotionMeta::getColor, (Color) null);
+        return getItemMeta().getColor();
     }
 
     public PotionMetaHandler color(@Nullable Color color) {
-        getBuilder().<PotionMeta>consumeMeta(meta -> meta.setColor(color));
+        getItemMeta().setColor(color);
         return this;
     }
 }

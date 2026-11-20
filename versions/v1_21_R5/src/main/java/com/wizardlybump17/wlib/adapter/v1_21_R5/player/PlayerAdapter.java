@@ -1,5 +1,6 @@
 package com.wizardlybump17.wlib.adapter.v1_21_R5.player;
 
+import com.wizardlybump17.wlib.adapter.v1_21_R5.BaseAdapter;
 import com.wizardlybump17.wlib.util.ReflectionUtil;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.craftbukkit.conversations.ConversationTracker;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class PlayerAdapter extends com.wizardlybump17.wlib.adapter.player.PlayerAdapter {
+public class PlayerAdapter extends com.wizardlybump17.wlib.adapter.player.PlayerAdapter implements BaseAdapter {
 
     public static final @NotNull Field CONVERSATION_TRACKER = ReflectionUtil.getField("conversationTracker", CraftPlayer.class);
     public static final @NotNull Field CONVERSATION_QUEUE = ReflectionUtil.getField("conversationQueue", ConversationTracker.class);
